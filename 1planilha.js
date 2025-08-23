@@ -4,27 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Benefícios Ativados | CCS Telecom</title>
-
   <style>
-    body { background:#0f0f0f; color:#fff; font-family:'Segoe UI',sans-serif; margin:0; }
-    header { background:#111; padding:40px 20px; text-align:center; }
-    .container { max-width:900px; margin:40px auto; padding:0 20px; }
-    .benefit-card { background:rgba(255,255,255,0.05); padding:30px; border-radius:16px; margin-bottom:30px; }
-    .benefit-title { font-size:22px; font-weight:bold; margin-bottom:10px; }
-    .benefit-subtitle { font-size:16px; color:#ccc; margin-bottom:15px; }
-    .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; }
-    footer { background:#111; text-align:center; padding:20px; margin-top:60px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      background: #111;
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .benefit-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+      margin-bottom: 30px;
+    }
+    .benefit-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .benefit-subtitle {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+    .app-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #fff;
+      color: #111;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+    }
+    .whatsapp {
+      background: #25d366;
+      color: white;
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    canvas#fireworks,
+    canvas#lights {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+      width: 100%;
+      height: 100%;
+    }
+    #welcome-banner {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    #welcome-banner h2 {
+      margin: 0 0 10px;
+    }
+    #welcome-banner button {
+      background: #fff;
+      color: #111;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
+
+<canvas id="fireworks"></canvas>
+<canvas id="lights"></canvas>
+
+<div id="welcome-banner">
+  <h2>🎉 Seus benefícios foram ativados com sucesso!</h2>
+  <p>Aproveite ao máximo tudo que seu plano oferece.</p>
+  <button onclick="fecharSaudacao()">Conferir agora</button>
+</div>
 
 <header>
   <h1>🎉 Benefícios Nível 1</h1>
   <p>Confira tudo que você ganhou com seu plano de <strong>250MB</strong></p>
 </header>
 
-<div class="container" id="benefits-container">
-  <div id="cta-card"></div>
+<div class="container">
+  <div class="benefit-card">
+    <div class="benefit-title">🎟️ CONECTA CLUBE</div>
+    <div class="benefit-subtitle">Clube de Vantagens CCS</div>
+    <p>Receba 1 voucher a cada 90 dias. Escolha benefícios em empresas da região!</p>
+    <p><strong>Não inclui atrações como Unipraias, Barco Pirata, Roda Gigante ou Aquário.</strong></p>
+    <p>Dúvidas? Envie um e-mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>.</p>
+  </div>
+
+  <div class="benefit-card">
+    <div class="benefit-title">🎬 CCS PLAY</div>
+    <div class="benefit-subtitle">Streaming com mais de 60 canais</div>
+    <p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p>
+    <p>Baixe o app: <a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></p>
+    <p><strong>Login:</strong> E-mail cadastrado<br/>
+       <strong>Senha:</strong> CPF do titular (somente números)</p>
+  </div>
+
+  <div class="benefit-card">
+    <div class="benefit-title">📚 SKEELO</div>
+    <div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div>
+    <p>Tenha acesso a uma biblioteca digital atualizada mensalmente.</p>
+    <p>Baixe o app: <a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></p>
+  </div>
+
+  <div class="benefit-card">
+    <div class="benefit-title">🆘 SUPORTE PREMIUM</div>
+    <div class="benefit-subtitle">Atendimento prioritário</div>
+    <p>Prazo de atendimento de até 36h úteis.</p>
+    <p>Você tem direito a 1 visita técnica gratuita por ano.</p>
+  </div>
+
+  <div class="benefit-card" style="text-align:center;">
+    <p><strong>Seus benefícios estarão disponíveis em até 72h úteis após a instalação.</strong></p>
+    <p>Tem dúvidas ou precisa de ajuda?</p>
+    <a class="whatsapp" href="https://wa.me/554797701300" target="_blank">📲 Falar no WhatsApp</a>
+  </div>
 </div>
 
 <footer>
@@ -32,50 +159,93 @@
 </footer>
 
 <script>
-function mostrarErro(mensagem) {
-  console.error(mensagem);
-  const container = document.getElementById('benefits-container');
-  if (container) {
-    const erroEl = document.createElement('p');
-    erroEl.textContent = mensagem;
-    container.appendChild(erroEl);
-  }
+function fecharSaudacao() {
+  document.getElementById('welcome-banner').style.display = 'none';
 }
 
-async function carregarBeneficios() {
-  const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9cGzpZYt-H-69LaYJrIWBiQAGiZwbazp5zTEtA81ljhu0Gp63JjrtcixMs7D6ulWhkd8PvdskyQ_b/gviz/tq?tqx=out:json';
-  try {
-    const response = await fetch(spreadsheetUrl);
-    if (!response.ok) {
-      mostrarErro("Erro ao carregar dados: " + response.status);
-      return;
-    }
-    const text = await response.text();
-    const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-    const rows = json.table.rows;
-    const container = document.getElementById('benefits-container');
-    const ctaCard = document.getElementById('cta-card');
-    rows.forEach(row => {
-      const titulo = row.c[0]?.v || "";
-      const subtitulo = row.c[1]?.v || "";
-      const descricao = row.c[2]?.v || "";
-      const link = row.c[3]?.v || "#";
-      const card = document.createElement("div");
-      card.className = "benefit-card";
-      card.innerHTML = `
-        <div class="benefit-title">${titulo}</div>
-        <div class="benefit-subtitle">${subtitulo}</div>
-        <p>${descricao}</p>
-        ${link && link !== "#" ? `<a href="${link}" target="_blank" class="app-link">Acessar</a>` : ""}
-      `;
-      container.insertBefore(card, ctaCard);
+// 🎉 Confete
+function startConfetti() {
+  const duration = 2000;
+  const end = Date.now() + duration;
+  (function frame() {
+    confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+    confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+}
+
+// 🎆 Fogos
+function startFireworks() {
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let particles = [];
+  function createParticle(x, y) {
+    const colors = ["#ff0043", "#14fc56", "#1e90ff", "#ffcc00"];
+    const angle = Math.random() * 2 * Math.PI;
+    const speed = Math.random() * 5 + 2;
+    return { x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, alpha: 1, color: colors[Math.floor(Math.random()*colors.length)] };
+  }
+  function explode(x, y) {
+    for (let i = 0; i < 30; i++) particles.push(createParticle(x, y));
+  }
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = particles.filter(p => p.alpha > 0);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= 0.01;
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
     });
-  } catch (err) {
-    mostrarErro("Erro inesperado: " + err.message);
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
   }
+  setInterval(() => explode(Math.random()*canvas.width, Math.random()*canvas.height/2), 700);
+  animate();
 }
-document.addEventListener('DOMContentLoaded', carregarBeneficios);
-</script>
 
+// 💡 Luzes
+function startLights() {
+  const canvas = document.getElementById("lights");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let lights = [];
+  for (let i = 0; i < 50; i++) {
+    lights.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      color: "rgba(255,255,255," + Math.random().toFixed(2) + ")"
+    });
+  }
+  function animateLights() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let l of lights) {
+      ctx.beginPath();
+      ctx.arc(l.x, l.y, l.radius, 0, Math.PI * 2);
+      ctx.fillStyle = l.color;
+      ctx.fill();
+      l.y -= 0.5;
+      if (l.y < 0) l.y = canvas.height;
+    }
+    requestAnimationFrame(animateLights);
+  }
+  animateLights();
+}
+
+window.onload = () => {
+  startConfetti();
+  startFireworks();
+  startLights();
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </body>
 </html>
