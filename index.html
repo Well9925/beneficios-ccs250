@@ -12,15 +12,87 @@
       color: #fff;
       overflow-x: hidden;
     }
-    header {
-      background: #111;
+
+    /* 🔹 MENU FIXO */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+    }
+    nav .logo {
+      font-weight: bold;
+      color: #ffcc00;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0; padding: 0;
+    }
+    nav ul li a {
       color: #fff;
-      padding: 40px 20px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+      color: #ffcc00;
+    }
+    nav .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* 🔹 BOAS-VINDAS FULLSCREEN */
+    #welcome-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.95) 70%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+      animation: spotlightMove 6s infinite alternate ease-in-out;
+    }
+    #welcome-overlay h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
       text-align: center;
     }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
+    #welcome-overlay button {
+      background: #ffcc00;
+      color: #111;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    @keyframes spotlightMove {
+      0% { background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.95) 70%); }
+      100% { background: radial-gradient(circle at 60% 60%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.95) 70%); }
+    }
+
+    /* 🔹 SEÇÕES */
+    header {
+      padding: 100px 20px 40px;
+      text-align: center;
+      margin-top: 50px;
     }
     .container {
       max-width: 1000px;
@@ -28,10 +100,9 @@
       padding: 0 20px;
     }
     .benefit-card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
       margin-bottom: 30px;
       opacity: 0;
       transform: translateY(30px);
@@ -41,78 +112,19 @@
       opacity: 1;
       transform: translateY(0);
     }
-    .benefit-title {
+    .benefit-card .benefit-title {
       font-size: 22px;
       font-weight: bold;
       margin-bottom: 10px;
+      animation: bounce 1s;
     }
-    .benefit-subtitle {
-      font-size: 16px;
-      margin-bottom: 15px;
-      color: #ccc;
+    @keyframes bounce {
+      0%,20%,50%,80%,100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
     }
-    .app-link {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #fff;
-      color: #111;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-    .app-link:hover {
-      background: #ffcc00;
-    }
-    footer {
-      background: #111;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      margin-top: 60px;
-    }
-    .whatsapp {
-      background: #25d366;
-      color: white;
-      display: inline-block;
-      padding: 12px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 10px;
-      transition: transform 0.3s;
-    }
-    .whatsapp:hover {
-      transform: scale(1.05);
-    }
-    canvas#fireworks,
-    canvas#lights {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 999;
-      width: 100%;
-      height: 100%;
-    }
-    #welcome-banner {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      text-align: center;
-    }
-    #welcome-banner h2 {
-      margin: 0 0 10px;
-    }
-    #welcome-banner button {
-      background: #fff;
-      color: #111;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    /* 🔹 Indique & Ganhe */
+
+    /* 🔹 INDIQUE & GANHE */
     .highlight {
       background: linear-gradient(135deg, #0033cc, #6600cc);
       color: #fff;
@@ -125,10 +137,7 @@
       transform: translateY(30px);
       transition: all 0.8s ease;
     }
-    .highlight.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .highlight.show { opacity: 1; transform: translateY(0); }
     .indique-cards {
       display: flex;
       gap: 20px;
@@ -141,8 +150,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 250px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
     .indique-cards .card:hover {
       transform: scale(1.05);
@@ -153,10 +161,10 @@
       margin-top: 10px;
       font-size: 22px;
       color: #ffcc00;
-      animation: pulse 2s infinite;
+      animation: pulseGlow 2s infinite;
     }
-    @keyframes pulse {
-      0%, 100% { text-shadow: 0 0 5px #ffcc00; }
+    @keyframes pulseGlow {
+      0%,100% { text-shadow: 0 0 5px #ffcc00; }
       50% { text-shadow: 0 0 20px #ffcc00; }
     }
     .cta {
@@ -169,218 +177,161 @@
       font-size: 18px;
       text-decoration: none;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.3s ease;
+      transition: background 0.3s, transform 0.3s;
     }
-    .cta:hover {
-      background: #ff3300;
-      transform: scale(1.05);
+    .cta:hover { background: #ff3300; transform: scale(1.05); }
+
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
     }
-    .bonus {
-      margin-top: 15px;
-      font-size: 16px;
-      font-style: italic;
+
+    /* 🔹 RESPONSIVIDADE */
+    @media(max-width:768px){
+      nav ul { display: none; flex-direction: column; background:#000; position:absolute; top:50px; right:0; padding:20px; }
+      nav ul.show { display: flex; }
+      nav .menu-toggle { display: block; color: #fff; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="fireworks"></canvas>
-<canvas id="lights"></canvas>
+<!-- 🔹 MENU -->
+<nav>
+  <div class="logo">CCS Telecom</div>
+  <span class="menu-toggle">☰</span>
+  <ul>
+    <li><a href="#beneficios">Benefícios</a></li>
+    <li><a href="#indique">Indique & Ganhe</a></li>
+    <li><a href="#portal">Portal</a></li>
+    <li><a href="#faturas">Faturas</a></li>
+    <li><a href="https://wa.me/554797701300" target="_blank">Contato</a></li>
+  </ul>
+</nav>
 
-<div id="welcome-banner">
+<!-- 🔹 BOAS-VINDAS FULLSCREEN -->
+<div id="welcome-overlay">
   <h2>🎉 Seus benefícios foram ativados com sucesso!</h2>
-  <p>Aproveite ao máximo tudo que seu plano oferece.</p>
-  <button onclick="fecharSaudacao()">Conferir agora</button>
+  <button onclick="unlockSite()">Conferir agora</button>
 </div>
 
-<header>
+<!-- 🔹 CONTEÚDO -->
+<header id="beneficios">
   <h1>🎉 Benefícios Nível 1</h1>
   <p>Confira tudo que você ganhou com seu plano de <strong>250MB</strong></p>
 </header>
 
 <div class="container">
-  <div class="benefit-card">
-    <div class="benefit-title">🎟️ CONECTA CLUBE</div>
-    <div class="benefit-subtitle">Clube de Vantagens CCS</div>
-    <p>Receba 1 voucher a cada 90 dias. Escolha benefícios em empresas da região!</p>
-    <p><strong>Não inclui atrações como Unipraias, Barco Pirata, Roda Gigante ou Aquário.</strong></p>
-    <p>Dúvidas? Envie um e-mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>.</p>
-  </div>
-
-  <div class="benefit-card">
-    <div class="benefit-title">🎬 CCS PLAY</div>
-    <div class="benefit-subtitle">Streaming com mais de 60 canais</div>
-    <p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p>
-    <p>Baixe o app: <a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></p>
-    <p><strong>Login:</strong> E-mail cadastrado<br/>
-       <strong>Senha:</strong> CPF do titular (somente números)</p>
-  </div>
-
-  <div class="benefit-card">
-    <div class="benefit-title">📚 SKEELO</div>
-    <div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div>
-    <p>Tenha acesso a uma biblioteca digital atualizada mensalmente.</p>
-    <p>Baixe o app: <a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></p>
-  </div>
-
-  <div class="benefit-card">
-    <div class="benefit-title">🆘 SUPORTE PREMIUM</div>
-    <div class="benefit-subtitle">Atendimento prioritário</div>
-    <p>Prazo de atendimento de até 36h úteis.</p>
-    <p>Você tem direito a 1 visita técnica gratuita por ano.</p>
-  </div>
+  <div class="benefit-card"><div class="benefit-title">🎟️ CONECTA CLUBE</div><p>Receba 1 voucher a cada 90 dias. Escolha empresas da região!</p></div>
+  <div class="benefit-card"><div class="benefit-title">🎬 CCS PLAY</div><p>Streaming com +60 canais. <a href="https://onelink.to/ccsplay" target="_blank">Baixar app</a></p></div>
+  <div class="benefit-card"><div class="benefit-title">📚 SKEELO</div><p>Livros digitais, audiobooks e minibooks. <a href="https://onelink.to/hseuht" target="_blank">Baixar app</a></p></div>
+  <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><p>Atendimento em até 36h úteis + 1 visita técnica gratuita.</p></div>
 </div>
 
 <section id="indique" class="highlight">
   <h2>💰 Indique & Ganhe</h2>
-  <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos para a CCS Telecom!</p>
-  
   <div class="indique-cards">
-    <div class="card">
-      <h3>🎯 Indique 1 amigo</h3>
-      <p>Plano 250MB</p>
-      <strong>R$30 de desconto</strong>
-    </div>
-    <div class="card">
-      <h3>🎯 Indique 1 amigo</h3>
-      <p>Plano 450MB</p>
-      <strong>R$50 de desconto</strong>
-    </div>
-    <div class="card">
-      <h3>🏆 Indique 1 amigo</h3>
-      <p>Plano 650MB</p>
-      <strong>Mensalidade ISENTA</strong>
-    </div>
+    <div class="card"><h3>🎯 Plano 250MB</h3><strong>R$30 de desconto</strong></div>
+    <div class="card"><h3>🎯 Plano 450MB</h3><strong>R$50 de desconto</strong></div>
+    <div class="card"><h3>🏆 Plano 650MB</h3><strong>Mensalidade ISENTA</strong></div>
   </div>
-
-  <p class="bonus">⏳ Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
-
+  <p class="bonus">⏳ Se o indicado contratar em até 72h: +R$20 bônus</p>
   <a href="https://wa.me/554797701300" class="cta">📲 Indicar agora</a>
 </section>
 
-<div class="container">
-  <div class="benefit-card">
-    <div class="benefit-title">🌐 Portal do Assinante</div>
-    <p>Tenha o controle da sua assinatura onde estiver!</p>
-    <ul>
-      <li>💠 Pagamento via PIX ou 💳 Cartão de Crédito</li>
-      <li>🧾 2ª via de faturas</li>
-      <li>🔓 Desbloqueio confiança</li>
-      <li>📊 Extrato de conexão</li>
-      <li>🔎 Acompanhamento de solicitações</li>
-    </ul>
-    <p><a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a></p>
-  </div>
-
-  <div class="benefit-card">
-    <div class="benefit-title">🧾 Portal de Faturas</div>
-    <p>Acesse rapidamente suas faturas sem login:</p>
-    <p><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a></p>
-  </div>
+<div class="container" id="portal">
+  <div class="benefit-card"><div class="benefit-title">🌐 Portal do Assinante</div><p>Controle sua assinatura via app CCS Telecom.</p><a class="app-link" href="https://bit.ly/CCS_APP">Acessar</a></div>
 </div>
 
-<footer>
-  © 2025 CCS Telecom — Todos os direitos reservados
-</footer>
+<div class="container" id="faturas">
+  <div class="benefit-card"><div class="benefit-title">🧾 Portal de Faturas</div><p>Acesse suas faturas sem login:</p><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Abrir faturas</a></div>
+</div>
 
+<footer>© 2025 CCS Telecom — Todos os direitos reservados</footer>
+
+<!-- 🔹 CANVAS EFEITOS -->
+<canvas id="fireworks"></canvas>
+<canvas id="lights"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-function fecharSaudacao() {
-  document.getElementById('welcome-banner').style.display = 'none';
+/* MENU */
+document.querySelector('.menu-toggle').addEventListener('click', ()=> {
+  document.querySelector('nav ul').classList.toggle('show');
+});
+
+/* DESBLOQUEAR SITE */
+function unlockSite(){
+  const overlay = document.getElementById('welcome-overlay');
+  overlay.style.transition = "all 1s ease";
+  overlay.style.opacity = 0;
+  overlay.style.transform = "scale(1.2)";
+  setTimeout(()=> overlay.style.display="none", 1000);
+  startConfetti();
 }
 
-// Scroll animations (cards aparecem ao rolar)
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("show");
+/* OBSERVER PARA ANIMAR CARDS */
+const observer = new IntersectionObserver((entries)=> {
+  entries.forEach((entry, i)=>{
+    if(entry.isIntersecting){
+      setTimeout(()=> entry.target.classList.add("show"), i*200);
+    } else {
+      entry.target.classList.remove("show");
     }
   });
-});
-document.querySelectorAll(".benefit-card, .highlight").forEach(el => observer.observe(el));
+},{ threshold:0.2 });
+document.querySelectorAll(".benefit-card, .highlight").forEach(el=> observer.observe(el));
 
-// Confete
-function startConfetti() {
-  const duration = 2000;
-  const end = Date.now() + duration;
-  (function frame() {
-    confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
-    confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
-    if (Date.now() < end) requestAnimationFrame(frame);
+/* CONFETE */
+function startConfetti(){
+  const duration=1500, end=Date.now()+duration;
+  (function frame(){
+    confetti({particleCount:7, angle:60, spread:55, origin:{x:0}});
+    confetti({particleCount:7, angle:120, spread:55, origin:{x:1}});
+    if(Date.now()<end) requestAnimationFrame(frame);
   })();
 }
 
-// Fogos
-function startFireworks() {
-  const canvas = document.getElementById("fireworks");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  let particles = [];
-  function createParticle(x, y) {
-    const colors = ["#ff0043", "#14fc56", "#1e90ff", "#ffcc00"];
-    const angle = Math.random() * 2 * Math.PI;
-    const speed = Math.random() * 5 + 2;
-    return { x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, alpha: 1, color: colors[Math.floor(Math.random()*colors.length)] };
-  }
-  function explode(x, y) {
-    for (let i = 0; i < 30; i++) particles.push(createParticle(x, y));
-  }
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles = particles.filter(p => p.alpha > 0);
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= 0.01;
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(animate);
-  }
-  setInterval(() => explode(Math.random()*canvas.width, Math.random()*canvas.height/2), 700);
+/* FOGOS */
+function startFireworks(){
+  const canvas=document.getElementById("fireworks");
+  const ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  let particles=[];
+  function create(x,y){const c=["#ff0043","#14fc56","#1e90ff","#ffcc00"];
+    const a=Math.random()*2*Math.PI, s=Math.random()*5+2;
+    return {x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,alpha:1,color:c[Math.floor(Math.random()*c.length)]};}
+  function explode(x,y){for(let i=0;i<30;i++)particles.push(create(x,y));}
+  function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles=particles.filter(p=>p.alpha>0);
+    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.alpha-=0.01;
+      ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.beginPath();
+      ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();});
+    ctx.globalAlpha=1;requestAnimationFrame(animate);}
+  setInterval(()=> explode(Math.random()*canvas.width,Math.random()*canvas.height/2),700);
   animate();
 }
 
-// Luzes
-function startLights() {
-  const canvas = document.getElementById("lights");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  let lights = [];
-  for (let i = 0; i < 50; i++) {
-    lights.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 1,
-      color: "rgba(255,255,255," + Math.random().toFixed(2) + ")"
-    });
-  }
-  function animateLights() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let l of lights) {
-      ctx.beginPath();
-      ctx.arc(l.x, l.y, l.radius, 0, Math.PI * 2);
-      ctx.fillStyle = l.color;
-      ctx.fill();
-      l.y -= 0.5;
-      if (l.y < 0) l.y = canvas.height;
-    }
-    requestAnimationFrame(animateLights);
-  }
-  animateLights();
+/* LUZES */
+function startLights(){
+  const canvas=document.getElementById("lights");
+  const ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  let lights=[];
+  for(let i=0;i<50;i++) lights.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*2+1,color:"rgba(255,255,255,"+Math.random().toFixed(2)+")"});
+  function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let l of lights){ctx.beginPath();ctx.arc(l.x,l.y,l.radius,0,Math.PI*2);
+      ctx.fillStyle=l.color;ctx.fill();l.y-=0.5;if(l.y<0)l.y=canvas.height;}
+    requestAnimationFrame(animate);}
+  animate();
 }
 
-window.onload = () => {
-  startConfetti();
-  startFireworks();
-  startLights();
-};
+/* START BACKGROUND EFFECTS */
+startFireworks();
+startLights();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </body>
 </html>
