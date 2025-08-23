@@ -9,12 +9,7 @@ function mostrarErro(mensagem) {
 }
 
 async function carregarBeneficios() {
-  const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9cGzpZYt-H-69LaYJrIWBiQAGiZwbazp5zTEtA81ljhu0Gp63JjrtcixMs7D6ulWhkd8PvdskyQ_b/gviz/tq?tqx=out:json';
-  try {
-    const response = await fetch(spreadsheetUrl);
-    if (!response.ok) {
-      const error = new Error(response.statusText);
-      console.error(`Erro ao buscar ${spreadsheetUrl}. Status: ${response.status}, Mensagem: ${error.message}`);
+main
       mostrarErro('Não foi possível carregar os benefícios.');
       return;
     }
@@ -22,12 +17,7 @@ async function carregarBeneficios() {
     const text = await response.text();
     let json;
     try {
-      json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-    } catch (err) {
-      console.error('Falha ao analisar JSON da planilha. Resposta original:', text, 'Erro:', err.message);
-      mostrarErro('Não foi possível carregar os benefícios.');
-      return;
-    }
+ main
     const rows = json.table.rows;
 
     const container = document.getElementById('benefits-container');
@@ -79,7 +69,7 @@ async function carregarBeneficios() {
 
     container.insertBefore(fragment, ctaCard);
   } catch (err) {
-    console.error(`Erro ao buscar ${spreadsheetUrl}. Mensagem: ${err.message}`);
+ main
     mostrarErro('Não foi possível carregar os benefícios.');
   }
 }
