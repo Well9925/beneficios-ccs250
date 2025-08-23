@@ -1,7 +1,11 @@
 function fecharSaudacao() {
-  document.getElementById('welcome-banner').style.display = 'none';
+  const banner = document.getElementById('welcome-banner');
+  if (banner) {
+    banner.classList.add('hidden');
+    banner.addEventListener('transitionend', () => {
+      banner.style.display = 'none';
+    }, { once: true });
+  }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = { fecharSaudacao };
-}
+module.exports = { fecharSaudacao };

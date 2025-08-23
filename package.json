@@ -1,16 +1,17 @@
 {
   "name": "beneficios-ccs250",
   "version": "1.0.0",
-  "description": "",
+  "description": "Landing page de benefícios para clientes CCS Telecom",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "devDependencies": {
     "jest": "^29.7.0"
   },
   "keywords": [],
-  "author": "",
+  "author": "CCS Telecom",
   "license": "ISC",
   "type": "commonjs"
 }
