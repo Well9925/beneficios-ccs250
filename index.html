@@ -137,12 +137,13 @@
   </div>
 </div>
 
-<footer>
-  © 2025 CCS Telecom — Todos os direitos reservados
-</footer>
+  <footer>
+    © 2025 CCS Telecom — Todos os direitos reservados
+  </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="fecharSaudacao.js"></script>
+  <script>
   function startConfetti() {
     const duration = 2000;
     const end = Date.now() + duration;
@@ -217,10 +218,6 @@
       requestAnimationFrame(animateLights);
     }
     animateLights();
-  }
-
-  function fecharSaudacao() {
-    document.getElementById('welcome-banner').style.display = 'none';
   }
 
   window.onload = () => {
