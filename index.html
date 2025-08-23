@@ -23,7 +23,7 @@
       margin-bottom: 10px;
     }
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -33,6 +33,13 @@
       border-radius: 16px;
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
       margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    .benefit-card.show {
+      opacity: 1;
+      transform: translateY(0);
     }
     .benefit-title {
       font-size: 22px;
@@ -52,6 +59,10 @@
       color: #111;
       border-radius: 6px;
       text-decoration: none;
+      transition: background 0.3s;
+    }
+    .app-link:hover {
+      background: #ffcc00;
     }
     footer {
       background: #111;
@@ -69,6 +80,10 @@
       text-decoration: none;
       font-weight: bold;
       margin-top: 10px;
+      transition: transform 0.3s;
+    }
+    .whatsapp:hover {
+      transform: scale(1.05);
     }
     canvas#fireworks,
     canvas#lights {
@@ -96,6 +111,74 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+    }
+    /* 🔹 Indique & Ganhe */
+    .highlight {
+      background: linear-gradient(135deg, #0033cc, #6600cc);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 16px;
+      margin: 40px auto;
+      max-width: 1000px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    .highlight.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .indique-cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .indique-cards .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      width: 250px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .indique-cards .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .indique-cards .card strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 22px;
+      color: #ffcc00;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 5px #ffcc00; }
+      50% { text-shadow: 0 0 20px #ffcc00; }
+    }
+    .cta {
+      display: inline-block;
+      background: #ff6600;
+      color: #fff;
+      padding: 15px 30px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .cta:hover {
+      background: #ff3300;
+      transform: scale(1.05);
+    }
+    .bonus {
+      margin-top: 15px;
+      font-size: 16px;
+      font-style: italic;
     }
   </style>
 </head>
@@ -146,11 +229,53 @@
     <p>Prazo de atendimento de até 36h úteis.</p>
     <p>Você tem direito a 1 visita técnica gratuita por ano.</p>
   </div>
+</div>
 
-  <div class="benefit-card" style="text-align:center;">
-    <p><strong>Seus benefícios estarão disponíveis em até 72h úteis após a instalação.</strong></p>
-    <p>Tem dúvidas ou precisa de ajuda?</p>
-    <a class="whatsapp" href="https://wa.me/554797701300" target="_blank">📲 Falar no WhatsApp</a>
+<section id="indique" class="highlight">
+  <h2>💰 Indique & Ganhe</h2>
+  <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos para a CCS Telecom!</p>
+  
+  <div class="indique-cards">
+    <div class="card">
+      <h3>🎯 Indique 1 amigo</h3>
+      <p>Plano 250MB</p>
+      <strong>R$30 de desconto</strong>
+    </div>
+    <div class="card">
+      <h3>🎯 Indique 1 amigo</h3>
+      <p>Plano 450MB</p>
+      <strong>R$50 de desconto</strong>
+    </div>
+    <div class="card">
+      <h3>🏆 Indique 1 amigo</h3>
+      <p>Plano 650MB</p>
+      <strong>Mensalidade ISENTA</strong>
+    </div>
+  </div>
+
+  <p class="bonus">⏳ Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
+
+  <a href="https://wa.me/554797701300" class="cta">📲 Indicar agora</a>
+</section>
+
+<div class="container">
+  <div class="benefit-card">
+    <div class="benefit-title">🌐 Portal do Assinante</div>
+    <p>Tenha o controle da sua assinatura onde estiver!</p>
+    <ul>
+      <li>💠 Pagamento via PIX ou 💳 Cartão de Crédito</li>
+      <li>🧾 2ª via de faturas</li>
+      <li>🔓 Desbloqueio confiança</li>
+      <li>📊 Extrato de conexão</li>
+      <li>🔎 Acompanhamento de solicitações</li>
+    </ul>
+    <p><a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a></p>
+  </div>
+
+  <div class="benefit-card">
+    <div class="benefit-title">🧾 Portal de Faturas</div>
+    <p>Acesse rapidamente suas faturas sem login:</p>
+    <p><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a></p>
   </div>
 </div>
 
@@ -163,7 +288,17 @@ function fecharSaudacao() {
   document.getElementById('welcome-banner').style.display = 'none';
 }
 
-// 🎉 Confete
+// Scroll animations (cards aparecem ao rolar)
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("show");
+    }
+  });
+});
+document.querySelectorAll(".benefit-card, .highlight").forEach(el => observer.observe(el));
+
+// Confete
 function startConfetti() {
   const duration = 2000;
   const end = Date.now() + duration;
@@ -174,7 +309,7 @@ function startConfetti() {
   })();
 }
 
-// 🎆 Fogos
+// Fogos
 function startFireworks() {
   const canvas = document.getElementById("fireworks");
   const ctx = canvas.getContext("2d");
@@ -210,7 +345,7 @@ function startFireworks() {
   animate();
 }
 
-// 💡 Luzes
+// Luzes
 function startLights() {
   const canvas = document.getElementById("lights");
   const ctx = canvas.getContext("2d");
