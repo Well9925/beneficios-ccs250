@@ -52,18 +52,18 @@
       background: rgba(10,10,10,0.65);
       backdrop-filter: blur(6px);
       border-bottom: 1px solid rgba(255,255,255,.12);
-      padding: 12px 12px 14px;
+      padding: 12px 12px 10px;
       text-align: center;
     }
     .sticky-title h1 {
       margin: 0;
-      font-size: 22px;
+      font-size: 28px; /* maior que os cards */
       font-weight: 900;
       letter-spacing: .3px;
       display: inline-flex; align-items: center; gap: 10px;
     }
     .lvl-pill {
-      display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:900; letter-spacing:.35px; color:#fff;
+      display:inline-block; padding:5px 12px; border-radius:999px; font-size:13px; font-weight:900; letter-spacing:.35px; color:#fff;
       border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(47,128,255,.24), inset 0 0 6px rgba(255,255,255,.12);
       cursor: pointer;
     }
@@ -73,15 +73,16 @@
     .lvl-pill.l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
     .sticky-title p {
       margin: 6px 0 0;
-      font-size: 14px; opacity: .92;
+      font-size: 15px; opacity: .92;
     }
     @media (max-width:600px){
-      .sticky-title h1 { font-size: 18px; }
+      .sticky-title h1 { font-size: 22px; }
+      .lvl-pill { font-size: 12px; padding:4px 10px; }
       .sticky-title p { font-size: 13px; }
     }
 
     /* Ajuste de âncora para não ficar atrás do título sticky */
-    section, .container { scroll-margin-top: 82px; }
+    section, .container { scroll-margin-top: 92px; }
 
     /* MENU INFERIOR */
     nav.menu-bottom { width: 100vw; background: #181818e6; position: fixed; left:0; bottom:0; z-index: 5001; box-shadow: 0 -2px 10px rgba(0,0,0,0.18); border-top: 1px solid #222; backdrop-filter: blur(6px); transition: opacity .3s ease; padding-bottom: env(safe-area-inset-bottom, 0); }
@@ -131,11 +132,17 @@
     .level-badge { cursor:pointer; font-weight:800; letter-spacing:.4px; color:#fff; background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); border: 1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(47,128,255,.25), inset 0 0 6px rgba(255,255,255,.12); }
     .level-badge:hover{ filter:brightness(1.06) saturate(1.08); }
 
+    .tag-atual {
+      display:inline-block; padding:3px 8px; border-radius:999px; font-size:10px; font-weight:900; letter-spacing:.35px;
+      color:#0b0b0b; background:#e8eefc; border:1px solid rgba(255,255,255,.35);
+      box-shadow: inset 0 0 4px rgba(255,255,255,.2);
+    }
+
     .quote { background: rgba(255,255,255,0.04); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 8px; margin: 6px 0 12px 0; color:#eaeaea; }
     .bullets { margin: 10px 0 6px 18px; }
     .bullets li { margin:4px 0; }
 
-    /* Aviso Nível 3 – texto claro com chip no fim (evita confusão) */
+    /* Aviso Nível 3 – sem traço */
     .disclaimer { font-size:13px; color:#cfcfcf; opacity:.95; margin-top:8px; }
     .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
     .chip { display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35); text-shadow: 0 1px 1px rgba(0,0,0,.35); -webkit-text-stroke:.2px rgba(0,0,0,.25); box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14); }
@@ -151,9 +158,15 @@
     /* POPUP NÍVEIS */
     .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
     .level-popover.open{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
-    .level-popover h4{ margin:0 0 8px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
+    .level-popover h4{ margin:0 0 6px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
+    /* Progresso dentro do popover */
+    .progress-inline { display:flex; align-items:center; gap:10px; font-size:12px; color:#cfefff; opacity:.95; margin: 2px 0 8px; }
+    .progress-inline .dots { display:flex; gap:6px; align-items:center; }
+    .progress-inline .dot { width:8px; height:8px; border-radius:50%; background:#666; box-shadow: inset 0 0 2px rgba(255,255,255,.25); }
+    .progress-inline .dot.active { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); box-shadow: 0 0 8px rgba(47,128,255,.6); }
+
     .level-list{ list-style:none; margin:0; padding:0; }
-    .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; }
+    .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; flex-wrap:wrap; }
     .level-list li+li{ margin-top:4px; }
     .pill{ flex:none; padding:4px 10px; font-size:11px; font-weight:900; color:#0b0b0b; border-radius:999px; letter-spacing:.4px; border:1px solid rgba(255,255,255,.25); }
     .l1{ background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
@@ -249,6 +262,7 @@
                 title="Clique para ver os níveis">
           Nível 1
         </button>
+        <!-- Removido "Atual" aqui; aparece só no popover -->
       </div>
       <div class="benefit-subtitle">Clube de Vantagens CCS</div>
 
@@ -264,9 +278,9 @@
         <li>Receba 1 voucher de benefício a cada 90 dias.</li>
       </ul>
 
-      <!-- Aviso claro com chip no fim -->
+      <!-- Aviso claro sem traço -->
       <p class="disclaimer disclaimer-lev3">
-        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante e Aquário —
+        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante e Aquário.
         <span class="chip" aria-label="Disponível somente no Nível 3">Somente Nível 3</span>
       </p>
 
@@ -279,10 +293,31 @@
       <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
         <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
+
+        <!-- Progresso movido para dentro do popover -->
+        <div class="progress-inline" aria-label="Progresso do nível">
+          <div class="dots" aria-hidden="true">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <span>Nível 1 de 3</span>
+        </div>
+
         <ul class="level-list">
-          <li><span class="pill l1">Nível 1</span><span class="lvl-desc">Planos: 250MB</span></li>
-          <li><span class="pill l2">Nível 2</span><span class="lvl-desc">Planos: 450MB</span></li>
-          <li><span class="pill l3">Nível 3</span><span class="lvl-desc">Planos: 650MB</span></li>
+          <li>
+            <span class="pill l1">Nível 1</span>
+            <span class="lvl-desc">Planos: 250MB</span>
+            <span class="tag-atual" aria-label="Seu nível atual">Atual</span>
+          </li>
+          <li>
+            <span class="pill l2">Nível 2</span>
+            <span class="lvl-desc">Planos: 450MB</span>
+          </li>
+          <li>
+            <span class="pill l3">Nível 3</span>
+            <span class="lvl-desc">Planos: 650MB</span>
+          </li>
         </ul>
         <div class="lvl-note" style="margin-top:8px;">Atrações premium estão no Nível 3.</div>
 
@@ -541,7 +576,7 @@
 
       popoverClose.addEventListener('click', ()=>{ haptic(10); closePopover(); });
 
-      // CTAs tracking (apenas L2/L3, os demais foram removidos)
+      // CTAs tracking
       ['ctaL2','ctaL3'].forEach(id=>{
         const el=document.getElementById(id);
         if(el) el.addEventListener('click', ()=>{ haptic(15); track('levels_cta_click',{ id }); });
@@ -601,7 +636,7 @@
       const sections=['beneficios','indique','portais'];
       const navLinks=document.querySelectorAll('nav.menu-bottom a');
       addEventListener('scroll', ()=>{
-        const scrolled=scrollY+80; let current='';
+        const scrolled=scrollY+100; let current='';
         for(const id of sections){ const sec=document.getElementById(id); if(sec && sec.offsetTop<=scrolled) current=id; }
         navLinks.forEach(link=>{ link.classList.toggle('active', link.getAttribute('href').slice(1)===current); });
       }, {passive:true});
