@@ -5,34 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Benefícios Ativados | CCS Telecom</title>
   <style>
-    /* Tema geral (site em branco) */
     :root{
       --accent: #ffffff;
       --accent-contrast: #111;
       --accent-glow-1: rgba(255,255,255,.6);
       --accent-glow-2: rgba(255,255,255,.4);
 
-      /* Paleta exclusiva do Boas‑vindas (impactante) */
-      --welcome-a: #ffffff;      /* branco */
-      --welcome-b: #0A58FF;      /* azul cobalt vivo */
-      --welcome-c: #00D9FF;      /* ciano vivo */
-      --welcome-glow-1: rgba(10,88,255,.85);   /* brilho azulado forte */
-      --welcome-glow-2: rgba(0,217,255,.72);   /* brilho ciano forte */
-      --welcome-border: rgba(255,255,255,.9);  /* cursor de digitação */
-      --welcome-spot: rgba(10,88,255,0.34);    /* spotlight azulado sutil */
+      /* Boas‑vindas */
+      --welcome-a: #ffffff;
+      --welcome-b: #0A58FF;
+      --welcome-c: #00D9FF;
+      --welcome-glow-1: rgba(10,88,255,.85);
+      --welcome-glow-2: rgba(0,217,255,.72);
+      --welcome-border: rgba(255,255,255,.9);
+      --welcome-spot: rgba(10,88,255,0.34);
 
-      /* CTA do botão do overlay (“Liberar benefícios agora”) */
-      --cta-1: #0A58FF;   /* cobalt */
-      --cta-2: #00D9FF;   /* ciano */
-      --cta-3: #00FFC6;   /* teal neon */
-      --cta-4: #2F80FF;   /* azul royal */
+      /* CTA Boas‑vindas */
+      --cta-1: #0A58FF;
+      --cta-2: #00D9FF;
+      --cta-3: #00FFC6;
+      --cta-4: #2F80FF;
       --cta-text: #ffffff;
       --cta-border: rgba(255,255,255,.3);
       --cta-glow-1: rgba(10,88,255,.65);
       --cta-glow-2: rgba(0,217,255,.6);
       --cta-shadow: rgba(0,0,0,.5);
 
-      /* Cores do popover de níveis */
+      /* Popover níveis */
       --popover-bg: #101010;
       --popover-border: rgba(255,255,255,.14);
       --popover-shadow: rgba(0,0,0,.55);
@@ -49,268 +48,139 @@
     @media (max-width:600px){ body { padding-bottom: 60px; } }
     header { text-align: center; }
 
-    /* ===== MENU FIXO INFERIOR ===== */
-    nav.menu-bottom {
-      width: 100vw;
-      background: #181818e6;
-      position: fixed; left: 0; bottom: 0;
-      z-index: 5001;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.18);
-      border-top: 1px solid #222;
-      backdrop-filter: blur(6px);
-      transition: opacity .3s ease;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
+    /* MENU INFERIOR */
+    nav.menu-bottom { width: 100vw; background: #181818e6; position: fixed; left:0; bottom:0; z-index: 5001; box-shadow: 0 -2px 10px rgba(0,0,0,0.18); border-top: 1px solid #222; backdrop-filter: blur(6px); transition: opacity .3s ease; padding-bottom: env(safe-area-inset-bottom, 0); }
     nav.menu-bottom.oculto { display: none; }
-    nav.menu-bottom ul { display: flex; justify-content: center; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
+    nav.menu-bottom ul { display:flex; justify-content:center; align-items:center; gap:0; margin:0; padding:0; list-style:none; }
     nav.menu-bottom li { margin: 0 8px; }
-    nav.menu-bottom a {
-      color: #fff; text-decoration: none; display: block;
-      padding: 14px 18px 12px;
-      font-weight: 700; letter-spacing: .3px; font-size: 16px;
-      border-radius: 0 0 12px 12px;
-      transition: background .2s, color .2s, box-shadow .25s;
-      box-shadow: 0 0 10px 2px rgba(255,255,255,0.25), inset 0 0 4px rgba(255,255,255,0.15);
-    }
-    nav.menu-bottom a:hover, nav.menu-bottom a.active {
-      background: #ffffff22; color: #fff;
-      box-shadow: 0 0 18px 4px rgba(255,255,255,0.45), inset 0 0 6px rgba(255,255,255,0.2);
-    }
-    @media (max-width:600px){
-      nav.menu-bottom ul { flex-wrap: wrap; }
-      nav.menu-bottom a { font-size: 15px; padding: 10px 10px 8px; }
-    }
+    nav.menu-bottom a { color:#fff; text-decoration:none; display:block; padding:14px 18px 12px; font-weight:700; letter-spacing:.3px; font-size:16px; border-radius:0 0 12px 12px; transition: background .2s, color .2s, box-shadow .25s; box-shadow: 0 0 10px 2px rgba(255,255,255,0.25), inset 0 0 4px rgba(255,255,255,0.15); }
+    nav.menu-bottom a:hover, nav.menu-bottom a.active { background:#ffffff22; color:#fff; box-shadow:0 0 18px 4px rgba(255,255,255,0.45), inset 0 0 6px rgba(255,255,255,0.2); }
+    @media (max-width:600px){ nav.menu-bottom ul{flex-wrap:wrap;} nav.menu-bottom a{font-size:15px; padding:10px 10px 8px;} }
 
-    /* ===== BOTÃO FLUTUANTE VOLTAR AO TOPO ===== */
-    #btnTopo {
-      position: fixed; right: 22px; bottom: 92px;
-      width: 54px; height: 54px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.12);
-      color: #fff; font-size: 24px; font-weight: 800; cursor: pointer;
-      z-index: 6000; backdrop-filter: blur(8px);
-      opacity: 0; pointer-events: none;
-      transition: opacity .3s, transform .2s, background .2s, box-shadow .2s;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 14px 4px rgba(255,255,255,0.35), inset 0 0 6px rgba(255,255,255,0.18);
-    }
-    #btnTopo.visivel { opacity: 1; pointer-events: auto; }
-    #btnTopo:hover { background: rgba(255,255,255,0.20); transform: translateY(-2px); }
-    @media (max-width:600px){
-      #btnTopo { width: 44px; height: 44px; font-size: 20px; right: 10px; bottom: 62px; }
-    }
+    /* BOTÃO TOPO */
+    #btnTopo { position: fixed; right:22px; bottom:92px; width:54px; height:54px; border-radius:50%; border:1px solid rgba(255,255,255,0.35); background:rgba(255,255,255,0.12); color:#fff; font-size:24px; font-weight:800; cursor:pointer; z-index:6000; backdrop-filter: blur(8px); opacity:0; pointer-events:none; transition: opacity .3s, transform .2s, background .2s, box-shadow .2s; display:flex; align-items:center; justify-content:center; box-shadow: 0 0 14px 4px rgba(255,255,255,0.35), inset 0 0 6px rgba(255,255,255,0.18); }
+    #btnTopo.visivel{ opacity:1; pointer-events:auto; }
+    #btnTopo:hover{ background:rgba(255,255,255,0.2); transform: translateY(-2px); }
+    @media (max-width:600px){ #btnTopo{ width:44px; height:44px; font-size:20px; right:10px; bottom:62px; } }
 
-    /* ===== OVERLAY BOAS-VINDAS ===== */
-    #welcome-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: flex; justify-content: center; align-items: center; flex-direction: column;
-      z-index: 4000; transition: opacity 1s ease; text-align: center;
-      backdrop-filter: blur(8px);
-    }
-    #particles { position: absolute; inset: 0; z-index: 3998; pointer-events: none; }
-    #spotlight { position: absolute; inset: 0; background: radial-gradient(circle 240px at center, var(--welcome-spot), transparent 80%); pointer-events: none; transition: background-position .1s; z-index: 3999; }
+    /* OVERLAY BOAS-VINDAS */
+    #welcome-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:4000; transition: opacity 1s ease; text-align:center; backdrop-filter: blur(8px); }
+    #particles { position:absolute; inset:0; z-index:3998; pointer-events:none; }
+    #spotlight { position:absolute; inset:0; background: radial-gradient(circle 240px at center, var(--welcome-spot), transparent 80%); pointer-events:none; transition: background-position .1s; z-index:3999; }
 
-    /* Título com energia, sem "caixa" */
-    #welcome-text {
-      font-size: 42px; margin-bottom: 20px; min-height: 30px; font-weight: 900;
-      background: linear-gradient(90deg, var(--welcome-a), var(--welcome-b), var(--welcome-c), var(--welcome-a));
-      background-size: 240% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite;
-      display: inline-block;
-      overflow: hidden; border-right: 2px solid var(--welcome-border);
-      -webkit-text-stroke: 0.6px rgba(255,255,255,0.28);
-      filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2));
-      position: relative; z-index: 4001; max-width: 90%; white-space: nowrap;
-      letter-spacing: .4px;
-    }
-    @keyframes gradientMove { to { background-position: 240% center; } }
-    @keyframes glowFilterPulse {
-      0%,100% { filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2)); }
-      50%     { filter: drop-shadow(0 0 14px var(--welcome-glow-1)) drop-shadow(0 0 34px var(--welcome-glow-2)); }
-    }
+    #welcome-text { font-size:42px; margin-bottom:20px; min-height:30px; font-weight:900; background: linear-gradient(90deg, var(--welcome-a), var(--welcome-b), var(--welcome-c), var(--welcome-a)); background-size:240% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite; display:inline-block; overflow:hidden; border-right:2px solid var(--welcome-border); -webkit-text-stroke: .6px rgba(255,255,255,.28); filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2)); position:relative; z-index:4001; max-width:90%; white-space:nowrap; letter-spacing:.4px; }
+    @keyframes gradientMove { to{ background-position: 240% center; } }
+    @keyframes glowFilterPulse { 0%,100%{ filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2)); } 50%{ filter: drop-shadow(0 0 14px var(--welcome-glow-1)) drop-shadow(0 0 34px var(--welcome-glow-2)); } }
 
-    /* CTA do overlay: NEON animado (apenas este botão) */
-    #start-btn {
-      color: var(--cta-text);
-      border: 1px solid var(--cta-border);
-      padding: 14px 28px;
-      border-radius: 14px;
-      font-weight: 900;
-      letter-spacing: .35px;
-      cursor: pointer;
-      font-size: 18px;
-      display: none; opacity: 0; transform: translateY(2px) scale(.98);
-      transition: opacity .6s ease, transform .2s ease, box-shadow .25s ease, filter .25s ease;
-      position: relative; z-index: 4001;
-
-      /* Gradiente neon animado */
-      background: linear-gradient(135deg, var(--cta-1), var(--cta-2), var(--cta-3), var(--cta-4));
-      background-size: 300% 300%;
-      animation: ctaGradient 2.4s ease-in-out infinite alternate, ctaPulse 1.8s ease-in-out infinite;
-
-      /* Glow */
-      box-shadow:
-        0 10px 28px var(--cta-shadow),
-        0 0 22px 4px var(--cta-glow-1),
-        inset 0 0 12px rgba(255,255,255,.16);
-    }
-    #start-btn.show { display: inline-block; opacity: 1; transform: translateY(0) scale(1); }
-    #start-btn:hover {
-      filter: saturate(1.24) brightness(1.08);
-      transform: translateY(-2px) scale(1.03);
-      box-shadow:
-        0 14px 34px var(--cta-shadow),
-        0 0 32px 10px var(--cta-glow-2),
-        inset 0 0 16px rgba(255,255,255,.22);
-    }
-    #start-btn:active { transform: translateY(0) scale(0.99); }
-    @keyframes ctaGradient {
-      0%   { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-    @keyframes ctaPulse {
-      0%,100% { box-shadow: 0 10px 28px var(--cta-shadow), 0 0 22px 4px var(--cta-glow-1), inset 0 0 12px rgba(255,255,255,.16); }
-      50%     { box-shadow: 0 16px 38px var(--cta-shadow), 0 0 36px 12px var(--cta-glow-2), inset 0 0 18px rgba(255,255,255,.24); }
-    }
-
-    /* Respeita usuários com "reduzir movimento" */
-    @media (prefers-reduced-motion: reduce){
-      #welcome-text { animation: gradientMove 10s linear infinite; filter: none; }
-      #start-btn { animation: none; }
-    }
-    @media (max-width:600px){ #welcome-text { white-space: normal; font-size: 26px; } }
+    #start-btn { color:var(--cta-text); border:1px solid var(--cta-border); padding:14px 28px; border-radius:14px; font-weight:900; letter-spacing:.35px; cursor:pointer; font-size:18px; display:none; opacity:0; transform: translateY(2px) scale(.98); transition: opacity .6s, transform .2s, box-shadow .25s, filter .25s; position:relative; z-index:4001; background: linear-gradient(135deg, var(--cta-1), var(--cta-2), var(--cta-3), var(--cta-4)); background-size:300% 300%; animation: ctaGradient 2.4s ease-in-out infinite alternate, ctaPulse 1.8s ease-in-out infinite; box-shadow: 0 10px 28px var(--cta-shadow), 0 0 22px 4px var(--cta-glow-1), inset 0 0 12px rgba(255,255,255,.16); }
+    #start-btn.show{ display:inline-block; opacity:1; transform: translateY(0) scale(1); }
+    #start-btn:hover{ filter: saturate(1.24) brightness(1.08); transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 34px var(--cta-shadow), 0 0 32px 10px var(--cta-glow-2), inset 0 0 16px rgba(255,255,255,.22); }
+    #start-btn:active{ transform: translateY(0) scale(0.99); }
+    @keyframes ctaGradient { 0%{ background-position:0% 50%; } 100%{ background-position:100% 50%; } }
+    @keyframes ctaPulse { 0%,100%{ box-shadow: 0 10px 28px var(--cta-shadow), 0 0 22px 4px var(--cta-glow-1), inset 0 0 12px rgba(255,255,255,.16);} 50%{ box-shadow: 0 16px 38px var(--cta-shadow), 0 0 36px 12px var(--cta-glow-2), inset 0 0 18px rgba(255,255,255,.24);} }
+    @media (prefers-reduced-motion: reduce){ #welcome-text{ animation: gradientMove 10s linear infinite; filter:none; } #start-btn{ animation:none; } }
+    @media (max-width:600px){ #welcome-text{ white-space:normal; font-size:26px; } }
 
     /* CANVAS DE FUNDO */
-    canvas#fireworks, canvas#lights {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1500;
-    }
+    canvas#fireworks, canvas#lights { position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:1500; }
 
-    /* CONTEÚDO */
+    /* CONTEÚDO GENÉRICO */
     .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-    .benefit-card {
-      background: rgba(255,255,255,0.05);
-      padding: 30px; border-radius: 16px; box-shadow: 0 2px 10px rgba(255,255,255,0.1); margin-bottom: 30px;
-      opacity: 0; transform: translateY(30px) scale(0.95); transition: all .8s ease; position: relative;
-    }
-    .benefit-card.show { opacity: 1; transform: translateY(0) scale(1); }
-    .benefit-card::after { content: ""; position: absolute; top: -10px; right: -10px; opacity: 0; transition: .8s; }
-    .benefit-card.show::after { opacity: 1; animation: sparkle 2s infinite; }
-    @keyframes sparkle { 0%,100%{opacity:.2;} 50%{opacity:1;} }
+    .benefit-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; box-shadow: 0 2px 10px rgba(255,255,255,0.1); margin-bottom: 30px; opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease; position: relative; }
+    .benefit-card.show { opacity:1; transform: translateY(0) scale(1); }
     .benefit-card:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(0,0,0,.5); }
     .benefit-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .benefit-subtitle { font-size: 16px; margin-bottom: 15px; color: #ccc; }
 
-    /* Estilos adicionais do CONECTA CLUBE */
-    .badge {
-      display:inline-block; font-size:12px; padding:3px 8px; border-radius:10px;
-      background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25);
-    }
-    /* Badge clicável para Nível 1 */
-    .level-badge {
-      cursor: pointer;
-      font-weight: 800;
-      letter-spacing: .4px;
-      color: #fff;
-      background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b));
-      border: 1px solid rgba(255,255,255,.25);
-      box-shadow: 0 0 10px rgba(47,128,255,.25), inset 0 0 6px rgba(255,255,255,.12);
-      padding: 6px 10px; /* aumenta alvo de clique para mobile */
-    }
-    .level-badge:hover { filter: brightness(1.06) saturate(1.08); }
+    .badge { display:inline-block; font-size:12px; padding:6px 10px; border-radius:10px; background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25); }
+    .level-badge { cursor:pointer; font-weight:800; letter-spacing:.4px; color:#fff; background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); border: 1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(47,128,255,.25), inset 0 0 6px rgba(255,255,255,.12); }
+    .level-badge:hover{ filter:brightness(1.06) saturate(1.08); }
 
-    .quote {
-      background: rgba(255,255,255,0.04);
-      border-left: 3px solid var(--accent);
-      padding: 10px 12px; border-radius: 8px; margin: 6px 0 12px 0; color:#eaeaea;
-    }
+    .quote { background: rgba(255,255,255,0.04); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 8px; margin: 6px 0 12px 0; color:#eaeaea; }
     .bullets { margin: 10px 0 6px 18px; }
-    .bullets li { margin: 4px 0; }
+    .bullets li { margin:4px 0; }
 
-    /* Aviso Nível 3 mais chamativo + contraste aumentado */
-    .disclaimer { font-size: 13px; color:#cfcfcf; opacity: .95; margin-top: 8px; }
+    .disclaimer { font-size:13px; color:#cfcfcf; opacity:.95; margin-top:8px; }
     .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; }
-    .chip {
-      display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; margin-right: 8px;
-      color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35);
-      text-shadow: 0 1px 1px rgba(0,0,0,.35);
-      -webkit-text-stroke: 0.2px rgba(0,0,0,.25);
-      box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14);
-    }
+    .chip { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:900; letter-spacing:.4px; text-transform:uppercase; margin-right:8px; color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35); text-shadow: 0 1px 1px rgba(0,0,0,.35); -webkit-text-stroke:.2px rgba(0,0,0,.25); box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14); }
 
     .email-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
-    .copy-link {
-      background: transparent; color:#fff; border:1px solid rgba(255,255,255,.25);
-      padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s;
-      box-shadow:none;
-    }
+    .copy-link { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.25); padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s; box-shadow:none; }
     .copy-link:hover { background:rgba(255,255,255,.08); }
     .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
-
     .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
-    .app-link:hover { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
+    .app-link:hover{ background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
     .inline-email { color:#fff; text-decoration: underline dotted; }
 
-    /* Popover de níveis */
-    .level-popover {
-      position: fixed; /* posicionado via JS ao abrir */
-      min-width: 280px; max-width: 92vw;
-      background: var(--popover-bg);
-      border: 1px solid var(--popover-border);
-      border-radius: 12px;
-      padding: 14px 14px 12px;
-      box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12);
-      z-index: 5002;
-      opacity: 0; transform: translateY(-6px) scale(.98);
-      pointer-events: none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .level-popover.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    .level-popover h4 { margin: 0 0 8px 0; font-size: 14px; letter-spacing: .4px; color:#f4f4f4; }
-    .level-list { list-style: none; margin: 0; padding: 0; }
-    .level-list li {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 6px; border-radius: 8px;
-    }
-    .level-list li + li { margin-top: 4px; }
-    .pill {
-      flex: none; padding: 4px 10px; font-size: 11px; font-weight: 900; color:#0b0b0b; border-radius: 999px; letter-spacing: .4px;
-      border: 1px solid rgba(255,255,255,.25);
-    }
-    .l1 { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
-    .l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
-    .l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
-    .lvl-desc { color:#eaeaea; font-size: 13px; }
-    .lvl-note { color:#cfefff; font-size: 12px; opacity: .9; }
+    /* POPUP NÍVEIS */
+    .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
+    .level-popover.open{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+    .level-popover h4{ margin:0 0 8px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
+    .level-list{ list-style:none; margin:0; padding:0; }
+    .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; }
+    .level-list li+li{ margin-top:4px; }
+    .pill{ flex:none; padding:4px 10px; font-size:11px; font-weight:900; color:#0b0b0b; border-radius:999px; letter-spacing:.4px; border:1px solid rgba(255,255,255,.25); }
+    .l1{ background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
+    .l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
+    .l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
+    .lvl-desc{ color:#eaeaea; font-size:13px; }
+    .lvl-note{ color:#cfefff; font-size:12px; opacity:.9; }
+    .level-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .level-actions .btn{ display:inline-block; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; }
+    .level-actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
+    .to-l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
+    .to-l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
+    .to-exp{ background: linear-gradient(90deg,#444,#666); border-color: rgba(255,255,255,.18); }
+    .level-footer{ margin-top:8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-start; }
+    .level-footer a{ color:#cfefff; font-size:12px; text-decoration: underline; opacity:.9; }
+    .popover-close{ position:absolute; top:6px; right:6px; background:transparent; border:1px solid rgba(255,255,255,.18); color:#fff; width:28px; height:28px; border-radius:8px; cursor:pointer; font-weight:900; line-height:26px; text-align:center; }
+    .popover-close:hover{ background: rgba(255,255,255,.08); }
 
-    /* Ações dentro do popover */
-    .level-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .level-actions .btn {
-      display:inline-block; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; letter-spacing:.3px; color:#fff; text-decoration:none;
-      border:1px solid rgba(255,255,255,.25);
-      box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12);
-      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+    /* INDICHE & GANHE – skin azul (fix) */
+    #indique.indique{
+      background: linear-gradient(160deg, #0b4bff 0%, #6f2bff 100%);
+      color:#fff; padding: 40px 20px; text-align: center;
+      border-radius: 20px; margin: 40px auto; max-width: 1000px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 24px rgba(111,43,255,.25);
+      position: relative; overflow: hidden;
+      opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease;
     }
-    .level-actions .btn:hover { transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
-    .level-actions .to-l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
-    .level-actions .to-l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
-    .level-actions .to-exp { background: linear-gradient(90deg,#444,#666); border-color: rgba(255,255,255,.18); }
+    #indique.indique.show{ opacity:1; transform: translateY(0) scale(1); }
+    #indique.indique h2{ margin-top:0; }
+    .indique-cards{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
+    #indique.indique .card{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 16px; padding: 20px; width: 300px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.35), inset 0 0 10px rgba(255,255,255,.08);
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+      text-align:left;
+    }
+    #indique.indique .card:hover{ transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 18px rgba(255,255,255,.12); }
+    #indique.indique .card h3{ margin:0 0 6px 0; }
+    #indique.indique .card strong{
+      display:block; margin-top:8px; font-size:22px;
+      background: linear-gradient(90deg,#fff,#e8f1ff,#fff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200% auto; animation: shine 3s linear infinite;
+    }
+    @keyframes shine{ to{ background-position: -200% center; } }
+    #indique.indique .toggle-details{
+      margin-top: 12px; background: transparent; color: #fff;
+      border: 1px solid rgba(255,255,255,.25); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .25s;
+    }
+    #indique.indique .toggle-details:hover{ background: rgba(255,255,255,.12); }
+    #indique.indique .details{ max-height:0; opacity:0; overflow:hidden; transition: max-height .6s ease, opacity .6s ease; }
+    #indique.indique .card.open .details{ max-height:400px; opacity:1; }
+    #indique.indique .bonus{ margin: 6px 0 16px; }
+    #indique.indique .app-link{ margin-top:10px; background:#fff; color:#111; border:1px solid rgba(0,0,0,.05); }
 
-    .level-footer {
-      margin-top: 8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-start;
-    }
-    .level-footer a {
-      color:#cfefff; font-size:12px; text-decoration: underline; opacity:.9;
-    }
-
-    /* Botão fechar do popover */
-    .popover-close {
-      position:absolute; top:6px; right:6px;
-      background: transparent; border:1px solid rgba(255,255,255,.18);
-      color:#fff; width:28px; height:28px; border-radius:8px; cursor:pointer;
-      font-weight:900; line-height:26px; text-align:center;
-    }
-    .popover-close:hover { background: rgba(255,255,255,.08); }
+    .aviso { background:#222; padding:20px; border-left:4px solid var(--accent); margin:40px auto; max-width:1000px; border-radius:12px; }
+    #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
+    #finalizacao h3 { font-size:24px; margin-bottom:10px; }
+    #finalizacao .stars { font-size:20px; color:var(--accent); animation: twinkle 2s infinite; }
+    @keyframes twinkle { 0%,100%{opacity:.4;} 50%{opacity:1;} }
+    footer { background:#111; text-align:center; padding:20px; margin-top:60px; }
   </style>
 </head>
 <body>
@@ -335,11 +205,7 @@
     <div class="benefit-card" id="conecta-clube">
       <div class="benefit-title">
         🎟️ CONECTA CLUBE
-        <button class="badge level-badge" id="levelBadge" type="button"
-                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
-                title="Clique para ver os níveis">
-          Nível 1
-        </button>
+        <button class="badge level-badge" id="levelBadge" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover" title="Clique para ver os níveis">Nível 1</button>
       </div>
       <div class="benefit-subtitle">Clube de Vantagens CCS</div>
 
@@ -355,73 +221,34 @@
         <li>Receba 1 voucher de benefício a cada 90 dias.</li>
       </ul>
 
-      <!-- Aviso Nível 3 mais chamativo -->
       <p class="disclaimer disclaimer-lev3">
         <span class="chip">Somente Nível 3</span>
         Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante ou Aquário.
       </p>
 
       <div class="email-actions">
-        <a
-          class="app-link"
-          id="emailBtn"
-          href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!"
-          >📩 Enviar e-mail agora</a>
+        <a class="app-link" id="emailBtn" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">📩 Enviar e-mail agora</a>
         <button class="copy-link" id="copyEmail" type="button">📋 Copiar e-mail</button>
       </div>
 
-      <!-- Popover de níveis -->
+      <!-- Popover níveis -->
       <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
         <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
         <ul class="level-list">
-          <li>
-            <span class="pill l1">Nível 1</span>
-            <span class="lvl-desc">Planos: 250MB</span>
-          </li>
-          <li>
-            <span class="pill l2">Nível 2</span>
-            <span class="lvl-desc">Planos: 450MB</span>
-          </li>
-          <li>
-            <span class="pill l3">Nível 3</span>
-            <span class="lvl-desc">Planos: 650MB</span>
-          </li>
+          <li><span class="pill l1">Nível 1</span><span class="lvl-desc">Planos: 250MB</span></li>
+          <li><span class="pill l2">Nível 2</span><span class="lvl-desc">Planos: 450MB</span></li>
+          <li><span class="pill l3">Nível 3</span><span class="lvl-desc">Planos: 650MB</span></li>
         </ul>
         <div class="lvl-note" style="margin-top:8px;">Atrações premium estão no Nível 3.</div>
 
-        <!-- CTAs para upgrade -->
         <div class="level-actions" aria-label="Ações de upgrade">
-          <a
-            id="ctaL2"
-            class="btn to-l2"
-            target="_blank" rel="noopener"
-            aria-label="Quero migrar para o Nível 2 (450MB) pelo WhatsApp"
-            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%202%20(Plano%20450MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">
-            Quero Nível 2
-          </a>
-          <a
-            id="ctaL3"
-            class="btn to-l3"
-            target="_blank" rel="noopener"
-            aria-label="Quero migrar para o Nível 3 (650MB) pelo WhatsApp"
-            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%203%20(Plano%20650MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">
-            Quero Nível 3
-          </a>
-          <a
-            id="ctaEXP"
-            class="btn to-exp"
-            target="_blank" rel="noopener"
-            aria-label="Falar com especialista pelo WhatsApp"
-            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20tirar%20d%C3%BAvidas%20sobre%20os%20benef%C3%ADcios%20e%20os%20n%C3%ADveis.">
-            Falar com especialista
-          </a>
+          <a id="ctaL2" class="btn to-l2" target="_blank" rel="noopener" aria-label="Quero migrar para o Nível 2 (450MB) pelo WhatsApp" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%202%20(Plano%20450MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">Quero Nível 2</a>
+          <a id="ctaL3" class="btn to-l3" target="_blank" rel="noopener" aria-label="Quero migrar para o Nível 3 (650MB) pelo WhatsApp" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%203%20(Plano%20650MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">Quero Nível 3</a>
+          <a id="ctaEXP" class="btn to-exp" target="_blank" rel="noopener" aria-label="Falar com especialista pelo WhatsApp" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20tirar%20d%C3%BAvidas%20sobre%20os%20benef%C3%ADcios%20e%20os%20n%C3%ADveis.">Falar com especialista</a>
         </div>
         <div class="level-footer">
-          <a id="ctaCompare" target="_blank" rel="noopener"
-             href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20poderiam%20me%20enviar%20a%20comparativo%20dos%20benef%C3%ADcios%20por%20n%C3%ADvel%3F">
-             Comparar níveis
-          </a>
+          <a id="ctaCompare" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20poderiam%20me%20enviar%20a%20comparativo%20dos%20benef%C3%ADcios%20por%20n%C3%ADvel%3F">Comparar níveis</a>
         </div>
       </div>
     </div>
@@ -432,13 +259,44 @@
     <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p></div>
   </div>
 
-  <section id="indique" class="highlight">
+  <!-- Indique & Ganhe (corrigido com skin azul) -->
+  <section id="indique" class="indique">
     <h2>🎯 Indique & Ganhe</h2>
     <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
     <div class="indique-cards">
-      <div class="card"><h3>🥉 250MB</h3><strong>R$30 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto aplicado após instalação.</li><li>Bônus extra se contratar em até 72h.</li></ul></div></div>
-      <div class="card"><h3>🥈 450MB</h3><strong>R$50 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto no próximo ciclo.</li><li>Válido para titular adimplente.</li></ul></div></div>
-      <div class="card"><h3>🥇 650MB</h3><strong>Mensalidade ISENTA</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Isenção após ativação confirmada.</li><li>1 isenção por indicação.</li></ul></div></div>
+      <div class="card">
+        <h3>🥉 250MB</h3>
+        <strong>R$30 de desconto</strong>
+        <button class="toggle-details">Ver detalhes</button>
+        <div class="details">
+          <ul>
+            <li>Desconto aplicado após instalação.</li>
+            <li>Bônus extra se contratar em até 72h.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🥈 450MB</h3>
+        <strong>R$50 de desconto</strong>
+        <button class="toggle-details">Ver detalhes</button>
+        <div class="details">
+          <ul>
+            <li>Desconto no próximo ciclo.</li>
+            <li>Válido para titular adimplente.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🥇 650MB</h3>
+        <strong>Mensalidade ISENTA</strong>
+        <button class="toggle-details">Ver detalhes</button>
+        <div class="details">
+          <ul>
+            <li>Isenção após ativação confirmada.</li>
+            <li>1 isenção por indicação.</li>
+          </ul>
+        </div>
+      </div>
     </div>
     <p class="bonus">🏆 Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
     <a href="https://wa.me/554797701300" class="app-link">📲 Indicar agora</a>
@@ -471,39 +329,25 @@
     </ul>
   </nav>
 
-  <!-- Botão flutuante: Voltar ao topo -->
   <button id="btnTopo" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
 
-  <!-- Carrega confetti sob demanda -->
   <script>
   (function bootstrap(){
     if (window.__CCS_INIT__) return;
     window.__CCS_INIT__ = true;
 
-    // -------- Utilidades
-    function sizeCanvasToViewport(canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function sizeCanvasToViewport(canvas){ canvas.width = innerWidth; canvas.height = innerHeight; }
     function haptic(ms=25){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
-    function track(event, params = {}) {
-      try {
-        if (window.gtag) window.gtag('event', event, params);
-        if (window.plausible) window.plausible(event, { props: params });
-        if (!window.gtag && !window.plausible) console.log('[track]', event, params);
-      } catch(e){}
-    }
-    let confettiReady = false, confettiLoadPromise = null;
+    function track(event, params={}){ try{ if(window.gtag) gtag('event', event, params); if(window.plausible) plausible(event, { props: params }); }catch(e){} }
+
+    let confettiReady=false, confettiLoadPromise=null;
     function loadConfetti(){
-      if (confettiReady) return Promise.resolve();
-      if (confettiLoadPromise) return confettiLoadPromise;
-      confettiLoadPromise = new Promise((resolve, reject)=>{
-        const s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
-        s.async = true;
-        s.onload = ()=>{ confettiReady = true; resolve(); };
-        s.onerror = reject;
-        document.head.appendChild(s);
+      if(confettiReady) return Promise.resolve();
+      if(confettiLoadPromise) return confettiLoadPromise;
+      confettiLoadPromise=new Promise((resolve,reject)=>{
+        const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
+        s.async=true; s.onload=()=>{confettiReady=true; resolve();}; s.onerror=reject; document.head.appendChild(s);
       });
       return confettiLoadPromise;
     }
@@ -526,331 +370,138 @@
       const menuInferior = document.getElementById('menuInferior');
       const btnTopo = document.getElementById('btnTopo');
 
-      const initialHash = window.location.hash; // << captura o hash para deep-link
+      const initialHash = location.hash;
 
-      function resizeAll(){
-        sizeCanvasToViewport(particles);
-        sizeCanvasToViewport(fwCanvas);
-        sizeCanvasToViewport(lightsCanvas);
-      }
-      resizeAll();
-      window.addEventListener('resize', resizeAll, { passive:true });
+      function resizeAll(){ sizeCanvasToViewport(particles); sizeCanvasToViewport(fwCanvas); sizeCanvasToViewport(lightsCanvas); }
+      resizeAll(); addEventListener('resize', resizeAll, { passive:true });
 
-      // Texto digitando (rAF)
-      const message = "🚀 250 Mega com muitos benefícios esperando por você!";
-      textEl.textContent = "";
-      let idx = 0, next = 0;
+      // Typing title
+      const message="🚀 250 Mega com muitos benefícios esperando por você!";
+      textEl.textContent=""; let idx=0, next=0;
       function typeLoop(ts){
-        if (!next) next = ts;
-        while (ts - next >= 28 && idx < message.length){
-          textEl.textContent += message.charAt(idx++);
-          next += 28;
-        }
-        if (idx < message.length) {
-          requestAnimationFrame(typeLoop);
-        } else {
-          textEl.style.borderRight = 'none';
-          setTimeout(()=>btnEl.classList.add('show'), 300);
-        }
+        if(!next) next=ts;
+        while(ts-next>=28 && idx<message.length){ textEl.textContent+=message.charAt(idx++); next+=28; }
+        if(idx<message.length){ requestAnimationFrame(typeLoop); } else { textEl.style.borderRight='none'; setTimeout(()=>btnEl.classList.add('show'),300); }
       }
       requestAnimationFrame(typeLoop);
 
-      // Spotlight (azulado sutil)
-      const moveListener = (e)=>{
-        const x = (e.touches ? e.touches[0].clientX : e.clientX);
-        const y = (e.touches ? e.touches[0].clientY : e.clientY);
-        spotlight.style.background = `radial-gradient(circle 240px at ${x}px ${y}px, var(--welcome-spot), transparent 80%)`;
-      };
-      document.addEventListener('mousemove', moveListener, { passive:true });
-      document.addEventListener('touchmove', moveListener, { passive:true });
+      // Spotlight
+      const moveListener = (e)=>{ const x=(e.touches?e.touches[0].clientX:e.clientX), y=(e.touches?e.touches[0].clientY:e.clientY); spotlight.style.background=`radial-gradient(circle 240px at ${x}px ${y}px, var(--welcome-spot), transparent 80%)`; };
+      addEventListener('mousemove', moveListener, { passive:true });
+      addEventListener('touchmove', moveListener, { passive:true });
 
-      // Partículas do overlay
-      let stars = [];
-      let starsActive = true;
-      let starsRAF = 0;
-      function createStars(){
-        stars.length = 0;
-        for(let i=0;i<110;i++){
-          stars.push({x:Math.random()*particles.width, y:Math.random()*particles.height, r:Math.random()*2+0.8, s:Math.random()*0.6+0.25});
-        }
-      }
+      // Stars
+      let stars=[], starsActive=true, starsRAF=0;
+      function createStars(){ stars.length=0; for(let i=0;i<110;i++){ stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+0.8,s:Math.random()*0.6+0.25}); } }
       createStars();
-      (function starsLoop(){
-        if (!starsActive) return;
-        pctx.clearRect(0,0,particles.width,particles.height);
-        pctx.fillStyle = "rgba(255,255,255,0.9)";
-        for(const s of stars){
-          pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill();
-          s.y += s.s; if(s.y > particles.height){ s.y = -2; s.x = Math.random()*particles.width; }
-        }
-        starsRAF = requestAnimationFrame(starsLoop);
-      })();
+      (function starsLoop(){ if(!starsActive) return; pctx.clearRect(0,0,particles.width,particles.height); pctx.fillStyle="rgba(255,255,255,0.9)"; for(const s of stars){ pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill(); s.y+=s.s; if(s.y>particles.height){ s.y=-2; s.x=Math.random()*particles.width; } } starsRAF=requestAnimationFrame(starsLoop); })();
 
-      // Clique: confete + liberar
+      // Start click
       btnEl.addEventListener('click', async ()=>{
-        haptic(25);
-        track('overlay_start_click');
-        try { await loadConfetti(); } catch(e){}
-        const r = btnEl.getBoundingClientRect();
-        const x = (r.left + r.width/2) / window.innerWidth;
-        const y = (r.top + r.height/2) / window.innerHeight;
-        const ctaColors = ['#0A58FF','#00D9FF','#FFFFFF'];
-
-        if (window.confetti) {
-          window.confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 52, colors: ctaColors });
-          setTimeout(()=>window.confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 60, colors: ctaColors }), 260);
-          for(let i=0;i<5;i++){
-            setTimeout(()=>{ window.confetti({ particleCount: 100, spread: 70, origin: {x, y: 0}, colors: ctaColors, startVelocity: 24 }); }, i*280);
-          }
+        haptic(25); track('overlay_start_click');
+        try{ await loadConfetti(); }catch(e){}
+        const r=btnEl.getBoundingClientRect(), x=(r.left+r.width/2)/innerWidth, y=(r.top+r.height/2)/innerHeight;
+        const colors=['#0A58FF','#00D9FF','#FFFFFF'];
+        if(window.confetti){
+          window.confetti({ particleCount:360, spread:360, origin:{x,y}, startVelocity:52, colors });
+          setTimeout(()=>window.confetti({ particleCount:360, spread:360, origin:{x,y}, startVelocity:60, colors }),260);
+          for(let i=0;i<5;i++) setTimeout(()=>window.confetti({ particleCount:100, spread:70, origin:{x, y:0}, colors, startVelocity:24 }), i*280);
         }
-        overlayEl.style.opacity = '0';
-
-        // Encerrar loops e listeners do overlay
-        starsActive = false;
-        cancelAnimationFrame(starsRAF);
-        document.removeEventListener('mousemove', moveListener);
-        document.removeEventListener('touchmove', moveListener);
-
+        overlayEl.style.opacity='0';
+        starsActive=false; cancelAnimationFrame(starsRAF);
+        removeEventListener('mousemove', moveListener); removeEventListener('touchmove', moveListener);
         setTimeout(()=>{
-          overlayEl.remove();
-          menuInferior.classList.remove('oculto');
-          btnTopo.classList.add('visivel');
-
-          // FIX: se a página abriu com hash (ex.: #indique), rola até a seção
-          if (initialHash) {
-            const target = document.getElementById(initialHash.slice(1));
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }
-        }, 900);
+          overlayEl.remove(); menuInferior.classList.remove('oculto'); btnTopo.classList.add('visivel');
+          if(initialHash){ const t=document.getElementById(initialHash.slice(1)); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); }
+        },900);
       });
 
-      /* ===== Popover Níveis (Conecta Clube) ===== */
+      /* Popover Níveis */
       const levelBadge = document.getElementById('levelBadge');
       const levelPopover = document.getElementById('levelPopover');
       const popoverClose = document.getElementById('popoverClose');
-      let popOpen = false;
-      let prevFocus = null;
-      let focusTrapHandler = null;
-
-      function positionPopover() {
-        if (!popOpen) return;
-        const rect = levelBadge.getBoundingClientRect();
-        const pop = levelPopover;
-        const widthGuess = pop.offsetWidth || 300;
-        const heightGuess = pop.offsetHeight || 200;
-        const pw = Math.min(340, Math.max(280, widthGuess));
-        let left = rect.left;
-        let top = rect.bottom + 8;
-
-        if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
-        if (left < 10) left = 10;
-        if (top + heightGuess > window.innerHeight - 10) {
-          top = rect.top - heightGuess - 8;
-          if (top < 10) top = 10;
-        }
-
-        pop.style.left = left + 'px';
-        pop.style.top  = top + 'px';
-        pop.style.minWidth = '280px';
-        pop.style.maxWidth = '92vw';
+      let popOpen=false, prevFocus=null, trapHandler=null;
+      function positionPopover(){
+        if(!popOpen) return;
+        const rect=levelBadge.getBoundingClientRect(), pop=levelPopover, w= Math.min(340, Math.max(280, pop.offsetWidth||300));
+        let left=rect.left, top=rect.bottom+8, h=pop.offsetHeight||200;
+        if(left+w>innerWidth-10) left=innerWidth-w-10; if(left<10) left=10;
+        if(top+h>innerHeight-10){ top=rect.top-h-8; if(top<10) top=10; }
+        pop.style.left=left+'px'; pop.style.top=top+'px'; pop.style.minWidth='280px'; pop.style.maxWidth='92vw';
       }
-
-      function getFocusable(container){
-        return Array.from(container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'))
-          .filter(el => el.offsetParent !== null);
+      function focusables(c){ return Array.from(c.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(el=>el.offsetParent!==null); }
+      function openPopover(){
+        popOpen=true; track('levels_popover_open'); haptic(15);
+        prevFocus=document.activeElement; levelBadge.setAttribute('aria-expanded','true'); levelPopover.classList.add('open'); positionPopover();
+        const els=focusables(levelPopover); const first=els[0]||levelPopover, last=els[els.length-1]||levelPopover; first.focus();
+        trapHandler=(e)=>{ if(e.key!=='Tab') return; if(!els.length){ e.preventDefault(); return; } if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); } };
+        levelPopover.addEventListener('keydown', trapHandler); addEventListener('scroll', positionPopover, {passive:true}); addEventListener('resize', positionPopover, {passive:true});
       }
-
-      function openPopover() {
-        popOpen = true;
-        track('levels_popover_open');
-        haptic(15);
-        prevFocus = document.activeElement;
-        levelBadge.setAttribute('aria-expanded', 'true');
-        levelPopover.classList.add('open');
-        positionPopover();
-
-        // Focus trap
-        const focusables = getFocusable(levelPopover);
-        const first = focusables[0] || levelPopover;
-        const last = focusables[focusables.length - 1] || levelPopover;
-        if (first) first.focus();
-        focusTrapHandler = (e)=>{
-          if (e.key !== 'Tab') return;
-          if (focusables.length === 0) { e.preventDefault(); return; }
-          if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-        };
-        levelPopover.addEventListener('keydown', focusTrapHandler);
-
-        window.addEventListener('scroll', positionPopover, { passive:true });
-        window.addEventListener('resize', positionPopover, { passive:true });
+      function closePopover(){
+        if(!popOpen) return; popOpen=false; levelBadge.setAttribute('aria-expanded','false'); levelPopover.classList.remove('open');
+        if(trapHandler) levelPopover.removeEventListener('keydown', trapHandler); if(prevFocus){ try{ prevFocus.focus(); }catch(e){} }
+        removeEventListener('scroll', positionPopover); removeEventListener('resize', positionPopover); track('levels_popover_close');
       }
+      levelBadge.addEventListener('click', (e)=>{ e.stopPropagation(); popOpen?closePopover():openPopover(); track('levels_badge_click'); });
+      addEventListener('click', (e)=>{ if(!popOpen) return; if(!levelPopover.contains(e.target) && e.target!==levelBadge) closePopover(); });
+      addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
+      popoverClose.addEventListener('click', ()=>{ haptic(10); closePopover(); });
 
-      function closePopover() {
-        if (!popOpen) return;
-        popOpen = false;
-        levelBadge.setAttribute('aria-expanded', 'false');
-        levelPopover.classList.remove('open');
-        if (focusTrapHandler) levelPopover.removeEventListener('keydown', focusTrapHandler);
-        if (prevFocus) { try { prevFocus.focus(); } catch(e){} }
-        window.removeEventListener('scroll', positionPopover);
-        window.removeEventListener('resize', positionPopover);
-        track('levels_popover_close');
-      }
+      // CTAs tracking
+      ['ctaL2','ctaL3','ctaEXP','ctaCompare'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', ()=>{ haptic(15); track('levels_cta_click',{ id }); }); });
 
-      levelBadge.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        popOpen ? closePopover() : openPopover();
-        track('levels_badge_click');
-      });
-
-      document.addEventListener('click', (e)=>{
-        if (!popOpen) return;
-        if (!levelPopover.contains(e.target) && e.target !== levelBadge) closePopover();
-      });
-
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && popOpen) closePopover();
-      });
-
-      popoverClose.addEventListener('click', ()=>{
-        haptic(10);
-        closePopover();
-      });
-
-      // CTAs do popover - tracking + haptics
-      const ctaL2 = document.getElementById('ctaL2');
-      const ctaL3 = document.getElementById('ctaL3');
-      const ctaEXP = document.getElementById('ctaEXP');
-      const ctaCompare = document.getElementById('ctaCompare');
-      [ctaL2, ctaL3, ctaEXP, ctaCompare].forEach((el)=>{
-        if (!el) return;
-        el.addEventListener('click', ()=>{
-          haptic(15);
-          track('levels_cta_click', { id: el.id });
-        });
-      });
-
-      /* ===== Efeitos de fundo do site (inalterados) ===== */
       // Fogos
       sizeCanvasToViewport(fwCanvas);
-      let fwParticles = [];
-      function spawnExplosion(x, y) {
-        const colors = ['#ff0043','#14fc56','#1e90ff','var(--accent)','#ffffff'];
-        for(let i=0;i<36;i++){
-          const ang = Math.random() * Math.PI * 2;
-          const spd = 2 + Math.random() * 5;
-          fwParticles.push({ x, y, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd, alpha: 1, color: colors[(Math.random()*colors.length)|0] });
-        }
-      }
-      let lastSpawn = 0;
-      function fireworksLoop(ts){
-        if(!lastSpawn) lastSpawn = ts;
-        if(ts - lastSpawn > 900){
-          spawnExplosion(Math.random()*fwCanvas.width, Math.random()*fwCanvas.height*0.5);
-          lastSpawn = ts;
-        }
-        fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
-        fwParticles = fwParticles.filter(p=>p.alpha > 0.02);
-        for(const p of fwParticles){
-          p.x += p.vx; p.y += p.vy; p.vy += 0.01; p.alpha *= 0.985;
-          fwCtx.globalAlpha = p.alpha; fwCtx.fillStyle = p.color;
-          fwCtx.beginPath(); fwCtx.arc(p.x,p.y,3,0,Math.PI*2); fwCtx.fill();
-        }
-        fwCtx.globalAlpha = 1;
-        requestAnimationFrame(fireworksLoop);
-      }
+      let fwParticles=[]; function spawnExplosion(x,y){ const colors=['#ff0043','#14fc56','#1e90ff','var(--accent)','#ffffff']; for(let i=0;i<36;i++){ const ang=Math.random()*Math.PI*2, spd=2+Math.random()*5; fwParticles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,alpha:1,color:colors[(Math.random()*colors.length)|0]}); } }
+      let lastSpawn=0; function fireworksLoop(ts){ if(!lastSpawn) lastSpawn=ts; if(ts-lastSpawn>900){ spawnExplosion(Math.random()*fwCanvas.width, Math.random()*fwCanvas.height*0.5); lastSpawn=ts; } fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height); fwParticles=fwParticles.filter(p=>p.alpha>0.02); for(const p of fwParticles){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.01; p.alpha*=0.985; fwCtx.globalAlpha=p.alpha; fwCtx.fillStyle=p.color; fwCtx.beginPath(); fwCtx.arc(p.x,p.y,3,0,Math.PI*2); fwCtx.fill(); } fwCtx.globalAlpha=1; requestAnimationFrame(fireworksLoop); }
       requestAnimationFrame(fireworksLoop);
 
-      // Luzes pulsantes
+      // Luzes
       sizeCanvasToViewport(lightsCanvas);
-      const lights = Array.from({length: 60}, ()=>({
-        x: Math.random()*lightsCanvas.width, y: Math.random()*lightsCanvas.height,
-        r: 1 + Math.random()*2, phase: Math.random()*Math.PI*2, speed: 0.6 + Math.random()*1.0, vy: 0.25 + Math.random()*0.4
-      }));
-      (function lightsLoop(){
-        lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height);
-        for(const l of lights){
-          l.phase += 0.02*l.speed;
-          const alpha = 0.25 + ((Math.sin(l.phase)+1)/2)*0.55;
-          lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2);
-          lightsCtx.fillStyle = `rgba(255,255,255,${alpha})`; lightsCtx.fill();
-          l.y -= l.vy; if(l.y < -5){ l.y = lightsCanvas.height + 5; l.x = Math.random()*lightsCanvas.width; }
-        }
-        requestAnimationFrame(lightsLoop);
-      })();
+      const lights=Array.from({length:60},()=>({x:Math.random()*lightsCanvas.width,y:Math.random()*lightsCanvas.height,r:1+Math.random()*2,phase:Math.random()*Math.PI*2,speed:0.6+Math.random()*1.0,vy:0.25+Math.random()*0.4}));
+      (function lightsLoop(){ lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height); for(const l of lights){ l.phase+=0.02*l.speed; const a=0.25+((Math.sin(l.phase)+1)/2)*0.55; lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2); lightsCtx.fillStyle=`rgba(255,255,255,${a})`; lightsCtx.fill(); l.y-=l.vy; if(l.y<-5){ l.y=lightsCanvas.height+5; l.x=Math.random()*lightsCanvas.width; } } requestAnimationFrame(lightsLoop); })();
 
-      // Cascata: aparecer/sumir
-      const els = [...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
-      const observer = new IntersectionObserver((entries)=>{
-        entries.forEach(entry=>{
-          if(entry.isIntersecting) entry.target.classList.add('show');
-          else entry.target.classList.remove('show');
-        });
-      }, { threshold: 0.18 });
+      // Observer (inclui .indique)
+      const els=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
+      const observer=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('show'); else en.target.classList.remove('show'); }); }, {threshold:0.18});
       els.forEach(el=>observer.observe(el));
 
-      // Toggle detalhes (Indique & Ganhe)
+      // Toggle detalhes Indique
       document.querySelectorAll('#indique .toggle-details').forEach(b=>{
         b.addEventListener('click', e=>{
-          const card = e.currentTarget.closest('.card');
+          const card=e.currentTarget.closest('.card');
           card.classList.toggle('open');
           e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
         });
       });
 
       // Menu ativo
-      const sections = ['beneficios','indique','portais'];
-      const navLinks = document.querySelectorAll('nav.menu-bottom a');
-      window.addEventListener('scroll', ()=>{
-        const scrolled = window.scrollY + 80;
-        let current = '';
-        for(const id of sections){
-          const sec = document.getElementById(id);
-          if(sec && sec.offsetTop <= scrolled) current = id;
-        }
-        navLinks.forEach(link=>{
-          link.classList.toggle('active', link.getAttribute('href').slice(1) === current);
-        });
-      }, { passive:true });
+      const sections=['beneficios','indique','portais'];
+      const navLinks=document.querySelectorAll('nav.menu-bottom a');
+      addEventListener('scroll', ()=>{
+        const scrolled=scrollY+80; let current='';
+        for(const id of sections){ const sec=document.getElementById(id); if(sec && sec.offsetTop<=scrolled) current=id; }
+        navLinks.forEach(link=>{ link.classList.toggle('active', link.getAttribute('href').slice(1)===current); });
+      }, {passive:true});
 
-      // Voltar ao topo
-      btnTopo.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
+      // Topo
+      btnTopo.addEventListener('click', ()=> scrollTo({ top:0, behavior:'smooth' }));
 
-      // Ações e-mail
-      const emailBtn = document.getElementById('emailBtn');
-      if (emailBtn) emailBtn.addEventListener('click', ()=> track('email_open_click'));
-      const copyBtn = document.getElementById('copyEmail');
-      if (copyBtn) {
-        copyBtn.addEventListener('click', async () => {
+      // Email actions
+      const emailBtn=document.getElementById('emailBtn'); if(emailBtn) emailBtn.addEventListener('click', ()=>track('email_open_click'));
+      const copyBtn=document.getElementById('copyEmail');
+      if(copyBtn){
+        copyBtn.addEventListener('click', async ()=>{
           haptic(10);
-          const email = 'ccs@ccstelecom.com.br';
-          try {
-            await navigator.clipboard.writeText(email);
-          } catch {
-            const tmp = document.createElement('input');
-            tmp.value = email;
-            document.body.appendChild(tmp);
-            tmp.select();
-            document.execCommand('copy');
-            document.body.removeChild(tmp);
-          }
+          const email='ccs@ccstelecom.com.br';
+          try{ await navigator.clipboard.writeText(email); }catch{ const tmp=document.createElement('input'); tmp.value=email; document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp); }
           track('email_copy_click');
-          const old = copyBtn.textContent;
-          copyBtn.textContent = '✅ E-mail copiado';
-          copyBtn.classList.add('copied');
-          setTimeout(()=>{ copyBtn.textContent = old; copyBtn.classList.remove('copied'); }, 1500);
+          const old=copyBtn.textContent; copyBtn.textContent='✅ E-mail copiado'; copyBtn.classList.add('copied'); setTimeout(()=>{ copyBtn.textContent=old; copyBtn.classList.remove('copied'); },1500);
         });
       }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init, { once:true });
-    } else {
-      init();
-    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init, {once:true}); } else { init(); }
   })();
   </script>
 </body>
