@@ -22,7 +22,6 @@
       --welcome-spot: rgba(10,88,255,0.34);    /* spotlight azulado sutil */
 
       /* CTA do botão do overlay (“Liberar benefícios agora”) */
-      /* Gradiente neon animado dentro da mesma família fria */
       --cta-1: #0A58FF;   /* cobalt */
       --cta-2: #00D9FF;   /* ciano */
       --cta-3: #00FFC6;   /* teal neon */
@@ -32,6 +31,17 @@
       --cta-glow-1: rgba(10,88,255,.65);
       --cta-glow-2: rgba(0,217,255,.6);
       --cta-shadow: rgba(0,0,0,.5);
+
+      /* Cores do popover de níveis */
+      --popover-bg: #101010;
+      --popover-border: rgba(255,255,255,.14);
+      --popover-shadow: rgba(0,0,0,.55);
+      --pill-1-a: #2F80FF;
+      --pill-1-b: #00D9FF;
+      --pill-2-a: #7B61FF;
+      --pill-2-b: #2F80FF;
+      --pill-3-a: #00D9FF;
+      --pill-3-b: #00FFC6;
     }
 
     html { scroll-behavior: smooth; }
@@ -109,7 +119,6 @@
       animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite;
       display: inline-block;
       overflow: hidden; border-right: 2px solid var(--welcome-border);
-      /* Contorno sutil para nitidez e glow com drop-shadow (não cria "caixa") */
       -webkit-text-stroke: 0.6px rgba(255,255,255,0.28);
       filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2));
       position: relative; z-index: 4001; max-width: 90%; white-space: nowrap;
@@ -138,7 +147,7 @@
       /* Gradiente neon animado */
       background: linear-gradient(135deg, var(--cta-1), var(--cta-2), var(--cta-3), var(--cta-4));
       background-size: 300% 300%;
-      animation: ctaGradient 3.1s ease-in-out infinite alternate, ctaPulse 2s ease-in-out infinite;
+      animation: ctaGradient 2.4s ease-in-out infinite alternate, ctaPulse 1.8s ease-in-out infinite;
 
       /* Glow */
       box-shadow:
@@ -148,7 +157,7 @@
     }
     #start-btn.show { display: inline-block; opacity: 1; transform: translateY(0) scale(1); }
     #start-btn:hover {
-      filter: saturate(1.22) brightness(1.07);
+      filter: saturate(1.24) brightness(1.08);
       transform: translateY(-2px) scale(1.03);
       box-shadow:
         0 14px 34px var(--cta-shadow),
@@ -170,7 +179,6 @@
       #welcome-text { animation: gradientMove 10s linear infinite; filter: none; }
       #start-btn { animation: none; }
     }
-
     @media (max-width:600px){ #welcome-text { white-space: normal; font-size: 26px; } }
 
     /* CANVAS DE FUNDO */
@@ -193,11 +201,23 @@
     .benefit-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .benefit-subtitle { font-size: 16px; margin-bottom: 15px; color: #ccc; }
 
-    /* Estilos adicionais do CONECTA CLUBE (já feitos antes) */
+    /* Estilos adicionais do CONECTA CLUBE */
     .badge {
       display:inline-block; font-size:12px; padding:3px 8px; border-radius:10px;
       background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25);
     }
+    /* Badge clicável para Nível 1 */
+    .level-badge {
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: .4px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b));
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: 0 0 10px rgba(47,128,255,.25), inset 0 0 6px rgba(255,255,255,.12);
+    }
+    .level-badge:hover { filter: brightness(1.06) saturate(1.08); }
+
     .quote {
       background: rgba(255,255,255,0.04);
       border-left: 3px solid var(--accent);
@@ -205,7 +225,16 @@
     }
     .bullets { margin: 10px 0 6px 18px; }
     .bullets li { margin: 4px 0; }
-    .disclaimer { font-size: 13px; color:#cfcfcf; opacity: .9; margin-top: 6px; font-style: italic; }
+
+    /* Aviso Nível 3 mais chamativo */
+    .disclaimer { font-size: 13px; color:#cfcfcf; opacity: .95; margin-top: 8px; }
+    .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; }
+    .chip {
+      display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; margin-right: 8px;
+      color:#0b0b0b; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.3);
+      box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14);
+    }
+
     .email-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
     .copy-link {
       background: transparent; color:#fff; border:1px solid rgba(255,255,255,.25);
@@ -217,8 +246,51 @@
 
     .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
     .app-link:hover { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
-
     .inline-email { color:#fff; text-decoration: underline dotted; }
+
+    /* Popover de níveis */
+    .level-popover {
+      position: fixed; /* posicionamos via JS ao abrir */
+      min-width: 280px; max-width: 92vw;
+      background: var(--popover-bg);
+      border: 1px solid var(--popover-border);
+      border-radius: 12px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12);
+      z-index: 5002;
+      opacity: 0; transform: translateY(-6px) scale(.98);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .level-popover.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .level-popover h4 { margin: 0 0 8px 0; font-size: 14px; letter-spacing: .4px; color:#f4f4f4; }
+    .level-list { list-style: none; margin: 0; padding: 0; }
+    .level-list li {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 6px; border-radius: 8px;
+    }
+    .level-list li + li { margin-top: 4px; }
+    .pill {
+      flex: none; padding: 4px 10px; font-size: 11px; font-weight: 900; color:#0b0b0b; border-radius: 999px; letter-spacing: .4px;
+      border: 1px solid rgba(255,255,255,.25);
+    }
+    .l1 { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
+    .l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
+    .l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
+    .lvl-desc { color:#eaeaea; font-size: 13px; }
+    .lvl-note { color:#cfefff; font-size: 12px; opacity: .9; }
+
+    /* Ações dentro do popover (novas) */
+    .level-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .level-actions .btn {
+      display:inline-block; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; letter-spacing:.3px; color:#fff; text-decoration:none;
+      border:1px solid rgba(255,255,255,.25);
+      box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12);
+      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .level-actions .btn:hover { transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
+    .level-actions .to-l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
+    .level-actions .to-l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
 
     .highlight {
       background: linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding: 40px 20px; text-align: center; border-radius: 16px; margin: 40px auto; max-width: 1000px;
@@ -265,7 +337,13 @@
   <div id="beneficios" class="container">
     <!-- CONECTA CLUBE -->
     <div class="benefit-card" id="conecta-clube">
-      <div class="benefit-title">🎟️ CONECTA CLUBE <span class="badge">Nível 1</span></div>
+      <div class="benefit-title">
+        🎟️ CONECTA CLUBE
+        <button class="badge level-badge" id="levelBadge" type="button"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover">
+          Nível 1
+        </button>
+      </div>
       <div class="benefit-subtitle">Clube de Vantagens CCS</div>
 
       <div class="quote">
@@ -279,7 +357,12 @@
       <ul class="bullets">
         <li>Receba 1 voucher de benefício a cada 90 dias.</li>
       </ul>
-      <p class="disclaimer">Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.</p>
+
+      <!-- Aviso Nível 3 mais chamativo -->
+      <p class="disclaimer disclaimer-lev3">
+        <span class="chip">Somente Nível 3</span>
+        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante ou Aquário.
+      </p>
 
       <div class="email-actions">
         <a
@@ -288,6 +371,45 @@
           href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!"
           >📩 Enviar e-mail agora</a>
         <button class="copy-link" id="copyEmail" type="button">📋 Copiar e-mail</button>
+      </div>
+
+      <!-- Popover de níveis -->
+      <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
+        <h4 id="levelsTitle">Conheça os níveis</h4>
+        <ul class="level-list">
+          <li>
+            <span class="pill l1">Nível 1</span>
+            <span class="lvl-desc">Planos: 250MB</span>
+          </li>
+          <li>
+            <span class="pill l2">Nível 2</span>
+            <span class="lvl-desc">Planos: 450MB</span>
+          </li>
+          <li>
+            <span class="pill l3">Nível 3</span>
+            <span class="lvl-desc">Planos: 650MB</span>
+          </li>
+        </ul>
+        <div class="lvl-note" style="margin-top:8px;">Atrações premium estão no Nível 3.</div>
+
+        <!-- CTAs para upgrade (novos) -->
+        <div class="level-actions" aria-label="Ações de upgrade">
+          <a
+            id="ctaL2"
+            class="btn to-l2"
+            target="_blank" rel="noopener"
+            aria-label="Quero migrar para o Nível 2 (450MB) pelo WhatsApp"
+            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%202%20(Plano%20450MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">
+            Quero Nível 2
+          </a>
+          <a
+            class="btn to-l3"
+            target="_blank" rel="noopener"
+            aria-label="Quero migrar para o Nível 3 (650MB) pelo WhatsApp"
+            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%203%20(Plano%20650MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">
+            Quero Nível 3
+          </a>
+        </div>
       </div>
     </div>
 
@@ -443,6 +565,68 @@
           menuInferior.classList.remove('oculto');
           btnTopo.classList.add('visivel');
         }, 900);
+      });
+
+      /* ===== Popover Níveis (Conecta Clube) ===== */
+      const levelBadge = document.getElementById('levelBadge');
+      const levelPopover = document.getElementById('levelPopover');
+      let popOpen = false;
+
+      function positionPopover() {
+        if (!popOpen) return;
+        const rect = levelBadge.getBoundingClientRect();
+        const pop = levelPopover;
+        const pw = Math.min(320, Math.max(280, pop.offsetWidth || 300));
+        let left = rect.left;
+        let top = rect.bottom + 8;
+
+        // Ajuste para caber na tela
+        if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
+        if (left < 10) left = 10;
+        if (top + (pop.offsetHeight || 180) > window.innerHeight - 10) {
+          top = rect.top - (pop.offsetHeight || 180) - 8;
+          if (top < 10) top = 10;
+        }
+
+        pop.style.left = left + 'px';
+        pop.style.top  = top + 'px';
+        pop.style.minWidth = '280px';
+        pop.style.maxWidth = '92vw';
+      }
+
+      function openPopover() {
+        popOpen = true;
+        levelBadge.setAttribute('aria-expanded', 'true');
+        levelPopover.classList.add('open');
+        positionPopover();
+        // Acessibilidade: foco no primeiro CTA
+        const firstCta = document.getElementById('ctaL2');
+        if (firstCta) firstCta.focus();
+
+        window.addEventListener('scroll', positionPopover, { passive:true });
+        window.addEventListener('resize', positionPopover, { passive:true });
+      }
+
+      function closePopover() {
+        popOpen = false;
+        levelBadge.setAttribute('aria-expanded', 'false');
+        levelPopover.classList.remove('open');
+        window.removeEventListener('scroll', positionPopover);
+        window.removeEventListener('resize', positionPopover);
+      }
+
+      levelBadge.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        popOpen ? closePopover() : openPopover();
+      });
+
+      document.addEventListener('click', (e)=>{
+        if (!popOpen) return;
+        if (!levelPopover.contains(e.target) && e.target !== levelBadge) closePopover();
+      });
+
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape' && popOpen) closePopover();
       });
 
       /* ===== Efeitos de fundo do site (inalterados) ===== */
