@@ -215,6 +215,7 @@
       background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b));
       border: 1px solid rgba(255,255,255,.25);
       box-shadow: 0 0 10px rgba(47,128,255,.25), inset 0 0 6px rgba(255,255,255,.12);
+      padding: 6px 10px; /* aumenta alvo de clique para mobile */
     }
     .level-badge:hover { filter: brightness(1.06) saturate(1.08); }
 
@@ -226,12 +227,14 @@
     .bullets { margin: 10px 0 6px 18px; }
     .bullets li { margin: 4px 0; }
 
-    /* Aviso Nível 3 mais chamativo */
+    /* Aviso Nível 3 mais chamativo + contraste aumentado */
     .disclaimer { font-size: 13px; color:#cfcfcf; opacity: .95; margin-top: 8px; }
     .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; }
     .chip {
       display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; margin-right: 8px;
-      color:#0b0b0b; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.3);
+      color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35);
+      text-shadow: 0 1px 1px rgba(0,0,0,.35);
+      -webkit-text-stroke: 0.2px rgba(0,0,0,.25);
       box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14);
     }
 
@@ -250,7 +253,7 @@
 
     /* Popover de níveis */
     .level-popover {
-      position: fixed; /* posicionamos via JS ao abrir */
+      position: fixed; /* posicionado via JS ao abrir */
       min-width: 280px; max-width: 92vw;
       background: var(--popover-bg);
       border: 1px solid var(--popover-border);
@@ -280,7 +283,7 @@
     .lvl-desc { color:#eaeaea; font-size: 13px; }
     .lvl-note { color:#cfefff; font-size: 12px; opacity: .9; }
 
-    /* Ações dentro do popover (novas) */
+    /* Ações dentro do popover */
     .level-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
     .level-actions .btn {
       display:inline-block; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; letter-spacing:.3px; color:#fff; text-decoration:none;
@@ -291,30 +294,23 @@
     .level-actions .btn:hover { transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
     .level-actions .to-l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
     .level-actions .to-l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
+    .level-actions .to-exp { background: linear-gradient(90deg,#444,#666); border-color: rgba(255,255,255,.18); }
 
-    .highlight {
-      background: linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding: 40px 20px; text-align: center; border-radius: 16px; margin: 40px auto; max-width: 1000px;
-      opacity: 0; transform: translateY(30px) scale(0.95); transition: all .8s ease;
+    .level-footer {
+      margin-top: 8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-start;
     }
-    .highlight.show { opacity: 1; transform: translateY(0) scale(1); }
-    .indique-cards { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
-    .indique-cards .card { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; width: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform .3s ease, box-shadow .3s ease; }
-    .indique-cards .card:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-    .indique-cards .card strong {
-      display:block; margin-top:10px; font-size:22px;
-      background: linear-gradient(90deg,#fff,var(--accent),#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shine 3s linear infinite;
+    .level-footer a {
+      color:#cfefff; font-size:12px; text-decoration: underline; opacity:.9;
     }
-    .toggle-details { margin-top: 12px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .25s; }
-    .toggle-details:hover { background: rgba(255,255,255,.1); }
-    .details { max-height: 0; opacity: 0; overflow: hidden; text-align: left; transition: max-height .6s ease, opacity .6s ease; }
-    .card.open .details { max-height: 400px; opacity: 1; }
 
-    .aviso { background:#222; padding:20px; border-left:4px solid var(--accent); margin:40px auto; max-width:1000px; border-radius:12px; }
-    #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
-    #finalizacao h3 { font-size:24px; margin-bottom:10px; }
-    #finalizacao .stars { font-size:20px; color:var(--accent); animation: twinkle 2s infinite; }
-    @keyframes twinkle { 0%,100%{opacity:.4;} 50%{opacity:1;} }
-    footer { background:#111; text-align:center; padding:20px; margin-top:60px; }
+    /* Botão fechar do popover */
+    .popover-close {
+      position:absolute; top:6px; right:6px;
+      background: transparent; border:1px solid rgba(255,255,255,.18);
+      color:#fff; width:28px; height:28px; border-radius:8px; cursor:pointer;
+      font-weight:900; line-height:26px; text-align:center;
+    }
+    .popover-close:hover { background: rgba(255,255,255,.08); }
   </style>
 </head>
 <body>
@@ -340,7 +336,8 @@
       <div class="benefit-title">
         🎟️ CONECTA CLUBE
         <button class="badge level-badge" id="levelBadge" type="button"
-                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover">
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
+                title="Clique para ver os níveis">
           Nível 1
         </button>
       </div>
@@ -375,6 +372,7 @@
 
       <!-- Popover de níveis -->
       <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
+        <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
         <ul class="level-list">
           <li>
@@ -392,7 +390,7 @@
         </ul>
         <div class="lvl-note" style="margin-top:8px;">Atrações premium estão no Nível 3.</div>
 
-        <!-- CTAs para upgrade (novos) -->
+        <!-- CTAs para upgrade -->
         <div class="level-actions" aria-label="Ações de upgrade">
           <a
             id="ctaL2"
@@ -403,11 +401,26 @@
             Quero Nível 2
           </a>
           <a
+            id="ctaL3"
             class="btn to-l3"
             target="_blank" rel="noopener"
             aria-label="Quero migrar para o Nível 3 (650MB) pelo WhatsApp"
             href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20migrar%20para%20o%20N%C3%ADvel%203%20(Plano%20650MB).%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D">
             Quero Nível 3
+          </a>
+          <a
+            id="ctaEXP"
+            class="btn to-exp"
+            target="_blank" rel="noopener"
+            aria-label="Falar com especialista pelo WhatsApp"
+            href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20tirar%20d%C3%BAvidas%20sobre%20os%20benef%C3%ADcios%20e%20os%20n%C3%ADveis.">
+            Falar com especialista
+          </a>
+        </div>
+        <div class="level-footer">
+          <a id="ctaCompare" target="_blank" rel="noopener"
+             href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20poderiam%20me%20enviar%20a%20comparativo%20dos%20benef%C3%ADcios%20por%20n%C3%ADvel%3F">
+             Comparar níveis
           </a>
         </div>
       </div>
@@ -461,15 +474,38 @@
   <!-- Botão flutuante: Voltar ao topo -->
   <button id="btnTopo" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <!-- Carrega confetti sob demanda -->
   <script>
   (function bootstrap(){
     if (window.__CCS_INIT__) return;
     window.__CCS_INIT__ = true;
 
+    // -------- Utilidades
     function sizeCanvasToViewport(canvas) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+    }
+    function haptic(ms=25){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+    function track(event, params = {}) {
+      try {
+        if (window.gtag) window.gtag('event', event, params);
+        if (window.plausible) window.plausible(event, { props: params });
+        if (!window.gtag && !window.plausible) console.log('[track]', event, params);
+      } catch(e){}
+    }
+    let confettiReady = false, confettiLoadPromise = null;
+    function loadConfetti(){
+      if (confettiReady) return Promise.resolve();
+      if (confettiLoadPromise) return confettiLoadPromise;
+      confettiLoadPromise = new Promise((resolve, reject)=>{
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
+        s.async = true;
+        s.onload = ()=>{ confettiReady = true; resolve(); };
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      return confettiLoadPromise;
     }
 
     function init(){
@@ -489,6 +525,8 @@
 
       const menuInferior = document.getElementById('menuInferior');
       const btnTopo = document.getElementById('btnTopo');
+
+      const initialHash = window.location.hash; // << captura o hash para deep-link
 
       function resizeAll(){
         sizeCanvasToViewport(particles);
@@ -517,17 +555,19 @@
       }
       requestAnimationFrame(typeLoop);
 
-      // Spotlight segue o cursor (azulado sutil)
-      document.addEventListener('mousemove',(e)=>{
-        spotlight.style.background = `radial-gradient(circle 240px at ${e.clientX}px ${e.clientY}px, var(--welcome-spot), transparent 80%)`;
-      }, { passive:true });
-      document.addEventListener('touchmove',(e)=>{
-        const t = e.touches[0];
-        spotlight.style.background = `radial-gradient(circle 240px at ${t.clientX}px ${t.clientY}px, var(--welcome-spot), transparent 80%)`;
-      }, { passive:true });
+      // Spotlight (azulado sutil)
+      const moveListener = (e)=>{
+        const x = (e.touches ? e.touches[0].clientX : e.clientX);
+        const y = (e.touches ? e.touches[0].clientY : e.clientY);
+        spotlight.style.background = `radial-gradient(circle 240px at ${x}px ${y}px, var(--welcome-spot), transparent 80%)`;
+      };
+      document.addEventListener('mousemove', moveListener, { passive:true });
+      document.addEventListener('touchmove', moveListener, { passive:true });
 
-      // Partículas do overlay (branco vivo)
+      // Partículas do overlay
       let stars = [];
+      let starsActive = true;
+      let starsRAF = 0;
       function createStars(){
         stars.length = 0;
         for(let i=0;i<110;i++){
@@ -536,55 +576,78 @@
       }
       createStars();
       (function starsLoop(){
+        if (!starsActive) return;
         pctx.clearRect(0,0,particles.width,particles.height);
         pctx.fillStyle = "rgba(255,255,255,0.9)";
         for(const s of stars){
           pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill();
           s.y += s.s; if(s.y > particles.height){ s.y = -2; s.x = Math.random()*particles.width; }
         }
-        requestAnimationFrame(starsLoop);
+        starsRAF = requestAnimationFrame(starsLoop);
       })();
 
-      // Confete (azul/ciano/branco)
-      const ctaColors = ['#0A58FF','#00D9FF','#FFFFFF'];
-
       // Clique: confete + liberar
-      btnEl.addEventListener('click',()=>{
+      btnEl.addEventListener('click', async ()=>{
+        haptic(25);
+        track('overlay_start_click');
+        try { await loadConfetti(); } catch(e){}
         const r = btnEl.getBoundingClientRect();
         const x = (r.left + r.width/2) / window.innerWidth;
         const y = (r.top + r.height/2) / window.innerHeight;
+        const ctaColors = ['#0A58FF','#00D9FF','#FFFFFF'];
 
-        confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 52, colors: ctaColors });
-        setTimeout(()=>confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 60, colors: ctaColors }), 260);
-        for(let i=0;i<5;i++){
-          setTimeout(()=>{ confetti({ particleCount: 100, spread: 70, origin: {x, y: 0}, colors: ctaColors, startVelocity: 24 }); }, i*280);
+        if (window.confetti) {
+          window.confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 52, colors: ctaColors });
+          setTimeout(()=>window.confetti({ particleCount: 360, spread: 360, origin: {x,y}, startVelocity: 60, colors: ctaColors }), 260);
+          for(let i=0;i<5;i++){
+            setTimeout(()=>{ window.confetti({ particleCount: 100, spread: 70, origin: {x, y: 0}, colors: ctaColors, startVelocity: 24 }); }, i*280);
+          }
         }
         overlayEl.style.opacity = '0';
+
+        // Encerrar loops e listeners do overlay
+        starsActive = false;
+        cancelAnimationFrame(starsRAF);
+        document.removeEventListener('mousemove', moveListener);
+        document.removeEventListener('touchmove', moveListener);
+
         setTimeout(()=>{
           overlayEl.remove();
           menuInferior.classList.remove('oculto');
           btnTopo.classList.add('visivel');
+
+          // FIX: se a página abriu com hash (ex.: #indique), rola até a seção
+          if (initialHash) {
+            const target = document.getElementById(initialHash.slice(1));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
         }, 900);
       });
 
       /* ===== Popover Níveis (Conecta Clube) ===== */
       const levelBadge = document.getElementById('levelBadge');
       const levelPopover = document.getElementById('levelPopover');
+      const popoverClose = document.getElementById('popoverClose');
       let popOpen = false;
+      let prevFocus = null;
+      let focusTrapHandler = null;
 
       function positionPopover() {
         if (!popOpen) return;
         const rect = levelBadge.getBoundingClientRect();
         const pop = levelPopover;
-        const pw = Math.min(320, Math.max(280, pop.offsetWidth || 300));
+        const widthGuess = pop.offsetWidth || 300;
+        const heightGuess = pop.offsetHeight || 200;
+        const pw = Math.min(340, Math.max(280, widthGuess));
         let left = rect.left;
         let top = rect.bottom + 8;
 
-        // Ajuste para caber na tela
         if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
         if (left < 10) left = 10;
-        if (top + (pop.offsetHeight || 180) > window.innerHeight - 10) {
-          top = rect.top - (pop.offsetHeight || 180) - 8;
+        if (top + heightGuess > window.innerHeight - 10) {
+          top = rect.top - heightGuess - 8;
           if (top < 10) top = 10;
         }
 
@@ -594,30 +657,53 @@
         pop.style.maxWidth = '92vw';
       }
 
+      function getFocusable(container){
+        return Array.from(container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'))
+          .filter(el => el.offsetParent !== null);
+      }
+
       function openPopover() {
         popOpen = true;
+        track('levels_popover_open');
+        haptic(15);
+        prevFocus = document.activeElement;
         levelBadge.setAttribute('aria-expanded', 'true');
         levelPopover.classList.add('open');
         positionPopover();
-        // Acessibilidade: foco no primeiro CTA
-        const firstCta = document.getElementById('ctaL2');
-        if (firstCta) firstCta.focus();
+
+        // Focus trap
+        const focusables = getFocusable(levelPopover);
+        const first = focusables[0] || levelPopover;
+        const last = focusables[focusables.length - 1] || levelPopover;
+        if (first) first.focus();
+        focusTrapHandler = (e)=>{
+          if (e.key !== 'Tab') return;
+          if (focusables.length === 0) { e.preventDefault(); return; }
+          if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        };
+        levelPopover.addEventListener('keydown', focusTrapHandler);
 
         window.addEventListener('scroll', positionPopover, { passive:true });
         window.addEventListener('resize', positionPopover, { passive:true });
       }
 
       function closePopover() {
+        if (!popOpen) return;
         popOpen = false;
         levelBadge.setAttribute('aria-expanded', 'false');
         levelPopover.classList.remove('open');
+        if (focusTrapHandler) levelPopover.removeEventListener('keydown', focusTrapHandler);
+        if (prevFocus) { try { prevFocus.focus(); } catch(e){} }
         window.removeEventListener('scroll', positionPopover);
         window.removeEventListener('resize', positionPopover);
+        track('levels_popover_close');
       }
 
       levelBadge.addEventListener('click', (e)=>{
         e.stopPropagation();
         popOpen ? closePopover() : openPopover();
+        track('levels_badge_click');
       });
 
       document.addEventListener('click', (e)=>{
@@ -629,8 +715,27 @@
         if (e.key === 'Escape' && popOpen) closePopover();
       });
 
+      popoverClose.addEventListener('click', ()=>{
+        haptic(10);
+        closePopover();
+      });
+
+      // CTAs do popover - tracking + haptics
+      const ctaL2 = document.getElementById('ctaL2');
+      const ctaL3 = document.getElementById('ctaL3');
+      const ctaEXP = document.getElementById('ctaEXP');
+      const ctaCompare = document.getElementById('ctaCompare');
+      [ctaL2, ctaL3, ctaEXP, ctaCompare].forEach((el)=>{
+        if (!el) return;
+        el.addEventListener('click', ()=>{
+          haptic(15);
+          track('levels_cta_click', { id: el.id });
+        });
+      });
+
       /* ===== Efeitos de fundo do site (inalterados) ===== */
       // Fogos
+      sizeCanvasToViewport(fwCanvas);
       let fwParticles = [];
       function spawnExplosion(x, y) {
         const colors = ['#ff0043','#14fc56','#1e90ff','var(--accent)','#ffffff'];
@@ -660,6 +765,7 @@
       requestAnimationFrame(fireworksLoop);
 
       // Luzes pulsantes
+      sizeCanvasToViewport(lightsCanvas);
       const lights = Array.from({length: 60}, ()=>({
         x: Math.random()*lightsCanvas.width, y: Math.random()*lightsCanvas.height,
         r: 1 + Math.random()*2, phase: Math.random()*Math.PI*2, speed: 0.6 + Math.random()*1.0, vy: 0.25 + Math.random()*0.4
@@ -686,7 +792,7 @@
       }, { threshold: 0.18 });
       els.forEach(el=>observer.observe(el));
 
-      // Toggle detalhes
+      // Toggle detalhes (Indique & Ganhe)
       document.querySelectorAll('#indique .toggle-details').forEach(b=>{
         b.addEventListener('click', e=>{
           const card = e.currentTarget.closest('.card');
@@ -713,10 +819,13 @@
       // Voltar ao topo
       btnTopo.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-      // Copiar e-mail
+      // Ações e-mail
+      const emailBtn = document.getElementById('emailBtn');
+      if (emailBtn) emailBtn.addEventListener('click', ()=> track('email_open_click'));
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn) {
         copyBtn.addEventListener('click', async () => {
+          haptic(10);
           const email = 'ccs@ccstelecom.com.br';
           try {
             await navigator.clipboard.writeText(email);
@@ -728,6 +837,7 @@
             document.execCommand('copy');
             document.body.removeChild(tmp);
           }
+          track('email_copy_click');
           const old = copyBtn.textContent;
           copyBtn.textContent = '✅ E-mail copiado';
           copyBtn.classList.add('copied');
