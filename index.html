@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Benefícios Ativados | CCS Telecom</title>
   <style>
+    /* Trocar a cor do destaque aqui:
+       - Amarelo (atual): #ffcc00
+       - Branco (sugestão): #ffffff
+    */
+    :root{
+      --accent: #ffcc00; /* mude para #ffffff para branco */
+      --accent-contrast: #111;
+      --accent-glow-1: rgba(255,204,0,.6);
+      --accent-glow-2: rgba(255,204,0,.4);
+    }
+
     html { scroll-behavior: smooth; }
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; padding-bottom: 72px; }
     @media (max-width:600px){ body { padding-bottom: 60px; } }
@@ -24,28 +35,19 @@
       padding-bottom: env(safe-area-inset-bottom, 0);
     }
     nav.menu-bottom.oculto { display: none; }
-    nav.menu-bottom ul {
-      display: flex; justify-content: center; align-items: center;
-      gap: 0; margin: 0; padding: 0; list-style: none;
-    }
+    nav.menu-bottom ul { display: flex; justify-content: center; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
     nav.menu-bottom li { margin: 0 8px; }
     nav.menu-bottom a {
-      color: #fff;
-      text-decoration: none;
-      display: block;
+      color: #fff; text-decoration: none; display: block;
       padding: 14px 18px 12px;
-      font-weight: 700;
-      letter-spacing: .3px;
+      font-weight: 700; letter-spacing: .3px; font-size: 16px;
       border-radius: 0 0 12px 12px;
       transition: background .2s, color .2s, box-shadow .25s;
-      font-size: 16px;
       /* Luz branca suave, sem pulsar */
       box-shadow: 0 0 10px 2px rgba(255,255,255,0.25), inset 0 0 4px rgba(255,255,255,0.15);
     }
-    nav.menu-bottom a:hover,
-    nav.menu-bottom a.active {
-      background: #ffffff22;
-      color: #fff;
+    nav.menu-bottom a:hover, nav.menu-bottom a.active {
+      background: #ffffff22; color: #fff;
       box-shadow: 0 0 18px 4px rgba(255,255,255,0.45), inset 0 0 6px rgba(255,255,255,0.2);
     }
     @media (max-width:600px){
@@ -55,18 +57,12 @@
 
     /* ===== BOTÃO FLUTUANTE VOLTAR AO TOPO (após liberação) ===== */
     #btnTopo {
-      position: fixed;
-      right: 22px;
-      bottom: 92px;
-      width: 54px; height: 54px;
-      border-radius: 50%;
+      position: fixed; right: 22px; bottom: 92px;
+      width: 54px; height: 54px; border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.35);
       background: rgba(255,255,255,0.12);
-      color: #fff;
-      font-size: 24px; font-weight: 800;
-      cursor: pointer;
-      z-index: 6000;
-      backdrop-filter: blur(8px);
+      color: #fff; font-size: 24px; font-weight: 800; cursor: pointer;
+      z-index: 6000; backdrop-filter: blur(8px);
       opacity: 0; pointer-events: none;
       transition: opacity .3s, transform .2s, background .2s, box-shadow .2s;
       display: flex; align-items: center; justify-content: center;
@@ -79,7 +75,7 @@
       #btnTopo { width: 44px; height: 44px; font-size: 20px; right: 10px; bottom: 62px; }
     }
 
-    /* ===== OVERLAY BOAS-VINDAS + EFEITOS ORIGINAIS ===== */
+    /* ===== OVERLAY BOAS-VINDAS + EFEITOS ===== */
     #welcome-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.8);
@@ -91,38 +87,37 @@
     #spotlight { position: absolute; inset: 0; background: radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events: none; transition: background-position .1s; z-index: 3999; }
     #welcome-text {
       font-size: 32px; margin-bottom: 20px; min-height: 30px; font-weight: 800;
-      background: linear-gradient(90deg,#fff,#ffcc00,#fff);
+      background: linear-gradient(90deg,#fff,var(--accent),#fff);
       background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       animation: gradientMove 3s linear infinite; display: inline-block;
-      overflow: hidden; border-right: 2px solid #ffcc00;
-      text-shadow: 0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4);
+      overflow: hidden; border-right: 2px solid var(--accent);
+      text-shadow: 0 0 8px var(--accent-glow-1), 0 0 16px var(--accent-glow-2);
       position: relative; z-index: 4001; max-width: 90%; white-space: nowrap;
     }
     @keyframes gradientMove { to { background-position: 200% center; } }
     #start-btn {
-      background: linear-gradient(90deg,#fff,#ffcc00,#fff); background-size: 200% auto;
+      background: linear-gradient(90deg,#fff,var(--accent),#fff); background-size: 200% auto;
       border: none; padding: 14px 28px; border-radius: 10px; font-weight: 800; cursor: pointer;
       animation: shine 2s linear infinite; font-size: 16px; margin-top: 20px;
       display: none; opacity: 0; transform: scale(.8); transition: all .6s ease;
-      position: relative; z-index: 4001; color: #111;
+      position: relative; z-index: 4001; color: var(--accent-contrast);
     }
     #start-btn.show { display: inline-block; opacity: 1; transform: scale(1); animation: shine 2s linear infinite, pulseHalo 2s ease-in-out infinite; }
     #start-btn.show::before, #start-btn.show::after {
-      content: ""; position: absolute; inset: -10px; border-radius: 16px; border: 2px solid rgba(255,204,0,.6);
+      content: ""; position: absolute; inset: -10px; border-radius: 16px; border: 2px solid var(--accent-glow-1);
       opacity: 0; transform: scale(.8); pointer-events: none;
     }
     #start-btn.show::before { animation: wave 2s ease-out infinite; }
     #start-btn.show::after  { animation: wave 2s ease-out infinite 1s; }
     @keyframes wave { 0%{opacity:.6;transform:scale(.8);}70%{opacity:0;transform:scale(1.8);}100%{opacity:0;transform:scale(2);} }
     @keyframes shine { to { background-position: 200% center; } }
-    @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,204,0,.6),0 0 30px rgba(255,204,0,.4);}50%{box-shadow:0 0 35px rgba(255,204,0,1),0 0 60px rgba(255,204,0,.7);} }
+    @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px var(--accent-glow-1),0 0 30px var(--accent-glow-2);}50%{box-shadow:0 0 35px var(--accent),0 0 60px var(--accent-glow-1);} }
     @media (max-width:600px){ #welcome-text { white-space: normal; font-size: 22px; } }
 
     /* CANVAS DE FUNDO */
     canvas#fireworks, canvas#lights {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1500;
     }
-    #ripple { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 0; height: 0; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,0,0.5) 0%, transparent 70%); opacity: 0; pointer-events: none; z-index: 1800; }
 
     /* CONTEÚDO */
     .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
@@ -139,7 +134,7 @@
     .benefit-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
     .benefit-subtitle { font-size: 16px; margin-bottom: 15px; color: #ccc; }
     .app-link { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #fff; color: #111; border-radius: 6px; text-decoration: none; transition: .3s; }
-    .app-link:hover { background: #ffcc00; }
+    .app-link:hover { background: var(--accent); }
 
     .highlight {
       background: linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding: 40px 20px; text-align: center; border-radius: 16px; margin: 40px auto; max-width: 1000px;
@@ -151,17 +146,17 @@
     .indique-cards .card:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     .indique-cards .card strong {
       display:block; margin-top:10px; font-size:22px;
-      background: linear-gradient(90deg,#fff,#ffcc00,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shine 3s linear infinite;
+      background: linear-gradient(90deg,#fff,var(--accent),#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shine 3s linear infinite;
     }
     .toggle-details { margin-top: 12px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .25s; }
     .toggle-details:hover { background: rgba(255,255,255,.1); }
     .details { max-height: 0; opacity: 0; overflow: hidden; text-align: left; transition: max-height .6s ease, opacity .6s ease; }
     .card.open .details { max-height: 400px; opacity: 1; }
 
-    .aviso { background:#222; padding:20px; border-left:4px solid #ffcc00; margin:40px auto; max-width:1000px; border-radius:12px; }
+    .aviso { background:#222; padding:20px; border-left:4px solid var(--accent); margin:40px auto; max-width:1000px; border-radius:12px; }
     #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
     #finalizacao h3 { font-size:24px; margin-bottom:10px; }
-    #finalizacao .stars { font-size:20px; color:#ffcc00; animation: twinkle 2s infinite; }
+    #finalizacao .stars { font-size:20px; color:var(--accent); animation: twinkle 2s infinite; }
     @keyframes twinkle { 0%,100%{opacity:.4;} 50%{opacity:1;} }
     footer { background:#111; text-align:center; padding:20px; margin-top:60px; }
   </style>
@@ -169,7 +164,6 @@
 <body>
   <canvas id="fireworks"></canvas>
   <canvas id="lights"></canvas>
-  <div id="ripple"></div>
 
   <!-- Overlay de boas-vindas -->
   <div id="welcome-overlay">
@@ -227,7 +221,6 @@
       <li><a href="#beneficios">Benefícios</a></li>
       <li><a href="#indique">Indique &amp; Ganhe</a></li>
       <li><a href="#portais">Portais</a></li>
-      <li><a href="#finalizacao">Finalização</a></li>
     </ul>
   </nav>
 
@@ -236,164 +229,198 @@
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script>
-    // Referências
-    const spotlight = document.getElementById('spotlight');
-    const overlayEl = document.getElementById('welcome-overlay');
-    const textEl = document.getElementById('welcome-text');
-    const btnEl = document.getElementById('start-btn');
-    const particles = document.getElementById('particles');
-    const pctx = particles.getContext('2d');
-    const menuInferior = document.getElementById('menuInferior');
-    const btnTopo = document.getElementById('btnTopo');
+  (function bootstrap(){
+    // Trava global: impede inicialização duplicada (live-reload/iframes)
+    if (window.__CCS_INIT__) return;
+    window.__CCS_INIT__ = true;
 
-    // Texto digitando
-    const message = "🚀 250 Mega com muitos benefícios esperando por você!";
-    let ti = 0;
-    (function type(){
-      if(ti < message.length){
-        textEl.textContent += message.charAt(ti++);
-        setTimeout(type, 30);
-      } else {
-        textEl.style.borderRight = 'none';
-        setTimeout(()=>btnEl.classList.add('show'), 300);
-      }
-    })();
-
-    // Spotlight segue mouse/touch
-    document.addEventListener('mousemove',(e)=>{
-      spotlight.style.background = `radial-gradient(circle 200px at ${e.clientX}px ${e.clientY}px, rgba(255,255,200,0.25), transparent 80%)`;
-    });
-    document.addEventListener('touchmove',(e)=>{
-      const t = e.touches[0];
-      spotlight.style.background = `radial-gradient(circle 200px at ${t.clientX}px ${t.clientY}px, rgba(255,255,200,0.25), transparent 80%)`;
-    });
-
-    // Partículas do overlay
-    function resizeParticles(){ particles.width = innerWidth; particles.height = innerHeight; }
-    let stars = [];
-    function createStars(){
-      stars = [];
-      for(let i=0;i<80;i++){
-        stars.push({x:Math.random()*particles.width, y:Math.random()*particles.height, r:Math.random()*2+1, s:Math.random()*0.5+0.2});
-      }
+    function sizeCanvasToViewport(canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-    function animateStars(){
-      pctx.clearRect(0,0,particles.width,particles.height);
-      pctx.fillStyle = "rgba(255,255,200,0.8)";
-      for(const star of stars){
-        pctx.beginPath(); pctx.arc(star.x,star.y,star.r,0,Math.PI*2); pctx.fill();
-        star.y += star.s; if(star.y > particles.height) star.y = -2;
+
+    function init(){
+      const spotlight = document.getElementById('spotlight');
+      const overlayEl = document.getElementById('welcome-overlay');
+      const textEl = document.getElementById('welcome-text');
+      const btnEl = document.getElementById('start-btn');
+
+      const particles = document.getElementById('particles');
+      const pctx = particles.getContext('2d');
+
+      const fwCanvas = document.getElementById('fireworks');
+      const fwCtx = fwCanvas.getContext('2d');
+
+      const lightsCanvas = document.getElementById('lights');
+      const lightsCtx = lightsCanvas.getContext('2d');
+
+      const menuInferior = document.getElementById('menuInferior');
+      const btnTopo = document.getElementById('btnTopo');
+
+      function resizeAll(){
+        sizeCanvasToViewport(particles);
+        sizeCanvasToViewport(fwCanvas);
+        sizeCanvasToViewport(lightsCanvas);
       }
-      requestAnimationFrame(animateStars);
-    }
-    resizeParticles(); createStars(); animateStars();
-    addEventListener('resize', ()=>{ resizeParticles(); createStars(); });
+      resizeAll();
+      window.addEventListener('resize', resizeAll, { passive:true });
 
-    // Clique no botão: confete, some overlay, mostra menu e botão topo
-    btnEl.addEventListener('click',()=>{
-      const r = btnEl.getBoundingClientRect();
-      const x = (r.left + r.width/2) / innerWidth;
-      const y = (r.top + r.height/2) / innerHeight;
-      confetti({ particleCount: 300, spread: 360, origin: {x,y}, startVelocity: 45 });
-      setTimeout(()=>confetti({ particleCount: 300, spread: 360, origin: {x,y}, startVelocity: 55 }), 250);
-      for(let i=0;i<5;i++){
-        setTimeout(()=>{ confetti({ particleCount: 80, spread: 60, origin: {x, y: 0}, colors: ['#FFD700'], startVelocity: 20 }); }, i*300);
-      }
-      overlayEl.style.opacity = '0';
-      setTimeout(()=>{
-        overlayEl.remove();
-        menuInferior.classList.remove('oculto');
-        btnTopo.classList.add('visivel'); // sempre visível após liberação
-      }, 1000);
-    });
-
-    // Cascata: aparecer/sumir com IntersectionObserver
-    const els = [...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting) entry.target.classList.add('show');
-        else entry.target.classList.remove('show');
-      });
-    }, { threshold: 0.2 });
-    els.forEach(el=>observer.observe(el));
-
-    // Toggle detalhes
-    document.querySelectorAll('#indique .toggle-details').forEach(btn=>{
-      btn.addEventListener('click', e=>{
-        const card = e.currentTarget.closest('.card');
-        card.classList.toggle('open');
-        e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
-      });
-    });
-
-    // Fogos de artifício
-    function startFireworks(){
-      const canvas = document.getElementById('fireworks');
-      const ctx = canvas.getContext('2d');
-      function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
-      addEventListener('resize', resize); resize();
-      let particles = [];
-      function createParticle(x,y){
-        const colors = ['#ff0043','#14fc56','#1e90ff','#ffcc00'];
-        const angle = Math.random()*Math.PI*2;
-        const speed = 2 + Math.random()*5;
-        return { x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, alpha: 1, color: colors[Math.floor(Math.random()*colors.length)] };
-      }
-      function explode(x,y){ for(let i=0;i<30;i++) particles.push(createParticle(x,y)); }
-      function animate(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        particles = particles.filter(p=>p.alpha>0);
-        for(const p of particles){
-          p.x += p.vx; p.y += p.vy; p.alpha -= 0.01;
-          ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
-          ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+      // Texto digitando (rAF, seguro contra duplicação)
+      const message = "250 Mega com muitos benefícios esperando por você!";
+      textEl.textContent = "";
+      let idx = 0, next = 0;
+      function typeLoop(ts){
+        if (!next) next = ts;
+        while (ts - next >= 28 && idx < message.length){
+          textEl.textContent += message.charAt(idx++);
+          next += 28;
         }
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(animate);
+        if (idx < message.length) {
+          requestAnimationFrame(typeLoop);
+        } else {
+          textEl.style.borderRight = 'none';
+          setTimeout(()=>btnEl.classList.add('show'), 300);
+        }
       }
-      setInterval(()=>explode(Math.random()*canvas.width, Math.random()*canvas.height/2), 1000);
-      animate();
-    }
+      requestAnimationFrame(typeLoop);
 
-    // Luzes animadas
-    function startLights(){
-      const canvas = document.getElementById('lights');
-      const ctx = canvas.getContext('2d');
-      function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
-      addEventListener('resize', resize); resize();
-      const lights = Array.from({length: 50}, ()=>({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 1+Math.random()*2, a: 0.3+Math.random()*0.7 }));
-      function animate(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+      // Spotlight segue o cursor
+      document.addEventListener('mousemove',(e)=>{
+        spotlight.style.background = `radial-gradient(circle 200px at ${e.clientX}px ${e.clientY}px, rgba(255,255,200,0.25), transparent 80%)`;
+      }, { passive:true });
+      document.addEventListener('touchmove',(e)=>{
+        const t = e.touches[0];
+        spotlight.style.background = `radial-gradient(circle 200px at ${t.clientX}px ${t.clientY}px, rgba(255,255,200,0.25), transparent 80%)`;
+      }, { passive:true });
+
+      // Partículas do overlay
+      let stars = [];
+      function createStars(){
+        stars.length = 0;
+        for(let i=0;i<100;i++){
+          stars.push({x:Math.random()*particles.width, y:Math.random()*particles.height, r:Math.random()*2+0.8, s:Math.random()*0.6+0.2});
+        }
+      }
+      createStars();
+      (function starsLoop(){
+        pctx.clearRect(0,0,particles.width,particles.height);
+        pctx.fillStyle = "rgba(255,255,200,0.85)";
+        for(const s of stars){
+          pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill();
+          s.y += s.s; if(s.y > particles.height){ s.y = -2; s.x = Math.random()*particles.width; }
+        }
+        requestAnimationFrame(starsLoop);
+      })();
+
+      // Clique: confete + liberar
+      btnEl.addEventListener('click',()=>{
+        const r = btnEl.getBoundingClientRect();
+        const x = (r.left + r.width/2) / window.innerWidth;
+        const y = (r.top + r.height/2) / window.innerHeight;
+
+        confetti({ particleCount: 320, spread: 360, origin: {x,y}, startVelocity: 48 });
+        setTimeout(()=>confetti({ particleCount: 320, spread: 360, origin: {x,y}, startVelocity: 56 }), 260);
+        for(let i=0;i<5;i++){
+          setTimeout(()=>{ confetti({ particleCount: 90, spread: 70, origin: {x, y: 0}, colors: ['#FFD700','#FFFFFF'], startVelocity: 22 }); }, i*280);
+        }
+        overlayEl.style.opacity = '0';
+        setTimeout(()=>{
+          overlayEl.remove();
+          menuInferior.classList.remove('oculto');
+          btnTopo.classList.add('visivel');
+        }, 900);
+      });
+
+      // Fogos de artifício
+      let fwParticles = [];
+      function spawnExplosion(x, y) {
+        const colors = ['#ff0043','#14fc56','#1e90ff','var(--accent)','#ffffff'];
+        for(let i=0;i<36;i++){
+          const ang = Math.random() * Math.PI * 2;
+          const spd = 2 + Math.random() * 5;
+          fwParticles.push({ x, y, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd, alpha: 1, color: colors[(Math.random()*colors.length)|0] });
+        }
+      }
+      let lastSpawn = 0;
+      function fireworksLoop(ts){
+        if(!lastSpawn) lastSpawn = ts;
+        if(ts - lastSpawn > 900){
+          spawnExplosion(Math.random()*fwCanvas.width, Math.random()*fwCanvas.height*0.5);
+          lastSpawn = ts;
+        }
+        fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+        fwParticles = fwParticles.filter(p=>p.alpha > 0.02);
+        for(const p of fwParticles){
+          p.x += p.vx; p.y += p.vy; p.vy += 0.01; p.alpha *= 0.985;
+          fwCtx.globalAlpha = p.alpha; fwCtx.fillStyle = p.color;
+          fwCtx.beginPath(); fwCtx.arc(p.x,p.y,3,0,Math.PI*2); fwCtx.fill();
+        }
+        fwCtx.globalAlpha = 1;
+        requestAnimationFrame(fireworksLoop);
+      }
+      requestAnimationFrame(fireworksLoop);
+
+      // Luzes pulsantes
+      const lights = Array.from({length: 60}, ()=>({
+        x: Math.random()*lightsCanvas.width, y: Math.random()*lightsCanvas.height,
+        r: 1 + Math.random()*2, phase: Math.random()*Math.PI*2, speed: 0.6 + Math.random()*1.0, vy: 0.25 + Math.random()*0.4
+      }));
+      (function lightsLoop(){
+        lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height);
         for(const l of lights){
-          ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2);
-          ctx.fillStyle = `rgba(255,255,255,${l.a})`; ctx.fill();
-          l.y -= 0.3; if(l.y < -5) l.y = canvas.height + 5;
+          l.phase += 0.02*l.speed;
+          const alpha = 0.25 + ((Math.sin(l.phase)+1)/2)*0.55;
+          lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2);
+          lightsCtx.fillStyle = `rgba(255,255,255,${alpha})`; lightsCtx.fill();
+          l.y -= l.vy; if(l.y < -5){ l.y = lightsCanvas.height + 5; l.x = Math.random()*lightsCanvas.width; }
         }
-        requestAnimationFrame(animate);
-      }
-      animate();
+        requestAnimationFrame(lightsLoop);
+      })();
+
+      // Cascata: aparecer/sumir
+      const els = [...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting) entry.target.classList.add('show');
+          else entry.target.classList.remove('show');
+        });
+      }, { threshold: 0.18 });
+      els.forEach(el=>observer.observe(el));
+
+      // Toggle detalhes
+      document.querySelectorAll('#indique .toggle-details').forEach(b=>{
+        b.addEventListener('click', e=>{
+          const card = e.currentTarget.closest('.card');
+          card.classList.toggle('open');
+          e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
+        });
+      });
+
+      // Menu ativo ao rolar
+      const sections = ['beneficios','indique','portais'];
+      const navLinks = document.querySelectorAll('nav.menu-bottom a');
+      window.addEventListener('scroll', ()=>{
+        const scrolled = window.scrollY + 80;
+        let current = '';
+        for(const id of sections){
+          const sec = document.getElementById(id);
+          if(sec && sec.offsetTop <= scrolled) current = id;
+        }
+        navLinks.forEach(link=>{
+          link.classList.toggle('active', link.getAttribute('href').slice(1) === current);
+        });
+      }, { passive:true });
+
+      // Voltar ao topo
+      btnTopo.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
-    // Iniciar efeitos de fundo
-    addEventListener('load', ()=>{ startFireworks(); startLights(); });
-
-    // Menu ativo ao rolar
-    const sections = ['beneficios','indique','portais','finalizacao'];
-    const navLinks = document.querySelectorAll('nav.menu-bottom a');
-    addEventListener('scroll', ()=>{
-      const scrolled = scrollY + 80;
-      let current = '';
-      for(const id of sections){
-        const sec = document.getElementById(id);
-        if(sec && sec.offsetTop <= scrolled) current = id;
-      }
-      navLinks.forEach(link=>{
-        link.classList.toggle('active', link.getAttribute('href').slice(1) === current);
-      });
-    });
-
-    // Botão "Voltar ao topo"
-    btnTopo.addEventListener('click', ()=> scrollTo({ top: 0, behavior: 'smooth' }));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once:true });
+    } else {
+      init();
+    }
+  })();
   </script>
 </body>
 </html>
