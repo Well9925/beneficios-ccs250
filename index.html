@@ -8,39 +8,27 @@
     html { scroll-behavior:smooth; }
     body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; }
 
-    /* ===== Botão Menu ===== */
-    #menu-btn { 
-      position:fixed; top:15px; right:15px; 
-      background:transparent; color:#fff; border:2px solid rgba(255,255,255,0.5); 
-      padding:10px 15px; font-size:20px; border-radius:6px; 
-      cursor:pointer; z-index:3000; display:none; 
-    }
-
-    /* ===== Menu Tela Cheia ===== */
-    #side-menu {
-      position:fixed; inset:0; 
-      background:rgba(0,0,0,0.7); backdrop-filter:blur(10px);
-      display:flex; flex-direction:column; justify-content:center; align-items:center;
-      z-index:2999; transform:translateY(-100%);
-      transition:transform .5s ease;
-    }
-    #side-menu.show { transform:translateY(0); }
-    #side-menu a {
-      color:#fff; text-decoration:none; font-size:22px; font-weight:bold;
-      margin:15px 0; opacity:0; transform:translateY(20px);
-      transition:all .5s ease;
-    }
-    #side-menu.show a { opacity:1; transform:translateY(0); }
-    #close-menu {
-      position:absolute; top:20px; right:20px;
-      font-size:28px; color:#fff; cursor:pointer; background:transparent; border:none;
-    }
-
     /* ===== Overlay boas-vindas ===== */
-    #welcome-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:4000; transition:opacity 1s ease; text-align:center; backdrop-filter: blur(8px); }
+    #welcome-overlay { 
+      position:fixed; inset:0; 
+      background:rgba(0,0,0,0.8); 
+      display:flex; justify-content:center; align-items:center; flex-direction:column; 
+      z-index:4000; transition:opacity 1s ease; text-align:center;
+      backdrop-filter: blur(8px); /* 🔹 Desfoca fundo até clicar */
+    }
     #particles { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3998; pointer-events:none; }
     #spotlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events:none; transition:background-position .1s; z-index:3999; }
-    #welcome-text { font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:gradientMove 3s linear infinite; display:inline-block; overflow:hidden; border-right:2px solid #ffcc00; text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); position:relative; z-index:4001; max-width:90%; white-space:nowrap; }
+    #welcome-text { 
+      font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; 
+      background:linear-gradient(90deg,#fff,#ffcc00,#fff); 
+      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; 
+      animation:gradientMove 3s linear infinite; display:inline-block; 
+      overflow:hidden; border-right:2px solid #ffcc00; 
+      text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); 
+      position:relative; z-index:4001;
+      max-width:90%; /* 🔹 Impede bug no celular */
+      white-space:nowrap;
+    }
     @keyframes gradientMove { to { background-position:200% center; } }
     #start-btn { background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; border:none; padding:14px 28px; border-radius:10px; font-weight:bold; cursor:pointer; animation:shine 2s linear infinite; font-size:16px; margin-top:20px; display:none; opacity:0; transform:scale(.8); transition:all .6s ease; position:relative; z-index:4001; }
     #start-btn.show { display:inline-block; opacity:1; transform:scale(1); animation:shine 2s linear infinite, pulseHalo 2s ease-in-out infinite; }
@@ -51,6 +39,7 @@
     @keyframes shine { to { background-position:200% center; } }
     @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,204,0,.6),0 0 30px rgba(255,204,0,.4);}50%{box-shadow:0 0 35px rgba(255,204,0,1),0 0 60px rgba(255,204,0,.7);} }
 
+    /* Texto no celular */
     @media (max-width:600px){
       #welcome-text { white-space:normal; font-size:22px; }
     }
@@ -98,15 +87,6 @@
 </head>
 <body>
 
-<button id="menu-btn">☰</button>
-<div id="side-menu">
-  <button id="close-menu">✖</button>
-  <a href="#beneficios">Benefícios</a>
-  <a href="#indique">Indique & Ganhe</a>
-  <a href="#portais">Portais</a>
-  <a href="#finalizacao">Finalização</a>
-</div>
-
 <canvas id="fireworks"></canvas>
 <canvas id="lights"></canvas>
 <div id="ripple"></div>
@@ -132,14 +112,14 @@
 </div>
 
 <section id="indique" class="highlight">
-  <h2>💰 Indique & Ganhe</h2>
+  <h2>🎯 Indique & Ganhe</h2>
   <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
   <div class="indique-cards">
-    <div class="card"><h3>🎯 250MB</h3><strong>R$30 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto aplicado após instalação.</li><li>Bônus extra se contratar em até 72h.</li></ul></div></div>
-    <div class="card"><h3>🎯 450MB</h3><strong>R$50 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto no próximo ciclo.</li><li>Válido para titular adimplente.</li></ul></div></div>
-    <div class="card"><h3>🏆 650MB</h3><strong>Mensalidade ISENTA</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Isenção após ativação confirmada.</li><li>1 isenção por indicação.</li></ul></div></div>
-  </div>
-  <p class="bonus">⏳ Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
+    <div class="card"><h3>🥉 250MB</h3><strong>R$30 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto aplicado após instalação.</li><li>Bônus extra se contratar em até 72h.</li></ul></div></div>
+    <div class="card"><h3>🥈 450MB</h3><strong>R$50 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto no próximo ciclo.</li><li>Válido para titular adimplente.</li></ul></div></div>
+    <div class="card"><h3>🥇 650MB</h3><strong>Mensalidade ISENTA</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Isenção após ativação confirmada.</li><li>1 isenção por indicação.</li></ul></div></div>
+  </div> 
+  <p class="bonus">🏆 Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
   <a href="https://wa.me/554797701300" class="app-link">📲 Indicar agora</a>
 </section>
 
@@ -163,14 +143,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-  // ===== Menu toggle =====
-  const menuBtn = document.getElementById('menu-btn');
-  const sideMenu = document.getElementById('side-menu');
-  const closeMenu = document.getElementById('close-menu');
-
-  menuBtn.addEventListener('click', ()=>{ sideMenu.classList.add('show'); });
-  closeMenu.addEventListener('click', ()=>{ sideMenu.classList.remove('show'); });
-
   // ===== Texto digitando =====
   const spotlight=document.getElementById('spotlight');
   const overlayEl=document.getElementById('welcome-overlay');
@@ -190,94 +162,37 @@
   document.addEventListener('touchmove',(e)=>{ const t=e.touches[0]; spotlight.style.background=`radial-gradient(circle 200px at ${t.clientX}px ${t.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; });
 
   // Partículas
-  particles.width=window.innerWidth; particles.height=window.innerHeight; 
-  let stars=[];
-  for(let i=0;i<80;i++){ 
-    stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2}); 
-  }
-  function animateStars(){ 
-    ctx.clearRect(0,0,particles.width,particles.height); 
-    ctx.fillStyle="rgba(255,255,200,0.8)"; 
-    for(let star of stars){ 
-      ctx.beginPath(); ctx.arc(star.x,star.y,star.r,0,Math.PI*2); ctx.fill(); 
-      star.y+=star.s; if(star.y>particles.height) star.y=0; 
-    } 
-    requestAnimationFrame(animateStars); 
-  }
+  particles.width=window.innerWidth; particles.height=window.innerHeight; let stars=[];
+  for(let i=0;i<80;i++){ stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2}); }
+  function animateStars(){ ctx.clearRect(0,0,particles.width,particles.height); ctx.fillStyle="rgba(255,255,200,0.8)"; for(let star of stars){ ctx.beginPath(); ctx.arc(star.x,star.y,star.r,0,Math.PI*2); ctx.fill(); star.y+=star.s; if(star.y>particles.height) star.y=0; } requestAnimationFrame(animateStars); }
   animateStars();
 
   // Botão clique confete
-  btnEl.addEventListener('click',()=>{ 
-    const r=btnEl.getBoundingClientRect(); 
-    const x=(r.left+r.width/2)/window.innerWidth; 
-    const y=(r.top+r.height/2)/window.innerHeight;
+  btnEl.addEventListener('click',()=>{ const r=btnEl.getBoundingClientRect(); const x=(r.left+r.width/2)/window.innerWidth; const y=(r.top+r.height/2)/window.innerHeight;
     confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:45 });
     setTimeout(()=>confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:55 }),250);
-    for(let i=0;i<5;i++){ 
-      setTimeout(()=>{ confetti({ particleCount:80, spread:60, origin:{x, y:0}, colors:['#FFD700'], startVelocity:20 }); }, i*300); 
-    }
-    overlayEl.style.opacity='0'; 
-    setTimeout(()=>{ overlayEl.remove(); document.getElementById('menu-btn').style.display='block'; },1000); 
+    for(let i=0;i<5;i++){ setTimeout(()=>{ confetti({ particleCount:80, spread:60, origin:{x, y:0}, colors:['#FFD700'], startVelocity:20 }); }, i*300); }
+    overlayEl.style.opacity='0'; setTimeout(()=>overlayEl.remove(),1000);
   });
 
   // Intersection Observer para cascata
   const els=[...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
-  const observer=new IntersectionObserver((entries)=>{ 
-    entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add("show"); } }); 
-  },{threshold:0.2});
+  const observer=new IntersectionObserver((entries)=>{ entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add("show"); } }); },{threshold:0.2});
   els.forEach(el=>observer.observe(el));
 
   // Toggle detalhes Indique & Ganhe
-  document.querySelectorAll('#indique .toggle-details').forEach(btn=>{ 
-    btn.addEventListener('click',e=>{ 
-      const card=e.currentTarget.closest('.card'); 
-      card.classList.toggle('open'); 
-      e.currentTarget.textContent=card.classList.contains('open')? 'Ocultar detalhes':'Ver detalhes'; 
-    }); 
-  });
+  document.querySelectorAll('#indique .toggle-details').forEach(btn=>{ btn.addEventListener('click',e=>{ const card=e.currentTarget.closest('.card'); card.classList.toggle('open'); e.currentTarget.textContent=card.classList.contains('open')? 'Ocultar detalhes':'Ver detalhes'; }); });
 
   // Fogos
-  function startFireworks(){ 
-    const canvas=document.getElementById('fireworks'); 
-    const ctx=canvas.getContext('2d'); 
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight; 
-    let particles=[];
-    function createParticle(x,y){ 
-      const colors=['#ff0043','#14fc56','#1e90ff','#ffcc00']; 
-      const angle=Math.random()*2*Math.PI; 
-      const speed=2+Math.random()*5; 
-      return {x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, alpha:1,color:colors[Math.floor(Math.random()*colors.length)]}; 
-    }
+  function startFireworks(){ const canvas=document.getElementById('fireworks'); const ctx=canvas.getContext('2d'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; let particles=[];
+    function createParticle(x,y){ const colors=['#ff0043','#14fc56','#1e90ff','#ffcc00']; const angle=Math.random()*2*Math.PI; const speed=2+Math.random()*5; return {x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, alpha:1,color:colors[Math.floor(Math.random()*colors.length)]}; }
     function explode(x,y){ for(let i=0;i<30;i++) particles.push(createParticle(x,y)); }
-    function animate(){ 
-      ctx.clearRect(0,0,canvas.width,canvas.height); 
-      particles=particles.filter(p=>p.alpha>0); 
-      for(const p of particles){ 
-        p.x+=p.vx; p.y+=p.vy; p.alpha-=0.01; ctx.globalAlpha=p.alpha; 
-        ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); 
-      } 
-      ctx.globalAlpha=1; requestAnimationFrame(animate); 
-    }
-    setInterval(()=>explode(Math.random()*canvas.width,Math.random()*canvas.height/2),1000); 
-    animate(); 
-  }
+    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles=particles.filter(p=>p.alpha>0); for(const p of particles){ p.x+=p.vx; p.y+=p.vy; p.alpha-=0.01; ctx.globalAlpha=p.alpha; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); } ctx.globalAlpha=1; requestAnimationFrame(animate); }
+    setInterval(()=>explode(Math.random()*canvas.width,Math.random()*canvas.height/2),1000); animate(); }
 
   // Luzes
-  function startLights(){ 
-    const canvas=document.getElementById('lights'); 
-    const ctx=canvas.getContext('2d'); 
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight; 
-    const lights=Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*2,a:0.3+Math.random()*0.7}));
-    function animate(){ 
-      ctx.clearRect(0,0,canvas.width,canvas.height); 
-      for(const l of lights){ 
-        ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${l.a})`; ctx.fill(); 
-        l.y-=0.3; if(l.y<-5) l.y=canvas.height+5; 
-      } 
-      requestAnimationFrame(animate); 
-    } 
-    animate(); 
-  }
+  function startLights(){ const canvas=document.getElementById('lights'); const ctx=canvas.getContext('2d'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; const lights=Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*2,a:0.3+Math.random()*0.7}));
+    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); for(const l of lights){ ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${l.a})`; ctx.fill(); l.y-=0.3; if(l.y<-5) l.y=canvas.height+5; } requestAnimationFrame(animate); } animate(); }
 
   window.addEventListener('load',()=>{ startFireworks(); startLights(); });
 </script>
