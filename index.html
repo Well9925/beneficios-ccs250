@@ -6,29 +6,63 @@
   <title>Benefícios Ativados | CCS Telecom</title>
   <style>
     html { scroll-behavior:smooth; }
-    body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; }
-
-    /* ===== Overlay boas-vindas ===== */
+    body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; padding-bottom:70px; }
+    @media (max-width:600px){ body { padding-bottom:56px; } }
+    header { text-align: center; }
+    /* ===== MENU FIXO INFERIOR ===== */
+    nav.menu-bottom {
+      width: 100vw;
+      background: #181818e6;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 5001;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.13);
+      border-top: 1px solid #222;
+      backdrop-filter: blur(4px);
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      transition: opacity .3s;
+    }
+    nav.menu-bottom.oculto { display: none; }
+    nav.menu-bottom ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin: 0; padding: 0;
+      list-style: none;
+    }
+    nav.menu-bottom li { margin: 0 8px; }
+    nav.menu-bottom a {
+      color: #ffcc00;
+      text-decoration: none;
+      display: block;
+      padding: 16px 18px 12px 18px;
+      font-weight: bold;
+      letter-spacing: .5px;
+      border-radius: 0 0 8px 8px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 16px;
+    }
+    nav.menu-bottom a:hover, nav.menu-bottom a.active {
+      background: #222;
+      color: #fff;
+    }
+    @media (max-width:600px){
+      nav.menu-bottom ul { flex-wrap: wrap; }
+      nav.menu-bottom a { font-size:15px; padding:12px 8px 8px 8px; }
+    }
+    /* ===== RESTANTE DO CSS ORIGINAL ===== */
     #welcome-overlay { 
       position:fixed; inset:0; 
       background:rgba(0,0,0,0.8); 
       display:flex; justify-content:center; align-items:center; flex-direction:column; 
       z-index:4000; transition:opacity 1s ease; text-align:center;
-      backdrop-filter: blur(8px); /* 🔹 Desfoca fundo até clicar */
+      backdrop-filter: blur(8px);
     }
     #particles { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3998; pointer-events:none; }
     #spotlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events:none; transition:background-position .1s; z-index:3999; }
-    #welcome-text { 
-      font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; 
-      background:linear-gradient(90deg,#fff,#ffcc00,#fff); 
-      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; 
-      animation:gradientMove 3s linear infinite; display:inline-block; 
-      overflow:hidden; border-right:2px solid #ffcc00; 
-      text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); 
-      position:relative; z-index:4001;
-      max-width:90%; /* 🔹 Impede bug no celular */
-      white-space:nowrap;
-    }
+    #welcome-text { font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:gradientMove 3s linear infinite; display:inline-block; overflow:hidden; border-right:2px solid #ffcc00; text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); position:relative; z-index:4001; max-width:90%; white-space:nowrap;}
     @keyframes gradientMove { to { background-position:200% center; } }
     #start-btn { background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; border:none; padding:14px 28px; border-radius:10px; font-weight:bold; cursor:pointer; animation:shine 2s linear infinite; font-size:16px; margin-top:20px; display:none; opacity:0; transform:scale(.8); transition:all .6s ease; position:relative; z-index:4001; }
     #start-btn.show { display:inline-block; opacity:1; transform:scale(1); animation:shine 2s linear infinite, pulseHalo 2s ease-in-out infinite; }
@@ -38,17 +72,9 @@
     @keyframes wave { 0%{opacity:.6;transform:scale(.8);}70%{opacity:0;transform:scale(1.8);}100%{opacity:0;transform:scale(2);} }
     @keyframes shine { to { background-position:200% center; } }
     @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,204,0,.6),0 0 30px rgba(255,204,0,.4);}50%{box-shadow:0 0 35px rgba(255,204,0,1),0 0 60px rgba(255,204,0,.7);} }
-
-    /* Texto no celular */
-    @media (max-width:600px){
-      #welcome-text { white-space:normal; font-size:22px; }
-    }
-
-    /* ===== Canvas ===== */
-    canvas#fireworks,canvas#lights { position:fixed; top:0; left:0; pointer-events:none; z-index:1500; width:100%; height:100%; }
+    @media (max-width:600px){ #welcome-text { white-space:normal; font-size:22px; } }
+    canvas#fireworks,canvas#lights { position:fixed; top:0; left:0; pointer-events:none; z-index:1500; width:100vw; height:100vh; }
     #ripple { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,0,0.5) 0%, transparent 70%); opacity: 0; pointer-events: none; z-index: 1800; }
-
-    /* ===== Cards ===== */
     .container { max-width:1000px; margin:40px auto; padding:0 20px; }
     .benefit-card { background:rgba(255,255,255,0.05); padding:30px; border-radius:16px; box-shadow:0 2px 10px rgba(255,255,255,0.1); margin-bottom:30px; opacity:0; transform:translateY(30px) scale(0.95); transition:all .8s ease; position:relative; }
     .benefit-card.show { opacity:1; transform:translateY(0) scale(1); }
@@ -60,24 +86,17 @@
     .benefit-subtitle { font-size:16px; margin-bottom:15px; color:#ccc; }
     .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
     .app-link:hover { background:#ffcc00; }
-
-    /* ===== Indique & Ganhe ===== */
     .highlight{ background:linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding:40px 20px; text-align:center; border-radius:16px; margin:40px auto; max-width:1000px; opacity:0; transform:translateY(30px) scale(0.95); transition: all .8s ease; }
     .highlight.show{ opacity:1; transform:translateY(0) scale(1); }
     .indique-cards{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
     .indique-cards .card{ background:rgba(255,255,255,0.1); border-radius:12px; padding:20px; width:300px; box-shadow:0 2px 10px rgba(0,0,0,0.3); transition:transform .3s ease, box-shadow .3s ease; }
     .indique-cards .card:hover{ transform:scale(1.05); box-shadow:0 4px 20px rgba(0,0,0,0.5); }
     .indique-cards .card strong{ display:block; margin-top:10px; font-size:22px; background:linear-gradient(90deg,#fff,#ffcc00,#fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:200% auto; animation:shine 3s linear infinite; }
-
     .toggle-details{ margin-top:12px; background:transparent; color:#fff; border:1px solid rgba(255,255,255,.25); padding:8px 12px; border-radius:10px; cursor:pointer; transition:.25s; }
     .toggle-details:hover{ background:rgba(255,255,255,.1); }
     .details{ max-height:0; opacity:0; overflow:hidden; text-align:left; transition:max-height .6s ease, opacity .6s ease; }
     .card.open .details{ max-height:400px; opacity:1; }
-
-    /* ===== Aviso ===== */
     .aviso { background:#222; padding:20px; border-left:4px solid #ffcc00; margin:40px auto; max-width:1000px; border-radius:12px; }
-
-    /* ===== Finalização ===== */
     #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
     #finalizacao h3 { font-size:24px; margin-bottom:10px; }
     #finalizacao .stars { font-size:20px; color:#ffcc00; animation: twinkle 2s infinite; }
@@ -86,12 +105,11 @@
   </style>
 </head>
 <body>
-
 <canvas id="fireworks"></canvas>
 <canvas id="lights"></canvas>
 <div id="ripple"></div>
 
-<!-- ===== NOVO Boas-vindas Premium ===== -->
+<!-- Overlay de boas-vindas -->
 <div id="welcome-overlay">
   <canvas id="particles"></canvas>
   <div id="spotlight"></div>
@@ -141,9 +159,19 @@
 
 <footer>© 2025 CCS Telecom — Todos os direitos reservados</footer>
 
+<!-- MENU INFERIOR FIXO (só aparece após boas-vindas) -->
+<nav class="menu-bottom oculto" id="menuInferior">
+  <ul>
+    <li><a href="#beneficios">Benefícios</a></li>
+    <li><a href="#indique">Indique &amp; Ganhe</a></li>
+    <li><a href="#portais">Portais</a></li>
+    <li><a href="#finalizacao">Finalização</a></li>
+  </ul>
+</nav>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-  // ===== Texto digitando =====
+  // Texto digitando
   const spotlight=document.getElementById('spotlight');
   const overlayEl=document.getElementById('welcome-overlay');
   const textEl=document.getElementById('welcome-text');
@@ -161,40 +189,122 @@
   document.addEventListener('mousemove',(e)=>{ spotlight.style.background=`radial-gradient(circle 200px at ${e.clientX}px ${e.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; });
   document.addEventListener('touchmove',(e)=>{ const t=e.touches[0]; spotlight.style.background=`radial-gradient(circle 200px at ${t.clientX}px ${t.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; });
 
-  // Partículas
-  particles.width=window.innerWidth; particles.height=window.innerHeight; let stars=[];
-  for(let i=0;i<80;i++){ stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2}); }
+  // Partículas de fundo do overlay
+  function resizeParticles(){
+    particles.width=window.innerWidth; particles.height=window.innerHeight;
+  }
+  resizeParticles();
+  window.addEventListener('resize',resizeParticles);
+  let stars=[];
+  function createStars(){
+    stars=[];
+    for(let i=0;i<80;i++){
+      stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2});
+    }
+  }
+  createStars();
   function animateStars(){ ctx.clearRect(0,0,particles.width,particles.height); ctx.fillStyle="rgba(255,255,200,0.8)"; for(let star of stars){ ctx.beginPath(); ctx.arc(star.x,star.y,star.r,0,Math.PI*2); ctx.fill(); star.y+=star.s; if(star.y>particles.height) star.y=0; } requestAnimationFrame(animateStars); }
   animateStars();
+  window.addEventListener('resize',createStars);
 
-  // Botão clique confete
-  btnEl.addEventListener('click',()=>{ const r=btnEl.getBoundingClientRect(); const x=(r.left+r.width/2)/window.innerWidth; const y=(r.top+r.height/2)/window.innerHeight;
+  // Confete, sumir overlay e mostrar menu inferior
+  const menuInferior = document.getElementById('menuInferior');
+  btnEl.addEventListener('click',()=>{
+    const r=btnEl.getBoundingClientRect();
+    const x=(r.left+r.width/2)/window.innerWidth;
+    const y=(r.top+r.height/2)/window.innerHeight;
     confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:45 });
     setTimeout(()=>confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:55 }),250);
     for(let i=0;i<5;i++){ setTimeout(()=>{ confetti({ particleCount:80, spread:60, origin:{x, y:0}, colors:['#FFD700'], startVelocity:20 }); }, i*300); }
-    overlayEl.style.opacity='0'; setTimeout(()=>overlayEl.remove(),1000);
+    overlayEl.style.opacity='0';
+    setTimeout(()=>{ overlayEl.remove(); menuInferior.classList.remove('oculto'); },1000);
   });
 
-  // Intersection Observer para cascata
+  // Intersection Observer para cascata (aparecer/sumir)
   const els=[...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
-  const observer=new IntersectionObserver((entries)=>{ entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add("show"); } }); },{threshold:0.2});
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+      } else {
+        entry.target.classList.remove("show");
+      }
+    });
+  },{threshold:0.2});
   els.forEach(el=>observer.observe(el));
 
   // Toggle detalhes Indique & Ganhe
-  document.querySelectorAll('#indique .toggle-details').forEach(btn=>{ btn.addEventListener('click',e=>{ const card=e.currentTarget.closest('.card'); card.classList.toggle('open'); e.currentTarget.textContent=card.classList.contains('open')? 'Ocultar detalhes':'Ver detalhes'; }); });
+  document.querySelectorAll('#indique .toggle-details').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const card=e.currentTarget.closest('.card');
+      card.classList.toggle('open');
+      e.currentTarget.textContent=card.classList.contains('open')? 'Ocultar detalhes':'Ver detalhes';
+    });
+  });
 
-  // Fogos
-  function startFireworks(){ const canvas=document.getElementById('fireworks'); const ctx=canvas.getContext('2d'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; let particles=[];
+  // Fogos de artifício (canvas #fireworks)
+  function startFireworks(){
+    const canvas=document.getElementById('fireworks');
+    const ctx=canvas.getContext('2d');
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    window.addEventListener("resize",resize);resize();
+    let particles=[];
     function createParticle(x,y){ const colors=['#ff0043','#14fc56','#1e90ff','#ffcc00']; const angle=Math.random()*2*Math.PI; const speed=2+Math.random()*5; return {x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, alpha:1,color:colors[Math.floor(Math.random()*colors.length)]}; }
     function explode(x,y){ for(let i=0;i<30;i++) particles.push(createParticle(x,y)); }
-    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles=particles.filter(p=>p.alpha>0); for(const p of particles){ p.x+=p.vx; p.y+=p.vy; p.alpha-=0.01; ctx.globalAlpha=p.alpha; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); } ctx.globalAlpha=1; requestAnimationFrame(animate); }
-    setInterval(()=>explode(Math.random()*canvas.width,Math.random()*canvas.height/2),1000); animate(); }
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles=particles.filter(p=>p.alpha>0);
+      for(const p of particles){
+        p.x+=p.vx; p.y+=p.vy; p.alpha-=0.01;
+        ctx.globalAlpha=p.alpha;
+        ctx.fillStyle=p.color;
+        ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      requestAnimationFrame(animate);
+    }
+    setInterval(()=>explode(Math.random()*canvas.width,Math.random()*canvas.height/2),1000);
+    animate();
+  }
 
-  // Luzes
-  function startLights(){ const canvas=document.getElementById('lights'); const ctx=canvas.getContext('2d'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; const lights=Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*2,a:0.3+Math.random()*0.7}));
-    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); for(const l of lights){ ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${l.a})`; ctx.fill(); l.y-=0.3; if(l.y<-5) l.y=canvas.height+5; } requestAnimationFrame(animate); } animate(); }
+  // Luzes animadas (canvas #lights)
+  function startLights(){
+    const canvas=document.getElementById('lights');
+    const ctx=canvas.getContext('2d');
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    window.addEventListener("resize",resize);resize();
+    const lights=Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*2,a:0.3+Math.random()*0.7}));
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(const l of lights){
+        ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${l.a})`; ctx.fill();
+        l.y-=0.3; if(l.y<-5) l.y=canvas.height+5;
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
 
-  window.addEventListener('load',()=>{ startFireworks(); startLights(); });
+  window.addEventListener('load',()=>{
+    startFireworks();
+    startLights();
+  });
+
+  // Menu ativo ao rolar
+  const sections = ['beneficios','indique','portais','finalizacao'];
+  const navLinks = document.querySelectorAll('nav.menu-bottom a');
+  window.addEventListener('scroll',()=>{
+    let scrolled = window.scrollY + 80;
+    let current = '';
+    for(const id of sections){
+      const sec = document.getElementById(id);
+      if(sec && sec.offsetTop <= scrolled) current = id;
+    }
+    navLinks.forEach(link=>{
+      link.classList.toggle('active', link.getAttribute('href').substring(1) === current);
+    });
+  });
 </script>
 </body>
 </html>
