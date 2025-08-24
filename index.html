@@ -52,7 +52,7 @@
     .container { max-width:1000px; margin:40px auto; padding:0 20px; }
     .benefit-card { background:rgba(255,255,255,0.05); padding:30px; border-radius:16px; box-shadow:0 2px 10px rgba(255,255,255,0.1); margin-bottom:30px; opacity:0; transform:translateY(30px) scale(0.95); transition:all .8s ease; position:relative; }
     .benefit-card.show { opacity:1; transform:translateY(0) scale(1); }
-    .benefit-card::after { content:"✨"; position:absolute; top:-10px; right:-10px; opacity:0; transition:.8s; }
+    .benefit-card::after { content:""; position:absolute; top:-10px; right:-10px; opacity:0; transition:.8s; }
     .benefit-card.show::after { opacity:1; animation:sparkle 2s infinite; }
     @keyframes sparkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
     .benefit-card:hover { transform:scale(1.03); box-shadow:0 4px 20px rgba(0,0,0,.5); }
