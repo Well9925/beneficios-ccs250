@@ -8,57 +8,69 @@
     html { scroll-behavior:smooth; }
     body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; }
 
+ <!-- Botão hamburger (escondido até boas-vindas acabar) -->
+<button id="menu-btn" aria-controls="menu-lateral" aria-expanded="false">☰</button>
+
+<!-- MENU OVERLAY Tela Cheia -->
+<div id="menu-lateral" aria-hidden="true">
+  <button id="fechar-menu" aria-label="Fechar">✕</button>
+  <nav class="lista-menu">
+    <a href="#beneficios" class="menu-link">Benefícios</a>
+    <a href="#indique" class="menu-link">Indique &amp; Ganhe</a>
+    <a href="#portais" class="menu-link">Portais</a>
+    <a href="#finalizacao" class="menu-link">Finalização</a>
+  </nav>
+</div>
+
+
     /* ===== Botão Menu ===== */
-    #menu-btn {
-      position: fixed;
-      top: 15px; right: 15px;
-      background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255,255,255,0.5);
-      padding: 10px 15px;
-      font-size: 22px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 3000;
-      display: none; /* 🔹 Só aparece depois do boas-vindas */
-      animation: glowPulse 2s infinite;
-    }
-    @keyframes glowPulse {
-      0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.3); }
-      50% { box-shadow: 0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,255,255,0.7); }
-    }
+#menu-btn{
+  position:fixed; top:15px; right:15px;
+  background:transparent; color:#fff;
+  border:2px solid rgba(255,255,255,0.5);
+  padding:10px 15px; font-size:20px; border-radius:50%;
+  cursor:pointer; z-index:3000;
+  display:none; /* 🔹 só aparece após boas-vindas */
+  animation:pulseBrilho 2s infinite;
+}
+@keyframes pulseBrilho{
+  0%,100%{ box-shadow:0 0 10px rgba(255,255,255,0.3); }
+  50%{ box-shadow:0 0 20px rgba(255,255,255,0.7); }
+}
 
-    /* ===== Menu Tela Cheia ===== */
-    #side-menu {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(10px);
-      z-index: 2999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transform: translateY(-100%);
-      transition: transform 0.5s ease;
-    }
-    #side-menu.show { transform: translateY(0); }
+/* ===== Menu Tela Cheia ===== */
+#menu-lateral{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.70);
+  backdrop-filter: blur(10px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transform: translateY(-100%);
+  transition: transform .5s ease; 
+  z-index:2999;
+}
+#menu-lateral.mostrar{ transform: translateY(0); }
 
-    #side-menu a {
-      color: #fff;
-      text-decoration: none;
-      margin: 15px 0;
-      font-size: 22px;
-      font-weight: bold;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-    }
-    #side-menu.show a { opacity: 1; transform: translateY(0); }
-    #side-menu.show a:nth-child(2){ transition-delay: .1s; }
-    #side-menu.show a:nth-child(3){ transition-delay: .2s; }
-    #side-menu.show a:nth-child(4){ transition-delay: .3s; }
-    #side-menu.show a:nth-child(5){ transition-delay: .4s; }
+/* Links do menu */
+#menu-lateral .lista-menu .menu-link{
+  color:#fff; text-decoration:none;
+  font-size:22px; font-weight:700;
+  margin:15px 0; opacity:0; transform: translateY(20px);
+  transition: all .5s ease;
+}
+#menu-lateral.mostrar .lista-menu .menu-link{ opacity:1; transform: translateY(0); }
+#menu-lateral.mostrar .lista-menu .menu-link:nth-child(2){ transition-delay:.10s; }
+#menu-lateral.mostrar .lista-menu .menu-link:nth-child(3){ transition-delay:.20s; }
+#menu-lateral.mostrar .lista-menu .menu-link:nth-child(4){ transition-delay:.30s; }
+
+/* Botão X */
+#fechar-menu{
+  position:absolute; top:20px; right:20px;
+  width:42px; height:42px; border-radius:50%;
+  border:2px solid #fff; background:transparent; color:#fff;
+  font-size:22px; cursor:pointer;
+  box-shadow:0 0 18px rgba(255,255,255,.6);
+}
+
 
     /* Botão fechar (X) */
     #close-menu {
@@ -219,16 +231,40 @@
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-  /* ===== Menu toggle ===== */
-  const menuBtn = document.getElementById('menu-btn');
-  const sideMenu = document.getElementById('side-menu');
-  const closeMenu = document.getElementById('close-menu');
-    menuBtn.addEventListener('click', ()=>{
-    sideMenu.classList.add('show');
-  });
-  closeMenu.addEventListener('click', ()=>{
-    sideMenu.classList.remove('show');
-  });
+// ==== MENU Overlay ====
+const menuBtn      = document.getElementById('menu-btn');
+const menuOverlay  = document.getElementById('menu-lateral');
+const fecharMenu   = document.getElementById('fechar-menu');
+
+// Abrir menu
+function abrirMenu(){
+  menuOverlay.classList.add('mostrar');
+  menuOverlay.setAttribute('aria-hidden','false');
+  menuBtn.setAttribute('aria-expanded','true');
+}
+// Fechar menu
+function fechar(){
+  menuOverlay.classList.remove('mostrar');
+  menuOverlay.setAttribute('aria-hidden','true');
+  menuBtn.setAttribute('aria-expanded','false');
+}
+
+menuBtn.addEventListener('click', abrirMenu);
+fecharMenu.addEventListener('click', fechar);
+
+// Fecha clicando no fundo
+menuOverlay.addEventListener('click', (e)=>{
+  if(e.target === menuOverlay) fechar();
+});
+
+// Fecha com Esc
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') fechar();
+});
+
+// Fecha ao clicar em links
+document.querySelectorAll('#menu-lateral .menu-link')
+  .forEach(a => a.addEventListener('click', fechar));
 
   /* ===== Texto digitando ===== */
   const spotlight=document.getElementById('spotlight');
