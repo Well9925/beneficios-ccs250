@@ -121,12 +121,32 @@
     #particles { position:absolute; inset:0; z-index:3998; pointer-events:none; }
     #spotlight { position:absolute; inset:0; background: radial-gradient(circle 240px at center, rgba(10,88,255,0.34), transparent 80%); pointer-events:none; transition: background-position .1s; z-index:3999; }
 
-    #welcome-text { font-size:42px; margin-bottom:20px; min-height:30px; font-weight:900; background: linear-gradient(90deg, #ffffff, #0A58FF, #00D9FF, #ffffff); background-size:240% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite; display:inline-block; overflow:hidden; border-right:2px solid rgba(255,255,255,.9); -webkit-text-stroke: .6px rgba(255,255,255,.28); filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72)); position:relative; z-index:4001; max-width:90%; white-space:nowrap; letter-spacing:.4px; }
+    #welcome-text {
+      font-size:42px; margin-bottom:20px; min-height:30px; font-weight:900;
+      background: linear-gradient(90deg, #ffffff, #0A58FF, #00D9FF, #ffffff);
+      background-size:240% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite;
+      display:inline-block; overflow:hidden; border-right:2px solid rgba(255,255,255,.9);
+      -webkit-text-stroke: .6px rgba(255,255,255,.28);
+      filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72));
+      position:relative; z-index:4001; max-width:90%;
+      white-space:nowrap; letter-spacing:.4px;
+    }
     @keyframes gradientMove { to{ background-position: 240% center; } }
     @keyframes glowFilterPulse { 0%,100%{ filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72)); } 50%{ filter: drop-shadow(0 0 14px rgba(10,88,255,.85)) drop-shadow(0 0 34px rgba(0,217,255,.72)); } }
-    @media (max-width:600px){ #welcome-text{ font-size:32px; } }
+    /* Mobile: não cortar e quebrar linhas com tamanho responsivo */
+    @media (max-width:600px){
+      #welcome-text{
+        white-space: normal;
+        text-wrap: balance;
+        word-break: break-word;
+        font-size: clamp(22px, 7vw, 32px);
+        line-height: 1.2;
+        border-right: none;
+      }
+    }
 
-    /* Botão com efeito */
+    /* Botão com efeito (mantido) */
     #start-btn {
       color:#fff;
       border:1px solid rgba(255,255,255,.3);
@@ -205,7 +225,7 @@
     .lvl-desc{ color:#eaeaea; font-size:13px; }
     .lvl-note{ color:#cfefff; font-size:12px; opacity:.9; }
     .level-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .level-actions .btn{ display:inline-block; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; }
+    .level-actions .btn{ display:inline-block; padding:10px 14px; border-radius:10px; font-weight:800; font-size:16px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; } /* 16px para evitar zoom iOS */
     .level-actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
     .to-l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
     .to-l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
@@ -351,24 +371,9 @@
     </div>
 
     <!-- Demais cards -->
-    <div class="benefit-card" id="ccs-play">
-      <div class="benefit-title">🎬 CCS PLAY</div>
-      <div class="benefit-subtitle">Streaming com mais de 60 canais</div>
-      <p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p>
-      <a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a>
-    </div>
-
-    <div class="benefit-card" id="skeelo">
-      <div class="benefit-title">📚 SKEELO</div>
-      <div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div>
-      <a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a>
-    </div>
-
-    <div class="benefit-card">
-      <div class="benefit-title">🆘 SUPORTE PREMIUM</div>
-      <div class="benefit-subtitle">Atendimento prioritário</div>
-      <p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p>
-    </div>
+    <div class="benefit-card" id="ccs-play"><div class="benefit-title">🎬 CCS PLAY</div><div class="benefit-subtitle">Streaming com mais de 60 canais</div><p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p><a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></div>
+    <div class="benefit-card" id="skeelo"><div class="benefit-title">📚 SKEELO</div><div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div><a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></div>
+    <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p></div>
   </div>
 
   <!-- Indique & Ganhe (skin azul) -->
@@ -415,21 +420,8 @@
   </section>
 
   <section id="portais" class="container">
-    <div class="benefit-card">
-      <div class="benefit-title">🌐 Portal do Assinante</div>
-      <ul>
-        <li>💠 Pagamentos PIX/Cartão</li>
-        <li>🧾 2ª via faturas</li>
-        <li>🔓 Desbloqueio confiança</li>
-        <li>📊 Extrato conexão</li>
-      </ul>
-      <a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-title">🧾 Portal de Faturas</div>
-      <p>Acesse sem login:</p>
-      <a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a>
-    </div>
+    <div class="benefit-card"><div class="benefit-title">🌐 Portal do Assinante</div><ul><li>💠 Pagamentos PIX/Cartão</li><li>🧾 2ª via faturas</li><li>🔓 Desbloqueio confiança</li><li>📊 Extrato conexão</li></ul><a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a></div>
+    <div class="benefit-card"><div class="benefit-title">🧾 Portal de Faturas</div><p>Acesse sem login:</p><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a></div>
   </section>
 
   <div class="aviso">⚠️ Seus benefícios estarão disponíveis em até 72h úteis após a instalação.</div>
@@ -495,28 +487,6 @@
       const levelPopover = document.getElementById('levelPopover');
       const popoverClose = document.getElementById('popoverClose');
       const levelBadgeCard = document.getElementById('levelBadge');
-      const initialHash = location.hash;
-
-      // iOS detection e viewport dynamic (para popover)
-      const ua = navigator.userAgent || navigator.vendor || window.opera;
-      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      const metaViewport = document.querySelector('meta[name="viewport"]');
-      const originalViewport = metaViewport ? metaViewport.getAttribute('content') : '';
-
-      // Scroll lock sem quebrar sticky
-      let scrollLockY = 0;
-      function lockScroll(){
-        scrollLockY = window.scrollY || window.pageYOffset;
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${scrollLockY}px`;
-        document.body.style.width = '100%';
-      }
-      function unlockScroll(){
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        window.scrollTo(0, scrollLockY);
-      }
 
       // Sizing
       function resizeAll(){ sizeCanvasToViewport(particles); sizeCanvasToViewport(fwCanvas); sizeCanvasToViewport(lightsCanvas); }
@@ -576,13 +546,10 @@
         }
       }
 
-      /* ===== Revelar cards (.show) – restaurado ===== */
+      /* ===== Revelar cards (.show) ===== */
       const revealTargets=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
       function revealAboveFold(){
-        revealTargets.forEach(el=>{
-          const r=el.getBoundingClientRect();
-          if(r.top < innerHeight*0.95) el.classList.add('show');
-        });
+        revealTargets.forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top < innerHeight*0.95) el.classList.add('show'); });
       }
       if('IntersectionObserver' in window){
         const io=new IntersectionObserver((entries, obs)=>{
@@ -595,14 +562,13 @@
         }, { threshold:0.12, rootMargin:"0px 0px -10% 0px" });
         revealTargets.forEach(el=>io.observe(el));
       } else {
-        // Fallback
         revealTargets.forEach(el=>el.classList.add('show'));
       }
-      // Primeira passada para o conteúdo acima da dobra
       revealAboveFold();
 
-      // Fechar overlay somente ao clicar no botão (com confete) + revelar acima da dobra
+      // Fechar overlay apenas no clique (preserva posição)
       btnEl.addEventListener('click', async ()=>{
+        const prevY = window.scrollY || window.pageYOffset;
         try{ await loadConfetti(); }catch(e){}
         const r=btnEl.getBoundingClientRect();
         const origin = { x:(r.left+r.width/2)/innerWidth, y:(r.top+r.height/2)/innerHeight };
@@ -615,10 +581,11 @@
         overlayEl.style.opacity='0';
         setTimeout(()=>{
           overlayEl.remove();
+          // garantir que não “desça lá pra baixo”
+          window.scrollTo(0, prevY);
           menuInferior.classList.remove('oculto');
           btnTopo.classList.add('visivel');
           revealAboveFold();
-          if(initialHash){ const t=document.getElementById(initialHash.slice(1)); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); }
         },700);
       });
 
@@ -634,8 +601,28 @@
       // Topo
       btnTopo.addEventListener('click', ()=> scrollTo({ top:0, behavior:'smooth' }));
 
-      /* ===== Popover Níveis ===== */
+      /* ===== Popover Níveis (sem alterar viewport, sem body fixed) ===== */
       let popOpen=false, prevFocus=null, trapHandler=null, currentTrigger=null;
+      let preventScrollHandlers = [];
+
+      function addPreventScroll(){
+        const prevent = (e)=>{
+          // permite scroll dentro do próprio popover (se necessário)
+          if (!levelPopover.contains(e.target)) { e.preventDefault(); }
+        };
+        // wheel e touchmove com passive:false para poder prevenir
+        document.addEventListener('wheel', prevent, { passive:false });
+        document.addEventListener('touchmove', prevent, { passive:false });
+        preventScrollHandlers = [prevent];
+      }
+      function removePreventScroll(){
+        const [prevent] = preventScrollHandlers;
+        if (prevent){
+          document.removeEventListener('wheel', prevent, { passive:false });
+          document.removeEventListener('touchmove', prevent, { passive:false });
+        }
+        preventScrollHandlers = [];
+      }
 
       function positionPopover() {
         if(!popOpen || !currentTrigger) return;
@@ -651,45 +638,34 @@
 
       function openPopover(triggerEl){
         popOpen=true; currentTrigger=triggerEl;
-
-        // Evitar zoom e quebra de sticky no iOS
-        lockScroll();
-        if (isIOS && metaViewport){
-          metaViewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
-        }
-
         prevFocus=document.activeElement;
         setExpanded(levelBadgeCard, false); setExpanded(topLevelBadge, false); setExpanded(triggerEl, true);
         levelPopover.classList.add('open'); positionPopover();
 
-        // Sem foco automático no iOS para não dar zoom
+        // não dar foco automático (evita zoom/“soco” visual em iOS)
         const els=focusables(levelPopover);
-        if (!isIOS){
-          const first=els[0]||levelPopover, last=els[els.length-1]||levelPopover;
-          if(first) first.focus();
-          trapHandler=(e)=>{ if(e.key!=='Tab') return; if(!els.length){ e.preventDefault(); return; }
-            const f=els[0], l=els[els.length-1];
-            if(e.shiftKey && document.activeElement===f){ e.preventDefault(); l.focus(); }
-            else if(!e.shiftKey && document.activeElement===l){ e.preventDefault(); f.focus(); } };
-          levelPopover.addEventListener('keydown', trapHandler);
-        }
+        trapHandler=(e)=>{ if(e.key!=='Tab') return;
+          if(!els.length){ e.preventDefault(); return; }
+          const f=els[0], l=els[els.length-1];
+          if(e.shiftKey && document.activeElement===f){ e.preventDefault(); l.focus(); }
+          else if(!e.shiftKey && document.activeElement===l){ e.preventDefault(); f.focus(); }
+        };
+        levelPopover.addEventListener('keydown', trapHandler);
 
+        addPreventScroll();
         addEventListener('scroll', positionPopover, {passive:true});
         addEventListener('resize', positionPopover, {passive:true});
       }
 
       function closePopover(){
         if(!popOpen) return; popOpen=false;
-        unlockScroll();
-        if (isIOS && metaViewport){
-          metaViewport.setAttribute('content', originalViewport || 'width=device-width, initial-scale=1.0');
-        }
         setExpanded(levelBadgeCard, false); setExpanded(topLevelBadge, false);
         levelPopover.classList.remove('open');
         if(trapHandler) levelPopover.removeEventListener('keydown', trapHandler);
         if(prevFocus){ try{ prevFocus.focus(); }catch{} }
         removeEventListener('scroll', positionPopover);
         removeEventListener('resize', positionPopover);
+        removePreventScroll();
         currentTrigger=null;
       }
 
@@ -737,14 +713,6 @@
           if (prevBtn) prevBtn.setAttribute('aria-expanded','false');
           openTip = null;
         }
-      });
-
-      // Toggle detalhes Indique
-      document.querySelectorAll('#indique .toggle-details').forEach(b=>{
-        b.addEventListener('click', e=>{
-          const card=e.currentTarget.closest('.card'); card.classList.toggle('open');
-          e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
-        });
       });
     }
 
