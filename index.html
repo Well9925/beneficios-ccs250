@@ -9,16 +9,39 @@
     body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; }
 
     /* ===== Menu ===== */
-    #menu-btn { position:fixed; top:15px; right:15px; background:#111; color:#fff; border:none; padding:10px 15px; font-size:20px; border-radius:6px; cursor:pointer; z-index:3000; }
+    #menu-btn { 
+      position:fixed; top:15px; right:15px; 
+      background:#111; color:#fff; border:none; 
+      padding:10px 15px; font-size:20px; 
+      border-radius:6px; cursor:pointer; 
+      z-index:3000;
+      display:none; /* 🔹 Menu escondido até boas-vindas fechar */
+    }
     #side-menu { position:fixed; top:0; right:-250px; width:250px; height:100%; background:#111; z-index:2999; display:flex; flex-direction:column; padding:40px 20px; transition:.3s; }
     #side-menu a { color:#fff; text-decoration:none; margin:10px 0; font-weight:bold; }
     #side-menu.show { right:0; }
 
-    /* ===== Overlay boas-vindas (NOVO premium) ===== */
-    #welcome-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:4000; transition:opacity 1s ease; text-align:center; }
+    /* ===== Overlay boas-vindas ===== */
+    #welcome-overlay { 
+      position:fixed; inset:0; 
+      background:rgba(0,0,0,0.8); 
+      display:flex; justify-content:center; align-items:center; flex-direction:column; 
+      z-index:4000; transition:opacity 1s ease; text-align:center;
+      backdrop-filter: blur(8px); /* 🔹 Desfoca fundo até clicar */
+    }
     #particles { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3998; pointer-events:none; }
     #spotlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events:none; transition:background-position .1s; z-index:3999; }
-    #welcome-text { font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:gradientMove 3s linear infinite; display:inline-block; white-space:nowrap; overflow:hidden; border-right:2px solid #ffcc00; text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); position:relative; z-index:4001; }
+    #welcome-text { 
+      font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; 
+      background:linear-gradient(90deg,#fff,#ffcc00,#fff); 
+      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; 
+      animation:gradientMove 3s linear infinite; display:inline-block; 
+      overflow:hidden; border-right:2px solid #ffcc00; 
+      text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); 
+      position:relative; z-index:4001;
+      max-width:90%; /* 🔹 Impede bug no celular */
+      white-space:nowrap;
+    }
     @keyframes gradientMove { to { background-position:200% center; } }
     #start-btn { background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto; border:none; padding:14px 28px; border-radius:10px; font-weight:bold; cursor:pointer; animation:shine 2s linear infinite; font-size:16px; margin-top:20px; display:none; opacity:0; transform:scale(.8); transition:all .6s ease; position:relative; z-index:4001; }
     #start-btn.show { display:inline-block; opacity:1; transform:scale(1); animation:shine 2s linear infinite, pulseHalo 2s ease-in-out infinite; }
@@ -28,6 +51,11 @@
     @keyframes wave { 0%{opacity:.6;transform:scale(.8);}70%{opacity:0;transform:scale(1.8);}100%{opacity:0;transform:scale(2);} }
     @keyframes shine { to { background-position:200% center; } }
     @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,204,0,.6),0 0 30px rgba(255,204,0,.4);}50%{box-shadow:0 0 35px rgba(255,204,0,1),0 0 60px rgba(255,204,0,.7);} }
+
+    /* Texto no celular */
+    @media (max-width:600px){
+      #welcome-text { white-space:normal; font-size:22px; }
+    }
 
     /* ===== Canvas ===== */
     canvas#fireworks,canvas#lights { position:fixed; top:0; left:0; pointer-events:none; z-index:1500; width:100%; height:100%; }
@@ -168,7 +196,8 @@
     confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:45 });
     setTimeout(()=>confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:55 }),250);
     for(let i=0;i<5;i++){ setTimeout(()=>{ confetti({ particleCount:80, spread:60, origin:{x, y:0}, colors:['#FFD700'], startVelocity:20 }); }, i*300); }
-    overlayEl.style.opacity='0'; setTimeout(()=>overlayEl.remove(),1000);
+    overlayEl.style.opacity='0'; setTimeout(()=>{ overlayEl.remove(); document.getElementById('menu-btn').style.display='block'; },1000); 
+    // 🔹 Menu só aparece agora
   });
 
   // Intersection Observer para cascata
