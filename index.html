@@ -131,10 +131,34 @@
     .benefit-card.show::after { opacity: 1; animation: sparkle 2s infinite; }
     @keyframes sparkle { 0%,100%{opacity:.2;} 50%{opacity:1;} }
     .benefit-card:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(0,0,0,.5); }
-    .benefit-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .benefit-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .benefit-subtitle { font-size: 16px; margin-bottom: 15px; color: #ccc; }
-    .app-link { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #fff; color: #111; border-radius: 6px; text-decoration: none; transition: .3s; }
-    .app-link:hover { background: var(--accent); }
+
+    /* Estilos adicionais para o CONECTA CLUBE */
+    .badge {
+      display:inline-block; font-size:12px; padding:3px 8px; border-radius:10px;
+      background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25);
+    }
+    .quote {
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid var(--accent);
+      padding: 10px 12px; border-radius: 8px; margin: 6px 0 12px 0; color:#eaeaea;
+    }
+    .bullets { margin: 10px 0 6px 18px; }
+    .bullets li { margin: 4px 0; }
+    .disclaimer { font-size: 13px; color:#cfcfcf; opacity: .9; margin-top: 6px; font-style: italic; }
+    .email-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .copy-link {
+      background: transparent; color:#fff; border:1px solid rgba(255,255,255,.25);
+      padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s;
+      box-shadow:none;
+    }
+    .copy-link:hover { background:rgba(255,255,255,.08); }
+    .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
+
+    .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
+    .app-link:hover { background: var(--accent); color: var(--accent-contrast); }
+    .inline-email { color:#fff; text-decoration: underline dotted; }
 
     .highlight {
       background: linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding: 40px 20px; text-align: center; border-radius: 16px; margin: 40px auto; max-width: 1000px;
@@ -179,7 +203,35 @@
   </header>
 
   <div id="beneficios" class="container">
-    <div class="benefit-card"><div class="benefit-title">🎟️ CONECTA CLUBE</div><div class="benefit-subtitle">Clube de Vantagens CCS</div><p>Receba 1 voucher a cada 90 dias. Escolha benefícios em empresas da região!</p></div>
+    <!-- CONECTA CLUBE atualizado -->
+    <div class="benefit-card" id="conecta-clube">
+      <div class="benefit-title">🎟️ CONECTA CLUBE <span class="badge">Nível 1</span></div>
+      <div class="benefit-subtitle">Clube de Vantagens CCS</div>
+
+      <div class="quote">
+        É o nosso clube de benefícios com diversas empresas parceiras da região! 🌟<br/>
+        Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!
+      </div>
+
+      <p><strong>Quer saber qual benefício está disponível no seu plano?</strong><br/>
+      Mande um e-mail para: <a class="inline-email" href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a> 📩</p>
+
+      <ul class="bullets">
+        <li>Receba 1 voucher de benefício a cada 90 dias.</li>
+      </ul>
+      <p class="disclaimer">Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.</p>
+
+      <div class="email-actions">
+        <a
+          class="app-link"
+          id="emailBtn"
+          href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!"
+          >📩 Enviar e-mail agora</a>
+        <button class="copy-link" id="copyEmail" type="button">📋 Copiar e-mail</button>
+      </div>
+    </div>
+
+    <!-- Demais cards intactos -->
     <div class="benefit-card"><div class="benefit-title">🎬 CCS PLAY</div><div class="benefit-subtitle">Streaming com mais de 60 canais</div><p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p><a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></div>
     <div class="benefit-card"><div class="benefit-title">📚 SKEELO</div><div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div><a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></div>
     <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p></div>
@@ -266,7 +318,7 @@
       window.addEventListener('resize', resizeAll, { passive:true });
 
       // Texto digitando (rAF, seguro contra duplicação)
-      const message = "250 Mega com muitos benefícios esperando por você!";
+      const message = "🚀 250 Mega com muitos benefícios esperando por você!";
       textEl.textContent = "";
       let idx = 0, next = 0;
       function typeLoop(ts){
@@ -413,6 +465,28 @@
 
       // Voltar ao topo
       btnTopo.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // Copiar e-mail (feedback visual)
+      const copyBtn = document.getElementById('copyEmail');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          const email = 'ccs@ccstelecom.com.br';
+          try {
+            await navigator.clipboard.writeText(email);
+          } catch {
+            const tmp = document.createElement('input');
+            tmp.value = email;
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand('copy');
+            document.body.removeChild(tmp);
+          }
+          const old = copyBtn.textContent;
+          copyBtn.textContent = '✅ E-mail copiado';
+          copyBtn.classList.add('copied');
+          setTimeout(()=>{ copyBtn.textContent = old; copyBtn.classList.remove('copied'); }, 1500);
+        });
+      }
     }
 
     if (document.readyState === 'loading') {
