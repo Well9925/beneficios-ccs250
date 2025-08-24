@@ -8,112 +8,96 @@
     html { scroll-behavior:smooth; }
     body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0f0f; color:#fff; overflow-x:hidden; }
 
-    /* ===== Botão Menu ===== */
-    #menu-btn {
-      position: fixed;
-      top: 15px; right: 15px;
-      background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255,255,255,0.5);
-      padding: 10px 15px;
-      font-size: 22px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 3000;
-      display: none; /* 🔹 Só aparece depois do boas-vindas */
-      animation: glowPulse 2s infinite;
+    /* ===== Botão de abrir menu ===== */
+    #menu-btn { 
+      position:fixed; top:15px; right:15px; 
+      background:transparent; 
+      border:2px solid rgba(255,255,255,0.5);
+      color:#fff; font-size:22px; 
+      border-radius:50%; width:48px; height:48px;
+      cursor:pointer; z-index:3000;
+      display:none; /* 🔹 Aparece só depois das boas-vindas */
+      box-shadow:0 0 10px rgba(255,255,255,0.6);
+      transition:.3s;
     }
-    @keyframes glowPulse {
-      0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.3); }
-      50% { box-shadow: 0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,255,255,0.7); }
-    }
+    #menu-btn:hover { box-shadow:0 0 20px rgba(255,255,255,1); }
 
-    /* ===== Menu Tela Cheia ===== */
-    #side-menu {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(10px);
-      z-index: 2999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transform: translateY(-100%);
-      transition: transform 0.5s ease;
+    /* ===== Overlay do menu ===== */
+    #menu-overlay {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      display:none;
+      justify-content:center; align-items:center;
+      flex-direction:column;
+      z-index:3500;
+      transition:opacity .4s;
     }
-    #side-menu.show { transform: translateY(0); }
+    #menu-overlay.show { display:flex; }
 
-    #side-menu a {
-      color: #fff;
-      text-decoration: none;
-      margin: 15px 0;
-      font-size: 22px;
-      font-weight: bold;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
+    #menu-overlay a {
+      background:#111;
+      padding:14px 24px;
+      margin:10px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:bold;
+      color:#fff;
+      font-size:18px;
+      box-shadow:0 0 15px rgba(255,255,255,0.6);
+      transition:.3s;
     }
-    #side-menu.show a { opacity: 1; transform: translateY(0); }
-    #side-menu.show a:nth-child(2){ transition-delay: .1s; }
-    #side-menu.show a:nth-child(3){ transition-delay: .2s; }
-    #side-menu.show a:nth-child(4){ transition-delay: .3s; }
-    #side-menu.show a:nth-child(5){ transition-delay: .4s; }
-
-    /* Botão fechar (X) */
-    #close-menu {
-      position: absolute;
-      top: 20px; right: 20px;
-      background: transparent;
-      border: none;
-      font-size: 28px;
-      color: #fff;
-      cursor: pointer;
+    #menu-overlay a:hover {
+      box-shadow:0 0 25px rgba(255,255,255,1);
+      transform:scale(1.05);
     }
 
     /* ===== Overlay boas-vindas ===== */
-    #welcome-overlay {
-      position:fixed; inset:0;
-      background:rgba(0,0,0,0.8);
-      display:flex; justify-content:center; align-items:center; flex-direction:column;
+    #welcome-overlay { 
+      position:fixed; inset:0; 
+      background:rgba(0,0,0,0.8); 
+      display:flex; justify-content:center; align-items:center; flex-direction:column; 
       z-index:4000; transition:opacity 1s ease; text-align:center;
       backdrop-filter: blur(8px);
     }
     #particles { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3998; pointer-events:none; }
-    #spotlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events:none; transition:background-position .1s; z-index:3999; }
-    #welcome-text {
-      font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold;
-      background:linear-gradient(90deg,#fff,#ffcc00,#fff);
-      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      animation:gradientMove 3s linear infinite; display:inline-block;
-      overflow:hidden; border-right:2px solid #ffcc00;
-      text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4);
+    #spotlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle 200px at center, rgba(255,255,200,0.25), transparent 80%); pointer-events:none; z-index:3999; }
+    #welcome-text { 
+      font-size:32px; margin-bottom:20px; min-height:30px; font-weight:bold; 
+      background:linear-gradient(90deg,#fff,#ffcc00,#fff); 
+      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; 
+      animation:gradientMove 3s linear infinite; display:inline-block; 
+      overflow:hidden; border-right:2px solid #ffcc00; 
+      text-shadow:0 0 8px rgba(255,204,0,.6), 0 0 16px rgba(255,204,0,.4); 
       position:relative; z-index:4001;
       max-width:90%; white-space:nowrap;
     }
     @keyframes gradientMove { to { background-position:200% center; } }
+
     #start-btn {
-      background:linear-gradient(90deg,#fff,#ffcc00,#fff); background-size:200% auto;
-      border:none; padding:14px 28px; border-radius:10px; font-weight:bold; cursor:pointer;
-      animation:shine 2s linear infinite;
-      font-size:16px; margin-top:20px; display:none; opacity:0; transform:scale(.8);
+      background:linear-gradient(90deg,#fff,#ffcc00,#fff);
+      background-size:200% auto;
+      border:none; padding:14px 28px;
+      border-radius:10px; font-weight:bold;
+      cursor:pointer; animation:shine 2s linear infinite;
+      font-size:16px; margin-top:20px;
+      display:none; opacity:0; transform:scale(.8);
       transition:all .6s ease; position:relative; z-index:4001;
     }
     #start-btn.show { display:inline-block; opacity:1; transform:scale(1); animation:shine 2s linear infinite, pulseHalo 2s ease-in-out infinite; }
-    #start-btn.show::before, #start-btn.show::after {
-      content:""; position:absolute; inset:-10px; border-radius:16px; border:2px solid rgba(255,204,0,.6); opacity:0; transform:scale(.8); pointer-events:none;
-    }
+    #start-btn.show::before, #start-btn.show::after { content:""; position:absolute; inset:-10px; border-radius:16px; border:2px solid rgba(255,255,255,.6); opacity:0; transform:scale(.8); pointer-events:none; }
     #start-btn.show::before { animation:wave 2s ease-out infinite; }
     #start-btn.show::after  { animation:wave 2s ease-out infinite 1s; }
     @keyframes wave { 0%{opacity:.6;transform:scale(.8);}70%{opacity:0;transform:scale(1.8);}100%{opacity:0;transform:scale(2);} }
     @keyframes shine { to { background-position:200% center; } }
-    @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,204,0,.6),0 0 30px rgba(255,204,0,.4);}50%{box-shadow:0 0 35px rgba(255,204,0,1),0 0 60px rgba(255,204,0,.7);} }
+    @keyframes pulseHalo { 0%,100%{box-shadow:0 0 15px rgba(255,255,255,.6),0 0 30px rgba(255,255,255,.4);}50%{box-shadow:0 0 35px rgba(255,255,255,1),0 0 60px rgba(255,255,255,.7);} }
 
-    @media (max-width:600px){ #welcome-text { white-space:normal; font-size:22px; } }
+    @media (max-width:600px){
+      #welcome-text { white-space:normal; font-size:22px; }
+    }
 
     /* ===== Canvas ===== */
     canvas#fireworks,canvas#lights { position:fixed; top:0; left:0; pointer-events:none; z-index:1500; width:100%; height:100%; }
-    #ripple { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-radius: 50%; background: radial-gradient(circle, rgba(255,200,0,0.5) 0%, transparent 70%); opacity: 0; pointer-events: none; z-index: 1800; }
 
     /* ===== Cards ===== */
     .container { max-width:1000px; margin:40px auto; padding:0 20px; }
@@ -129,10 +113,10 @@
     .app-link:hover { background:#ffcc00; }
 
     /* ===== Indique & Ganhe ===== */
-    .highlight{ background:linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding:40px 20px; text-align:center; border-radius:16px; margin:40px auto; max-width:1000px; opacity:0; transform:translateY(30px) scale(0.95); transition: all .8s ease; }
+    .highlight{ background:linear-gradient(135deg,#0033cc,#6600cc); color:#fff; padding:40px 20px; text-align:center; border-radius:16px; margin:40px auto; max-width:1000px; opacity:0; transform:translateY(30px) scale(0.95); transition:.8s; }
     .highlight.show{ opacity:1; transform:translateY(0) scale(1); }
     .indique-cards{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
-    .indique-cards .card{ background:rgba(255,255,255,0.1); border-radius:12px; padding:20px; width:300px; box-shadow:0 2px 10px rgba(0,0,0,0.3); transition:transform .3s ease, box-shadow .3s ease; }
+    .indique-cards .card{ background:rgba(255,255,255,0.1); border-radius:12px; padding:20px; width:300px; box-shadow:0 2px 10px rgba(0,0,0,0.3); transition:.3s; }
     .indique-cards .card:hover{ transform:scale(1.05); box-shadow:0 4px 20px rgba(0,0,0,0.5); }
     .indique-cards .card strong{ display:block; margin-top:10px; font-size:22px; background:linear-gradient(90deg,#fff,#ffcc00,#fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:200% auto; animation:shine 3s linear infinite; }
 
@@ -155,19 +139,17 @@
 <body>
 
 <button id="menu-btn">☰</button>
-<div id="side-menu">
-  <button id="close-menu">✕</button>
-  <a href="#beneficios">Benefícios</a>
-  <a href="#indique">Indique & Ganhe</a>
-  <a href="#portais">Portais</a>
-  <a href="#finalizacao">Finalização</a>
+<div id="menu-overlay">
+  <a href="#beneficios">🎟️ Benefícios</a>
+  <a href="#indique">💰 Indique & Ganhe</a>
+  <a href="#portais">🌐 Portais</a>
+  <a href="#finalizacao">⭐ Finalização</a>
 </div>
 
 <canvas id="fireworks"></canvas>
 <canvas id="lights"></canvas>
-<div id="ripple"></div>
 
-<!-- ===== NOVO Boas-vindas Premium ===== -->
+<!-- ===== Boas-vindas Premium ===== -->
 <div id="welcome-overlay">
   <canvas id="particles"></canvas>
   <div id="spotlight"></div>
@@ -181,37 +163,36 @@
 </header>
 
 <div id="beneficios" class="container">
-  <div class="benefit-card"><div class="benefit-title">🎟️ CONECTA CLUBE</div><div class="benefit-subtitle">Clube de Vantagens CCS</div><p>Receba 1 voucher a cada 90 dias. Escolha benefícios em empresas da região!</p></div>
-  <div class="benefit-card"><div class="benefit-title">🎬 CCS PLAY</div><div class="benefit-subtitle">Streaming com mais de 60 canais</div><p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p><a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></div>
-  <div class="benefit-card"><div class="benefit-title">📚 SKEELO</div><div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div><a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></div>
-  <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p></div>
+  <div class="benefit-card"><div class="benefit-title">🎟️ CONECTA CLUBE</div><div class="benefit-subtitle">Clube de Vantagens CCS</div><p>Receba 1 voucher a cada 90 dias.</p></div>
+  <div class="benefit-card"><div class="benefit-title">🎬 CCS PLAY</div><div class="benefit-subtitle">Streaming com mais de 60 canais</div><p>Inclui SBT, Record (sem Globo).</p><a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a></div>
+  <div class="benefit-card"><div class="benefit-title">📚 SKEELO</div><div class="benefit-subtitle">E-books e Audiobooks</div><a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a></div>
+  <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita/ano.</p></div>
 </div>
 
 <section id="indique" class="highlight">
   <h2>💰 Indique & Ganhe</h2>
-  <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
+  <p>Ganhe até <strong>100% de desconto</strong> indicando amigos!</p>
   <div class="indique-cards">
-    <div class="card"><h3>🎯 250MB</h3><strong>R$30 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto aplicado após instalação.</li><li>Bônus extra se contratar em até 72h.</li></ul></div></div>
-    <div class="card"><h3>🎯 450MB</h3><strong>R$50 de desconto</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Desconto no próximo ciclo.</li><li>Válido para titular adimplente.</li></ul></div></div>
-    <div class="card"><h3>🏆 650MB</h3><strong>Mensalidade ISENTA</strong><button class="toggle-details">Ver detalhes</button><div class="details"><ul><li>Isenção após ativação confirmada.</li><li>1 isenção por indicação.</li></ul></div></div>
+    <div class="card"><h3>🎯 250MB</h3><strong>R$30 de desconto</strong></div>
+    <div class="card"><h3>🎯 450MB</h3><strong>R$50 de desconto</strong></div>
+    <div class="card"><h3>🏆 650MB</h3><strong>Mensalidade ISENTA</strong></div>
   </div>
-  <p class="bonus">⏳ Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
+  <p class="bonus">⏳ Se contratar em até 72h, bônus +R$20!</p>
   <a href="https://wa.me/554797701300" class="app-link">📲 Indicar agora</a>
 </section>
 
 <section id="portais" class="container">
-  <div class="benefit-card"><div class="benefit-title">🌐 Portal do Assinante</div><ul><li>💠 Pagamentos PIX/Cartão</li><li>🧾 2ª via faturas</li><li>🔓 Desbloqueio confiança</li><li>📊 Extrato conexão</li></ul><a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a></div>
-  <div class="benefit-card"><div class="benefit-title">🧾 Portal de Faturas</div><p>Acesse sem login:</p><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a></div>
+  <div class="benefit-card"><div class="benefit-title">🌐 Portal do Assinante</div><ul><li>💠 PIX/Cartão</li><li>🧾 2ª via</li><li>🔓 Desbloqueio</li><li>📊 Extrato</li></ul><a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a></div>
+  <div class="benefit-card"><div class="benefit-title">🧾 Portal de Faturas</div><a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a></div>
 </section>
 
-<div class="aviso">⚠️ Seus benefícios estarão disponíveis em até 72h úteis após a instalação.</div>
+<div class="aviso">⚠️ Benefícios disponíveis em até 72h após instalação.</div>
 
 <section id="finalizacao">
   <h3>💙 Obrigado por fazer parte da família CCS Telecom</h3>
   <div class="stars">⭐⭐⭐⭐⭐</div>
   <p>Conte com a gente sempre 🚀</p>
-  <a href="https://wa.me/554797701300" class="app-link">📲 Falar com Suporte</a>
-  <br/><br/>
+  <a href="https://wa.me/554797701300" class="app-link">📲 Suporte</a><br/><br/>
   <a href="https://is.gd/CCSnota10" target="_blank" class="app-link">⭐ Avalie-nos no Google</a>
 </section>
 
@@ -219,19 +200,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-  /* ===== Menu toggle ===== */
-  const menuBtn = document.getElementById('menu-btn');
-  const sideMenu = document.getElementById('side-menu');
-  const closeMenu = document.getElementById('close-menu');
-  menuBtn.addEventListener('click', ()=>
-{
-    sideMenu.classList.add('show');
-  });
-  closeMenu.addEventListener('click', ()=>{
-    sideMenu.classList.remove('show');
-  });
-
-  /* ===== Texto digitando ===== */
+  // ===== Texto digitando boas-vindas =====
   const spotlight=document.getElementById('spotlight');
   const overlayEl=document.getElementById('welcome-overlay');
   const textEl=document.getElementById('welcome-text');
@@ -241,120 +210,40 @@
   const message="🚀 250 Mega com muitos benefícios esperando por você!";
   let ti=0;
   (function type(){
-    if(ti<message.length){ 
-      textEl.textContent+=message.charAt(ti++); 
-      setTimeout(type,30);
-    } else { 
-      textEl.style.borderRight='none'; 
-      setTimeout(()=>btnEl.classList.add('show'),300); 
-    }
+    if(ti<message.length){ textEl.textContent+=message.charAt(ti++); setTimeout(type,30);
+    } else { textEl.style.borderRight='none'; setTimeout(()=>btnEl.classList.add('show'),300); }
   })();
 
-  // Spotlight segue mouse/dedo
-  document.addEventListener('mousemove',(e)=>{ 
-    spotlight.style.background=`radial-gradient(circle 200px at ${e.clientX}px ${e.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; 
-  });
-  document.addEventListener('touchmove',(e)=>{ 
-    const t=e.touches[0]; 
-    spotlight.style.background=`radial-gradient(circle 200px at ${t.clientX}px ${t.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; 
-  });
+  // Spotlight segue mouse
+  document.addEventListener('mousemove',(e)=>{ spotlight.style.background=`radial-gradient(circle 200px at ${e.clientX}px ${e.clientY}px, rgba(255,255,200,0.25), transparent 80%)`; });
 
-  // Partículas
-  particles.width=window.innerWidth; particles.height=window.innerHeight; 
-  let stars=[];
-  for(let i=0;i<80;i++){ 
-    stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2}); 
-  }
-  function animateStars(){ 
-    ctx.clearRect(0,0,particles.width,particles.height); 
-    ctx.fillStyle="rgba(255,255,200,0.8)"; 
-    for(let star of stars){ 
-      ctx.beginPath(); ctx.arc(star.x,star.y,star.r,0,Math.PI*2); 
-      ctx.fill(); 
-      star.y+=star.s; 
-      if(star.y>particles.height) star.y=0; 
-    } 
-    requestAnimationFrame(animateStars); 
-  }
+  // Partículas fundo
+  particles.width=window.innerWidth; particles.height=window.innerHeight; let stars=[];
+  for(let i=0;i<80;i++){ stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+1,s:Math.random()*0.5+0.2}); }
+  function animateStars(){ ctx.clearRect(0,0,particles.width,particles.height); ctx.fillStyle="rgba(255,255,200,0.8)"; for(let star of stars){ ctx.beginPath(); ctx.arc(star.x,star.y,star.r,0,Math.PI*2); ctx.fill(); star.y+=star.s; if(star.y>particles.height) star.y=0; } requestAnimationFrame(animateStars); }
   animateStars();
 
-  // Botão clique confete
+  // Clique boas-vindas -> libera site + menu
   btnEl.addEventListener('click',()=>{ 
-    const r=btnEl.getBoundingClientRect(); 
-    const x=(r.left+r.width/2)/window.innerWidth; 
-    const y=(r.top+r.height/2)/window.innerHeight;
+    const r=btnEl.getBoundingClientRect(); const x=(r.left+r.width/2)/window.innerWidth; const y=(r.top+r.height/2)/window.innerHeight;
     confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:45 });
     setTimeout(()=>confetti({ particleCount:300, spread:360, origin:{x,y}, startVelocity:55 }),250);
-    for(let i=0;i<5;i++){ 
-      setTimeout(()=>{ 
-        confetti({ particleCount:80, spread:60, origin:{x, y:0}, colors:['#FFD700'], startVelocity:20 }); 
-      }, i*300); 
-    }
     overlayEl.style.opacity='0'; 
-    setTimeout(()=>{
-      overlayEl.remove(); 
-      menuBtn.style.display='block'; // 🔹 Menu só aparece agora
-    },1000); 
+    setTimeout(()=>{ overlayEl.remove(); document.getElementById('menu-btn').style.display='block'; },1000); 
   });
 
-  // Intersection Observer para cascata
-  const els=[...document.querySelectorAll(".benefit-card, .highlight, #finalizacao")];
-  const observer=new IntersectionObserver((entries)=>{ 
-    entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add("show"); } }); 
-  },{threshold:0.2});
-  els.forEach(el=>observer.observe(el));
+  // ===== Menu overlay toggle =====
+  const menuBtn=document.getElementById('menu-btn');
+  const menuOverlay=document.getElementById('menu-overlay');
 
-  // Toggle detalhes Indique & Ganhe
-  document.querySelectorAll('#indique .toggle-details').forEach(btn=>{ 
-    btn.addEventListener('click',e=>{ 
-      const card=e.currentTarget.closest('.card'); 
-      card.classList.toggle('open'); 
-      e.currentTarget.textContent=card.classList.contains('open')? 'Ocultar detalhes':'Ver detalhes'; 
-    }); 
+  menuBtn.addEventListener('click',()=>{
+    menuOverlay.classList.toggle('show');
   });
 
-  // Fogos
-  function startFireworks(){ 
-    const canvas=document.getElementById('fireworks'); const ctx=canvas.getContext('2d'); 
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight; 
-    let particles=[];
-    function createParticle(x,y){ 
-      const colors=['#ff0043','#14fc56','#1e90ff','#ffcc00']; 
-      const angle=Math.random()*2*Math.PI; const speed=2+Math.random()*5; 
-      return {x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, alpha:1,color:colors[Math.floor(Math.random()*colors.length)]}; 
-    }
-    function explode(x,y){ for(let i=0;i<30;i++) particles.push(createParticle(x,y)); }
-    function animate(){ 
-      ctx.clearRect(0,0,canvas.width,canvas.height); 
-      particles=particles.filter(p=>p.alpha>0); 
-      for(const p of particles){ 
-        p.x+=p.vx; p.y+=p.vy; p.alpha-=0.01; 
-        ctx.globalAlpha=p.alpha; ctx.fillStyle=p.color; 
-        ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill(); 
-      } 
-      ctx.globalAlpha=1; requestAnimationFrame(animate); 
-    }
-    setInterval(()=>explode(Math.random()*canvas.width,Math.random()*canvas.height/2),1000); animate(); 
-  }
-
-  // Luzes
-  function startLights(){ 
-    const canvas=document.getElementById('lights'); const ctx=canvas.getContext('2d'); 
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight; 
-    const lights=Array.from({length:50},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*2,a:0.3+Math.random()*0.7}));
-    function animate(){ 
-      ctx.clearRect(0,0,canvas.width,canvas.height); 
-      for(const l of lights){ 
-        ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2); 
-        ctx.fillStyle=`rgba(255,255,255,${l.a})`; ctx.fill(); 
-        l.y-=0.3; if(l.y<-5) l.y=canvas.height+5; 
-      } 
-      requestAnimationFrame(animate); 
-    } 
-    animate(); 
-  }
-
-  window.addEventListener('load',()=>{ startFireworks(); startLights(); });
+  // Fecha menu clicando fora dos botões
+  menuOverlay.addEventListener('click',(e)=>{
+    if(e.target===menuOverlay){ menuOverlay.classList.remove('show'); }
+  });
 </script>
 </body>
 </html>
