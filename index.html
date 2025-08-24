@@ -45,8 +45,41 @@
 
     html { scroll-behavior: smooth; }
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; padding-bottom: 72px; }
-    @media (max-width:600px){ body { padding-bottom: 60px; } }
-    header { text-align: center; }
+
+    /* TÍTULO FIXO (sticky) */
+    .sticky-title {
+      position: sticky; top: 0; z-index: 3200;
+      background: rgba(10,10,10,0.65);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 12px 12px 14px;
+      text-align: center;
+    }
+    .sticky-title h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .lvl-pill {
+      display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:900; letter-spacing:.35px; color:#fff;
+      border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(47,128,255,.24), inset 0 0 6px rgba(255,255,255,.12);
+    }
+    .lvl-pill.l1 { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
+    .lvl-pill.l2 { background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
+    .lvl-pill.l3 { background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
+    .sticky-title p {
+      margin: 6px 0 0;
+      font-size: 14px; opacity: .92;
+    }
+    @media (max-width:600px){
+      .sticky-title h1 { font-size: 18px; }
+      .sticky-title p { font-size: 13px; }
+    }
+
+    /* Ajuste de âncora para não ficar atrás do título sticky */
+    section, .container { scroll-margin-top: 82px; }
 
     /* MENU INFERIOR */
     nav.menu-bottom { width: 100vw; background: #181818e6; position: fixed; left:0; bottom:0; z-index: 5001; box-shadow: 0 -2px 10px rgba(0,0,0,0.18); border-top: 1px solid #222; backdrop-filter: blur(6px); transition: opacity .3s ease; padding-bottom: env(safe-area-inset-bottom, 0); }
@@ -85,7 +118,7 @@
     canvas#fireworks, canvas#lights { position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:1500; }
 
     /* CONTEÚDO GENÉRICO */
-    .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    .container { max-width: 1000px; margin: 20px auto 40px; padding: 0 20px; }
     .benefit-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; box-shadow: 0 2px 10px rgba(255,255,255,0.1); margin-bottom: 30px; opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease; position: relative; }
     .benefit-card.show { opacity:1; transform: translateY(0) scale(1); }
     .benefit-card:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(0,0,0,.5); }
@@ -100,9 +133,10 @@
     .bullets { margin: 10px 0 6px 18px; }
     .bullets li { margin:4px 0; }
 
+    /* Aviso Nível 3 – texto claro com chip no fim (evita confusão) */
     .disclaimer { font-size:13px; color:#cfcfcf; opacity:.95; margin-top:8px; }
-    .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; }
-    .chip { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:900; letter-spacing:.4px; text-transform:uppercase; margin-right:8px; color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35); text-shadow: 0 1px 1px rgba(0,0,0,.35); -webkit-text-stroke:.2px rgba(0,0,0,.25); box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14); }
+    .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
+    .chip { display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35); text-shadow: 0 1px 1px rgba(0,0,0,.35); -webkit-text-stroke:.2px rgba(0,0,0,.25); box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14); }
 
     .email-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
     .copy-link { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.25); padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s; box-shadow:none; }
@@ -136,7 +170,7 @@
     .popover-close{ position:absolute; top:6px; right:6px; background:transparent; border:1px solid rgba(255,255,255,.18); color:#fff; width:28px; height:28px; border-radius:8px; cursor:pointer; font-weight:900; line-height:26px; text-align:center; }
     .popover-close:hover{ background: rgba(255,255,255,.08); }
 
-    /* INDICHE & GANHE – skin azul (fix) */
+    /* INDICHE & GANHE – skin azul */
     #indique.indique{
       background: linear-gradient(160deg, #0b4bff 0%, #6f2bff 100%);
       color:#fff; padding: 40px 20px; text-align: center;
@@ -187,6 +221,15 @@
   <canvas id="fireworks"></canvas>
   <canvas id="lights"></canvas>
 
+  <!-- Título fixo com tema do Nível 1 -->
+  <div class="sticky-title">
+    <h1>
+      Benefícios
+      <span class="lvl-pill l1" aria-label="Nível 1">Nível 1</span>
+    </h1>
+    <p>Confira tudo que você ganhou com seu plano de <strong>250MB</strong></p>
+  </div>
+
   <!-- Overlay de boas-vindas -->
   <div id="welcome-overlay">
     <canvas id="particles"></canvas>
@@ -194,11 +237,6 @@
     <h2 id="welcome-text"></h2>
     <button id="start-btn">Liberar benefícios agora 🔓</button>
   </div>
-
-  <header>
-    <h1>🎉 Benefícios Nível 1</h1>
-    <p>Confira tudo que você ganhou com seu plano de <strong>250MB</strong></p>
-  </header>
 
   <div id="beneficios" class="container">
     <!-- CONECTA CLUBE -->
@@ -221,9 +259,10 @@
         <li>Receba 1 voucher de benefício a cada 90 dias.</li>
       </ul>
 
+      <!-- Aviso claro com chip no fim -->
       <p class="disclaimer disclaimer-lev3">
-        <span class="chip">Somente Nível 3</span>
-        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante ou Aquário.
+        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante e Aquário —
+        <span class="chip" aria-label="Disponível somente no Nível 3">Somente Nível 3</span>
       </p>
 
       <div class="email-actions">
@@ -259,7 +298,7 @@
     <div class="benefit-card"><div class="benefit-title">🆘 SUPORTE PREMIUM</div><div class="benefit-subtitle">Atendimento prioritário</div><p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p></div>
   </div>
 
-  <!-- Indique & Ganhe (corrigido com skin azul) -->
+  <!-- Indique & Ganhe (skin azul) -->
   <section id="indique" class="indique">
     <h2>🎯 Indique & Ganhe</h2>
     <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
@@ -423,8 +462,8 @@
       let popOpen=false, prevFocus=null, trapHandler=null;
       function positionPopover(){
         if(!popOpen) return;
-        const rect=levelBadge.getBoundingClientRect(), pop=levelPopover, w= Math.min(340, Math.max(280, pop.offsetWidth||300));
-        let left=rect.left, top=rect.bottom+8, h=pop.offsetHeight||200;
+        const rect=levelBadge.getBoundingClientRect(), pop=levelPopover, w= Math.min(340, Math.max(280, pop.offsetWidth||300)), h=pop.offsetHeight||200;
+        let left=rect.left, top=rect.bottom+8;
         if(left+w>innerWidth-10) left=innerWidth-w-10; if(left<10) left=10;
         if(top+h>innerHeight-10){ top=rect.top-h-8; if(top<10) top=10; }
         pop.style.left=left+'px'; pop.style.top=top+'px'; pop.style.minWidth='280px'; pop.style.maxWidth='92vw';
