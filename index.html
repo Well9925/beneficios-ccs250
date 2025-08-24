@@ -11,40 +11,27 @@
       --accent-glow-1: rgba(255,255,255,.6);
       --accent-glow-2: rgba(255,255,255,.4);
 
-      /* Boas‑vindas */
-      --welcome-a: #ffffff;
-      --welcome-b: #0A58FF;
-      --welcome-c: #00D9FF;
-      --welcome-glow-1: rgba(10,88,255,.85);
-      --welcome-glow-2: rgba(0,217,255,.72);
-      --welcome-border: rgba(255,255,255,.9);
-      --welcome-spot: rgba(10,88,255,0.34);
+      /* Gradientes base */
+      --blue-a: #2F80FF;
+      --blue-b: #00D9FF;
+      --violet-a: #7B61FF;
 
-      /* CTA Boas‑vindas */
-      --cta-1: #0A58FF;
-      --cta-2: #00D9FF;
-      --cta-3: #00FFC6;
-      --cta-4: #2F80FF;
-      --cta-text: #ffffff;
-      --cta-border: rgba(255,255,255,.3);
-      --cta-glow-1: rgba(10,88,255,.65);
-      --cta-glow-2: rgba(0,217,255,.6);
-      --cta-shadow: rgba(0,0,0,.5);
-
-      /* Popover níveis */
+      /* Popover e UI */
       --popover-bg: #101010;
       --popover-border: rgba(255,255,255,.14);
       --popover-shadow: rgba(0,0,0,.55);
-      --pill-1-a: #2F80FF;
-      --pill-1-b: #00D9FF;
-      --pill-2-a: #7B61FF;
-      --pill-2-b: #2F80FF;
-      --pill-3-a: #00D9FF;
+
+      /* Níveis */
+      --pill-1-a: var(--blue-a);
+      --pill-1-b: var(--blue-b);
+      --pill-2-a: var(--violet-a);
+      --pill-2-b: var(--blue-a);
+      --pill-3-a: var(--blue-b);
       --pill-3-b: #00FFC6;
     }
 
     html { scroll-behavior: smooth; }
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; padding-bottom: 72px; }
+    body { margin: 0; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; padding-bottom: 72px; }
     body.no-scroll { overflow: hidden; }
 
     /* TÍTULO FIXO (sticky) */
@@ -64,32 +51,56 @@
     }
     .sticky-title h1 {
       margin: 0;
-      font-size: 28px; /* maior que os cards (22px) */
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: .3px;
       display: inline-flex; align-items: center; gap: 10px;
     }
-    .lvl-pill {
-      display:inline-block; padding:5px 12px; border-radius:999px; font-size:13px; font-weight:900; letter-spacing:.35px; color:#fff;
-      border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(47,128,255,.24), inset 0 0 6px rgba(255,255,255,.12);
-      cursor: pointer;
+
+    /* Grupo segmentado (conexão visual entre Nível e Plano) */
+    .seg-group {
+      display: inline-flex; align-items: center; gap: 0;
+      border-radius: 9999px; overflow: hidden; position: relative;
+      padding: 2px;
+      background: linear-gradient(90deg, rgba(47,128,255,.3), rgba(232,238,252,.65));
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 0 12px rgba(47,128,255,.22), inset 0 0 6px rgba(255,255,255,.10);
+      isolation: isolate;
     }
-    .lvl-pill:hover { filter: brightness(1.06) saturate(1.08); }
-    .lvl-pill.l1 { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
-    .lvl-pill.pulse { animation: pillPulse 1.6s ease-in-out 0s 3; }
-    @keyframes pillPulse { 0%,100%{ transform: scale(1); box-shadow: 0 0 10px rgba(47,128,255,.24), inset 0 0 6px rgba(255,255,255,.12);} 50%{ transform: scale(1.055); box-shadow: 0 0 16px rgba(47,128,255,.50), inset 0 0 10px rgba(255,255,255,.22);} }
-    .plan-pill {
-      display:inline-block; padding:5px 10px; border-radius:999px; font-size:12px; font-weight:900; letter-spacing:.3px; color:#0b0b0b;
-      background: #e8eefc; border:1px solid rgba(255,255,255,.3);
+    .seg-item {
+      display:inline-flex; align-items:center; justify-content:center;
+      height: 26px; padding: 0 12px;
+      font-size: 12.5px; font-weight: 900; letter-spacing:.35px; white-space:nowrap;
+      border-radius: 9999px; border: 0; outline: 0;
     }
+    .seg-item.level {
+      color:#fff; cursor:pointer;
+      background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b));
+      box-shadow: inset 0 0 6px rgba(255,255,255,.12);
+    }
+    .seg-item.level:hover { filter: brightness(1.06) saturate(1.08); }
+    .seg-item.plan { color:#0b0b0b; background: #e8eefc; }
+    .seg-sep {
+      width:1px; height: 18px; background: rgba(0,0,0,.18);
+      margin: 0 2px; border-radius: 1px; opacity:.75;
+    }
+
+    /* variação menor para popover */
+    .seg-group.sm { padding: 2px; }
+    .seg-group.sm .seg-item { height: 24px; padding: 0 10px; font-size: 12px; }
+    .seg-item.current {
+      color:#0b0b0b;
+      background: linear-gradient(90deg,#00FFC6,#00D9FF);
+      box-shadow: inset 0 0 6px rgba(255,255,255,.14), 0 0 10px rgba(0,217,255,.25);
+    }
+
     .sticky-title p {
       margin: 6px 0 0;
       font-size: 15px; opacity: .92;
     }
     @media (max-width:600px){
       .sticky-title h1 { font-size: 22px; }
-      .lvl-pill { font-size: 12px; padding:4px 10px; }
-      .plan-pill { font-size: 11px; padding:4px 8px; }
+      .seg-item { height: 24px; padding: 0 10px; font-size: 11.5px; }
       .sticky-title p { font-size: 13px; }
     }
 
@@ -112,27 +123,21 @@
     @media (max-width:600px){ #btnTopo{ width:44px; height:44px; font-size:20px; right:10px; bottom:62px; } }
 
     /* OVERLAY BOAS-VINDAS */
-    #welcome-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:4000; transition: opacity 1s ease; text-align:center; backdrop-filter: blur(8px); }
+    #welcome-overlay { position: fixed; inset:0; background: radial-gradient(1200px 1200px at 50% 10%, rgba(10,88,255,.25), transparent 40%), rgba(0,0,0,0.86); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:4000; transition: opacity 0.8s ease; text-align:center; backdrop-filter: blur(8px); }
     #particles { position:absolute; inset:0; z-index:3998; pointer-events:none; }
-    #spotlight { position:absolute; inset:0; background: radial-gradient(circle 240px at center, var(--welcome-spot), transparent 80%); pointer-events:none; transition: background-position .1s; z-index:3999; }
+    #spotlight { position:absolute; inset:0; background: radial-gradient(circle 240px at center, rgba(10,88,255,0.34), transparent 80%); pointer-events:none; transition: background-position .1s; z-index:3999; }
 
-    #welcome-text { font-size:42px; margin-bottom:20px; min-height:30px; font-weight:900; background: linear-gradient(90deg, var(--welcome-a), var(--welcome-b), var(--welcome-c), var(--welcome-a)); background-size:240% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite; display:inline-block; overflow:hidden; border-right:2px solid var(--welcome-border); -webkit-text-stroke: .6px rgba(255,255,255,.28); filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2)); position:relative; z-index:4001; max-width:90%; white-space:nowrap; letter-spacing:.4px; }
+    #welcome-text { font-size:42px; margin-bottom:20px; min-height:30px; font-weight:900; background: linear-gradient(90deg, #ffffff, #0A58FF, #00D9FF, #ffffff); background-size:240% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: gradientMove 3s linear infinite, glowFilterPulse 2.1s ease-in-out infinite; display:inline-block; overflow:hidden; border-right:2px solid rgba(255,255,255,.9); -webkit-text-stroke: .6px rgba(255,255,255,.28); filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72)); position:relative; z-index:4001; max-width:90%; white-space:nowrap; letter-spacing:.4px; }
     @keyframes gradientMove { to{ background-position: 240% center; } }
-    @keyframes glowFilterPulse { 0%,100%{ filter: drop-shadow(0 0 8px var(--welcome-glow-1)) drop-shadow(0 0 22px var(--welcome-glow-2)); } 50%{ filter: drop-shadow(0 0 14px var(--welcome-glow-1)) drop-shadow(0 0 34px var(--welcome-glow-2)); } }
+    @keyframes glowFilterPulse { 0%,100%{ filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72)); } 50%{ filter: drop-shadow(0 0 14px rgba(10,88,255,.85)) drop-shadow(0 0 34px rgba(0,217,255,.72)); } }
 
-    #start-btn { color:var(--cta-text); border:1px solid var(--cta-border); padding:14px 28px; border-radius:14px; font-weight:900; letter-spacing:.35px; cursor:pointer; font-size:18px; display:none; opacity:0; transform: translateY(2px) scale(.98); transition: opacity .6s, transform .2s, box-shadow .25s, filter .25s; position:relative; z-index:4001; background: linear-gradient(135deg, var(--cta-1), var(--cta-2), var(--cta-3), var(--cta-4)); background-size:300% 300%; animation: ctaGradient 2.4s ease-in-out infinite alternate, ctaPulse 1.8s ease-in-out infinite; box-shadow: 0 10px 28px var(--cta-shadow), 0 0 22px 4px var(--cta-glow-1), inset 0 0 12px rgba(255,255,255,.16); }
-    #start-btn.show{ display:inline-block; opacity:1; transform: translateY(0) scale(1); }
-    #start-btn:hover{ filter: saturate(1.24) brightness(1.08); transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 34px var(--cta-shadow), 0 0 32px 10px var(--cta-glow-2), inset 0 0 16px rgba(255,255,255,.22); }
-    #start-btn:active{ transform: translateY(0) scale(0.99); }
-    @keyframes ctaGradient { 0%{ background-position:0% 50%; } 100%{ background-position:100% 50%; } }
-    @keyframes ctaPulse { 0%,100%{ box-shadow: 0 10px 28px var(--cta-shadow), 0 0 22px 4px var(--cta-glow-1), inset 0 0 12px rgba(255,255,255,.16);} 50%{ box-shadow: 0 16px 38px var(--cta-shadow), 0 0 36px 12px var(--cta-glow-2), inset 0 0 18px rgba(255,255,255,.24);} }
-    @media (prefers-reduced-motion: reduce){ #welcome-text{ animation: gradientMove 10s linear infinite; filter:none; } #start-btn{ animation:none; } }
-    @media (max-width:600px){ #welcome-text{ white-space:normal; font-size:26px; } }
+    #start-btn { color:#111; border:1px solid rgba(255,255,255,.3); padding:12px 18px; border-radius:10px; font-weight:900; letter-spacing:.35px; cursor:pointer; font-size:14px; display:inline-block; background:#fff; transition: transform .2s, box-shadow .25s, filter .25s; position:relative; z-index:4001; }
+    #start-btn:hover{ transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.35); }
 
     /* CANVAS DE FUNDO */
     canvas#fireworks, canvas#lights { position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:1500; }
 
-    /* CONTEÚDO GENÉRICO */
+    /* CONTEÚDO */
     .container { max-width: 1000px; margin: 20px auto 40px; padding: 0 20px; }
     .benefit-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; box-shadow: 0 2px 10px rgba(255,255,255,0.1); margin-bottom: 30px; opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease; position: relative; }
     .benefit-card.show { opacity:1; transform: translateY(0) scale(1); }
@@ -173,9 +178,7 @@
       margin-top: 10px; background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:8px 10px;
     }
-    details.howto summary {
-      cursor:pointer; list-style:none; font-weight:800; letter-spacing:.3px;
-    }
+    details.howto summary { cursor:pointer; list-style:none; font-weight:800; letter-spacing:.3px; }
     details.howto summary::-webkit-details-marker { display:none; }
     details.howto[open] { background: rgba(255,255,255,.07); }
 
@@ -185,23 +188,14 @@
     .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
     .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
     .app-link:hover{ background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
-    .inline-email { color:#fff; text-decoration: underline dotted; }
 
     /* POPUP NÍVEIS */
     .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
     .level-popover.open{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
     .level-popover h4{ margin:0 0 6px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
-    /* Progresso dentro do popover */
-    .progress-inline { display:flex; align-items:center; gap:10px; font-size:12px; color:#cfefff; opacity:.95; margin: 2px 0 8px; }
-    .progress-inline .dots { display:flex; gap:6px; align-items:center; }
-    .progress-inline .dot { width:8px; height:8px; border-radius:50%; background:#666; box-shadow: inset 0 0 2px rgba(255,255,255,.25); }
-    .progress-inline .dot.active { background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); box-shadow: 0 0 8px rgba(47,128,255,.6); }
-
     .level-list{ list-style:none; margin:0; padding:0; }
     .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; flex-wrap:wrap; }
-    .level-list li+li{ margin-top:4px; }
     .pill{ flex:none; padding:4px 10px; font-size:11px; font-weight:900; color:#0b0b0b; border-radius:999px; letter-spacing:.4px; border:1px solid rgba(255,255,255,.25); }
-    .l1{ background: linear-gradient(90deg, var(--pill-1-a), var(--pill-1-b)); }
     .l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
     .l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
     .lvl-desc{ color:#eaeaea; font-size:13px; }
@@ -222,34 +216,10 @@
       opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease;
     }
     #indique.indique.show{ opacity:1; transform: translateY(0) scale(1); }
-    #indique.indique h2{ margin-top:0; }
-    .indique-cards{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
-    #indique.indique .card{
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 16px; padding: 20px; width: 300px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.35), inset 0 0 10px rgba(255,255,255,.08);
-      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
-      text-align:left;
-    }
-    #indique.indique .card:hover{ transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 18px rgba(255,255,255,.12); }
-    #indique.indique .card h3{ margin:0 0 6px 0; }
-    #indique.indique .card strong{
-      display:block; margin-top:8px; font-size:22px;
-      background: linear-gradient(90deg,#fff,#e8f1ff,#fff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-size: 200% auto; animation: shine 3s linear infinite;
-    }
-    @keyframes shine{ to{ background-position: -200% center; } }
     #indique.indique .toggle-details{
       margin-top: 12px; background: transparent; color: #fff;
       border: 1px solid rgba(255,255,255,.25); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .25s;
     }
-    #indique.indique .toggle-details:hover{ background: rgba(255,255,255,.12); }
-    #indique.indique .details{ max-height:0; opacity:0; overflow:hidden; transition: max-height .6s ease, opacity .6s ease; }
-    #indique.indique .card.open .details{ max-height:400px; opacity:1; }
-    #indique.indique .bonus{ margin: 6px 0 16px; }
-    #indique.indique .app-link{ margin-top:10px; background:#fff; color:#111; border:1px solid rgba(0,0,0,.05); }
 
     .aviso { background:#222; padding:20px; border-left:4px solid var(--accent); margin:40px auto; max-width:1000px; border-radius:12px; }
     #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
@@ -263,18 +233,21 @@
   <canvas id="fireworks"></canvas>
   <canvas id="lights"></canvas>
 
-  <!-- Título fixo com tema do Nível 1 -->
+  <!-- Título fixo com grupo segmentado -->
   <div class="sticky-title" id="stickyTitle">
     <h1>
       Benefícios
-      <button class="lvl-pill l1" id="topLevelBadge" type="button"
-              aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
-              title="Clique para ver os níveis">
-        Nível 1
-      </button>
-      <span class="plan-pill" aria-label="Plano 250MB">Plano 250MB</span>
+      <span class="seg-group" role="group" aria-label="Nível e plano">
+        <button class="seg-item level" id="topLevelBadge" type="button"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
+                title="Clique para ver os níveis">
+          Nível 1
+        </button>
+        <span class="seg-sep" aria-hidden="true"></span>
+        <span class="seg-item plan" aria-label="Plano 250MB">Plano 250MB</span>
+      </span>
     </h1>
-    <p>Confira tudo que você ganhou com seu plano de <strong>250MB</strong></p>
+    <p>Confira todos os benefícios do seu plano</p>
   </div>
 
   <!-- Overlay de boas-vindas -->
@@ -333,27 +306,21 @@
         <button class="copy-link" id="copyEmail" type="button">📋 Copiar e-mail</button>
       </div>
 
-      <!-- Popover níveis (um único para a página; ancora no elemento clicado) -->
+      <!-- Popover níveis -->
       <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
         <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
 
-        <!-- Progresso dentro do popover -->
-        <div class="progress-inline" aria-label="Progresso do nível">
-          <div class="dots" aria-hidden="true">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          <span>Nível 1 de 3</span>
+        <!-- Grupo segmentado unificado (sem repetição abaixo) -->
+        <div class="seg-group sm" aria-label="Dados do seu plano e nível">
+          <span class="seg-item level" aria-hidden="true">Nível 1</span>
+          <span class="seg-sep" aria-hidden="true"></span>
+          <span class="seg-item plan">Plano 250MB</span>
+          <span class="seg-sep" aria-hidden="true"></span>
+          <span class="seg-item current" title="Este é o seu nível atual" aria-label="Seu nível atual">Atual ✓</span>
         </div>
 
-        <ul class="level-list">
-          <li>
-            <span class="pill l1">Nível 1</span>
-            <span class="lvl-desc">Planos: 250MB</span>
-            <span class="tag-atual" aria-label="Seu nível atual">Atual</span>
-          </li>
+        <ul class="level-list" style="margin-top:6px">
           <li>
             <span class="pill l2">Nível 2</span>
             <span class="lvl-desc">Planos: 450MB</span>
@@ -459,48 +426,31 @@
   <button id="btnTopo" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
 
   <script>
-  (function bootstrap(){
-    if (window.__CCS_INIT__) return;
-    window.__CCS_INIT__ = true;
+  (function(){
+    if (window.__CCS_INIT__) return; window.__CCS_INIT__ = true;
 
     function sizeCanvasToViewport(canvas){ canvas.width = innerWidth; canvas.height = innerHeight; }
-    function haptic(ms=25){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
-    function track(event, params={}){ try{ if(window.gtag) gtag('event', event, params); if(window.plausible) plausible(event, { props: params }); }catch(e){} }
-
-    let confettiReady=false, confettiLoadPromise=null;
-    function loadConfetti(){
-      if(confettiReady) return Promise.resolve();
-      if(confettiLoadPromise) return confettiLoadPromise;
-      confettiLoadPromise=new Promise((resolve,reject)=>{
-        const s=document.createElement('script');
-        s.src='https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
-        s.async=true; s.onload=()=>{confettiReady=true; resolve();}; s.onerror=reject; document.head.appendChild(s);
-      });
-      return confettiLoadPromise;
-    }
 
     function init(){
-      const spotlight = document.getElementById('spotlight');
       const overlayEl = document.getElementById('welcome-overlay');
       const textEl = document.getElementById('welcome-text');
       const btnEl = document.getElementById('start-btn');
-
       const particles = document.getElementById('particles');
       const pctx = particles.getContext('2d');
-
       const fwCanvas = document.getElementById('fireworks');
       const fwCtx = fwCanvas.getContext('2d');
-
       const lightsCanvas = document.getElementById('lights');
       const lightsCtx = lightsCanvas.getContext('2d');
-
       const menuInferior = document.getElementById('menuInferior');
       const btnTopo = document.getElementById('btnTopo');
-
       const stickyTitle = document.getElementById('stickyTitle');
       const topLevelBadge = document.getElementById('topLevelBadge');
+      const levelPopover = document.getElementById('levelPopover');
+      const popoverClose = document.getElementById('popoverClose');
+      const levelBadgeCard = document.getElementById('levelBadge');
       const initialHash = location.hash;
 
+      // Sizing
       function resizeAll(){ sizeCanvasToViewport(particles); sizeCanvasToViewport(fwCanvas); sizeCanvasToViewport(lightsCanvas); }
       resizeAll(); addEventListener('resize', resizeAll, { passive:true });
 
@@ -510,184 +460,60 @@
       function typeLoop(ts){
         if(!next) next=ts;
         while(ts-next>=28 && idx<message.length){ textEl.textContent+=message.charAt(idx++); next+=28; }
-        if(idx<message.length){ requestAnimationFrame(typeLoop); } else { textEl.style.borderRight='none'; setTimeout(()=>btnEl.classList.add('show'),300); }
+        if(idx<message.length){ requestAnimationFrame(typeLoop); } else { textEl.style.borderRight='none'; }
       }
       requestAnimationFrame(typeLoop);
 
-      // Spotlight
-      const moveListener = (e)=>{ const x=(e.touches?e.touches[0].clientX:e.clientX), y=(e.touches?e.touches[0].clientY:e.clientY); spotlight.style.background=`radial-gradient(circle 240px at ${x}px ${y}px, var(--welcome-spot), transparent 80%)`; };
+      // Spotlight move
+      const spotlight = document.getElementById('spotlight');
+      const moveListener = (e)=>{ const t=e.touches?e.touches[0]:e; spotlight.style.background=`radial-gradient(circle 240px at ${t.clientX}px ${t.clientY}px, rgba(10,88,255,0.34), transparent 80%)`; };
       addEventListener('mousemove', moveListener, { passive:true });
       addEventListener('touchmove', moveListener, { passive:true });
 
       // Stars
-      let stars=[], starsActive=true, starsRAF=0;
-      function createStars(){ stars.length=0; for(let i=0;i<110;i++){ stars.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+0.8,s:Math.random()*0.6+0.25}); } }
-      createStars();
+      function createStars(){ const arr=[]; for(let i=0;i<110;i++) arr.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+0.8,s:Math.random()*0.6+0.25}); return arr;}
+      let stars=createStars(), starsRAF=0, starsActive=true;
       (function starsLoop(){ if(!starsActive) return; pctx.clearRect(0,0,particles.width,particles.height); pctx.fillStyle="rgba(255,255,255,0.9)"; for(const s of stars){ pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill(); s.y+=s.s; if(s.y>particles.height){ s.y=-2; s.x=Math.random()*particles.width; } } starsRAF=requestAnimationFrame(starsLoop); })();
 
-      // Start click
-      btnEl.addEventListener('click', async ()=>{
-        haptic(25); track('overlay_start_click');
-        try{ await loadConfetti(); }catch(e){}
-        const r=btnEl.getBoundingClientRect(), x=(r.left+r.width/2)/innerWidth, y=(r.top+r.height/2)/innerHeight;
-        const colors=['#0A58FF','#00D9FF','#FFFFFF'];
-        if(window.confetti){
-          window.confetti({ particleCount:360, spread:360, origin:{x,y}, startVelocity:52, colors });
-          setTimeout(()=>window.confetti({ particleCount:360, spread:360, origin:{x,y}, startVelocity:60, colors }),260);
-          for(let i=0;i<5;i++) setTimeout(()=>window.confetti({ particleCount:100, spread:70, origin:{x, y:0}, colors, startVelocity:24 }), i*280);
-        }
-        overlayEl.style.opacity='0';
-        starsActive=false; cancelAnimationFrame(starsRAF);
-        removeEventListener('mousemove', moveListener); removeEventListener('touchmove', moveListener);
-        setTimeout(()=>{
-          overlayEl.remove(); menuInferior.classList.remove('oculto'); btnTopo.classList.add('visivel');
-          if(initialHash){ const t=document.getElementById(initialHash.slice(1)); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); }
-        },900);
-      });
-
-      // Sticky elevated shadow on scroll
+      // Sticky shadow
       const elevate = ()=> stickyTitle.classList.toggle('elevated', scrollY > 4);
       elevate(); addEventListener('scroll', elevate, { passive:true });
 
-      // Pill pulse at start
-      topLevelBadge.classList.add('pulse');
-      setTimeout(()=> topLevelBadge.classList.remove('pulse'), 4800);
-      topLevelBadge.addEventListener('click', ()=> topLevelBadge.classList.remove('pulse'), { once:true });
-
-      /* ===== Popover Níveis (um popover, dois gatilhos) ===== */
-      const levelPopover = document.getElementById('levelPopover');
-      const popoverClose = document.getElementById('popoverClose');
-      const levelBadgeCard = document.getElementById('levelBadge');
-      const levelBadgeTop  = document.getElementById('topLevelBadge');
-
-      let popOpen=false, prevFocus=null, trapHandler=null, currentTrigger=null;
-
-      function positionPopover() {
-        if(!popOpen || !currentTrigger) return;
-        const rect=currentTrigger.getBoundingClientRect(), pop=levelPopover;
-        const w=Math.min(340, Math.max(280, pop.offsetWidth||300)), h=pop.offsetHeight||200;
-        let left=rect.left, top=rect.bottom+8;
-        if(left+w>innerWidth-10) left=innerWidth-w-10; if(left<10) left=10;
-        if(top+h>innerHeight-10){ top=rect.top-h-8; if(top<10) top=10; }
-        pop.style.left=left+'px'; pop.style.top=top+'px'; pop.style.minWidth='280px'; pop.style.maxWidth='92vw';
-      }
-
-      function focusables(c){ return Array.from(c.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(el=>el.offsetParent!==null); }
-
-      function setExpanded(el, val){ if(!el) return; el.setAttribute('aria-expanded', String(val)); }
-
-      function openPopover(triggerEl){
-        popOpen=true; currentTrigger=triggerEl;
-        track('levels_popover_open', { source: triggerEl.id });
-        haptic(15);
-        document.body.classList.add('no-scroll');
-        prevFocus=document.activeElement;
-        setExpanded(levelBadgeCard, false); setExpanded(levelBadgeTop, false);
-        setExpanded(triggerEl, true);
-        levelPopover.classList.add('open');
-        positionPopover();
-
-        const els=focusables(levelPopover);
-        const first=els[0]||levelPopover, last=els[els.length-1]||levelPopover;
-        if(first) first.focus();
-        trapHandler=(e)=>{ if(e.key!=='Tab') return;
-          if(!els.length){ e.preventDefault(); return; }
-          if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-          else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-        };
-        levelPopover.addEventListener('keydown', trapHandler);
-        addEventListener('scroll', positionPopover, {passive:true});
-        addEventListener('resize', positionPopover, {passive:true});
-      }
-
-      function closePopover(){
-        if(!popOpen) return;
-        popOpen=false;
-        document.body.classList.remove('no-scroll');
-        setExpanded(levelBadgeCard, false); setExpanded(levelBadgeTop, false);
-        levelPopover.classList.remove('open');
-        if(trapHandler) levelPopover.removeEventListener('keydown', trapHandler);
-        if(prevFocus){ try{ prevFocus.focus(); }catch(e){} }
-        removeEventListener('scroll', positionPopover);
-        removeEventListener('resize', positionPopover);
-        track('levels_popover_close');
-        currentTrigger=null;
-      }
-
-      [levelBadgeCard, levelBadgeTop].forEach(el=>{
-        if(!el) return;
-        el.addEventListener('click', (e)=>{
-          e.stopPropagation();
-          if(popOpen && currentTrigger===el) { closePopover(); }
-          else { openPopover(el); }
-          track('levels_badge_click', { source: el.id });
-        });
-      });
-
-      addEventListener('click', (e)=>{
-        if(!popOpen) return;
-        if(!levelPopover.contains(e.target) && e.target!==currentTrigger) closePopover();
-      });
-
-      addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
-
-      popoverClose.addEventListener('click', ()=>{ haptic(10); closePopover(); });
-
-      // CTAs tracking
-      ['ctaL2','ctaL3'].forEach(id=>{
-        const el=document.getElementById(id);
-        if(el) el.addEventListener('click', ()=>{ haptic(15); track('levels_cta_click',{ id }); });
-      });
-
-      /* Tooltip premium toggle */
-      const tipBtn = document.getElementById('tipBtn');
-      if (tipBtn){
-        tipBtn.addEventListener('click', (e)=>{
-          const parent = document.getElementById('premiumNotice');
-          const expanded = tipBtn.getAttribute('aria-expanded') === 'true';
-          tipBtn.setAttribute('aria-expanded', String(!expanded));
-          parent.classList.toggle('tip-open', !expanded);
-          e.stopPropagation();
-        });
-        // Fechar tooltip ao clicar fora
-        addEventListener('click', (e)=>{
-          const parent = document.getElementById('premiumNotice');
-          if (!parent.contains(e.target)){
-            tipBtn.setAttribute('aria-expanded','false');
-            parent.classList.remove('tip-open');
-          }
-        });
-      }
-
-      /* ===== Efeitos de fundo do site ===== */
+      // Fireworks from title (can travel entire window)
       sizeCanvasToViewport(fwCanvas);
-      let fwParticles=[];
-      function spawnExplosion(x,y){ const colors=['#ff0043','#14fc56','#1e90ff','var(--accent)','#ffffff'];
-        for(let i=0;i<36;i++){ const ang=Math.random()*Math.PI*2, spd=2+Math.random()*5;
-          fwParticles.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,alpha:1,color:colors[(Math.random()*colors.length)|0]}); } }
-      let lastSpawn=0;
-      function fireworksLoop(ts){
+      function titleRect(){ const r=stickyTitle.getBoundingClientRect(); return { x:r.left+8, y:r.top+4, w:r.width-16, h:r.height-8 }; }
+      let fwParticles=[]; let lastSpawn=0;
+      (function fireworksLoop(ts){
         if(!lastSpawn) lastSpawn=ts;
-        if(ts-lastSpawn>900){ spawnExplosion(Math.random()*fwCanvas.width, Math.random()*fwCanvas.height*0.5); lastSpawn=ts; }
+        if(ts-lastSpawn>950){ spawnExplosionFromTitle(); lastSpawn=ts; }
         fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
         fwParticles=fwParticles.filter(p=>p.alpha>0.02);
         for(const p of fwParticles){
-          p.x+=p.vx; p.y+=p.vy; p.vy+=0.01; p.alpha*=0.985;
+          p.x+=p.vx; p.y+=p.vy; p.vy+=0.015; p.vx*=0.995; p.vy*=0.995; p.alpha*=0.984;
           fwCtx.globalAlpha=p.alpha; fwCtx.fillStyle=p.color;
-          fwCtx.beginPath(); fwCtx.arc(p.x,p.y,3,0,Math.PI*2); fwCtx.fill();
+          fwCtx.beginPath(); fwCtx.arc(p.x,p.y,p.r,0,Math.PI*2); fwCtx.fill();
         }
         fwCtx.globalAlpha=1;
         requestAnimationFrame(fireworksLoop);
+      })();
+      function spawnExplosionFromTitle(){
+        const tr=titleRect();
+        const x = tr.x + tr.w*(0.2 + Math.random()*0.6);
+        const y = tr.y + tr.h*(0.4 + Math.random()*0.3);
+        const colors=['#ff0043','#14fc56','#1e90ff','#ffffff','#00d9ff'];
+        for(let i=0;i<44;i++){
+          const ang=Math.random()*Math.PI*2, spd=2.4+Math.random()*5.6;
+          fwParticles.push({ x, y, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd - 0.6, alpha:1, color:colors[(Math.random()*colors.length)|0], r:2.4+Math.random()*1.6 });
+        }
       }
-      requestAnimationFrame(fireworksLoop);
 
+      // Lights
       sizeCanvasToViewport(lightsCanvas);
       const lights=Array.from({length:60},()=>({x:Math.random()*lightsCanvas.width,y:Math.random()*lightsCanvas.height,r:1+Math.random()*2,phase:Math.random()*Math.PI*2,speed:0.6+Math.random()*1.0,vy:0.25+Math.random()*0.4}));
       (function lightsLoop(){
         lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height);
         for(const l of lights){
-          l.phase+=0.02*l.speed;
-          const a=0.25+((Math.sin(l.phase)+1)/2)*0.55;
+          l.phase+=0.02*l.speed; const a=0.25+((Math.sin(l.phase)+1)/2)*0.55;
           lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2);
           lightsCtx.fillStyle=`rgba(255,255,255,${a})`; lightsCtx.fill();
           l.y-=l.vy; if(l.y<-5){ l.y=lightsCanvas.height+5; l.x=Math.random()*lightsCanvas.width; }
@@ -695,19 +521,34 @@
         requestAnimationFrame(lightsLoop);
       })();
 
-      // Observer (inclui .indique)
-      const els=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
-      const observer=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('show'); else en.target.classList.remove('show'); }); }, {threshold:0.18});
-      els.forEach(el=>observer.observe(el));
+      // Reveal cards on view
+      const revealTargets=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
+      const io=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('show'); }); }, { threshold:0.12, rootMargin:"0px 0px -12% 0px" });
+      revealTargets.forEach(el=>io.observe(el));
+      function revealAboveFold(){
+        revealTargets.forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top < innerHeight*0.9) el.classList.add('show'); });
+      }
 
-      // Toggle detalhes Indique
-      document.querySelectorAll('#indique .toggle-details').forEach(b=>{
-        b.addEventListener('click', e=>{
-          const card=e.currentTarget.closest('.card');
-          card.classList.toggle('open');
-          e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
-        });
-      });
+      // Overlay dismiss (robusto)
+      let overlayGone=false;
+      function dismissOverlay(){
+        if(overlayGone) return; overlayGone=true;
+        overlayEl.style.opacity='0';
+        starsActive=false; cancelAnimationFrame(starsRAF);
+        removeEventListener('mousemove', moveListener); removeEventListener('touchmove', moveListener);
+        setTimeout(()=>{
+          overlayEl.remove();
+          menuInferior.classList.remove('oculto');
+          btnTopo.classList.add('visivel');
+          revealAboveFold();
+          if(initialHash){ const t=document.getElementById(initialHash.slice(1)); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); }
+        },700);
+      }
+      btnEl.addEventListener('click', dismissOverlay);
+      // Failsafes
+      setTimeout(dismissOverlay, 7000); // auto
+      addEventListener('scroll', ()=>{ if(!overlayGone && scrollY>10) dismissOverlay(); }, {passive:true});
+      addEventListener('keydown', (e)=>{ if(!overlayGone && (e.key==='Enter' || e.key==='Escape' || e.key===' ')) dismissOverlay(); });
 
       // Menu ativo
       const sections=['beneficios','indique','portais'];
@@ -721,18 +562,53 @@
       // Topo
       btnTopo.addEventListener('click', ()=> scrollTo({ top:0, behavior:'smooth' }));
 
-      // Email actions
-      const emailBtn=document.getElementById('emailBtn'); if(emailBtn) emailBtn.addEventListener('click', ()=>track('email_open_click'));
-      const copyBtn=document.getElementById('copyEmail');
-      if(copyBtn){
-        copyBtn.addEventListener('click', async ()=>{
-          haptic(10);
-          const email='ccs@ccstelecom.com.br';
-          try{ await navigator.clipboard.writeText(email); }catch{ const tmp=document.createElement('input'); tmp.value=email; document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp); }
-          track('email_copy_click');
-          const old=copyBtn.textContent; copyBtn.textContent='✅ E-mail copiado'; copyBtn.classList.add('copied'); setTimeout(()=>{ copyBtn.textContent=old; copyBtn.classList.remove('copied'); },1500);
-        });
+      /* ===== Popover Níveis ===== */
+      let popOpen=false, prevFocus=null, trapHandler=null, currentTrigger=null;
+      function positionPopover() {
+        if(!popOpen || !currentTrigger) return;
+        const rect=currentTrigger.getBoundingClientRect(), pop=levelPopover;
+        const w=Math.min(340, Math.max(280, pop.offsetWidth||300)), h=pop.offsetHeight||200;
+        let left=rect.left, top=rect.bottom+8;
+        if(left+w>innerWidth-10) left=innerWidth-w-10; if(left<10) left=10;
+        if(top+h>innerHeight-10){ top=rect.top-h-8; if(top<10) top=10; }
+        pop.style.left=left+'px'; pop.style.top=top+'px'; pop.style.minWidth='280px'; pop.style.maxWidth='92vw';
       }
+      function focusables(c){ return Array.from(c.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(el=>el.offsetParent!==null); }
+      function setExpanded(el, val){ if(el) el.setAttribute('aria-expanded', String(val)); }
+
+      function openPopover(triggerEl){
+        popOpen=true; currentTrigger=triggerEl; document.body.classList.add('no-scroll');
+        prevFocus=document.activeElement;
+        setExpanded(levelBadgeCard, false); setExpanded(topLevelBadge, false); setExpanded(triggerEl, true);
+        levelPopover.classList.add('open'); positionPopover();
+        const els=focusables(levelPopover); const first=els[0]||levelPopover, last=els[els.length-1]||levelPopover;
+        if(first) first.focus();
+        trapHandler=(e)=>{ if(e.key!=='Tab') return; if(!els.length){ e.preventDefault(); return; }
+          if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+          else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); } };
+        levelPopover.addEventListener('keydown', trapHandler);
+        addEventListener('scroll', positionPopover, {passive:true});
+        addEventListener('resize', positionPopover, {passive:true});
+      }
+      function closePopover(){
+        if(!popOpen) return; popOpen=false; document.body.classList.remove('no-scroll');
+        setExpanded(levelBadgeCard, false); setExpanded(topLevelBadge, false);
+        levelPopover.classList.remove('open'); if(trapHandler) levelPopover.removeEventListener('keydown', trapHandler);
+        if(prevFocus){ try{ prevFocus.focus(); }catch{} }
+        removeEventListener('scroll', positionPopover); removeEventListener('resize', positionPopover); currentTrigger=null;
+      }
+      [levelBadgeCard, topLevelBadge].forEach(el=>{ if(!el) return; el.addEventListener('click', (e)=>{ e.stopPropagation(); (popOpen && currentTrigger===el) ? closePopover() : openPopover(el); }); });
+      addEventListener('click', (e)=>{ if(popOpen && !levelPopover.contains(e.target) && e.target!==currentTrigger) closePopover(); });
+      addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
+      if(popoverClose) popoverClose.addEventListener('click', closePopover);
+
+      // Toggle detalhes Indique
+      document.querySelectorAll('#indique .toggle-details').forEach(b=>{
+        b.addEventListener('click', e=>{
+          const card=e.currentTarget.closest('.card'); card.classList.toggle('open');
+          e.currentTarget.textContent = card.classList.contains('open') ? 'Ocultar detalhes' : 'Ver detalhes';
+        });
+      });
     }
 
     if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init, {once:true}); } else { init(); }
