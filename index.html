@@ -180,7 +180,7 @@
     .app-link:hover, .copy-link:hover { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
     .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
 
-    /* NOVO: Faixa de destaque do ciclo de voucher */
+    /* Faixa de destaque do ciclo de voucher */
     .voucher-strip{
       display:flex; align-items:center; gap:10px;
       background: linear-gradient(90deg, rgba(0,217,255,.10), rgba(255,255,255,.05));
@@ -198,16 +198,30 @@
     }
     .voucher-meta{ font-size:13.5px; color:#cfefff; opacity:.95; }
 
-    /* CTA Box (mantido no CSS; não usado visivelmente agora) */
-    .cta-box{ margin-top:12px; background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:12px; }
-    .cta-box h4{ margin:0 0 6px 0; font-size:15px; letter-spacing:.35px; }
-    .cta-box p{ margin:4px 0; color:#dfe7ff; font-size:13.5px; }
-    .cta-email{ font-size:12.5px; color:#cfcfcf; }
+    /* NOVO: Card de compatibilidade (CCS PLAY) */
+    .compat-card{
+      margin-top:10px; padding:12px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.28), inset 0 0 8px rgba(255,255,255,.06);
+    }
+    .compat-header{ display:flex; align-items:center; gap:10px; }
+    .compat-icon{ font-size:18px; filter: drop-shadow(0 0 6px rgba(255,215,0,.35)); }
+    .compat-title{ margin:0; font-size:15px; font-weight:900; letter-spacing:.35px; }
+    .compat-sub{ margin:2px 0 0 0; font-size:13.5px; color:#dfe7ff; opacity:.95; }
+    .compat-list{ list-style:none; margin:10px 0 6px 0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+    .compat-chip{
+      padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.25px;
+      background: rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18);
+    }
+    .compat-note{ margin:6px 0 8px 0; font-size:12.5px; color:#cfcfcf; }
+    .compat-card .app-link{ margin-top:6px; }
 
     /* Popover níveis */
     .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
     .level-popover.open{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
-    .level-popover h4{ margin:0 0 6px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
+    .level-popover.h4{ margin:0 0 6px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
     .level-popover.is-mobile{ left:50% !important; transform: translate(-50%, 0) !important; right:auto !important; }
     .level-list{ list-style:none; margin:0; padding:0; }
     .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; flex-wrap:wrap; }
@@ -289,21 +303,6 @@
         <span class="voucher-meta">a cada 90 dias</span>
       </div>
 
-      <!-- NOVO: Cardzinho de contato (acordeão) -->
-      <details class="howto" open>
-        <summary>Consultar benefício do seu plano</summary>
-        <div style="margin-top:8px;">
-          <p style="margin:0 0 6px 0;">
-            <em>Quer saber qual benefício está disponível no seu plano?</em><br/>
-            <em>Mande um e-mail para: <a class="inline-email" href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>! 📩</em>
-          </p>
-          <div class="email-actions">
-            <a class="app-link" id="emailBtn" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">📩 Enviar e‑mail agora</a>
-            <button class="copy-link" id="copyEmail" type="button">📋 Copiar e‑mail</button>
-          </div>
-        </div>
-      </details>
-
       <!-- Acordeão "Como funciona" -->
       <details class="howto">
         <summary>Como funciona</summary>
@@ -330,7 +329,22 @@
         </div>
       </details>
 
-      <!-- Popover níveis -->
+      <!-- Card de consulta (último e renomeado) -->
+      <details class="howto" open>
+        <summary>Consultar vouchers disponíveis no seu plano</summary>
+        <div style="margin-top:8px;">
+          <p style="margin:0 0 6px 0;">
+            <em>Quer saber quais vouchers estão disponíveis no seu plano?</em><br/>
+            <em>Mande um e-mail para: <a class="inline-email" href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>! 📩</em>
+          </p>
+          <div class="email-actions">
+            <a class="app-link" id="emailBtn" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20quais%20vouchers%20est%C3%A3o%20dispon%C3%ADveis%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">📩 Enviar e‑mail agora</a>
+            <button class="copy-link" id="copyEmail" type="button">📋 Copiar e‑mail</button>
+          </div>
+        </div>
+      </details>
+
+      <!-- Popover níveis (reutilizado) -->
       <div class="level-popover" id="levelPopover" role="dialog" aria-modal="false" aria-labelledby="levelsTitle">
         <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
@@ -356,14 +370,62 @@
       </div>
     </div>
 
-    <!-- Demais cards -->
+    <!-- CCS PLAY (melhorado com card de compatibilidade) -->
     <div class="benefit-card" id="ccs-play">
-      <div class="benefit-title">🎬 CCS PLAY</div>
-      <div class="benefit-subtitle">Streaming com mais de 60 canais</div>
-      <p>Inclui SBT, Record e canais regionais (Rede Globo não está incluída).</p>
-      <a class="app-link" href="https://onelink.to/ccsplay" target="_blank">Acessar CCS PLAY</a>
+      <div class="benefit-title">
+        2️⃣ 🎬 CCS TV + 📲 CCS PLAY
+        <button class="badge level-badge" id="levelBadgePlay" type="button"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
+                title="Clique para ver os níveis">
+          Nível 1
+        </button>
+      </div>
+
+      <div class="benefit-subtitle">Streaming completo com mais de 60 canais regionais e variados!</div>
+
+      <div class="quote">
+        Inclui canais como SBT, Record e muitos outros. <strong>|</strong> Rede Globo não está incluída.
+      </div>
+
+      <details class="howto">
+        <summary>Como acessar?</summary>
+        <ul class="bullets">
+          <li><em>Baixe o app:</em> 👉 <a class="inline-email" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li>
+          <li><em>Ou procure por “CCS PLAY”</em> na loja de aplicativos do seu dispositivo.</li>
+        </ul>
+      </details>
+
+      <details class="howto">
+        <summary>Acesse com</summary>
+        <ul class="bullets">
+          <li>Usuário: <strong>e-mail cadastrado aqui na CCS</strong></li>
+          <li>Senha: <strong>CPF do titular (somente números)</strong></li>
+        </ul>
+      </details>
+
+      <!-- NOVO: Cardzinho de compatibilidade com botão integrado -->
+      <div class="compat-card" aria-label="Compatibilidade CCS PLAY">
+        <div class="compat-header">
+          <span class="compat-icon" aria-hidden="true">⚠️</span>
+          <div>
+            <p class="compat-title">Compatibilidade</p>
+            <p class="compat-sub">Disponível para celular, tablet, computador e Smart TV</p>
+          </div>
+        </div>
+
+        <ul class="compat-list" role="list">
+          <li class="compat-chip">iOS</li>
+          <li class="compat-chip">Android</li>
+          <li class="compat-chip">Web (computador)</li>
+          <li class="compat-chip">Smart TV</li>
+        </ul>
+
+        <p class="compat-note">Confira se seu aparelho é compatível com o aplicativo.</p>
+        <a class="app-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">Acessar CCS PLAY</a>
+      </div>
     </div>
 
+    <!-- SKEELO -->
     <div class="benefit-card" id="skeelo">
       <div class="benefit-title">📚 SKEELO</div>
       <div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div>
@@ -507,6 +569,7 @@
       const levelPopover = document.getElementById('levelPopover');
       const popoverClose = document.getElementById('popoverClose');
       const levelBadgeCard = document.getElementById('levelBadge');
+      const levelBadgePlay = document.getElementById('levelBadgePlay');
 
       // Sizing
       function resizeAll(){
@@ -748,7 +811,8 @@
         currentTrigger=null;
       }
 
-      [document.getElementById('levelBadge'), document.getElementById('topLevelBadge')].forEach(el=>{
+      // Triggers (Conecta Clube topo e card, e CCS PLAY)
+      [levelBadgeCard, topLevelBadge, levelBadgePlay].forEach(el=>{
         if(!el) return;
         el.addEventListener('click', (e)=>{
           e.stopPropagation();
@@ -759,7 +823,7 @@
       addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
       if(popoverClose) popoverClose.addEventListener('click', closePopover);
 
-      /* Copiar e-mail */
+      /* Copiar e-mail (card de consulta) */
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn){
         copyBtn.addEventListener('click', async ()=>{
