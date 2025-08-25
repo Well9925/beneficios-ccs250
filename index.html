@@ -30,11 +30,16 @@
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     scroll-snap-type: y mandatory;
     overflow-y: auto;
+    padding-top: var(--topbar-h);
   }
 
-  /* Topbar minimal */
+  /* Ícones (sprite) */
+  svg.hidden-sprite{position:absolute;width:0;height:0;overflow:hidden}
+  .ico{width:18px;height:18px}
+
+  /* Topbar fixa */
   .topbar{
-    position: sticky; top:0; z-index:40;
+    position: fixed; left:0; right:0; top:0; z-index:50;
     height: var(--topbar-h);
     background: rgba(16,18,24,.6);
     backdrop-filter: blur(8px);
@@ -50,36 +55,38 @@
   nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
   nav a:hover, nav a.active{background:#ffffff1a}
 
-  /* Dots (nav lateral) */
+  /* Nav lateral com ícones */
   .dots{
-    position: fixed; right: 14px; top: 50%; transform: translateY(-50%);
-    display:flex; flex-direction:column; gap:10px; z-index:35;
+    position: fixed; right: 12px; top: calc(var(--topbar-h) + 12px);
+    display:flex; flex-direction:column; gap:10px; z-index:45;
   }
   .dot{
-    width:10px; height:10px; border-radius:50%;
-    background:#7b89af; opacity:.6; border:1px solid #9bb1ff44; cursor:pointer;
-    transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    width:28px; height:28px; border-radius:10px;
+    display:grid; place-items:center;
+    background:#1b2233aa; border:1px solid #3a4260; backdrop-filter: blur(6px);
+    color:#9fb7ff; cursor:pointer;
+    transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
   }
-  .dot:hover{ transform: scale(1.25); opacity:.9 }
-  .dot.active{ background:#1bd3ff; opacity:1; transform: scale(1.35); box-shadow: 0 0 0 4px rgba(27,211,255,.18); }
+  .dot:hover{ transform: scale(1.06) }
+  .dot svg{ width:16px; height:16px; }
+  .dot.active{ background:#213153; color:#1bd3ff; box-shadow: 0 0 0 4px rgba(27,211,255,.12); }
 
-  /* Dock superior (minimiza o anterior) */
+  /* Dock anterior (agora clicável) */
   .dock{
-    position: sticky; top: var(--topbar-h); z-index:30;
-    height: 0; /* não ocupa layout quando vazio */
-    pointer-events:none;
+    position: sticky; top: var(--topbar-h); z-index:40;
+    height: 0;
   }
   .dock .chip{
-    position: absolute; left: var(--side-pad); right: var(--side-pad); top: 8px;
+    position: absolute; left: var(--side-pad); right: calc(var(--side-pad) + 40px); top: 8px;
     display:none; align-items:center; justify-content:space-between; gap:10px;
     background: rgba(255,255,255,.08); border:1px solid var(--line); border-radius: 999px;
     padding: 10px 14px; backdrop-filter: blur(8px); box-shadow: var(--shadow-2);
   }
-  .dock .chip.show{ display:flex; pointer-events:auto; }
+  .dock .chip.show{ display:flex; }
   .chip .title{font-weight:900; letter-spacing:.2px}
   .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
 
-  /* Seções em tela cheia com scroll-snap */
+  /* Seções em tela cheia */
   .section{
     scroll-snap-align: start;
     min-height: calc(100svh - var(--topbar-h));
@@ -88,12 +95,8 @@
     position: relative; isolation:isolate;
   }
 
-  /* Fundos suaves por seção */
-  .bg{
-    position:absolute; inset:0; z-index:-2; pointer-events:none;
-    background: radial-gradient(60% 50% at 70% -10%, rgba(47,107,255,.25), transparent 60%),
-                radial-gradient(50% 40% at 20% 110%, rgba(0,217,255,.18), transparent 60%);
-  }
+  /* Fundos suaves */
+  .bg{ position:absolute; inset:0; z-index:-2; pointer-events:none; }
   .s1 .bg{ background:
       radial-gradient(60% 50% at 10% -10%, rgba(47,107,255,.28), transparent 60%),
       radial-gradient(50% 40% at 80% 110%, rgba(0,255,198,.16), transparent 60%); }
@@ -107,7 +110,7 @@
       radial-gradient(60% 50% at 50% -10%, rgba(255,184,77,.22), transparent 60%),
       radial-gradient(50% 40% at 50% 110%, rgba(47,107,255,.18), transparent 60%); }
 
-  /* Conteúdo principal (cartão fluido, sem “quadradão”) */
+  /* Card fluido */
   .card{
     width: min(1080px, 100%);
     margin:auto;
@@ -129,9 +132,7 @@
     opacity: 1;
     box-shadow: 0 18px 50px rgba(0,0,0,.5);
   }
-  @media (max-width: 920px){
-    .card{ grid-template-columns: 1fr; }
-  }
+  @media (max-width: 920px){ .card{ grid-template-columns: 1fr; } }
 
   .media{
     position:relative; min-height: 260px; background: linear-gradient(135deg, #1b2030, #0f1420);
@@ -142,12 +143,19 @@
     background: rgba(255,255,255,.14); border:1px solid var(--line); color:#fff;
     padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
   }
-  .media .art{
-    width: 72%; max-width: 520px; aspect-ratio: 16/9; border-radius: clamp(16px, 1.8vw, 22px);
+  /* Imagem real do benefício */
+  .media .art-img{
+    width: 72%; max-width: 520px; aspect-ratio: 16/9;
+    border-radius: clamp(16px, 1.8vw, 22px);
     border:1px solid var(--line);
+    object-fit: cover; object-position: center;
     background: linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
-    display:flex; align-items:center; justify-content:center; color:#9fb7ff; font-weight:900; letter-spacing:.3px;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
+  }
+  /* Fallback com o nome se a imagem falhar */
+  .media .art-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:#9fb7ff; font-weight:900; letter-spacing:.3px; pointer-events:none;
   }
 
   .content{ padding: clamp(16px, 2.2vw, 24px) }
@@ -178,7 +186,20 @@
 </style>
 </head>
 <body>
-  <!-- Topbar -->
+  <!-- Sprite de ícones -->
+  <svg class="hidden-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
+      <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
+      <symbol id="ico-book" viewBox="0 0 24 24"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 5h8" stroke="#0f0f10" stroke-width="1.6"/></symbol>
+      <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v4h3m4 0h3v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></symbol>
+      <symbol id="ico-megaphone" viewBox="0 0 24 24"><path d="M3 10v4l10-3V7L3 10z" fill="currentColor"/><path d="M13 8l6-2v12l-6-2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 14l1.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="ico-portal" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 9h8" stroke="currentColor" stroke-width="1.6"/></symbol>
+      <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M12 3a7 7 0 1 0 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M11.9 14c0-2.2 3.2-2 3.2-4a3 3 0 0 0-6 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- Topbar fixa -->
   <header class="topbar" id="topbar">
     <div class="wrap">
       <div class="brand">
@@ -205,32 +226,24 @@
     </div>
   </div>
 
-  <!-- Dots -->
+  <!-- Navegação lateral com ícones -->
   <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
 
-  <!-- Seções em tela cheia -->
-  <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta">
+  <!-- Seções em tela cheia (agora aceitam imagem via data-img) -->
+  <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-img="">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
-        <div class="art">Conecta Clube</div>
+        <img class="art-img" alt="Conecta Clube" loading="eager">
+        <div class="art-fallback">Conecta Clube</div>
       </div>
       <div class="content">
-        <div class="title">
-          <h2>Conecta Clube</h2>
-        </div>
+        <div class="title"><h2>Conecta Clube</h2></div>
         <p class="subtitle">Clube de Vantagens CCS</p>
-        <div class="row">
-          <span class="pill hi">1 voucher</span>
-          <span class="pill">a cada 90 dias</span>
-        </div>
+        <div class="row"><span class="pill hi">1 voucher</span><span class="pill">a cada 90 dias</span></div>
         <p class="muted">Parceiros da região com vouchers para você usar no prazo indicado.</p>
-        <ul class="list">
-          <li>Escolha um parceiro participante.</li>
-          <li>Receba seu voucher digital.</li>
-          <li>Use dentro do prazo informado.</li>
-        </ul>
+        <ul class="list"><li>Escolha um parceiro participante.</li><li>Receba seu voucher digital.</li><li>Use dentro do prazo informado.</li></ul>
         <div class="actions">
           <a class="btn cta" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20quais%20vouchers%20est%C3%A3o%20dispon%C3%ADveis%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">Enviar e‑mail agora</a>
           <button class="btn" id="copyEmail" type="button">Copiar e‑mail</button>
@@ -239,88 +252,64 @@
     </div>
   </section>
 
-  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="CCS PLAY">
+  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="CCS PLAY" data-icon="ico-play" data-img="">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
-        <div class="art">CCS TV + PLAY</div>
+        <img class="art-img" alt="CCS TV + CCS PLAY" loading="lazy">
+        <div class="art-fallback">CCS TV + PLAY</div>
       </div>
       <div class="content">
-        <div class="title">
-          <h2>CCS TV + CCS PLAY</h2>
-        </div>
+        <div class="title"><h2>CCS TV + CCS PLAY</h2></div>
         <p class="subtitle">Streaming completo para sua família</p>
-        <div class="row">
-          <span class="pill hi">60+ canais</span>
-          <span class="pill">regionais e variados</span>
-        </div>
+        <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
         <p class="note">Inclui SBT, Record e outros. Rede Globo não está incluída.</p>
-        <ul class="list">
-          <li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li>
-          <li>Login: e‑mail cadastrado | Senha: CPF (somente números)</li>
-        </ul>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
-        </div>
+        <ul class="list"><li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li><li>Login: e‑mail cadastrado | Senha: CPF (somente números)</li></ul>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a></div>
       </div>
     </div>
   </section>
 
-  <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo">
+  <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo" data-icon="ico-book" data-img="">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Incluído</div>
-        <div class="art">Skeelo</div>
+        <img class="art-img" alt="Skeelo" loading="lazy">
+        <div class="art-fallback">Skeelo</div>
       </div>
       <div class="content">
-        <div class="title">
-          <h2>Skeelo</h2>
-        </div>
+        <div class="title"><h2>Skeelo</h2></div>
         <p class="subtitle">Sua biblioteca de leitura e áudio</p>
-        <div class="row">
-          <span class="pill hi">Livros + Audiobooks</span>
-          <span class="pill">Minibooks e Comics</span>
-        </div>
+        <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
         <p class="muted">Novos livros digitais todo mês, audiobooks exclusivos e mais.</p>
-        <ul class="list">
-          <li>Baixe: <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">https://onelink.to/hseuht</a></li>
-          <li>Compatível com iOS e Android</li>
-        </ul>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
-        </div>
+        <ul class="list"><li>Baixe: <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">https://onelink.to/hseuht</a></li><li>Compatível com iOS e Android</li></ul>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a></div>
       </div>
     </div>
   </section>
 
-  <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte">
+  <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support" data-img="">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">SLA 36h úteis</div>
-        <div class="art">Suporte Premium</div>
+        <img class="art-img" alt="Suporte Premium" loading="lazy">
+        <div class="art-fallback">Suporte Premium</div>
       </div>
       <div class="content">
-        <div class="title">
-          <h2>Suporte Premium</h2>
-        </div>
+        <div class="title"><h2>Suporte Premium</h2></div>
         <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
-        <div class="row">
-          <span class="pill hi">SLA 36h úteis</span>
-          <span class="pill">+ 1 visita técnica/ano</span>
-        </div>
+        <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">+ 1 visita técnica/ano</span></div>
         <p>Benefícios disponíveis em até <strong>72 horas úteis</strong> após a instalação (validação interna).</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=suporte">Solicitar suporte</a>
-        </div>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=suporte">Solicitar suporte</a></div>
       </div>
     </div>
   </section>
 
-  <!-- Indique & Ganhe (bloco padrão) -->
-  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique">
+  <!-- Indique & Ganhe -->
+  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-img="">
     <div class="bg"></div>
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
@@ -332,18 +321,16 @@
           <div class="pill">Plano 650 • 1 mensalidade isenta</div>
         </div>
         <p class="note">Bônus +R$20 se o indicado contratar em até 72h.</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=indique">Indicar agora</a>
-        </div>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=indique">Indicar agora</a></div>
       </div>
     </div>
   </section>
 
   <!-- Portais -->
-  <section class="section" id="s-portais" data-title="Portais" data-dot="Portais">
+  <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal" data-img="">
     <div class="bg"></div>
     <div class="card">
-      <div class="media"><div class="art">Portais</div></div>
+      <div class="media"><img class="art-img" alt="Portais" loading="lazy"><div class="art-fallback">Portais</div></div>
       <div class="content">
         <div class="title"><h2>Portais</h2></div>
         <div class="row" style="gap:12px">
@@ -361,7 +348,7 @@
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ">
+  <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ" data-icon="ico-faq" data-img="">
     <div class="bg"></div>
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
@@ -396,30 +383,50 @@
 
 <script>
 (function(){
-  // Corrige a altura útil em função da topbar (em caso de temas/barras diferentes)
+  // Ajusta altura da topbar fixa e compensa no body
   var topbar = document.getElementById('topbar');
-  function setTopbarH(){ document.documentElement.style.setProperty('--topbar-h', topbar.offsetHeight + 'px'); }
+  function setTopbarH(){
+    var h = topbar.offsetHeight || 64;
+    document.documentElement.style.setProperty('--topbar-h', h + 'px');
+    document.body.style.paddingTop = h + 'px';
+  }
   setTopbarH(); window.addEventListener('resize', setTopbarH, {passive:true});
 
-  // Seções e estado ativo
+  // Seções
   var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav a'));
   var dotsWrap = document.getElementById('dots');
   var toTop = document.getElementById('toTop');
 
-  // Dots
+  // Injeta imagens reais se data-img estiver definido
+  sections.forEach(function(sec){
+    var url = sec.getAttribute('data-img') || '';
+    var img = sec.querySelector('.art-img');
+    var fallback = sec.querySelector('.art-fallback');
+    if (img){
+      if (url){
+        img.src = url;
+        img.addEventListener('load', function(){ if (fallback) fallback.style.display = 'none'; });
+        img.addEventListener('error', function(){ if (fallback) fallback.style.display = 'flex'; });
+      } else {
+        if (fallback) fallback.style.display = 'flex';
+      }
+    }
+  });
+
+  // Dots com ícones
   sections.forEach(function(sec, idx){
     var d = document.createElement('button');
     d.className = 'dot' + (idx===0?' active':'');
-    d.setAttribute('aria-label', 'Ir para ' + (sec.getAttribute('data-dot')||('Seção '+(idx+1))));
-    d.addEventListener('click', function(){
-      sec.scrollIntoView({ behavior: 'smooth', block:'start' });
-    });
+    d.setAttribute('title', sec.getAttribute('data-dot') || ('Seção '+(idx+1)));
+    var icon = sec.getAttribute('data-icon') || 'ico-ticket';
+    d.innerHTML = '<svg aria-hidden="true"><use href="#'+icon+'"/></svg>';
+    d.addEventListener('click', function(){ sec.scrollIntoView({ behavior: 'smooth', block:'start' }); });
     dotsWrap.appendChild(d);
   });
   var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('.dot'));
 
-  // Dock (minimiza anterior)
+  // Dock (anterior)
   var dockTitle = document.getElementById('dockTitle');
   var dockChip = document.getElementById('dockChip');
   var dockBack = document.getElementById('dockBack');
@@ -446,10 +453,9 @@
     if (idx > 0) toTop.classList.add('show'); else toTop.classList.remove('show');
   }
 
-  // IntersectionObserver para ativar a seção mais centrada
+  // IO para ativar seção ao rolar
   if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
-      // Escolhe a com maior interseção
       var best = { idx: currentIndex, ratio: 0 };
       entries.forEach(function(e){
         if (!e.isIntersecting) return;
@@ -460,7 +466,6 @@
     }, { threshold: buildThresholdList(), rootMargin: "-10% 0px -10% 0px" });
     sections.forEach(function(s){ io.observe(s); });
   } else {
-    // Fallback: ativa por posição de scroll
     window.addEventListener('scroll', function(){
       var center = innerHeight/2;
       var bestIdx = 0, bestDelta = 1e9;
@@ -515,6 +520,9 @@
     for (var i=0; i<=1.0; i+=0.05) thresholds.push(i);
     return thresholds;
   }
+
+  // Estado inicial
+  setActiveByIdx(0);
 })();
 </script>
 </body>
