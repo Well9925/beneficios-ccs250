@@ -83,7 +83,7 @@
     .seg-item.plan { color:#0b0b0b; background: #e8eefc; }
     .seg-sep { width:1px; height: 18px; background: rgba(0,0,0,.18); margin: 0 2px; border-radius: 1px; opacity:.75; }
 
-    /* Pulse inicial da pílula de nível (reativado) */
+    /* Pulse inicial da pílula de nível */
     @keyframes pillPulse {
       0%,100%{ transform: scale(1); box-shadow: inset 0 0 6px rgba(255,255,255,.12), 0 0 10px rgba(47,128,255,.24); }
       50%     { transform: scale(1.055); box-shadow: inset 0 0 10px rgba(255,255,255,.20), 0 0 16px rgba(47,128,255,.50); }
@@ -197,29 +197,39 @@
     .inline-email:hover { background: rgba(255,255,255,.1); border-radius: 4px; }
     .inline-email:focus-visible { outline: 2px solid rgba(0,217,255,.8); outline-offset: 2px; border-radius: 4px; }
 
-    /* Aviso Nível 3 – com tooltip (i) */
+    /* Aviso Nível 3 – estilos aproveitados */
     .disclaimer { font-size:13px; color:#cfcfcf; opacity:.95; margin-top:8px; position: relative; }
     .disclaimer-lev3 { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,.18); padding: 10px 12px; border-radius: 10px; display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
     .chip { display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .4px; text-transform: uppercase; color:#fff; background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); border: 1px solid rgba(255,255,255,.35); text-shadow: 0 1px 1px rgba(0,0,0,.35); -webkit-text-stroke:.2px rgba(0,0,0,.25); box-shadow: 0 0 10px rgba(0,217,255,.25), inset 0 0 6px rgba(255,255,255,.14); }
 
-    .tip-btn{ width:20px; height:20px; border-radius:50%; border:1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color:#fff; font-size:12px; font-weight:900; line-height:18px; text-align:center; cursor:pointer; }
-    .tip-btn:hover, .tip-btn:focus-visible{ background: rgba(255,255,255,.14); outline: 2px solid rgba(0,217,255,.65); outline-offset: 2px; }
-    .tip-bubble{ position:absolute; bottom: calc(100% + 8px); left: 12px; max-width: 280px; background:#0f0f0f; color:#eaeaea; border:1px solid rgba(255,255,255,.18); padding:8px 10px; border-radius:8px; font-size:12px; box-shadow: 0 8px 18px rgba(0,0,0,.45); opacity:0; transform: translateY(4px); pointer-events:none; transition: opacity .18s ease, transform .18s ease; z-index: 5200; }
-    .tip-bubble[data-open="true"]{ opacity:1; transform: translateY(0); pointer-events:auto; }
-
-    /* Acordeão "Como funciona" */
+    /* Acordeão "Como funciona" + premium */
     details.howto { margin-top: 10px; background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:8px 10px; }
     details.howto summary { cursor:pointer; list-style:none; font-weight:800; letter-spacing:.3px; }
     details.howto summary::-webkit-details-marker { display:none; }
     details.howto[open] { background: rgba(255,255,255,.07); }
 
     .email-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
-    .copy-link { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.25); padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s; box-shadow:none; }
-    .copy-link:hover { background:rgba(255,255,255,.08); }
+    /* Unificar design dos botões */
+    .app-link,
+    .copy-link {
+      display:inline-block;
+      margin-top:10px;
+      padding:10px 20px;
+      background:#fff;
+      color:#111;
+      border-radius:6px;
+      text-decoration:none;
+      border:1px solid rgba(0,0,0,.05);
+      transition:.3s;
+      cursor:pointer;
+    }
+    .app-link:hover,
+    .copy-link:hover{
+      background: var(--accent);
+      color: var(--accent-contrast);
+      box-shadow: 0 0 14px 4px var(--accent-glow-2);
+    }
     .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
-
-    .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
-    .app-link:hover{ background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
 
     /* POPUP NÍVEIS */
     .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
@@ -267,7 +277,7 @@
     <h1>
       Benefícios
       <span class="seg-group" role="group" aria-label="Nível e plano">
-        <button class="seg-item level" id="topLevelBadge" type="button"
+        <button class="seg-item level pulse" id="topLevelBadge" type="button"
                 aria-haspopup="dialog" aria-expanded="false" aria-controls="levelPopover"
                 title="Clique para ver os níveis">
           Nível 1
@@ -322,15 +332,21 @@
         </ul>
       </details>
 
-      <!-- Aviso claro com tooltip e sem traço -->
-      <p class="disclaimer disclaimer-lev3">
-        <button class="tip-btn" type="button" aria-expanded="false" aria-controls="tipPremium">i</button>
-        <span class="tip-bubble" id="tipPremium" role="tooltip" aria-live="polite" data-open="false">
-          Atrações com custo elevado e alta demanda; por isso são liberadas no Nível 3.
-        </span>
-        Atrações premium não incluídas neste nível: Unipraias, Barco Pirata, Roda Gigante e Aquário.
-        <span class="chip" aria-label="Disponível somente no Nível 3">Somente Nível 3</span>
-      </p>
+      <!-- NOVO acordeão: Atrações premium não incluídas (substitui o tooltip i) -->
+      <details class="howto">
+        <summary>Atrações premium não incluídas</summary>
+        <div class="disclaimer disclaimer-lev3" style="margin-top:8px;">
+          <p style="margin:0 0 6px 0;">Estas atrações são disponibilizadas apenas no <strong>Nível 3</strong> devido ao custo elevado e alta demanda:</p>
+          <ul class="bullets" style="margin-top:0;">
+            <li>Unipraias</li>
+            <li>Barco Pirata</li>
+            <li>Roda Gigante</li>
+            <li>Aquário</li>
+          </ul>
+          <p class="lvl-note" style="margin:6px 0 0 0;">Por esse motivo, não estão disponíveis nos Níveis 1 e 2.</p>
+          <span class="chip" aria-label="Disponível somente no Nível 3" style="margin-top:6px;">Somente Nível 3</span>
+        </div>
+      </details>
 
       <div class="email-actions">
         <a class="app-link" id="emailBtn" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Benef%C3%ADcio%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20qual%20benef%C3%ADcio%20est%C3%A1%20dispon%C3%ADvel%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">📩 Enviar e-mail agora</a>
@@ -342,7 +358,7 @@
         <button class="popover-close" id="popoverClose" aria-label="Fechar">×</button>
         <h4 id="levelsTitle">Conheça os níveis</h4>
 
-        <!-- Grupo segmentado unificado (sem repetição abaixo) -->
+        <!-- Grupo segmentado unificado -->
         <div class="seg-group sm" aria-label="Dados do seu plano e nível">
           <span class="seg-item level" aria-hidden="true">Nível 1</span>
           <span class="seg-sep" aria-hidden="true"></span>
@@ -404,7 +420,7 @@
         <h3>🥈 450MB</h3>
         <strong>R$50 de desconto</strong>
         <button class="toggle-details">Ver detalhes</button>
-        <div class="details">
+        <div class="details>
           <ul>
             <li>Desconto no próximo ciclo.</li>
             <li>Válido para titular adimplente.</li>
@@ -522,11 +538,9 @@
       let stars=createStars();
       (function starsLoop(){ pctx.clearRect(0,0,particles.width,particles.height); pctx.fillStyle="rgba(255,255,255,0.9)"; for(const s of stars){ pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill(); s.y+=s.s; if(s.y>particles.height){ s.y=-2; s.x=Math.random()*particles.width; } } requestAnimationFrame(starsLoop); })();
 
-      // Sombra sticky e pulse inicial da pílula de nível
+      // Sombra sticky
       const elevate = ()=> stickyTitle.classList.toggle('elevated', scrollY > 4);
       elevate(); addEventListener('scroll', elevate, { passive:true });
-      topLevelBadge.classList.add('pulse');
-      setTimeout(()=> topLevelBadge.classList.remove('pulse'), 4800);
 
       // Fogos (saem do título e viajam a janela)
       sizeCanvasToViewport(fwCanvas);
@@ -555,20 +569,6 @@
           fwParticles.push({ x, y, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd - 0.6, alpha:1, color:colors[(Math.random()*colors.length)|0], r:2.4+Math.random()*1.6 });
         }
       }
-
-      // Luzinhas de fundo
-      sizeCanvasToViewport(lightsCanvas);
-      const lights=Array.from({length:60},()=>({x:Math.random()*lightsCanvas.width,y:Math.random()*lightsCanvas.height,r:1+Math.random()*2,phase:Math.random()*Math.PI*2,speed:0.6+Math.random()*1.0,vy:0.25+Math.random()*0.4}));
-      (function lightsLoop(){
-        lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height);
-        for(const l of lights){
-          l.phase+=0.02*l.speed; const a=0.25+((Math.sin(l.phase)+1)/2)*0.55;
-          lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2);
-          lightsCtx.fillStyle=`rgba(255,255,255,${a})`; lightsCtx.fill();
-          l.y-=l.vy; if(l.y<-5){ l.y=lightsCanvas.height+5; l.x=Math.random()*lightsCanvas.width; }
-        }
-        requestAnimationFrame(lightsLoop);
-      })();
 
       /* ===== Revelar cards ===== */
       const revealTargets=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
@@ -698,61 +698,22 @@
       addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
       if(popoverClose) popoverClose.addEventListener('click', closePopover);
 
-      /* ===== Tooltip delegação ===== */
-      let openTip = null;
-      document.addEventListener('click', (e)=>{
-        const btn = e.target.closest('.tip-btn');
-        if (btn){
-          const wrapper = btn.closest('.disclaimer');
-          const bubble = wrapper?.querySelector('.tip-bubble');
-          if (!bubble) return;
-          const currentlyOpen = bubble.getAttribute('data-open') === 'true';
-          if (openTip && openTip !== bubble){
-            openTip.setAttribute('data-open','false');
-            const prevBtn = openTip.closest('.disclaimer')?.querySelector('.tip-btn');
-            if (prevBtn) prevBtn.setAttribute('aria-expanded','false');
-          }
-          bubble.setAttribute('data-open', String(!currentlyOpen));
-          btn.setAttribute('aria-expanded', String(!currentlyOpen));
-          openTip = !currentlyOpen ? bubble : null;
-          e.stopPropagation(); return;
-        }
-        if (openTip){
-          openTip.setAttribute('data-open','false');
-          const prevBtn = openTip.closest('.disclaimer')?.querySelector('.tip-btn');
-          if (prevBtn) prevBtn.setAttribute('aria-expanded','false');
-          openTip = null;
-        }
-      });
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && openTip){
-          openTip.setAttribute('data-open','false');
-          const prevBtn = openTip.closest('.disclaimer')?.querySelector('.tip-btn');
-          if (prevBtn) prevBtn.setAttribute('aria-expanded','false');
-          openTip = null;
-        }
-      });
-
-      /* ===== Botão Copiar e-mail (corrigido e robusto) ===== */
+      /* ===== Botão Copiar e-mail (robusto) ===== */
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn){
         copyBtn.addEventListener('click', async ()=>{
           const email='ccs@ccstelecom.com.br';
           let ok=false;
-          // Navigator.clipboard (contexto seguro)
           try{
             if (navigator.clipboard && window.isSecureContext){
               await navigator.clipboard.writeText(email);
               ok=true;
             }
           }catch(e){}
-          // Fallback (iOS/Safari/HTTP)
           if(!ok){
             const ta=document.createElement('textarea');
-            ta.value=email;
-            ta.setAttribute('readonly','');
-            ta.style.position='fixed';
-            ta.style.top='-9999px';
+            ta.value=email; ta.setAttribute('readonly','');
+            ta.style.position='fixed'; ta.style.top='-9999px';
             document.body.appendChild(ta);
             ta.select();
             try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
