@@ -198,7 +198,7 @@
     }
     .voucher-meta{ font-size:13.5px; color:#cfefff; opacity:.95; }
 
-    /* NOVO: Card de compatibilidade (CCS PLAY) */
+    /* Compatibilidade (reutilizável) */
     .compat-card{
       margin-top:10px; padding:12px;
       background: rgba(255,255,255,.05);
@@ -218,32 +218,56 @@
     .compat-note{ margin:6px 0 8px 0; font-size:12.5px; color:#cfcfcf; }
     .compat-card .app-link{ margin-top:6px; }
 
-    /* Popover níveis */
-    .level-popover { position: fixed; min-width:280px; max-width:92vw; background: var(--popover-bg); border:1px solid var(--popover-border); border-radius:12px; padding:14px 14px 12px; box-shadow: 0 16px 36px var(--popover-shadow), 0 0 18px rgba(47,128,255,.12); z-index:5002; opacity:0; transform: translateY(-6px) scale(.98); pointer-events:none; transition: opacity .18s ease, transform .18s ease; }
-    .level-popover.open{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
-    .level-popover.h4{ margin:0 0 6px 0; font-size:14px; letter-spacing:.4px; color:#f4f4f4; }
-    .level-popover.is-mobile{ left:50% !important; transform: translate(-50%, 0) !important; right:auto !important; }
-    .level-list{ list-style:none; margin:0; padding:0; }
-    .level-list li{ display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:8px; flex-wrap:wrap; }
-    .pill{ flex:none; padding:4px 10px; font-size:11px; font-weight:900; color:#0b0b0b; border-radius:999px; letter-spacing:.4px; border:1px solid rgba(255,255,255,.25); }
-    .l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
-    .l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
-    .lvl-desc{ color:#eaeaea; font-size:13px; }
-    .lvl-note{ color:#cfefff; font-size:12px; opacity:.9; }
-    .level-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .level-actions .btn{ display:inline-block; padding:10px 14px; border-radius:10px; font-weight:800; font-size:16px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; }
-    .level-actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
-    .to-l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
-    .to-l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
-
-    /* Indique & Ganhe */
-    #indique.indique{ background: linear-gradient(160deg, #0b4bff 0%, #6f2bff 100%); color:#fff; padding: 40px 20px; text-align: center; border-radius: 20px; margin: 40px auto; max-width: 1000px; box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 24px rgba(111,43,255,.25); position: relative; overflow: hidden; opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease; }
+    /* INDICAR & GANHAR — layout único */
+    #indique.indique{
+      background: linear-gradient(160deg, #0b4bff 0%, #6f2bff 100%);
+      color:#fff; padding: 36px 20px; text-align: center;
+      border-radius: 20px; margin: 40px auto; max-width: 1000px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 24px rgba(111,43,255,.25);
+      position: relative; overflow: hidden;
+      opacity:0; transform: translateY(30px) scale(0.95); transition: all .8s ease;
+    }
     #indique.indique.show{ opacity:1; transform: translateY(0) scale(1); }
-    #indique.indique .toggle-details{ margin-top: 12px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .25s; }
+    .ind-hero{ font-size:22px; font-weight:900; margin-bottom:8px; letter-spacing:.4px; }
+    .ind-sub{ margin:0 auto 14px; max-width:800px; opacity:.95; }
+    .ind-steps{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 14px; }
+    .ind-step{ background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 10px; font-size:12.5px; font-weight:800; }
+    .ind-cards{ display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:14px; margin:14px 0 10px; }
+    .ind-card{ background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22); border-radius:12px; padding:12px; box-shadow: inset 0 0 10px rgba(255,255,255,.08); }
+    .ind-card h3{ margin:0 0 6px 0; }
+    .ind-card strong{ display:block; margin-bottom:8px; }
+    .ind-card .details{ margin-top:8px; text-align:left; }
+    .ind-actions{ margin-top:10px; }
+    .ind-actions .app-link{ background:#fff; color:#111; }
+    @media (max-width:800px){ .ind-cards{ grid-template-columns:1fr; } }
 
-    .aviso { background:#222; padding:20px; border-left:4px solid var(--accent); margin:40px auto; max-width:1000px; border-radius:12px; }
-    #finalizacao { text-align:center; padding:40px 20px; margin-top:40px; }
-    #finalizacao h3 { font-size:24px; margin-bottom:10px; }
+    /* PORTAIS — layout específico */
+    .portal-grid{ display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:16px; }
+    .portal-card{ background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); border-radius:16px; padding:18px; box-shadow: 0 2px 10px rgba(255,255,255,0.1); }
+    .portal-card .icon{ font-size:22px; margin-right:8px; }
+    .chip-list{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+    .chip-lite{ padding:6px 10px; border-radius:999px; font-size:12px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); }
+    .portal-card .app-link{ margin-top:10px; display:inline-block; }
+
+    @media (max-width:800px){ .portal-grid{ grid-template-columns:1fr; } }
+
+    /* CARD INFORMATIVO (ativação) */
+    .info-card{
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px; padding:14px; margin: 16px auto;
+    }
+    .info-card h4{ margin:0 0 6px 0; font-size:16px; }
+    .info-card p{ margin:6px 0; color:#eaeaea; }
+
+    /* FINALIZAÇÃO — layout dedicado */
+    #finalizacao { padding:40px 20px; margin-top:40px; }
+    .thanks-card{
+      max-width: 1000px; margin: 0 auto; text-align:center;
+      background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14);
+      border-radius:18px; padding:28px; box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 0 10px rgba(255,255,255,.06);
+    }
+    #finalizacao h3 { font-size:24px; margin:0 0 10px; }
     #finalizacao .stars { font-size:20px; color:var(--accent); animation: twinkle 2s infinite; }
     @keyframes twinkle { 0%,100%{opacity:.4;} 50%{opacity:1;} }
     footer { background:#111; text-align:center; padding:20px; margin-top:60px; }
@@ -279,7 +303,7 @@
   </div>
 
   <div id="beneficios" class="container">
-    <!-- CONECTA CLUBE -->
+    <!-- CONECTA CLUBE (inalterado) -->
     <div class="benefit-card" id="conecta-clube">
       <div class="benefit-title">
         🎟️ CONECTA CLUBE
@@ -296,14 +320,12 @@
         Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!
       </div>
 
-      <!-- Faixa do voucher -->
       <div class="voucher-strip" aria-label="Ciclo de voucher">
         <span class="voucher-icon" aria-hidden="true">🎁</span>
         <span class="voucher-pill">1 voucher</span>
         <span class="voucher-meta">a cada 90 dias</span>
       </div>
 
-      <!-- Acordeão "Como funciona" -->
       <details class="howto">
         <summary>Como funciona</summary>
         <ul class="bullets">
@@ -313,7 +335,6 @@
         </ul>
       </details>
 
-      <!-- Atrações premium não incluídas -->
       <details class="howto">
         <summary>Atrações premium não incluídas</summary>
         <div class="disclaimer disclaimer-lev3" style="margin-top:8px;">
@@ -329,7 +350,6 @@
         </div>
       </details>
 
-      <!-- Card de consulta (último e renomeado) -->
       <details class="howto" open>
         <summary>Consultar vouchers disponíveis no seu plano</summary>
         <div style="margin-top:8px;">
@@ -370,7 +390,7 @@
       </div>
     </div>
 
-    <!-- CCS PLAY (melhorado com card de compatibilidade) -->
+    <!-- CCS PLAY (mantido com compatibilidade) -->
     <div class="benefit-card" id="ccs-play">
       <div class="benefit-title">
         2️⃣ 🎬 CCS TV + 📲 CCS PLAY
@@ -403,7 +423,6 @@
         </ul>
       </details>
 
-      <!-- NOVO: Cardzinho de compatibilidade com botão integrado -->
       <div class="compat-card" aria-label="Compatibilidade CCS PLAY">
         <div class="compat-header">
           <span class="compat-icon" aria-hidden="true">⚠️</span>
@@ -425,29 +444,86 @@
       </div>
     </div>
 
-    <!-- SKEELO -->
+    <!-- SKEELO (reestilizado) -->
     <div class="benefit-card" id="skeelo">
-      <div class="benefit-title">📚 SKEELO</div>
-      <div class="benefit-subtitle">Livros Digitais, Audiobooks e Minibooks</div>
-      <a class="app-link" href="https://onelink.to/hseuht" target="_blank">Acessar SKEELO</a>
+      <div class="benefit-title">3️⃣ 📚 SKEELO</div>
+      <div class="benefit-subtitle">Sua biblioteca de leitura e áudio sempre com você</div>
+
+      <div class="quote">
+        Acesse uma biblioteca com:<br/>
+        • Livros digitais liberados todo mês<br/>
+        • Audiobooks exclusivos • Minibooks e Comeeks
+      </div>
+
+      <details class="howto">
+        <summary>Como acessar?</summary>
+        <ul class="bullets">
+          <li><em>Baixe o app:</em> 👉 <a class="inline-email" href="https://onelink.to/hseuht" target="_blank" rel="noopener">https://onelink.to/hseuht</a></li>
+          <li><em>Ou procure por “SKEELO”</em> na loja de aplicativos do seu dispositivo.</li>
+        </ul>
+      </details>
+
+      <div class="compat-card" aria-label="Compatibilidade SKEELO">
+        <div class="compat-header">
+          <span class="compat-icon" aria-hidden="true">⚠️</span>
+          <div>
+            <p class="compat-title">Compatibilidade</p>
+            <p class="compat-sub">Disponível para celular e tablet</p>
+          </div>
+        </div>
+
+        <ul class="compat-list" role="list">
+          <li class="compat-chip">iOS</li>
+          <li class="compat-chip">Android</li>
+        </ul>
+
+        <p class="compat-note">Confira se seu aparelho é compatível com o aplicativo.</p>
+        <a class="app-link" href="https://onelink.to/hseuht" target="_blank" rel="noopener">Acessar SKEELO</a>
+      </div>
     </div>
 
-    <div class="benefit-card">
-      <div class="benefit-title">🆘 SUPORTE PREMIUM</div>
-      <div class="benefit-subtitle">Atendimento prioritário</div>
-      <p>Prazo até 36h úteis + 1 visita técnica gratuita por ano.</p>
+    <!-- SUPORTE PREMIUM (reestilizado) -->
+    <div class="benefit-card" id="suporte-premium">
+      <div class="benefit-title">
+        4️⃣ 🆘 SUPORTE PREMIUM
+        <span class="badge level-badge" aria-hidden="true">Nível 1</span>
+      </div>
+      <div class="benefit-subtitle">Atendimento com prioridade e prazo garantido</div>
+
+      <div class="quote">
+        SLA de atendimento: <strong>até 36h úteis</strong> — resolvemos o seu problema com o prazo máximo de 36h úteis!<br/>
+        Direito a <strong>1 visita técnica gratuita por ano</strong>!
+      </div>
+
+      <div class="email-actions">
+        <a class="app-link" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D" target="_blank" rel="noopener">📲 Solicitar suporte</a>
+      </div>
+
+      <div class="info-card" aria-label="Ativação dos benefícios">
+        <h4>Ativação dos benefícios</h4>
+        <p>Seus benefícios estarão disponíveis em até <strong>72 horas úteis</strong> após a instalação!</p>
+        <p>Esse é o prazo que nosso setor de aprovação precisa para validar todo o processo, desde o meu atendimento até o trabalho da nossa equipe técnica.</p>
+        <p><em>Assim que tudo estiver certinho, o acesso é liberado automaticamente!</em></p>
+        <p>Qualquer dúvida, a qualquer momento sigo à disposição, combinado? 😊</p>
+      </div>
     </div>
   </div>
 
-  <!-- Indique & Ganhe -->
+  <!-- Indique & Ganhe (layout único) -->
   <section id="indique" class="indique">
-    <h2>🎯 Indique & Ganhe</h2>
-    <p>Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
-    <div class="indique-cards">
-      <div class="card">
+    <div class="ind-hero">🎯 Indique & Ganhe</div>
+    <p class="ind-sub">Ganhe até <strong>100% de desconto</strong> na sua próxima fatura indicando amigos!</p>
+
+    <div class="ind-steps" aria-label="Como funciona">
+      <span class="ind-step">1) Indique um amigo</span>
+      <span class="ind-step">2) Instalação confirmada</span>
+      <span class="ind-step">3) Você recebe o desconto</span>
+    </div>
+
+    <div class="ind-cards">
+      <div class="ind-card">
         <h3>🥉 250MB</h3>
         <strong>R$30 de desconto</strong>
-        <button class="toggle-details">Ver detalhes</button>
         <div class="details">
           <ul>
             <li>Desconto aplicado após instalação.</li>
@@ -455,10 +531,9 @@
           </ul>
         </div>
       </div>
-      <div class="card">
+      <div class="ind-card">
         <h3>🥈 450MB</h3>
         <strong>R$50 de desconto</strong>
-        <button class="toggle-details">Ver detalhes</button>
         <div class="details">
           <ul>
             <li>Desconto no próximo ciclo.</li>
@@ -466,10 +541,9 @@
           </ul>
         </div>
       </div>
-      <div class="card">
+      <div class="ind-card">
         <h3>🥇 650MB</h3>
         <strong>Mensalidade ISENTA</strong>
-        <button class="toggle-details">Ver detalhes</button>
         <div class="details">
           <ul>
             <li>Isenção após ativação confirmada.</li>
@@ -478,37 +552,46 @@
         </div>
       </div>
     </div>
-    <p class="bonus">🏆 Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
-    <a href="https://wa.me/554797701300" class="app-link">📲 Indicar agora</a>
+
+    <p class="ind-sub">🏆 Se o indicado contratar em até 72h, você ainda ganha <strong>+R$20</strong> de bônus!</p>
+
+    <div class="ind-actions">
+      <a href="https://wa.me/554797701300" class="app-link">📲 Indicar agora</a>
+    </div>
   </section>
 
+  <!-- Portais (layout específico) -->
   <section id="portais" class="container">
-    <div class="benefit-card">
-      <div class="benefit-title">🌐 Portal do Assinante</div>
-      <ul>
-        <li>💠 Pagamentos PIX/Cartão</li>
-        <li>🧾 2ª via faturas</li>
-        <li>🔓 Desbloqueio confiança</li>
-        <li>📊 Extrato conexão</li>
-      </ul>
-      <a class="app-link" href="https://bit.ly/CCS_APP" target="_blank">Acessar CCS TELECOM</a>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-title">🧾 Portal de Faturas</div>
-      <p>Acesse sem login:</p>
-      <a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank">Acessar faturas</a>
+    <div class="portal-grid">
+      <div class="portal-card">
+        <div class="benefit-title"><span class="icon">🌐</span>Portal do Assinante</div>
+        <div class="chip-list">
+          <span class="chip-lite">Pagamentos PIX/Cartão</span>
+          <span class="chip-lite">2ª via faturas</span>
+          <span class="chip-lite">Desbloqueio confiança</span>
+          <span class="chip-lite">Extrato conexão</span>
+        </div>
+        <a class="app-link" href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">Acessar CCS TELECOM</a>
+      </div>
+      <div class="portal-card">
+        <div class="benefit-title"><span class="icon">🧾</span>Portal de Faturas</div>
+        <p style="margin:6px 0 8px 0;">Acesse sem login e baixe suas contas rapidamente.</p>
+        <a class="app-link" href="https://ccs.pix.7az.com.br/" target="_blank" rel="noopener">Acessar faturas</a>
+      </div>
     </div>
   </section>
 
-  <div class="aviso">⚠️ Seus benefícios estarão disponíveis em até 72h úteis após a instalação.</div>
-
+  <!-- Finalização -->
   <section id="finalizacao">
-    <h3>💙 Obrigado por fazer parte da família CCS Telecom</h3>
-    <div class="stars">⭐⭐⭐⭐⭐</div>
-    <p>Conte com a gente sempre 🚀</p>
-    <a href="https://wa.me/554797701300" class="app-link">📲 Falar com Suporte</a>
-    <br/><br/>
-    <a href="https://is.gd/CCSnota10" target="_blank" class="app-link">⭐ Avalie-nos no Google</a>
+    <div class="thanks-card">
+      <h3>💙 Obrigado por fazer parte da família CCS Telecom</h3>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>Conte com a gente sempre 🚀</p>
+      <div class="email-actions" style="justify-content:center;">
+        <a href="https://wa.me/554797701300" class="app-link">📲 Falar com Suporte</a>
+        <a href="https://is.gd/CCSnota10" target="_blank" class="app-link">⭐ Avalie-nos no Google</a>
+      </div>
+    </div>
   </section>
 
   <footer>© 2025 CCS Telecom — Todos os direitos reservados</footer>
@@ -811,7 +894,6 @@
         currentTrigger=null;
       }
 
-      // Triggers (Conecta Clube topo e card, e CCS PLAY)
       [levelBadgeCard, topLevelBadge, levelBadgePlay].forEach(el=>{
         if(!el) return;
         el.addEventListener('click', (e)=>{
@@ -823,7 +905,7 @@
       addEventListener('keydown', (e)=>{ if(e.key==='Escape' && popOpen) closePopover(); });
       if(popoverClose) popoverClose.addEventListener('click', closePopover);
 
-      /* Copiar e-mail (card de consulta) */
+      /* Copiar e-mail (card de consulta Conecta Clube) */
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn){
         copyBtn.addEventListener('click', async ()=>{
