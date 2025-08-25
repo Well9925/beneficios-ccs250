@@ -72,6 +72,7 @@
       height: 26px; padding: 0 12px;
       font-size: 12.5px; font-weight: 900; letter-spacing:.35px; white-space:nowrap;
       border-radius: 9999px; border: 0; outline: 0;
+      transition: filter .2s ease;
     }
     .seg-item.level {
       color:#fff; cursor:pointer;
@@ -81,6 +82,13 @@
     .seg-item.level:hover, .seg-item.level:focus-visible { filter: brightness(1.06) saturate(1.08); }
     .seg-item.plan { color:#0b0b0b; background: #e8eefc; }
     .seg-sep { width:1px; height: 18px; background: rgba(0,0,0,.18); margin: 0 2px; border-radius: 1px; opacity:.75; }
+
+    /* Pulse inicial da pílula de nível (reativado) */
+    @keyframes pillPulse {
+      0%,100%{ transform: scale(1); box-shadow: inset 0 0 6px rgba(255,255,255,.12), 0 0 10px rgba(47,128,255,.24); }
+      50%     { transform: scale(1.055); box-shadow: inset 0 0 10px rgba(255,255,255,.20), 0 0 16px rgba(47,128,255,.50); }
+    }
+    .seg-item.level.pulse { animation: pillPulse 1.6s ease-in-out 0s 3; }
 
     /* variação menor para popover */
     .seg-group.sm { padding: 2px; }
@@ -98,7 +106,7 @@
       .sticky-title p { font-size: 13px; }
     }
 
-    /* Ajuste de âncora para não ficar atrás do título sticky */
+    /* Ajuste de âncora */
     section, .container, .benefit-card { scroll-margin-top: 96px; }
 
     /* MENU INFERIOR */
@@ -134,7 +142,6 @@
     }
     @keyframes gradientMove { to{ background-position: 240% center; } }
     @keyframes glowFilterPulse { 0%,100%{ filter: drop-shadow(0 0 8px rgba(10,88,255,.85)) drop-shadow(0 0 22px rgba(0,217,255,.72)); } 50%{ filter: drop-shadow(0 0 14px rgba(10,88,255,.85)) drop-shadow(0 0 34px rgba(0,217,255,.72)); } }
-    /* Mobile: não cortar e quebrar linhas com tamanho responsivo */
     @media (max-width:600px){
       #welcome-text{
         white-space: normal;
@@ -210,6 +217,7 @@
     .copy-link { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.25); padding:10px 16px; border-radius:6px; cursor:pointer; transition:.25s; box-shadow:none; }
     .copy-link:hover { background:rgba(255,255,255,.08); }
     .copy-link.copied { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow-2); }
+
     .app-link { display:inline-block; margin-top:10px; padding:10px 20px; background:#fff; color:#111; border-radius:6px; text-decoration:none; transition:.3s; }
     .app-link:hover{ background: var(--accent); color: var(--accent-contrast); box-shadow: 0 0 14px 4px var(--accent-glow-2); }
 
@@ -225,7 +233,7 @@
     .lvl-desc{ color:#eaeaea; font-size:13px; }
     .lvl-note{ color:#cfefff; font-size:12px; opacity:.9; }
     .level-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .level-actions .btn{ display:inline-block; padding:10px 14px; border-radius:10px; font-weight:800; font-size:16px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; } /* 16px para evitar zoom iOS */
+    .level-actions .btn{ display:inline-block; padding:10px 14px; border-radius:10px; font-weight:800; font-size:16px; letter-spacing:.3px; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.25); box-shadow: 0 0 10px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.12); transition: transform .15s, filter .2s, box-shadow .2s; }
     .level-actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.06) saturate(1.08); box-shadow: 0 8px 18px rgba(0,0,0,.35), 0 0 14px rgba(255,255,255,.12); }
     .to-l2{ background: linear-gradient(90deg, var(--pill-2-a), var(--pill-2-b)); }
     .to-l3{ background: linear-gradient(90deg, var(--pill-3-a), var(--pill-3-b)); }
@@ -509,16 +517,18 @@
       addEventListener('mousemove', moveListener, { passive:true });
       addEventListener('touchmove', moveListener, { passive:true });
 
-      // Estrelas
+      // Estrelas no overlay
       function createStars(){ const arr=[]; for(let i=0;i<110;i++){ arr.push({x:Math.random()*particles.width,y:Math.random()*particles.height,r:Math.random()*2+0.8,s:Math.random()*0.6+0.25}); } return arr; }
       let stars=createStars();
       (function starsLoop(){ pctx.clearRect(0,0,particles.width,particles.height); pctx.fillStyle="rgba(255,255,255,0.9)"; for(const s of stars){ pctx.beginPath(); pctx.arc(s.x,s.y,s.r,0,Math.PI*2); pctx.fill(); s.y+=s.s; if(s.y>particles.height){ s.y=-2; s.x=Math.random()*particles.width; } } requestAnimationFrame(starsLoop); })();
 
-      // Sombra sticky
+      // Sombra sticky e pulse inicial da pílula de nível
       const elevate = ()=> stickyTitle.classList.toggle('elevated', scrollY > 4);
       elevate(); addEventListener('scroll', elevate, { passive:true });
+      topLevelBadge.classList.add('pulse');
+      setTimeout(()=> topLevelBadge.classList.remove('pulse'), 4800);
 
-      // Fogos originando do título e viajando a janela
+      // Fogos (saem do título e viajam a janela)
       sizeCanvasToViewport(fwCanvas);
       function titleRect(){ const r=stickyTitle.getBoundingClientRect(); return { x:r.left+8, y:r.top+4, w:r.width-16, h:r.height-8 }; }
       let fwParticles=[]; let lastSpawn=0;
@@ -546,7 +556,21 @@
         }
       }
 
-      /* ===== Revelar cards (.show) ===== */
+      // Luzinhas de fundo
+      sizeCanvasToViewport(lightsCanvas);
+      const lights=Array.from({length:60},()=>({x:Math.random()*lightsCanvas.width,y:Math.random()*lightsCanvas.height,r:1+Math.random()*2,phase:Math.random()*Math.PI*2,speed:0.6+Math.random()*1.0,vy:0.25+Math.random()*0.4}));
+      (function lightsLoop(){
+        lightsCtx.clearRect(0,0,lightsCanvas.width,lightsCanvas.height);
+        for(const l of lights){
+          l.phase+=0.02*l.speed; const a=0.25+((Math.sin(l.phase)+1)/2)*0.55;
+          lightsCtx.beginPath(); lightsCtx.arc(l.x,l.y,l.r,0,Math.PI*2);
+          lightsCtx.fillStyle=`rgba(255,255,255,${a})`; lightsCtx.fill();
+          l.y-=l.vy; if(l.y<-5){ l.y=lightsCanvas.height+5; l.x=Math.random()*lightsCanvas.width; }
+        }
+        requestAnimationFrame(lightsLoop);
+      })();
+
+      /* ===== Revelar cards ===== */
       const revealTargets=[...document.querySelectorAll(".benefit-card, #indique.indique, #finalizacao")];
       function revealAboveFold(){
         revealTargets.forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top < innerHeight*0.95) el.classList.add('show'); });
@@ -581,7 +605,6 @@
         overlayEl.style.opacity='0';
         setTimeout(()=>{
           overlayEl.remove();
-          // garantir que não “desça lá pra baixo”
           window.scrollTo(0, prevY);
           menuInferior.classList.remove('oculto');
           btnTopo.classList.add('visivel');
@@ -601,16 +624,14 @@
       // Topo
       btnTopo.addEventListener('click', ()=> scrollTo({ top:0, behavior:'smooth' }));
 
-      /* ===== Popover Níveis (sem alterar viewport, sem body fixed) ===== */
+      /* ===== Popover Níveis (sem zoom/break no mobile) ===== */
       let popOpen=false, prevFocus=null, trapHandler=null, currentTrigger=null;
       let preventScrollHandlers = [];
 
       function addPreventScroll(){
         const prevent = (e)=>{
-          // permite scroll dentro do próprio popover (se necessário)
           if (!levelPopover.contains(e.target)) { e.preventDefault(); }
         };
-        // wheel e touchmove com passive:false para poder prevenir
         document.addEventListener('wheel', prevent, { passive:false });
         document.addEventListener('touchmove', prevent, { passive:false });
         preventScrollHandlers = [prevent];
@@ -642,14 +663,11 @@
         setExpanded(levelBadgeCard, false); setExpanded(topLevelBadge, false); setExpanded(triggerEl, true);
         levelPopover.classList.add('open'); positionPopover();
 
-        // não dar foco automático (evita zoom/“soco” visual em iOS)
         const els=focusables(levelPopover);
-        trapHandler=(e)=>{ if(e.key!=='Tab') return;
-          if(!els.length){ e.preventDefault(); return; }
+        trapHandler=(e)=>{ if(e.key!=='Tab') return; if(!els.length){ e.preventDefault(); return; }
           const f=els[0], l=els[els.length-1];
           if(e.shiftKey && document.activeElement===f){ e.preventDefault(); l.focus(); }
-          else if(!e.shiftKey && document.activeElement===l){ e.preventDefault(); f.focus(); }
-        };
+          else if(!e.shiftKey && document.activeElement===l){ e.preventDefault(); f.focus(); } };
         levelPopover.addEventListener('keydown', trapHandler);
 
         addPreventScroll();
@@ -714,6 +732,38 @@
           openTip = null;
         }
       });
+
+      /* ===== Botão Copiar e-mail (corrigido e robusto) ===== */
+      const copyBtn = document.getElementById('copyEmail');
+      if (copyBtn){
+        copyBtn.addEventListener('click', async ()=>{
+          const email='ccs@ccstelecom.com.br';
+          let ok=false;
+          // Navigator.clipboard (contexto seguro)
+          try{
+            if (navigator.clipboard && window.isSecureContext){
+              await navigator.clipboard.writeText(email);
+              ok=true;
+            }
+          }catch(e){}
+          // Fallback (iOS/Safari/HTTP)
+          if(!ok){
+            const ta=document.createElement('textarea');
+            ta.value=email;
+            ta.setAttribute('readonly','');
+            ta.style.position='fixed';
+            ta.style.top='-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+            document.body.removeChild(ta);
+          }
+          const old=copyBtn.textContent;
+          copyBtn.textContent = ok ? '✅ E-mail copiado' : '❌ Falha ao copiar';
+          copyBtn.classList.toggle('copied', ok);
+          setTimeout(()=>{ copyBtn.textContent=old; copyBtn.classList.remove('copied'); },1500);
+        });
+      }
     }
 
     if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init, {once:true}); } else { init(); }
