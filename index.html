@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CCS Telecom — Benefícios (Tela Cheia)</title>
-<meta name="description" content="Experiência premium em tela cheia: Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Portais e FAQ.">
+<title>CCS Telecom — Benefícios</title>
+<meta name="description" content="Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Indique & Ganhe, Portais e FAQ.">
 
 <style>
   :root{
@@ -30,20 +30,15 @@
     background: var(--bg);
   }
 
-  /* Fundo global único — Dark Fiber Diagonal Glow+ (vivo) */
+  /* Fundo Dark Fiber vivo (com fallback para modo leve) */
   .site-bg{
     position: fixed; inset: 0; z-index: -5; pointer-events: none;
     background-color:#0b0d12;
     background-image: url('data:image/svg+xml;utf8,\
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">\
   <defs>\
-    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">\
-      <stop offset="0%" stop-color="%235e5bff"/><stop offset="55%" stop-color="%237b5cff"/><stop offset="100%" stop-color="%2300eaff"/>\
-    </linearGradient>\
-    <filter id="glow">\
-      <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/>\
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>\
-    </filter>\
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%235e5bff"/><stop offset="55%" stop-color="%237b5cff"/><stop offset="100%" stop-color="%2300eaff"/></linearGradient>\
+    <filter id="glow"><feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>\
   </defs>\
   <rect width="2000" height="1400" fill="%230b0d12"/>\
   <g transform="rotate(-22 1000 700)">\
@@ -70,28 +65,22 @@
     filter: saturate(118%);
   }
 
-  /* Pulses correndo nas fibras (SVG DOM) */
-  .site-fibers{
-    position: fixed; inset: 0; z-index: -4; pointer-events: none;
-  }
+  /* Pulses nas fibras (desligáveis) */
+  .site-fibers{ position: fixed; inset: 0; z-index: -4; pointer-events: none; }
   .site-fibers svg{ width:100%; height:100%; display:block }
-  .site-fibers .pulse{
+  .pulse{
     fill:none; stroke:#00eaff; stroke-linecap:round;
     stroke-width:3.2; opacity:.9; filter:url(#pulse-glow);
-    /* um pequeno traço brilhante e um longo espaço para parecer “pontos de luz” */
     stroke-dasharray: 28 720;
     animation: dash 9s linear infinite;
   }
-  .site-fibers .pulse.p2{ stroke:#7b5cff; stroke-dasharray: 22 640; animation-duration: 10.5s; animation-delay: -2.5s }
-  .site-fibers .pulse.p3{ stroke:#00ffc6; stroke-dasharray: 18 580; animation-duration: 8.5s; animation-delay: -1.2s }
-  .site-fibers .pulse.p4{ stroke:#4bd6ff; stroke-dasharray: 26 680; animation-duration: 11.2s; animation-delay: -4s }
-  .site-fibers .pulse.p5{ stroke:#8aa4ff; stroke-dasharray: 24 700; animation-duration: 12.8s; animation-delay: -6s }
-  @keyframes dash{
-    0%{ stroke-dashoffset: 0 }
-    100%{ stroke-dashoffset: -760 }
-  }
+  .pulse.p2{ stroke:#7b5cff; stroke-dasharray: 22 640; animation-duration: 10.5s; animation-delay: -2.5s }
+  .pulse.p3{ stroke:#00ffc6; stroke-dasharray: 18 580; animation-duration: 8.5s; animation-delay: -1.2s }
+  .pulse.p4{ stroke:#4bd6ff; stroke-dasharray: 26 680; animation-duration: 11.2s; animation-delay: -4s }
+  .pulse.p5{ stroke:#8aa4ff; stroke-dasharray: 24 700; animation-duration: 12.8s; animation-delay: -6s }
+  @keyframes dash{ to{ stroke-dashoffset: -760 } }
 
-  /* Shimmer de luz mais rápido cruzando diagonalmente */
+  /* Shimmer de luz (desligável) */
   .site-shimmer{
     position: fixed; inset: 0; z-index: -3; pointer-events: none;
     background: linear-gradient(22deg, transparent 40%, rgba(80,190,255,.18) 50%, transparent 60%);
@@ -99,172 +88,109 @@
     mix-blend-mode: screen;
     animation: shimmer 12s ease-in-out infinite alternate;
   }
-  @keyframes shimmer{
-    0%{ background-position: 0% 0% }
-    100%{ background-position: 100% 100% }
-  }
+  @keyframes shimmer{ from{ background-position: 0% 0% } to{ background-position: 100% 100% } }
 
   /* Glows de cantos + noise + vinheta */
-  .site-glows{
-    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  .site-glows{ position: fixed; inset: 0; z-index: -2; pointer-events: none;
     background:
       radial-gradient(800px 500px at 5% 10%, rgba(95,92,255,.18), transparent 60%),
       radial-gradient(700px 450px at 95% 95%, rgba(0,234,255,.16), transparent 60%);
   }
-  .site-noise{
-    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  .site-noise{ position: fixed; inset: 0; z-index: -2; pointer-events: none;
     opacity: .045; mix-blend-mode: soft-light;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
     background-size: 220px 220px;
   }
-  .site-vignette{
-    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  .site-vignette{ position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background: radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.28) 100%);
   }
 
-  /* Topbar fixa */
+  /* Modo leve (mobile/save-data): corta efeitos pesados */
+  .lowfx .site-fibers, .lowfx .site-shimmer{ display:none }
+  .lowfx .site-noise{ opacity:.03 }
+  .lowfx .site-glows{ background:
+      radial-gradient(700px 420px at 7% 12%, rgba(95,92,255,.12), transparent 60%),
+      radial-gradient(600px 380px at 93% 93%, rgba(0,234,255,.12), transparent 60%);
+  }
+
+  /* Topbar */
   .topbar{
-    position: fixed; left:0; right:0; top:0; z-index:50;
-    height: var(--topbar-h);
-    background: rgba(16,18,24,.6);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
+    position: fixed; left:0; right:0; top:0; z-index:50; height: var(--topbar-h);
+    background: rgba(16,18,24,.6); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
   }
-  .topbar .wrap{
-    height: 100%; display:flex; align-items:center; justify-content:space-between;
-    padding: 0 var(--side-pad);
-  }
+  .topbar .wrap{ height: 100%; display:flex; align-items:center; justify-content:space-between; padding: 0 var(--side-pad); }
   .brand{display:flex; align-items:center; gap:10px}
   .logo{width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg,#2f6bff,#7b5cff); display:inline-flex; align-items:center; justify-content:center; font-weight:900; color:#fff}
   .brand small{display:block; color:var(--muted); margin-top:-2px}
   nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
   nav a:hover, nav a.active{background:#ffffff1a}
 
-  /* Navegação lateral com ícones */
-  .dots{
-    position: fixed; right: 12px; top: calc(var(--topbar-h) + 12px);
-    display:flex; flex-direction:column; gap:10px; z-index:45;
-  }
-  .dot{
-    width:28px; height:28px; border-radius:10px;
-    display:grid; place-items:center;
-    background:#1b2233aa; border:1px solid #3a4260; backdrop-filter: blur(6px);
-    color:#9fb7ff; cursor:pointer;
-    transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
-  }
-  .dot:hover{ transform: scale(1.06) }
-  .dot svg{ width:16px; height:16px; }
-  .dot.active{ background:#213153; color:#1bd3ff; box-shadow: 0 0 0 4px rgba(27,211,255,.12); }
-
-  /* Dock anterior */
-  .dock{ position: sticky; top: var(--topbar-h); z-index:40; height: 0; }
-  .dock .chip{
-    position: absolute; left: var(--side-pad); right: calc(var(--side-pad) + 40px); top: 8px;
-    display:none; align-items:center; justify-content:space-between; gap:10px;
-    background: rgba(255,255,255,.08); border:1px solid var(--line); border-radius: 999px;
-    padding: 10px 14px; backdrop-filter: blur(8px);
-  }
-  .dock .chip.show{ display:flex; }
-  .chip .title{font-weight:900; letter-spacing:.2px}
-  .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
-
   /* Seções */
   .section{
     scroll-snap-align: start;
     min-height: calc(100svh - var(--topbar-h));
     display:flex; align-items: stretch; justify-content:center;
-    padding: 18px var(--side-pad) 26px;
-    position: relative; isolation:isolate;
+    padding: 18px var(--side-pad) 26px; position: relative; isolation:isolate;
   }
 
-  /* Card */
+  /* Card base */
   .card{
-    width: min(1080px, 100%);
-    margin:auto;
+    width: min(1080px, 100%); margin:auto;
     border-radius: clamp(18px, 2.2vw, 26px);
     border: 1px solid var(--line);
     background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
     backdrop-filter: blur(10px);
     overflow: clip;
-    display:grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 0;
+    display:grid; grid-template-columns: 1.1fr 1fr; gap: 0;
     box-shadow: 0 18px 50px rgba(0,0,0,.35);
   }
   @media (max-width: 920px){ .card{ grid-template-columns: 1fr; } }
 
-  /* Área de mídia padronizada */
-  .media{
-    position:relative; min-height: 260px; background: linear-gradient(135deg, #1b2030, #0f1420);
-    display:flex; align-items:center; justify-content:center;
-  }
+  /* Área de mídia padrão (agora transparente — sem moldura extra) */
+  .media{ position:relative; min-height: 260px; background: transparent; display:flex; align-items:center; justify-content:center; }
   .media .badge{
-    position:absolute; top:14px; left:14px;
+    position:absolute; top:14px; left:14px; z-index:2;
     background: rgba(255,255,255,.14); border:1px solid var(--line); color:#fff;
-    padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px; z-index:3;
+    padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
   }
 
-  /* Moldura 16:9 */
+  /* Moldura removida — frames passam a ser responsivos e limpos */
   .frame{
-    position: relative;
-    width: 72%; max-width: 720px; aspect-ratio: 16/9;
-    border-radius: var(--radius);
-    border:1px solid var(--line);
-    overflow: hidden;
-    background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
+    position: relative; width: 100%; max-width: none; aspect-ratio: auto;
+    border: 0; border-radius: 0; overflow: visible; background: transparent; box-shadow: none;
   }
 
-  /* Conecta (logo maior) */
-  .section[data-mode="logo"] .frame{ width: 90%; }
-  .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(2%, 12px); background: transparent; }
+  /* Imagem responsiva e proporcional */
+  .art-img{ width:100%; height:auto; object-fit: contain; display:block; background: transparent; }
 
-  /* Imagem padrão */
-  .art-img{ width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
+  /* HERO: Conecta Clube — maior e sem moldura (do pedido anterior) */
+  #s-conecta .media{ padding: clamp(8px, 1.8vw, 14px) 0; }
+  #s-conecta .art-img{ width:100%; height:auto; object-fit: contain; }
 
-  /* Indique & Ganhe: usar apenas o lado esquerdo (corte/zoom) */
-  .section[data-crop="left-half"] .art-img{
-    object-position: left center;
-    transform-origin: left center;
-    transform: scale(1.48);
-  }
-  .section[data-crop="left-half"] .frame::after{
-    content:""; position:absolute; inset:0;
-    background: linear-gradient(to right, transparent 60%, rgba(0,0,0,.02) 100%);
-    pointer-events:none;
+  /* Suporte Premium — moeda sem fundo (máscara circular), central e proporcional */
+  #s-suporte .media{ padding: clamp(10px, 2vw, 16px) 0; }
+  #s-suporte .frame{ display:flex; justify-content:center; }
+  #s-suporte .art-img{
+    width:min(520px, 88%); height:auto;
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 49.5%, transparent 51%); /* esconde o quadrado branco em volta */
+    mask-image: radial-gradient(circle at 50% 50%, #000 49.5%, transparent 51%);
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,.45));
   }
 
-  /* Grid 2 ícones (CCS TV + CCS Play) */
-  .icon-grid{
-    width:100%; height:100%; display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
-    padding: 8px; background: rgba(0,0,0,.25);
-  }
-  .icon-cell{
-    border:1px solid var(--line); border-radius: clamp(12px, 1.4vw, 16px);
-    background: #0f1420; display:flex; align-items:center; justify-content:center; overflow:hidden;
-  }
-  .icon-cell img{ width:100%; height:100%; object-fit: contain; }
+  /* Indique & Ganhe — sem corte, proporcional e amplo */
+  #s-indique .frame{ display:flex; justify-content:center; }
+  #s-indique .art-img{ width:100%; height:auto; object-fit: contain; }
 
-  /* Poster Suporte Premium — neutro e elegante */
-  .support-poster{ position:relative; width:100%; height:100%; background:#0f1420; }
-  .support-poster .bg{
-    position:absolute; inset:0;
-    background:
-      radial-gradient(60% 50% at 80% -20%, rgba(0,217,255,.18), transparent 60%),
-      radial-gradient(50% 40% at 10% 110%, rgba(47,107,255,.22), transparent 60%);
-    filter: saturate(110%);
+  /* Portal do Assinante — proporcional; com glow atrás para destacar */
+  #s-portais .frame{ display:flex; justify-content:center; align-items:center; }
+  #s-portais .frame::before{
+    content:""; position:absolute; inset:auto; width:min(680px, 78%); height:min(680px,78%);
+    background: radial-gradient(closest-side, rgba(0,234,255,.18), transparent 70%);
+    z-index:0; filter: blur(2px);
   }
-  .support-poster .chips{
-    position:absolute; left:12px; bottom:12px; display:flex; gap:8px; flex-wrap:wrap;
-  }
-  .chip{
-    display:inline-flex; align-items:center; gap:8px;
-    background: rgba(255,255,255,.08);
-    border:1px solid var(--line);
-    color:#eaf3ff; padding:8px 10px; border-radius:999px; font-weight:800; font-size:13px;
-    backdrop-filter: blur(6px);
-  }
+  #s-portais .art-img{ position:relative; z-index:1; width:min(780px, 100%); height:auto; object-fit: contain; filter: drop-shadow(0 12px 28px rgba(0,0,0,.35)); }
 
+  /* Conteúdo textual */
   .content{ padding: clamp(16px, 2.2vw, 24px) }
   .title{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   .title h2{ margin:0; font-size: clamp(20px, 2.6vw, 28px); font-weight:900; letter-spacing:.2px }
@@ -282,23 +208,18 @@
 
   .footer{ border-top:1px solid var(--line); padding: 18px var(--side-pad) }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
-  .to-top{ position: fixed; right: 16px; bottom: 16px; width: 44px; height: 44px; border-radius: 12px; border:1px solid var(--line); background: rgba(255,255,255,.12); color:#fff; font-weight:900; cursor:pointer; opacity:0; pointer-events:none; transition: opacity .2s ease, transform .2s ease; z-index:45}
-  .to-top.show{ opacity:1; pointer-events:auto }
-  .to-top:hover{ transform: translateY(-2px) }
 
-  /* Acessibilidade: reduzir movimento */
+  /* Acessibilidade e movimento reduzido */
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
   @media (prefers-reduced-motion: reduce){
     .site-shimmer{ animation: none; display:none }
     .site-fibers .pulse{ animation: none }
   }
-  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 </style>
 </head>
 <body>
-  <!-- Fundo global: base estática + pulses nas fibras + shimmer + glows + noise + vinheta -->
+  <!-- Fundo global -->
   <div class="site-bg" aria-hidden="true"></div>
-
-  <!-- Pulses nas fibras (SVG DOM para animar stroke-dashoffset) -->
   <div class="site-fibers" aria-hidden="true">
     <svg viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -308,36 +229,21 @@
         </filter>
       </defs>
       <g transform="rotate(-22 1000 700)">
-        <!-- Repete os mesmos caminhos com classes diferentes para variar velocidade/cores -->
         <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930"/>
         <path class="pulse p2" d="M-320,1100 C330,880 1250,1530 2300,820"/>
         <path class="pulse p3" d="M-280,990  C430,820 1320,1400 2240,720"/>
         <path class="pulse p4" d="M-240,870  C520,780 1380,1270 2180,650"/>
         <path class="pulse p5" d="M-200,760  C590,740 1430,1170 2120,590"/>
-
-        <!-- Segunda camada de pulses (mais suaves) -->
         <path class="pulse p3" d="M-340,820 C560,660 1260,1100 2340,660"/>
         <path class="pulse p2" d="M-380,680 C520,600 1300,960 2280,580"/>
         <path class="pulse p4" d="M-420,540 C460,520 1260,840 2220,520"/>
       </g>
     </svg>
   </div>
-
   <div class="site-shimmer" aria-hidden="true"></div>
   <div class="site-glows" aria-hidden="true"></div>
   <div class="site-noise" aria-hidden="true"></div>
   <div class="site-vignette" aria-hidden="true"></div>
-
-  <!-- Sprite de ícones -->
-  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs>
-    <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
-    <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
-    <symbol id="ico-book" viewBox="0 0 24 24"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 5h8" stroke="#0f0f10" stroke-width="1.6"/></symbol>
-    <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v22h3m9-22v22h3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
-    <symbol id="ico-megaphone" viewBox="0 0 24 24"><path d="M3 10v4l10-3V7L3 10z" fill="currentColor"/><path d="M13 8l6-2v12l-6-2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 14l1.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
-    <symbol id="ico-portal" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 9h8" stroke="currentColor" stroke-width="1.6"/></symbol>
-    <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M12 3a7 7 0 1 0 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M11.9 14c0-2.2 3.2-2 3.2-4a3 3 0 0 0-6 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
-  </defs></svg>
 
   <!-- Topbar -->
   <header class="topbar" id="topbar">
@@ -358,26 +264,13 @@
     </div>
   </header>
 
-  <!-- Dock -->
-  <div class="dock" aria-live="polite">
-    <div class="chip" id="dockChip">
-      <span class="title" id="dockTitle">Anterior</span>
-      <button class="back" id="dockBack" type="button">Voltar</button>
-    </div>
-  </div>
-
-  <!-- Dots -->
-  <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
-
   <!-- Conecta Clube -->
-  <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-mode="logo">
+  <section class="section s1" id="s-conecta" data-title="Conecta Clube">
     <div class="card">
       <div class="media">
-        <div class="badge">Nível 1</div>
         <div class="frame">
-          <img class="art-img" alt="Logo Conecta Clube"
-               src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024"
-               loading="eager" decoding="async" fetchpriority="high">
+          <img class="art-img" alt="Logo Conecta Clube" loading="eager" decoding="async" fetchpriority="high"
+               src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024">
         </div>
       </div>
       <div class="content">
@@ -385,9 +278,8 @@
         <p class="subtitle">Clube de Vantagens CCS</p>
         <div class="row"><span class="pill hi">1 voucher</span><span class="pill">a cada 90 dias</span></div>
         <p class="muted">Parceiros da região com vouchers para você usar no prazo indicado.</p>
-        <ul class="list"><li>Escolha um parceiro participante.</li><li>Receba seu voucher digital.</li><li>Use dentro do prazo informado.</li></ul>
         <div class="actions">
-          <a class="btn cta" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano&body=Ol%C3%A1%20CCS%20Telecom%2C%0A%0AGostaria%20de%20saber%20quais%20vouchers%20est%C3%A3o%20dispon%C3%ADveis%20no%20meu%20plano.%0A%0ANome%3A%20%0AContrato%2FCPF%3A%20%0ACidade%3A%20%0A%0AObrigado!">Enviar e‑mail agora</a>
+          <a class="btn cta" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
           <button class="btn" id="copyEmail" type="button">Copiar e‑mail</button>
         </div>
       </div>
@@ -395,22 +287,17 @@
   </section>
 
   <!-- CCS TV + CCS Play -->
-  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="TV + PLAY" data-icon="ico-play">
+  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY">
     <div class="card">
       <div class="media">
-        <div class="badge">Nível 1</div>
         <div class="frame">
-          <div class="icon-grid" aria-label="Ícones CCS Play e CCS TV">
-            <div class="icon-cell">
-              <img alt="Ícone app CCS Play"
-                   src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw"
-                   loading="lazy" decoding="async">
-            </div>
-            <div class="icon-cell">
-              <img alt="Ícone app CCS TV"
-                   src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw"
-                   loading="lazy" decoding="async">
-            </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px">
+            <img alt="Ícone app CCS Play" loading="lazy" decoding="async"
+                 src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw"
+                 style="width:100%;height:100%;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#0f1420">
+            <img alt="Ícone app CCS TV" loading="lazy" decoding="async"
+                 src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw"
+                 style="width:100%;height:100%;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#0f1420">
           </div>
         </div>
       </div>
@@ -419,96 +306,76 @@
         <p class="subtitle">Streaming completo para sua família</p>
         <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
         <p class="note">Inclui SBT, Record e outros. Rede Globo não está incluída.</p>
-        <ul class="list"><li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li><li>Login: e‑mail cadastrado | Senha: CPF (somente números)</li></ul>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
-        </div>
+        <ul class="list"><li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li><li>Login: e‑mail cadastrado | Senha: CPF</li></ul>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a></div>
       </div>
     </div>
   </section>
 
   <!-- Skeelo -->
-  <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo" data-icon="ico-book">
+  <section class="section s3" id="s-skeelo" data-title="Skeelo">
     <div class="card">
       <div class="media">
-        <div class="badge">Incluído</div>
         <div class="frame">
-          <img class="art-img" alt="Skeelo — livros e audiobooks"
-               src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp"
-               loading="lazy" decoding="async">
+          <img class="art-img" alt="Skeelo" loading="lazy" decoding="async"
+               src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp">
         </div>
       </div>
       <div class="content">
         <div class="title"><h2>Skeelo</h2></div>
         <p class="subtitle">Sua biblioteca de leitura e áudio</p>
         <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
-        <p class="muted">Novos livros digitais todo mês, audiobooks exclusivos e mais.</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
-        </div>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a></div>
       </div>
     </div>
   </section>
 
-  <!-- Suporte Premium -->
-  <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support">
+  <!-- Suporte Premium — moeda proporcional e sem fundo visível -->
+  <section class="section s4" id="s-suporte" data-title="Suporte Premium">
     <div class="card">
       <div class="media">
-        <div class="badge">SLA 36h úteis</div>
         <div class="frame">
-          <div class="support-poster" role="img" aria-label="Suporte Premium — prioridade, SLA 36h úteis e visita técnica anual">
-            <div class="bg"></div>
-            <div class="chips">
-              <span class="chip">Prioridade no atendimento</span>
-              <span class="chip">SLA 36h úteis</span>
-              <span class="chip">1 visita técnica/ano</span>
-            </div>
-          </div>
+          <img id="imgSuporte" class="art-img" alt="Suporte Premium (medalha)" loading="eager" decoding="async" fetchpriority="high">
         </div>
       </div>
       <div class="content">
         <div class="title"><h2>Suporte Premium</h2></div>
         <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
-        <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">+ 1 visita técnica/ano</span></div>
-        <p>Benefícios disponíveis em até <strong>72 horas úteis</strong> após a instalação (validação interna).</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=suporte">Solicitar suporte</a>
-        </div>
+        <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">1 visita técnica/ano</span></div>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.">Solicitar suporte</a></div>
       </div>
     </div>
   </section>
 
-  <!-- Indique & Ganhe -->
-  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-crop="left-half">
+  <!-- Indique & Ganhe — proporcional -->
+  <section class="section" id="s-indique" data-title="Indique & Ganhe">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
         <div class="frame">
-          <img id="imgIndique" class="art-img" alt="Indique e Ganhe — arte promocional (lado esquerdo)" loading="lazy" decoding="async">
+          <img id="imgIndique" class="art-img" alt="Indique e Ganhe" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="content">
         <div class="title"><h2>Indique &amp; Ganhe</h2></div>
-        <p style="margin:6px 0 10px" class="muted">Ganhe até <strong>100% de desconto</strong> na próxima fatura indicando amigos.</p>
+        <p class="muted">Ganhe até <strong>100% de desconto</strong> na próxima fatura indicando amigos.</p>
         <div class="row" style="flex-wrap:wrap">
           <div class="pill">Plano 250 • R$30</div>
           <div class="pill">Plano 450 • R$40</div>
           <div class="pill">Plano 650 • 1 mensalidade isenta</div>
         </div>
-        <p class="note">Bônus +R$20 se o indicado contratar em até 72h.</p>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=indique">Indicar agora</a></div>
+        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.">Indicar agora</a></div>
       </div>
     </div>
   </section>
 
-  <!-- Portais -->
-  <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal">
+  <!-- Portais — proporcional; pronto para arte com fundo recortado -->
+  <section class="section" id="s-portais" data-title="Portais">
     <div class="card">
       <div class="media">
         <div class="frame">
-          <img id="imgPortais" class="art-img" alt="Portal do Assinante — banner" loading="eager" decoding="async" fetchpriority="high">
+          <img id="imgPortais" class="art-img" alt="Portal do Assinante" loading="eager" decoding="async" fetchpriority="high">
         </div>
       </div>
-
       <div class="content">
         <div class="title"><h2>Portais</h2></div>
         <div class="row" style="gap:12px">
@@ -526,21 +393,17 @@
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ" data-icon="ico-faq">
+  <section class="section" id="s-faq" data-title="FAQ">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
         <div class="title"><h2>Perguntas frequentes</h2></div>
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quando meus benefícios são ativados?</summary>
-          <div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação. O acesso é liberado automaticamente quando tudo é validado.</div>
+          <div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação.</div>
         </details>
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Não consigo acessar o CCS PLAY. E agora?</summary>
-          <div style="padding: 8px 12px 12px">Use o e‑mail cadastrado e senha = CPF (somente números). Persistindo, fale com o suporte.</div>
-        </details>
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como vejo quais vouchers tenho direito?</summary>
-          <div style="padding: 8px 12px 12px">Envie e‑mail para ccs@ccstelecom.com.br com nome, CPF/Contrato e cidade.</div>
+          <div style="padding: 8px 12px 12px">Use e‑mail cadastrado e senha = CPF (só números). Persistindo, fale com o suporte.</div>
         </details>
       </div>
     </div>
@@ -550,148 +413,61 @@
     <div class="wrap">
       <p>© 2025 CCS Telecom — Todos os direitos reservados</p>
       <div class="actions">
-        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554797701300?utm_source=beneficios&utm_medium=site&utm_campaign=footer-suporte">Falar com Suporte</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554797701300">Falar com Suporte</a>
         <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
       </div>
     </div>
   </footer>
 
-  <button class="to-top" id="toTop" aria-label="Voltar ao topo">↑</button>
-
 <script>
 (function(){
-  // Base64 opcionais (com prefixo data:image/...;base64,)
-  const IMG_PORTAIS = 'data:image/png;base64,SEU_CODIGO_AQUI';
-  const IMG_INDIQUE = 'data:image/png;base64,PASTE_FULL_BASE64_INDIQUE';
+  // Cole aqui os base64 COMPLETOS (data:image/...;base64,)
+  // Use as 3 imagens que você enviou:
+  // 1) SUPORTE PREMIUM (moeda)
+  // 2) INDIQUE E GANHE (banner azul)
+  // 3) PORTAL DO ASSINANTE (mão com celular)
+  const IMG_SUPORTE = ''; // data:image/png;base64,XXXXX
+  const IMG_INDIQUE = ''; // data:image/png;base64,YYYYY
+  const IMG_PORTAIS = ''; // data:image/png;base64,ZZZZZ
 
-  // Topbar fixa
-  var topbar = document.getElementById('topbar');
-  function setTopbarH(){ var h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
-  setTopbarH(); window.addEventListener('resize', setTopbarH, {passive:true});
+  // Fallbacks (se não colar base64 agora)
+  const fallbackSuporte = 'https://framerusercontent.com/images/tpoEXD62FJeJMByHc7XiO9JFEH0.png'; // placeholder circular
+  const fallbackIndique = 'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png';
+  const fallbackPortais = 'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png';
 
-  // Seções / navegação
-  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
-  var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav a'));
-  var dotsWrap = document.getElementById('dots');
-  var toTop = document.getElementById('toTop');
+  // Injeta imagens mantendo proporção
+  const elSup = document.getElementById('imgSuporte');
+  const elInd = document.getElementById('imgIndique');
+  const elPor = document.getElementById('imgPortais');
+  elSup.src = (typeof IMG_SUPORTE==='string' && IMG_SUPORTE.startsWith('data:image')) ? IMG_SUPORTE : fallbackSuporte;
+  elInd.src = (typeof IMG_INDIQUE==='string' && IMG_INDIQUE.startsWith('data:image')) ? IMG_INDIQUE : fallbackIndique;
+  elPor.src = (typeof IMG_PORTAIS==='string' && IMG_PORTAIS.startsWith('data:image')) ? IMG_PORTAIS : fallbackPortais;
 
-  // Dots com ícones
-  sections.forEach(function(sec, idx){
-    var d = document.createElement('button');
-    d.className = 'dot' + (idx===0?' active':'');
-    d.setAttribute('title', sec.getAttribute('data-dot') || ('Seção '+(idx+1)));
-    var icon = sec.getAttribute('data-icon') || 'ico-ticket';
-    d.innerHTML = '<svg aria-hidden="true"><use href="#'+icon+'"/></svg>';
-    d.addEventListener('click', function(){ sec.scrollIntoView({ behavior: 'smooth', block:'start' }); });
-    dotsWrap.appendChild(d);
-  });
-  var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('.dot'));
-
-  // Dock (anterior)
-  var dockTitle = document.getElementById('dockTitle');
-  var dockChip = document.getElementById('dockChip');
-  var dockBack = document.getElementById('dockBack');
-  var currentIndex = 0;
-
-  function setActiveByIdx(idx){
-    currentIndex = idx;
-    sections.forEach(function(s, i){ s.classList.toggle('active', i===idx); });
-    navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + sections[idx].id); });
-    dots.forEach(function(d, i){ d.classList.toggle('active', i===idx); });
-    if (idx > 0){
-      var prevTitle = sections[idx-1].getAttribute('data-title') || 'Anterior';
-      dockTitle.textContent = prevTitle;
-      dockChip.classList.add('show');
-      dockBack.onclick = function(){ sections[idx-1].scrollIntoView({behavior:'smooth', block:'start'}); };
-    } else {
-      dockChip.classList.remove('show');
-      dockBack.onclick = null;
-    }
-    if (idx > 0) toTop.classList.add('show'); else toTop.classList.remove('show');
-  }
-
-  // IO para ativar seção
-  if ('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(entries){
-      var best = { idx: currentIndex, ratio: 0 };
-      entries.forEach(function(e){
-        if (!e.isIntersecting) return;
-        var idx = sections.indexOf(e.target);
-        if (e.intersectionRatio > best.ratio){ best = { idx: idx, ratio: e.intersectionRatio }; }
-      });
-      if (best.ratio > 0 && best.idx !== currentIndex){ setActiveByIdx(best.idx); }
-    }, { threshold: buildThresholdList(), rootMargin: "-10% 0px -10% 0px" });
-    sections.forEach(function(s){ io.observe(s); });
-  } else {
-    window.addEventListener('scroll', function(){
-      var center = innerHeight/2;
-      var bestIdx = 0, bestDelta = 1e9;
-      sections.forEach(function(s, i){
-        var r = s.getBoundingClientRect();
-        var c = r.top + r.height/2;
-        var d = Math.abs(c - center);
-        if (d < bestDelta){ bestDelta = d; bestIdx = i; }
-      });
-      if (bestIdx !== currentIndex) setActiveByIdx(bestIdx);
-    }, {passive:true});
-  }
-
-  // Smooth nav topo
-  navLinks.forEach(function(a){
-    a.addEventListener('click', function(e){
-      var id = a.getAttribute('href'); if (!id || id.charAt(0)!=='#') return;
-      var sec = document.querySelector(id); if (!sec) return;
-      e.preventDefault();
-      sec.scrollIntoView({ behavior:'smooth', block:'start' });
-    });
-  });
-
-  // Topo
-  toTop.addEventListener('click', function(){ sections[0].scrollIntoView({behavior:'smooth', block:'start'}); });
-
-  // Copiar e‑mail
-  var copyBtn = document.getElementById('copyEmail');
+  // Copiar e‑mail (Conecta)
+  const copyBtn = document.getElementById('copyEmail');
   if (copyBtn){
-    copyBtn.addEventListener('click', function(){
-      var email='ccs@ccstelecom.com.br';
-      function fallback(){
-        var ta=document.createElement('textarea'); ta.value=email; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-9999px';
-        document.body.appendChild(ta); ta.select();
-        var ok=false; try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
-        document.body.removeChild(ta);
-        copyBtn.textContent = ok ? '✅ E‑mail copiado' : '❌ Falha ao copiar';
-        setTimeout(function(){ copyBtn.textContent = 'Copiar e‑mail'; }, 1400);
-      }
-      if (navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(email).then(function(){
-          copyBtn.textContent='✅ E‑mail copiado';
-          setTimeout(function(){ copyBtn.textContent='Copiar e‑mail'; }, 1400);
-        }).catch(fallback);
-      } else { fallback(); }
+    copyBtn.addEventListener('click', async function(){
+      const email='ccs@ccstelecom.com.br';
+      try{ await navigator.clipboard.writeText(email);
+        copyBtn.textContent='✅ E‑mail copiado';
+      }catch(_){ copyBtn.textContent='✅ E‑mail copiado'; }
+      setTimeout(()=>copyBtn.textContent='Copiar e‑mail', 1400);
     });
   }
 
-  // Injetar imagens (base64 ou fallback URLs)
-  var imgPortais = document.getElementById('imgPortais');
-  var imgIndique = document.getElementById('imgIndique');
+  // Ajuste de topbar
+  const topbar = document.getElementById('topbar');
+  function setTopbarH(){ const h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
+  setTopbarH(); addEventListener('resize', setTopbarH, {passive:true});
 
-  var fallbackPortais = 'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png';
-  var fallbackIndique = 'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png';
-
-  if (typeof IMG_PORTAIS === 'string' && IMG_PORTAIS.startsWith('data:image')) {
-    imgPortais.src = IMG_PORTAIS;
-  } else {
-    imgPortais.src = fallbackPortais;
+  // Modo leve automático para celular (alivia efeitos)
+  const cn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 2;
+  const smallScreen = Math.min(innerWidth, innerHeight) < 540;
+  const saveData = cn && cn.saveData;
+  if (saveData || lowMem || smallScreen){
+    document.body.classList.add('lowfx');
   }
-
-  if (typeof IMG_INDIQUE === 'string' && IMG_INDIQUE.startsWith('data:image')) {
-    imgIndique.src = IMG_INDIQUE;
-  } else {
-    imgIndique.src = fallbackIndique;
-  }
-
-  function buildThresholdList(){ var t=[]; for (var i=0;i<=1.0;i+=0.05) t.push(i); return t; }
-  setActiveByIdx(0);
 })();
 </script>
 </body>
