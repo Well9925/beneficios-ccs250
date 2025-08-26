@@ -30,9 +30,9 @@
     background: var(--bg);
   }
 
-  /* Fundo global único — Dark Fiber Diagonal Glow+ (mais vivo) */
+  /* Fundo global único — Dark Fiber Diagonal Glow+ (vivo) */
   .site-bg{
-    position: fixed; inset: 0; z-index: -4; pointer-events: none;
+    position: fixed; inset: 0; z-index: -5; pointer-events: none;
     background-color:#0b0d12;
     background-image: url('data:image/svg+xml;utf8,\
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">\
@@ -69,15 +69,42 @@
     background-attachment: fixed;
     filter: saturate(118%);
   }
+
+  /* Pulses correndo nas fibras (SVG DOM) */
+  .site-fibers{
+    position: fixed; inset: 0; z-index: -4; pointer-events: none;
+  }
+  .site-fibers svg{ width:100%; height:100%; display:block }
+  .site-fibers .pulse{
+    fill:none; stroke:#00eaff; stroke-linecap:round;
+    stroke-width:3.2; opacity:.9; filter:url(#pulse-glow);
+    /* um pequeno traço brilhante e um longo espaço para parecer “pontos de luz” */
+    stroke-dasharray: 28 720;
+    animation: dash 9s linear infinite;
+  }
+  .site-fibers .pulse.p2{ stroke:#7b5cff; stroke-dasharray: 22 640; animation-duration: 10.5s; animation-delay: -2.5s }
+  .site-fibers .pulse.p3{ stroke:#00ffc6; stroke-dasharray: 18 580; animation-duration: 8.5s; animation-delay: -1.2s }
+  .site-fibers .pulse.p4{ stroke:#4bd6ff; stroke-dasharray: 26 680; animation-duration: 11.2s; animation-delay: -4s }
+  .site-fibers .pulse.p5{ stroke:#8aa4ff; stroke-dasharray: 24 700; animation-duration: 12.8s; animation-delay: -6s }
+  @keyframes dash{
+    0%{ stroke-dashoffset: 0 }
+    100%{ stroke-dashoffset: -760 }
+  }
+
+  /* Shimmer de luz mais rápido cruzando diagonalmente */
   .site-shimmer{
     position: fixed; inset: 0; z-index: -3; pointer-events: none;
-    background: linear-gradient(22deg, transparent 40%, rgba(80,190,255,.16) 50%, transparent 60%);
+    background: linear-gradient(22deg, transparent 40%, rgba(80,190,255,.18) 50%, transparent 60%);
     background-size: 200% 200%;
     mix-blend-mode: screen;
-    animation: shimmer 20s ease-in-out infinite alternate;
+    animation: shimmer 12s ease-in-out infinite alternate;
   }
-  @keyframes shimmer{ 0%{background-position:0% 0%} 100%{background-position:100% 100%} }
+  @keyframes shimmer{
+    0%{ background-position: 0% 0% }
+    100%{ background-position: 100% 100% }
+  }
 
+  /* Glows de cantos + noise + vinheta */
   .site-glows{
     position: fixed; inset: 0; z-index: -2; pointer-events: none;
     background:
@@ -113,7 +140,7 @@
   nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
   nav a:hover, nav a.active{background:#ffffff1a}
 
-  /* Dots navegação */
+  /* Navegação lateral com ícones */
   .dots{
     position: fixed; right: 12px; top: calc(var(--topbar-h) + 12px);
     display:flex; flex-direction:column; gap:10px; z-index:45;
@@ -141,7 +168,7 @@
   .chip .title{font-weight:900; letter-spacing:.2px}
   .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
 
-  /* Seções e cards */
+  /* Seções */
   .section{
     scroll-snap-align: start;
     min-height: calc(100svh - var(--topbar-h));
@@ -149,6 +176,8 @@
     padding: 18px var(--side-pad) 26px;
     position: relative; isolation:isolate;
   }
+
+  /* Card */
   .card{
     width: min(1080px, 100%);
     margin:auto;
@@ -163,6 +192,8 @@
     box-shadow: 0 18px 50px rgba(0,0,0,.35);
   }
   @media (max-width: 920px){ .card{ grid-template-columns: 1fr; } }
+
+  /* Área de mídia padronizada */
   .media{
     position:relative; min-height: 260px; background: linear-gradient(135deg, #1b2030, #0f1420);
     display:flex; align-items:center; justify-content:center;
@@ -172,6 +203,8 @@
     background: rgba(255,255,255,.14); border:1px solid var(--line); color:#fff;
     padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px; z-index:3;
   }
+
+  /* Moldura 16:9 */
   .frame{
     position: relative;
     width: 72%; max-width: 720px; aspect-ratio: 16/9;
@@ -181,14 +214,55 @@
     background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
   }
-  .section[data-mode="logo"] .frame{ width: 90%; } /* Conecta maior */
 
-  /* LOGO: contorno com glints (usa CCCS1.svg local) */
-  .logo-stage{ width:100%; height:100%; display:block; background: transparent; }
-  /* Opcional: reduzir competição com shimmer nesta seção */
-  #s-conecta .media::after{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
-    background: radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.12) 100%);
+  /* Conecta (logo maior) */
+  .section[data-mode="logo"] .frame{ width: 90%; }
+  .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(2%, 12px); background: transparent; }
+
+  /* Imagem padrão */
+  .art-img{ width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
+
+  /* Indique & Ganhe: usar apenas o lado esquerdo (corte/zoom) */
+  .section[data-crop="left-half"] .art-img{
+    object-position: left center;
+    transform-origin: left center;
+    transform: scale(1.48);
+  }
+  .section[data-crop="left-half"] .frame::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(to right, transparent 60%, rgba(0,0,0,.02) 100%);
+    pointer-events:none;
+  }
+
+  /* Grid 2 ícones (CCS TV + CCS Play) */
+  .icon-grid{
+    width:100%; height:100%; display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    padding: 8px; background: rgba(0,0,0,.25);
+  }
+  .icon-cell{
+    border:1px solid var(--line); border-radius: clamp(12px, 1.4vw, 16px);
+    background: #0f1420; display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .icon-cell img{ width:100%; height:100%; object-fit: contain; }
+
+  /* Poster Suporte Premium — neutro e elegante */
+  .support-poster{ position:relative; width:100%; height:100%; background:#0f1420; }
+  .support-poster .bg{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(60% 50% at 80% -20%, rgba(0,217,255,.18), transparent 60%),
+      radial-gradient(50% 40% at 10% 110%, rgba(47,107,255,.22), transparent 60%);
+    filter: saturate(110%);
+  }
+  .support-poster .chips{
+    position:absolute; left:12px; bottom:12px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,.08);
+    border:1px solid var(--line);
+    color:#eaf3ff; padding:8px 10px; border-radius:999px; font-weight:800; font-size:13px;
+    backdrop-filter: blur(6px);
   }
 
   .content{ padding: clamp(16px, 2.2vw, 24px) }
@@ -199,6 +273,7 @@
   .pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--line); background: rgba(255,255,255,.1); font-weight:900; font-size:13px }
   .pill.hi{ background:linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0b0b; border-color:transparent }
   .muted{ color:var(--muted) }
+  .list{ margin:8px 0 8px 18px }
   .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px }
   .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; cursor:pointer; border-radius:12px; font-weight:900; padding: 12px 16px; border:1px solid var(--line); color:#111; background:#fff; transition: transform .2s ease, filter .2s ease }
   .btn:hover{ transform: translateY(-2px); filter: brightness(1.04) }
@@ -211,17 +286,43 @@
   .to-top.show{ opacity:1; pointer-events:auto }
   .to-top:hover{ transform: translateY(-2px) }
 
+  /* Acessibilidade: reduzir movimento */
   @media (prefers-reduced-motion: reduce){
     .site-shimmer{ animation: none; display:none }
-    /* Oculta glints se o usuário prefere menos movimento */
-    #logoGlints { display:none }
+    .site-fibers .pulse{ animation: none }
   }
   a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 </style>
 </head>
 <body>
-  <!-- Fundo global -->
+  <!-- Fundo global: base estática + pulses nas fibras + shimmer + glows + noise + vinheta -->
   <div class="site-bg" aria-hidden="true"></div>
+
+  <!-- Pulses nas fibras (SVG DOM para animar stroke-dashoffset) -->
+  <div class="site-fibers" aria-hidden="true">
+    <svg viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="pulse-glow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g transform="rotate(-22 1000 700)">
+        <!-- Repete os mesmos caminhos com classes diferentes para variar velocidade/cores -->
+        <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930"/>
+        <path class="pulse p2" d="M-320,1100 C330,880 1250,1530 2300,820"/>
+        <path class="pulse p3" d="M-280,990  C430,820 1320,1400 2240,720"/>
+        <path class="pulse p4" d="M-240,870  C520,780 1380,1270 2180,650"/>
+        <path class="pulse p5" d="M-200,760  C590,740 1430,1170 2120,590"/>
+
+        <!-- Segunda camada de pulses (mais suaves) -->
+        <path class="pulse p3" d="M-340,820 C560,660 1260,1100 2340,660"/>
+        <path class="pulse p2" d="M-380,680 C520,600 1300,960 2280,580"/>
+        <path class="pulse p4" d="M-420,540 C460,520 1260,840 2220,520"/>
+      </g>
+    </svg>
+  </div>
+
   <div class="site-shimmer" aria-hidden="true"></div>
   <div class="site-glows" aria-hidden="true"></div>
   <div class="site-noise" aria-hidden="true"></div>
@@ -268,67 +369,15 @@
   <!-- Dots -->
   <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
 
-  <!-- Conecta Clube (logo com glints no contorno) -->
+  <!-- Conecta Clube -->
   <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-mode="logo">
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
         <div class="frame">
-          <!-- Stage SVG: usa sua logo CCCS1.svg; extrai anel do contorno e corre glints -->
-          <svg class="logo-stage" viewBox="0 0 1080 1350" aria-label="Logo Conecta Clube com contorno iluminado">
-            <defs>
-              <!-- Glow suave sobre a logo -->
-              <filter id="logo-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
-                <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.40  0 0 0 0 0.75  0 0 0 0 1.0  0 0 0 1 0" result="c"/>
-                <feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-
-              <!-- Extrai o anel do contorno a partir da alpha da logo -->
-              <filter id="ring-extract" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="9" result="dil"/>
-                <feMorphology in="SourceAlpha" operator="erode"  radius="9" result="ero"/>
-                <feComposite in="dil" in2="ero" operator="out" result="ring"/>
-                <feGaussianBlur in="ring" stdDeviation="0.6" result="ringBlur"/>
-                <!-- vira branco para uso como máscara -->
-                <feColorMatrix in="ringBlur" type="matrix"
-                  values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0" />
-              </filter>
-
-              <!-- Máscara do anel (usa o filtro acima) -->
-              <mask id="ringMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1350">
-                <image href="CCCS1.svg" x="0" y="0" width="1080" height="1350" filter="url(#ring-extract)"/>
-              </mask>
-
-              <!-- Glow dos glints -->
-              <filter id="pulseGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-
-              <!-- Órbita elíptica aproximada ao redor da logo (ajuste rx/ry se quiser) -->
-              <path id="orbit" d="M 540 60
-                                  a 480 600 0 1 1 0 1230
-                                  a 480 600 0 1 1 0 -1230" />
-            </defs>
-
-            <!-- Logo base -->
-            <image href="CCCS1.svg" x="0" y="0" width="1080" height="1350" preserveAspectRatio="xMidYMid meet" filter="url(#logo-glow)"/>
-
-            <!-- Glints correndo no contorno (visíveis só no anel) -->
-            <g id="logoGlints" mask="url(#ringMask)">
-              <circle r="28" fill="#00eaff" filter="url(#pulseGlow)">
-                <animateMotion dur="8s" repeatCount="indefinite" rotate="auto">
-                  <mpath xlink:href="#orbit"/>
-                </animateMotion>
-              </circle>
-              <circle r="22" fill="#7b5cff" filter="url(#pulseGlow)" opacity="0.9">
-                <animateMotion dur="10s" begin="-2.5s" repeatCount="indefinite" rotate="auto">
-                  <mpath xlink:href="#orbit"/>
-                </animateMotion>
-              </circle>
-            </g>
-          </svg>
+          <img class="art-img" alt="Logo Conecta Clube"
+               src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024"
+               loading="eager" decoding="async" fetchpriority="high">
         </div>
       </div>
       <div class="content">
