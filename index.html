@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CCS Telecom — Benefícios (Experiência Tela Cheia)</title>
-<meta name="description" content="Experiência elegante em tela cheia: role entre Conecta Clube, CCS TV + PLAY, Skeelo e Suporte Premium.">
+<title>CCS Telecom — Benefícios (Tela Cheia)</title>
+<meta name="description" content="Experiência elegante em tela cheia: role entre Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Portais e FAQ.">
 
 <style>
   :root{
@@ -15,9 +15,7 @@
     --muted:#cfe0ff;
     --cta-a:#ff8a25; --cta-b:#ffb04a;
     --focus:#00d9ff;
-    --radius:22px; --radius-sm:14px;
-    --shadow-1:0 14px 40px rgba(0,0,0,.45);
-    --shadow-2:0 8px 22px rgba(0,0,0,.28);
+    --radius: clamp(16px, 1.8vw, 22px);
     --topbar-h:64px;
     --side-pad: clamp(16px, 5vw, 36px);
   }
@@ -32,10 +30,6 @@
     overflow-y: auto;
     padding-top: var(--topbar-h);
   }
-
-  /* Ícones (sprite) */
-  svg.hidden-sprite{position:absolute;width:0;height:0;overflow:hidden}
-  .ico{width:18px;height:18px}
 
   /* Topbar fixa */
   .topbar{
@@ -55,7 +49,7 @@
   nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
   nav a:hover, nav a.active{background:#ffffff1a}
 
-  /* Nav lateral com ícones */
+  /* Navegação lateral com ícones */
   .dots{
     position: fixed; right: 12px; top: calc(var(--topbar-h) + 12px);
     display:flex; flex-direction:column; gap:10px; z-index:45;
@@ -77,11 +71,11 @@
     position: absolute; left: var(--side-pad); right: calc(var(--side-pad) + 40px); top: 8px;
     display:none; align-items:center; justify-content:space-between; gap:10px;
     background: rgba(255,255,255,.08); border:1px solid var(--line); border-radius: 999px;
-    padding: 10px 14px; backdrop-filter: blur(8px); box-shadow: var(--shadow-2);
+    padding: 10px 14px; backdrop-filter: blur(8px);
   }
   .dock .chip.show{ display:flex; }
   .chip .title{font-weight:900; letter-spacing:.2px}
-  .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a), var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
+  .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
 
   /* Seções em tela cheia */
   .section{
@@ -92,7 +86,7 @@
     position: relative; isolation:isolate;
   }
 
-  /* Fundos suaves */
+  /* Fundos suaves por seção */
   .bg{ position:absolute; inset:0; z-index:-2; pointer-events:none; }
   .s1 .bg{ background:
       radial-gradient(60% 50% at 10% -10%, rgba(47,107,255,.28), transparent 60%),
@@ -107,30 +101,24 @@
       radial-gradient(60% 50% at 50% -10%, rgba(255,184,77,.22), transparent 60%),
       radial-gradient(50% 40% at 50% 110%, rgba(47,107,255,.18), transparent 60%); }
 
-  /* Card fluido */
+  /* Card */
   .card{
     width: min(1080px, 100%);
     margin:auto;
     border-radius: clamp(18px, 2.2vw, 26px);
     border: 1px solid var(--line);
     background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-    box-shadow: var(--shadow-1);
     backdrop-filter: blur(10px);
     overflow: clip;
     display:grid;
     grid-template-columns: 1.1fr 1fr;
     gap: 0;
-    transform: translateY(6px) scale(.985);
-    opacity: .88;
-    transition: transform .35s ease, opacity .35s ease, box-shadow .35s ease;
-  }
-  .section.active .card{
-    transform: translateY(0) scale(1);
-    opacity: 1;
-    box-shadow: 0 18px 50px rgba(0,0,0,.5);
+    box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    transition: transform .35s ease, opacity .35s ease;
   }
   @media (max-width: 920px){ .card{ grid-template-columns: 1fr; } }
 
+  /* Área de mídia padronizada */
   .media{
     position:relative; min-height: 260px; background: linear-gradient(135deg, #1b2030, #0f1420);
     display:flex; align-items:center; justify-content:center;
@@ -138,20 +126,50 @@
   .media .badge{
     position:absolute; top:14px; left:14px;
     background: rgba(255,255,255,.14); border:1px solid var(--line); color:#fff;
-    padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px;
+    padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px; z-index:3;
   }
-  .media .art-img{
+
+  /* Moldura 16:9 compartilhada */
+  .frame{
     width: 72%; max-width: 520px; aspect-ratio: 16/9;
-    border-radius: clamp(16px, 1.8vw, 22px);
+    border-radius: var(--radius);
     border:1px solid var(--line);
-    object-fit: cover; object-position: center;
-    background: linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
   }
-  .media .art-fallback{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    color:#9fb7ff; font-weight:900; letter-spacing:.3px; pointer-events:none;
+
+  /* Imagem única (padrão) */
+  .art-img{ width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
+
+  /* Modo logo (Conecta: não cortar) */
+  .section[data-mode="logo"] .frame{ background: rgba(255,255,255,.05); }
+  .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(6%, 22px); background: transparent; }
+
+  /* Foco à esquerda (Indique & Ganhe) */
+  .section[data-pos="left"] .art-img{ object-position: left center; }
+
+  /* Grid 2 ícones (CCS TV + CCS Play) */
+  .icon-grid{
+    width:100%; height:100%; display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    padding: 8px; background: rgba(0,0,0,.25);
   }
+  .icon-cell{
+    border:1px solid var(--line); border-radius: clamp(12px, 1.4vw, 16px);
+    background: #0f1420; display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .icon-cell img{ width:100%; height:100%; object-fit: contain; }
+
+  /* Carrossel (Portais) */
+  .carousel{ position: relative; width:100%; height:100%; }
+  .carousel-track{ display:flex; height:100%; transition: transform .45s ease; will-change: transform; }
+  .carousel-slide{ flex: 0 0 100%; height: 100%; position: relative; }
+  .carousel-slide img{ position:absolute; inset:0; width:100%; height:100%; object-fit: cover; object-position: center; }
+  .carousel-nav{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding: 0 6px; z-index:2; pointer-events:none; }
+  .carousel-btn{ pointer-events:auto; appearance:none; border:1px solid var(--line); background: rgba(30,36,52,.7); color:#fff; width:34px; height:34px; border-radius:10px; cursor:pointer; font-weight:900; }
+  .carousel-dots{ position:absolute; left:50%; transform: translateX(-50%); bottom:6px; display:flex; gap:6px; z-index:2; background: rgba(0,0,0,.25); padding:4px 6px; border-radius:999px; border:1px solid rgba(255,255,255,.18); backdrop-filter: blur(4px); }
+  .carousel-dot{ width:8px; height:8px; border-radius:50%; background:#91a3d8; opacity:.65; border:1px solid #bcd; cursor:pointer; }
+  .carousel-dot.active{ background:#1bd3ff; opacity:1; box-shadow: 0 0 0 3px rgba(27,211,255,.18); }
 
   .content{ padding: clamp(16px, 2.2vw, 24px) }
   .title{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -174,25 +192,24 @@
   .to-top.show{ opacity:1; pointer-events:auto }
   .to-top:hover{ transform: translateY(-2px) }
 
+  /* Acessibilidade */
   a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
   @media (prefers-reduced-motion: reduce){ *{ transition: none !important; animation: none !important } }
 </style>
 </head>
 <body>
-  <!-- Sprite de ícones -->
-  <svg class="hidden-sprite" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
-      <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
-      <symbol id="ico-book" viewBox="0 0 24 24"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 5h8" stroke="#0f0f10" stroke-width="1.6"/></symbol>
-      <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v4h3m4 0h3v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></symbol>
-      <symbol id="ico-megaphone" viewBox="0 0 24 24"><path d="M3 10v4l10-3V7L3 10z" fill="currentColor"/><path d="M13 8l6-2v12l-6-2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 14l1.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
-      <symbol id="ico-portal" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 9h8" stroke="currentColor" stroke-width="1.6"/></symbol>
-      <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M12 3a7 7 0 1 0 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M11.9 14c0-2.2 3.2-2 3.2-4a3 3 0 0 0-6 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
-    </defs>
-  </svg>
+  <!-- Sprite de ícones simples -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs>
+    <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
+    <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
+    <symbol id="ico-book" viewBox="0 0 24 24"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 5h8" stroke="#0f0f10" stroke-width="1.6"/></symbol>
+    <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v4h3m4 0h3v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></symbol>
+    <symbol id="ico-megaphone" viewBox="0 0 24 24"><path d="M3 10v4l10-3V7L3 10z" fill="currentColor"/><path d="M13 8l6-2v12l-6-2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 14l1.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="ico-portal" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 9h8" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M12 3a7 7 0 1 0 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M11.9 14c0-2.2 3.2-2 3.2-4a3 3 0 0 0-6 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
+  </defs></svg>
 
-  <!-- Topbar fixa -->
+  <!-- Topbar -->
   <header class="topbar" id="topbar">
     <div class="wrap">
       <div class="brand">
@@ -211,7 +228,7 @@
     </div>
   </header>
 
-  <!-- Dock minimizado (seção anterior) -->
+  <!-- Dock -->
   <div class="dock" aria-live="polite">
     <div class="chip" id="dockChip">
       <span class="title" id="dockTitle">Anterior</span>
@@ -219,17 +236,20 @@
     </div>
   </div>
 
-  <!-- Navegação lateral com ícones -->
+  <!-- Dots -->
   <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
 
-  <!-- Seções em tela cheia (com data-img já apontando para suas imagens) -->
-  <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-img="img/conecta-clube.png">
+  <!-- Conecta Clube (logo, sem cortar) -->
+  <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-mode="logo">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
-        <img class="art-img" alt="Banner Conecta Clube com cupons e presentes" loading="eager">
-        <div class="art-fallback">Conecta Clube</div>
+        <div class="frame">
+          <img class="art-img" alt="Logo Conecta Clube"
+               src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024"
+               loading="eager" decoding="async" fetchpriority="high">
+        </div>
       </div>
       <div class="content">
         <div class="title"><h2>Conecta Clube</h2></div>
@@ -245,13 +265,26 @@
     </div>
   </section>
 
-  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="CCS PLAY" data-icon="ico-play" data-img="img/playstore-ccsplay.png">
+  <!-- CCS TV + CCS Play (grid 2 ícones) -->
+  <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="TV + PLAY" data-icon="ico-play">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
-        <img class="art-img" alt="Página do app CCS Play na Google Play" loading="lazy">
-        <div class="art-fallback">CCS TV + PLAY</div>
+        <div class="frame">
+          <div class="icon-grid" aria-label="Ícones CCS Play e CCS TV">
+            <div class="icon-cell">
+              <img alt="Ícone app CCS Play"
+                   src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw"
+                   loading="lazy" decoding="async">
+            </div>
+            <div class="icon-cell">
+              <img alt="Ícone app CCS TV"
+                   src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw"
+                   loading="lazy" decoding="async">
+            </div>
+          </div>
+        </div>
       </div>
       <div class="content">
         <div class="title"><h2>CCS TV + CCS PLAY</h2></div>
@@ -259,18 +292,24 @@
         <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
         <p class="note">Inclui SBT, Record e outros. Rede Globo não está incluída.</p>
         <ul class="list"><li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li><li>Login: e‑mail cadastrado | Senha: CPF (somente números)</li></ul>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo" data-icon="ico-book" data-img="">
+  <!-- Skeelo (poster padrão) -->
+  <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo" data-icon="ico-book">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Incluído</div>
-        <img class="art-img" alt="Skeelo" loading="lazy">
-        <div class="art-fallback">Skeelo</div>
+        <div class="frame">
+          <img class="art-img" alt="Skeelo — livros e audiobooks"
+               src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp"
+               loading="lazy" decoding="async">
+        </div>
       </div>
       <div class="content">
         <div class="title"><h2>Skeelo</h2></div>
@@ -278,36 +317,63 @@
         <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
         <p class="muted">Novos livros digitais todo mês, audiobooks exclusivos e mais.</p>
         <ul class="list"><li>Baixe: <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">https://onelink.to/hseuht</a></li><li>Compatível com iOS e Android</li></ul>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support" data-img="">
+  <!-- Suporte Premium (proposta visual com SVG) -->
+  <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">SLA 36h úteis</div>
-        <img class="art-img" alt="Suporte Premium" loading="lazy">
-        <div class="art-fallback">Suporte Premium</div>
+        <div class="frame" aria-hidden="true">
+          <!-- Ilustração leve em SVG como “poster” do suporte -->
+          <svg viewBox="0 0 800 450" width="100%" height="100%" role="img" aria-label="Suporte Premium">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2f6bff"/><stop offset="100%" stop-color="#00d9ff"/>
+              </linearGradient>
+              <radialGradient id="g2" cx="70%" cy="30%" r="0.8">
+                <stop offset="0%" stop-color="#ffffff22"/><stop offset="100%" stop-color="#ffffff05"/>
+              </radialGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="#0f1420"/>
+            <circle cx="650" cy="90" r="160" fill="url(#g2)"/>
+            <g transform="translate(260,120) scale(2.2)" fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round">
+              <circle cx="48" cy="48" r="42"/>
+              <path d="M10 50v22h14M72 50v22h14"/>
+              <circle cx="34" cy="38" r="3" fill="#fff"/><circle cx="62" cy="38" r="3" fill="#fff"/>
+            </g>
+            <text x="40" y="380" fill="#a8b6d9" font-size="28" font-weight="700">Atendimento com prioridade e prazo garantido</text>
+          </svg>
+        </div>
       </div>
       <div class="content">
         <div class="title"><h2>Suporte Premium</h2></div>
         <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
         <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">+ 1 visita técnica/ano</span></div>
         <p>Benefícios disponíveis em até <strong>72 horas úteis</strong> após a instalação (validação interna).</p>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=suporte">Solicitar suporte</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.%20Meu%20nome%3A%20%5Bpreencha%5D%20%7C%20CPF%2FContrato%3A%20%5Bpreencha%5D%20%7C%20Cidade%3A%20%5Bpreencha%5D&utm_source=beneficios&utm_medium=site&utm_campaign=suporte">Solicitar suporte</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Indique & Ganhe -->
-  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-img="img/indique-ganhe.png">
+  <!-- Indique & Ganhe (cortar usando o lado esquerdo) -->
+  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-pos="left">
     <div class="bg"></div>
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
-        <img class="art-img" alt="Arte Indique e Ganhe com megafone e moedas" loading="lazy">
-        <div class="art-fallback">Indique e Ganhe</div>
+        <div class="frame">
+          <img class="art-img" alt="Indique e Ganhe — megafone e moedas"
+               src="https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png"
+               loading="lazy" decoding="async">
+        </div>
       </div>
       <div class="content">
         <div class="title"><h2>Indique &amp; Ganhe</h2></div>
@@ -323,14 +389,48 @@
     </div>
   </section>
 
-  <!-- Portais -->
-  <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal" data-img="img/app-hand-cta.png">
+  <!-- Portais com carrossel (banner Portal + 5 imagens) -->
+  <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal">
     <div class="bg"></div>
     <div class="card">
       <div class="media">
-        <img class="art-img" alt="Banner do app CCS com mão segurando um celular e botões para baixar" loading="lazy">
-        <div class="art-fallback">Portais</div>
+        <div class="frame">
+          <div class="carousel" id="portaisCarousel" aria-roledescription="carousel" aria-label="Galeria de Portais e App">
+            <div class="carousel-track" role="group">
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="1 de 6">
+                <img src="https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png"
+                     alt="Portal do Assinante — banner de download do app" loading="eager" decoding="async" fetchpriority="high">
+              </div>
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="2 de 6">
+                <img src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w2560-h1440-rw"
+                     alt="Tela do app — ícone CCS" loading="lazy" decoding="async">
+              </div>
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="3 de 6">
+                <img src="https://play-lh.googleusercontent.com/5i5P-7HHhb0niabpxzMK5orNnKS2g6cjs0beXLCHssRINnqbKYAfgkZnL0pk1FYngg=w2560-h1440-rw"
+                     alt="Tela do app — grade de canais" loading="lazy" decoding="async">
+              </div>
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="4 de 6">
+                <img src="https://play-lh.googleusercontent.com/3s6pwDeqvhDYWRiRm1ocjkChQX3gOdyNJxv4wgDgPSbZc9G92a2gCM25lAhmJe9d5Q=w2560-h1440-rw"
+                     alt="Tela do app — programação 1" loading="lazy" decoding="async">
+              </div>
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="5 de 6">
+                <img src="https://play-lh.googleusercontent.com/nxxlifm6o6aHWqN-wfpszr5O8LeHw9omHFyclHRpw1oi9450HpvFaHgqOP_Nmy0-ZA=w2560-h1440-rw"
+                     alt="Tela do app — programação 2" loading="lazy" decoding="async">
+              </div>
+              <div class="carousel-slide" aria-roledescription="slide" aria-label="6 de 6">
+                <img src="https://play-lh.googleusercontent.com/xpCt58vTIkxqswISC32pxgavDWj5rrWNUUXU6UikBgc67OjIrnPQjLMVF_ouJUFCndU=w2560-h1440-rw"
+                     alt="Tela do app — lista de conteúdos" loading="lazy" decoding="async">
+              </div>
+            </div>
+            <div class="carousel-nav" aria-hidden="false">
+              <button class="carousel-btn prev" type="button" aria-label="Anterior">‹</button>
+              <button class="carousel-btn next" type="button" aria-label="Próximo">›</button>
+            </div>
+            <div class="carousel-dots" role="tablist" aria-label="Indicadores de slides"></div>
+          </div>
+        </div>
       </div>
+
       <div class="content">
         <div class="title"><h2>Portais</h2></div>
         <div class="row" style="gap:12px">
@@ -348,7 +448,7 @@
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ" data-icon="ico-faq" data-img="">
+  <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ" data-icon="ico-faq">
     <div class="bg"></div>
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
@@ -383,38 +483,18 @@
 
 <script>
 (function(){
-  // Ajuste topbar fixa
+  // Topbar fixa
   var topbar = document.getElementById('topbar');
-  function setTopbarH(){
-    var h = topbar.offsetHeight || 64;
-    document.documentElement.style.setProperty('--topbar-h', h + 'px');
-    document.body.style.paddingTop = h + 'px';
-  }
+  function setTopbarH(){ var h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
   setTopbarH(); window.addEventListener('resize', setTopbarH, {passive:true});
 
-  // Seções
+  // Seções / navegação
   var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav a'));
   var dotsWrap = document.getElementById('dots');
   var toTop = document.getElementById('toTop');
 
-  // Carrega imagens de data-img
-  sections.forEach(function(sec){
-    var url = sec.getAttribute('data-img') || '';
-    var img = sec.querySelector('.art-img');
-    var fallback = sec.querySelector('.art-fallback');
-    if (img){
-      if (url){
-        img.src = url;
-        img.addEventListener('load', function(){ if (fallback) fallback.style.display = 'none'; });
-        img.addEventListener('error', function(){ if (fallback) fallback.style.display = 'flex'; });
-      } else {
-        if (fallback) fallback.style.display = 'flex';
-      }
-    }
-  });
-
-  // Dots com ícones por seção
+  // Dots com ícones
   sections.forEach(function(sec, idx){
     var d = document.createElement('button');
     d.className = 'dot' + (idx===0?' active':'');
@@ -435,11 +515,8 @@
   function setActiveByIdx(idx){
     currentIndex = idx;
     sections.forEach(function(s, i){ s.classList.toggle('active', i===idx); });
-    // Nav topo
     navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + sections[idx].id); });
-    // Dots
     dots.forEach(function(d, i){ d.classList.toggle('active', i===idx); });
-    // Dock (anterior)
     if (idx > 0){
       var prevTitle = sections[idx-1].getAttribute('data-title') || 'Anterior';
       dockTitle.textContent = prevTitle;
@@ -449,11 +526,10 @@
       dockChip.classList.remove('show');
       dockBack.onclick = null;
     }
-    // Botão topo
     if (idx > 0) toTop.classList.add('show'); else toTop.classList.remove('show');
   }
 
-  // IO para ativar seção ao rolar
+  // IO para ativar seção
   if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       var best = { idx: currentIndex, ratio: 0 };
@@ -513,6 +589,73 @@
       } else { fallback(); }
     });
   }
+
+  // ---------- Carrossel Portais ----------
+  (function initCarousel(){
+    var host = document.getElementById('portaisCarousel');
+    if (!host) return;
+    var track = host.querySelector('.carousel-track');
+    var slides = Array.prototype.slice.call(host.querySelectorAll('.carousel-slide'));
+    var btnPrev = host.querySelector('.carousel-btn.prev');
+    var btnNext = host.querySelector('.carousel-btn.next');
+    var dotsBox = host.querySelector('.carousel-dots');
+
+    var idx = 0, count = slides.length;
+    var autoplay = true, interval = 5000, timer = null;
+    var isPointerDown = false, startX = 0, deltaX = 0;
+
+    // Dots
+    for (var i=0;i<count;i++){
+      var b = document.createElement('button');
+      b.className = 'carousel-dot' + (i===0?' active':'');
+      b.type='button'; b.setAttribute('aria-label','Ir para slide '+(i+1));
+      (function(go){ b.addEventListener('click', function(){ goTo(go); }); })(i);
+      dotsBox.appendChild(b);
+    }
+    var dots = Array.prototype.slice.call(dotsBox.querySelectorAll('.carousel-dot'));
+
+    function update(){
+      track.style.transform = 'translateX(' + (-idx*100) + '%)';
+      dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+      slides.forEach(function(s,i){ s.setAttribute('aria-label', (i+1)+' de '+count + (i===idx?' (atual)':'')); });
+    }
+    function goTo(n){ idx = (n + count) % count; update(); restartAutoplay(); }
+    function next(){ goTo(idx+1); }
+    function prev(){ goTo(idx-1); }
+
+    if (btnPrev && btnNext){ btnPrev.addEventListener('click', prev); btnNext.addEventListener('click', next); }
+
+    // Swipe
+    host.addEventListener('pointerdown', function(e){ isPointerDown=true; startX=e.clientX; host.setPointerCapture(e.pointerId); });
+    host.addEventListener('pointermove', function(e){ if(!isPointerDown) return; deltaX=e.clientX - startX; });
+    host.addEventListener('pointerup', function(e){
+      if(!isPointerDown) return; isPointerDown=false; host.releasePointerCapture(e.pointerId);
+      if (Math.abs(deltaX) > host.clientWidth*0.15){ deltaX>0 ? prev() : next(); }
+      deltaX = 0;
+    });
+
+    // Autoplay (pausa no hover/foco/fora da aba)
+    function startAutoplay(){ if(autoplay && !timer) timer = setInterval(next, interval); }
+    function stopAutoplay(){ if(timer){ clearInterval(timer); timer = null; } }
+    function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
+
+    host.addEventListener('mouseenter', stopAutoplay);
+    host.addEventListener('mouseleave', startAutoplay);
+    host.addEventListener('focusin', stopAutoplay);
+    host.addEventListener('focusout', startAutoplay);
+    document.addEventListener('visibilitychange', function(){ document.hidden ? stopAutoplay() : startAutoplay(); });
+
+    // Teclado (quando Portais estiver ativo)
+    document.addEventListener('keydown', function(e){
+      var activeSection = sections[currentIndex] || null;
+      if (!activeSection || activeSection.id !== 's-portais') return;
+      if (e.key === 'ArrowLeft'){ e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight'){ e.preventDefault(); next(); }
+    });
+
+    update(); startAutoplay();
+  })();
+  // --------------------------------------
 
   function buildThresholdList(){ var t=[]; for (var i=0;i<=1.0;i+=0.05) t.push(i); return t; }
   setActiveByIdx(0);
