@@ -4,12 +4,11 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>CCS Telecom — Benefícios (Tela Cheia)</title>
-<meta name="description" content="Experiência elegante em tela cheia: role entre Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Portais e FAQ.">
+<meta name="description" content="Experiência premium em tela cheia: Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Portais e FAQ.">
 
 <style>
   :root{
     --bg:#0b0d12;
-    --glass:rgba(255,255,255,.06);
     --line:rgba(255,255,255,.12);
     --txt:#f6f8ff;
     --muted:#cfe0ff;
@@ -22,13 +21,83 @@
   *{box-sizing:border-box}
   html,body{height:100%; margin:0}
   body{
-    background: radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,.06), transparent 60%), var(--bg);
     color:var(--txt);
     font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     scroll-snap-type: y mandatory;
     overflow-y: auto;
     padding-top: var(--topbar-h);
+    background: var(--bg);
+  }
+
+  /* Fundo global único — Dark Fiber Diagonal Glow */
+  .site-bg{
+    position: fixed; inset: 0; z-index: -4; pointer-events: none;
+    background-color:#0b0d12;
+    background-image: url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">\
+  <defs>\
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">\
+      <stop offset="0%" stop-color="%232f6bff"/><stop offset="100%" stop-color="%2300d9ff"/>\
+    </linearGradient>\
+    <filter id="glow">\
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>\
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>\
+    </filter>\
+  </defs>\
+  <rect width="2000" height="1400" fill="%230b0d12"/>\
+  <!-- Grupo rotacionado para deixar diagonal (~18°) -->\
+  <g transform="rotate(-18 1000 700)">\
+    <!-- Fibras com glow (mais intensas) -->\
+    <g fill="none" stroke="url(%23g1)" stroke-width="3.0" stroke-linecap="round" opacity="0.28" filter="url(%23glow)">\
+      <path d="M-320,1180 C260,920 1200,1600 2320,920"/>\
+      <path d="M-280,1030 C340,860 1240,1480 2280,800"/>\
+      <path d="M-240,900  C420,780 1310,1350 2240,700"/>\
+      <path d="M-210,770  C500,720 1360,1220 2200,620"/>\
+      <path d="M-180,650  C560,670 1400,1120 2160,560"/>\
+    </g>\
+    <!-- Fibras secundárias (ciano suave) -->\
+    <g fill="none" stroke="%2300ffc6" stroke-width="2.0" stroke-linecap="round" opacity="0.14">\
+      <path d="M-260,720 C520,600 1220,1040 2300,640"/>\
+      <path d="M-300,560 C480,520 1260,900 2220,540"/>\
+      <path d="M-320,420 C420,420 1200,780 2180,460"/>\
+      <path d="M-340,300 C380,340 1160,660 2140,400"/>\
+      <path d="M-360,200 C320,280 1100,560 2100,360"/>\
+    </g>\
+  </g>\
+</svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    filter: saturate(112%);
+  }
+
+  /* Shimmer de luz sutil cruzando diagonalmente */
+  .site-shimmer{
+    position: fixed; inset: 0; z-index: -3; pointer-events: none;
+    background: linear-gradient(20deg, transparent 42%, rgba(27,211,255,.10) 50%, transparent 58%);
+    background-size: 200% 200%;
+    mix-blend-mode: screen;
+    animation: shimmer 26s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer{
+    0%{ background-position: 0% 0% }
+    100%{ background-position: 100% 100% }
+  }
+
+  /* Noise sutil para acabamento */
+  .site-noise{
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    opacity: .035; mix-blend-mode: soft-light;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
+    background-size: 220px 220px;
+  }
+
+  /* Vinheta leve para profundidade */
+  .site-vignette{
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(120% 110% at 50% 50%, transparent 62%, rgba(0,0,0,.22) 100%);
   }
 
   /* Topbar fixa */
@@ -77,7 +146,7 @@
   .chip .title{font-weight:900; letter-spacing:.2px}
   .chip .back{appearance:none; border:0; background: linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; font-weight:900; padding:8px 12px; border-radius: 999px; cursor:pointer}
 
-  /* Seções em tela cheia */
+  /* Seções */
   .section{
     scroll-snap-align: start;
     min-height: calc(100svh - var(--topbar-h));
@@ -85,21 +154,6 @@
     padding: 18px var(--side-pad) 26px;
     position: relative; isolation:isolate;
   }
-
-  /* Fundos suaves por seção */
-  .bg{ position:absolute; inset:0; z-index:-2; pointer-events:none; }
-  .s1 .bg{ background:
-      radial-gradient(60% 50% at 10% -10%, rgba(47,107,255,.28), transparent 60%),
-      radial-gradient(50% 40% at 80% 110%, rgba(0,255,198,.16), transparent 60%); }
-  .s2 .bg{ background:
-      radial-gradient(60% 50% at 90% -10%, rgba(255,138,37,.25), transparent 60%),
-      radial-gradient(50% 40% at 20% 110%, rgba(0,217,255,.18), transparent 60%); }
-  .s3 .bg{ background:
-      radial-gradient(60% 50% at 20% -10%, rgba(123,92,255,.25), transparent 60%),
-      radial-gradient(50% 40% at 80% 110%, rgba(0,217,255,.16), transparent 60%); }
-  .s4 .bg{ background:
-      radial-gradient(60% 50% at 50% -10%, rgba(255,184,77,.22), transparent 60%),
-      radial-gradient(50% 40% at 50% 110%, rgba(47,107,255,.18), transparent 60%); }
 
   /* Card */
   .card{
@@ -129,25 +183,34 @@
     padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px; z-index:3;
   }
 
-  /* Moldura 16:9 compartilhada */
+  /* Moldura 16:9 */
   .frame{
-    width: 72%; max-width: 520px; aspect-ratio: 16/9;
+    position: relative;
+    width: 72%; max-width: 720px; aspect-ratio: 16/9;
     border-radius: var(--radius);
     border:1px solid var(--line);
     overflow: hidden;
     background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
   }
+  /* Conecta (logo maior) */
+  .section[data-mode="logo"] .frame{ width: 90%; }
+  .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(2%, 12px); background: transparent; }
 
-  /* Imagem única (padrão) */
+  /* Imagem padrão */
   .art-img{ width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
 
-  /* Modo logo (Conecta: não cortar) */
-  .section[data-mode="logo"] .frame{ background: rgba(255,255,255,.05); }
-  .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(6%, 22px); background: transparent; }
-
-  /* Foco à esquerda (Indique & Ganhe) */
-  .section[data-pos="left"] .art-img{ object-position: left center; }
+  /* Indique & Ganhe: usar apenas o lado esquerdo (corte/zoom) */
+  .section[data-crop="left-half"] .art-img{
+    object-position: left center;
+    transform-origin: left center;
+    transform: scale(1.48);
+  }
+  .section[data-crop="left-half"] .frame::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(to right, transparent 60%, rgba(0,0,0,.02) 100%);
+    pointer-events:none;
+  }
 
   /* Grid 2 ícones (CCS TV + CCS Play) */
   .icon-grid{
@@ -160,16 +223,27 @@
   }
   .icon-cell img{ width:100%; height:100%; object-fit: contain; }
 
-  /* Carrossel (Portais) */
-  .carousel{ position: relative; width:100%; height:100%; }
-  .carousel-track{ display:flex; height:100%; transition: transform .45s ease; will-change: transform; }
-  .carousel-slide{ flex: 0 0 100%; height: 100%; position: relative; }
-  .carousel-slide img{ position:absolute; inset:0; width:100%; height:100%; object-fit: cover; object-position: center; }
-  .carousel-nav{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding: 0 6px; z-index:2; pointer-events:none; }
-  .carousel-btn{ pointer-events:auto; appearance:none; border:1px solid var(--line); background: rgba(30,36,52,.7); color:#fff; width:34px; height:34px; border-radius:10px; cursor:pointer; font-weight:900; }
-  .carousel-dots{ position:absolute; left:50%; transform: translateX(-50%); bottom:6px; display:flex; gap:6px; z-index:2; background: rgba(0,0,0,.25); padding:4px 6px; border-radius:999px; border:1px solid rgba(255,255,255,.18); backdrop-filter: blur(4px); }
-  .carousel-dot{ width:8px; height:8px; border-radius:50%; background:#91a3d8; opacity:.65; border:1px solid #bcd; cursor:pointer; }
-  .carousel-dot.active{ background:#1bd3ff; opacity:1; box-shadow: 0 0 0 3px rgba(27,211,255,.18); }
+  /* Poster Suporte Premium — neutro e elegante */
+  .support-poster{
+    position:relative; width:100%; height:100%; background:#0f1420;
+  }
+  .support-poster .bg{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(60% 50% at 80% -20%, rgba(0,217,255,.18), transparent 60%),
+      radial-gradient(50% 40% at 10% 110%, rgba(47,107,255,.22), transparent 60%);
+    filter: saturate(110%);
+  }
+  .support-poster .chips{
+    position:absolute; left:12px; bottom:12px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,.08);
+    border:1px solid var(--line);
+    color:#eaf3ff; padding:8px 10px; border-radius:999px; font-weight:800; font-size:13px;
+    backdrop-filter: blur(6px);
+  }
 
   .content{ padding: clamp(16px, 2.2vw, 24px) }
   .title{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -192,18 +266,26 @@
   .to-top.show{ opacity:1; pointer-events:auto }
   .to-top:hover{ transform: translateY(-2px) }
 
-  /* Acessibilidade */
+  /* Acessibilidade e movimento reduzido */
   a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
-  @media (prefers-reduced-motion: reduce){ *{ transition: none !important; animation: none !important } }
+  @media (prefers-reduced-motion: reduce){
+    .site-shimmer{ animation: none; display:none }
+  }
 </style>
 </head>
 <body>
-  <!-- Sprite de ícones simples -->
+  <!-- Fundo global: fibras diagonais + shimmer + noise + vinheta -->
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="site-shimmer" aria-hidden="true"></div>
+  <div class="site-noise" aria-hidden="true"></div>
+  <div class="site-vignette" aria-hidden="true"></div>
+
+  <!-- Sprite de ícones (mínimos) -->
   <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs>
     <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
     <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
     <symbol id="ico-book" viewBox="0 0 24 24"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 5h8" stroke="#0f0f10" stroke-width="1.6"/></symbol>
-    <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v4h3m4 0h3v-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></symbol>
+    <symbol id="ico-support" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 12v22h3m9-22v22h3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
     <symbol id="ico-megaphone" viewBox="0 0 24 24"><path d="M3 10v4l10-3V7L3 10z" fill="currentColor"/><path d="M13 8l6-2v12l-6-2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 14l1.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
     <symbol id="ico-portal" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 9h8" stroke="currentColor" stroke-width="1.6"/></symbol>
     <symbol id="ico-faq" viewBox="0 0 24 24"><path d="M12 3a7 7 0 1 0 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M11.9 14c0-2.2 3.2-2 3.2-4a3 3 0 0 0-6 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
@@ -239,9 +321,8 @@
   <!-- Dots -->
   <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
 
-  <!-- Conecta Clube (logo, sem cortar) -->
+  <!-- Conecta Clube (logo maior) -->
   <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-mode="logo">
-    <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
@@ -267,7 +348,6 @@
 
   <!-- CCS TV + CCS Play (grid 2 ícones) -->
   <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="TV + PLAY" data-icon="ico-play">
-    <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Nível 1</div>
@@ -299,9 +379,8 @@
     </div>
   </section>
 
-  <!-- Skeelo (poster padrão) -->
+  <!-- Skeelo -->
   <section class="section s3" id="s-skeelo" data-title="Skeelo" data-dot="Skeelo" data-icon="ico-book">
-    <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">Incluído</div>
@@ -316,7 +395,6 @@
         <p class="subtitle">Sua biblioteca de leitura e áudio</p>
         <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
         <p class="muted">Novos livros digitais todo mês, audiobooks exclusivos e mais.</p>
-        <ul class="list"><li>Baixe: <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">https://onelink.to/hseuht</a></li><li>Compatível com iOS e Android</li></ul>
         <div class="actions">
           <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
         </div>
@@ -324,32 +402,20 @@
     </div>
   </section>
 
-  <!-- Suporte Premium (proposta visual com SVG) -->
+  <!-- Suporte Premium (poster neutro) -->
   <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support">
-    <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="badge">SLA 36h úteis</div>
-        <div class="frame" aria-hidden="true">
-          <!-- Ilustração leve em SVG como “poster” do suporte -->
-          <svg viewBox="0 0 800 450" width="100%" height="100%" role="img" aria-label="Suporte Premium">
-            <defs>
-              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2f6bff"/><stop offset="100%" stop-color="#00d9ff"/>
-              </linearGradient>
-              <radialGradient id="g2" cx="70%" cy="30%" r="0.8">
-                <stop offset="0%" stop-color="#ffffff22"/><stop offset="100%" stop-color="#ffffff05"/>
-              </radialGradient>
-            </defs>
-            <rect width="100%" height="100%" fill="#0f1420"/>
-            <circle cx="650" cy="90" r="160" fill="url(#g2)"/>
-            <g transform="translate(260,120) scale(2.2)" fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round">
-              <circle cx="48" cy="48" r="42"/>
-              <path d="M10 50v22h14M72 50v22h14"/>
-              <circle cx="34" cy="38" r="3" fill="#fff"/><circle cx="62" cy="38" r="3" fill="#fff"/>
-            </g>
-            <text x="40" y="380" fill="#a8b6d9" font-size="28" font-weight="700">Atendimento com prioridade e prazo garantido</text>
-          </svg>
+        <div class="frame">
+          <div class="support-poster" role="img" aria-label="Suporte Premium — prioridade, SLA 36h úteis e visita técnica anual">
+            <div class="bg"></div>
+            <div class="chips">
+              <span class="chip">Prioridade no atendimento</span>
+              <span class="chip">SLA 36h úteis</span>
+              <span class="chip">1 visita técnica/ano</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="content">
@@ -364,15 +430,12 @@
     </div>
   </section>
 
-  <!-- Indique & Ganhe (cortar usando o lado esquerdo) -->
-  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-pos="left">
-    <div class="bg"></div>
+  <!-- Indique & Ganhe (corte à esquerda; aceita base64) -->
+  <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-crop="left-half">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
         <div class="frame">
-          <img class="art-img" alt="Indique e Ganhe — megafone e moedas"
-               src="https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png"
-               loading="lazy" decoding="async">
+          <img id="imgIndique" class="art-img" alt="Indique e Ganhe — arte promocional (lado esquerdo)" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="content">
@@ -389,45 +452,12 @@
     </div>
   </section>
 
-  <!-- Portais com carrossel (banner Portal + 5 imagens) -->
+  <!-- Portais (base64 ou fallback) -->
   <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal">
-    <div class="bg"></div>
     <div class="card">
       <div class="media">
         <div class="frame">
-          <div class="carousel" id="portaisCarousel" aria-roledescription="carousel" aria-label="Galeria de Portais e App">
-            <div class="carousel-track" role="group">
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="1 de 6">
-                <img src="https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png"
-                     alt="Portal do Assinante — banner de download do app" loading="eager" decoding="async" fetchpriority="high">
-              </div>
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="2 de 6">
-                <img src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w2560-h1440-rw"
-                     alt="Tela do app — ícone CCS" loading="lazy" decoding="async">
-              </div>
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="3 de 6">
-                <img src="https://play-lh.googleusercontent.com/5i5P-7HHhb0niabpxzMK5orNnKS2g6cjs0beXLCHssRINnqbKYAfgkZnL0pk1FYngg=w2560-h1440-rw"
-                     alt="Tela do app — grade de canais" loading="lazy" decoding="async">
-              </div>
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="4 de 6">
-                <img src="https://play-lh.googleusercontent.com/3s6pwDeqvhDYWRiRm1ocjkChQX3gOdyNJxv4wgDgPSbZc9G92a2gCM25lAhmJe9d5Q=w2560-h1440-rw"
-                     alt="Tela do app — programação 1" loading="lazy" decoding="async">
-              </div>
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="5 de 6">
-                <img src="https://play-lh.googleusercontent.com/nxxlifm6o6aHWqN-wfpszr5O8LeHw9omHFyclHRpw1oi9450HpvFaHgqOP_Nmy0-ZA=w2560-h1440-rw"
-                     alt="Tela do app — programação 2" loading="lazy" decoding="async">
-              </div>
-              <div class="carousel-slide" aria-roledescription="slide" aria-label="6 de 6">
-                <img src="https://play-lh.googleusercontent.com/xpCt58vTIkxqswISC32pxgavDWj5rrWNUUXU6UikBgc67OjIrnPQjLMVF_ouJUFCndU=w2560-h1440-rw"
-                     alt="Tela do app — lista de conteúdos" loading="lazy" decoding="async">
-              </div>
-            </div>
-            <div class="carousel-nav" aria-hidden="false">
-              <button class="carousel-btn prev" type="button" aria-label="Anterior">‹</button>
-              <button class="carousel-btn next" type="button" aria-label="Próximo">›</button>
-            </div>
-            <div class="carousel-dots" role="tablist" aria-label="Indicadores de slides"></div>
-          </div>
+          <img id="imgPortais" class="art-img" alt="Portal do Assinante — banner" loading="eager" decoding="async" fetchpriority="high">
         </div>
       </div>
 
@@ -449,7 +479,6 @@
 
   <!-- FAQ -->
   <section class="section" id="s-faq" data-title="FAQ" data-dot="FAQ" data-icon="ico-faq">
-    <div class="bg"></div>
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
         <div class="title"><h2>Perguntas frequentes</h2></div>
@@ -483,6 +512,10 @@
 
 <script>
 (function(){
+  // Base64 opcionais (com prefixo data:image/...;base64,)
+  const IMG_PORTAIS = 'data:image/png;base64,SEU_CODIGO_AQUI';
+  const IMG_INDIQUE = 'data:image/png;base64,PASTE_FULL_BASE64_INDIQUE';
+
   // Topbar fixa
   var topbar = document.getElementById('topbar');
   function setTopbarH(){ var h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
@@ -590,72 +623,24 @@
     });
   }
 
-  // ---------- Carrossel Portais ----------
-  (function initCarousel(){
-    var host = document.getElementById('portaisCarousel');
-    if (!host) return;
-    var track = host.querySelector('.carousel-track');
-    var slides = Array.prototype.slice.call(host.querySelectorAll('.carousel-slide'));
-    var btnPrev = host.querySelector('.carousel-btn.prev');
-    var btnNext = host.querySelector('.carousel-btn.next');
-    var dotsBox = host.querySelector('.carousel-dots');
+  // Injetar imagens (base64 ou fallback URLs)
+  var imgPortais = document.getElementById('imgPortais');
+  var imgIndique = document.getElementById('imgIndique');
 
-    var idx = 0, count = slides.length;
-    var autoplay = true, interval = 5000, timer = null;
-    var isPointerDown = false, startX = 0, deltaX = 0;
+  var fallbackPortais = 'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png';
+  var fallbackIndique = 'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png';
 
-    // Dots
-    for (var i=0;i<count;i++){
-      var b = document.createElement('button');
-      b.className = 'carousel-dot' + (i===0?' active':'');
-      b.type='button'; b.setAttribute('aria-label','Ir para slide '+(i+1));
-      (function(go){ b.addEventListener('click', function(){ goTo(go); }); })(i);
-      dotsBox.appendChild(b);
-    }
-    var dots = Array.prototype.slice.call(dotsBox.querySelectorAll('.carousel-dot'));
+  if (typeof IMG_PORTAIS === 'string' && IMG_PORTAIS.startsWith('data:image')) {
+    imgPortais.src = IMG_PORTAIS;
+  } else {
+    imgPortais.src = fallbackPortais;
+  }
 
-    function update(){
-      track.style.transform = 'translateX(' + (-idx*100) + '%)';
-      dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
-      slides.forEach(function(s,i){ s.setAttribute('aria-label', (i+1)+' de '+count + (i===idx?' (atual)':'')); });
-    }
-    function goTo(n){ idx = (n + count) % count; update(); restartAutoplay(); }
-    function next(){ goTo(idx+1); }
-    function prev(){ goTo(idx-1); }
-
-    if (btnPrev && btnNext){ btnPrev.addEventListener('click', prev); btnNext.addEventListener('click', next); }
-
-    // Swipe
-    host.addEventListener('pointerdown', function(e){ isPointerDown=true; startX=e.clientX; host.setPointerCapture(e.pointerId); });
-    host.addEventListener('pointermove', function(e){ if(!isPointerDown) return; deltaX=e.clientX - startX; });
-    host.addEventListener('pointerup', function(e){
-      if(!isPointerDown) return; isPointerDown=false; host.releasePointerCapture(e.pointerId);
-      if (Math.abs(deltaX) > host.clientWidth*0.15){ deltaX>0 ? prev() : next(); }
-      deltaX = 0;
-    });
-
-    // Autoplay (pausa no hover/foco/fora da aba)
-    function startAutoplay(){ if(autoplay && !timer) timer = setInterval(next, interval); }
-    function stopAutoplay(){ if(timer){ clearInterval(timer); timer = null; } }
-    function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
-
-    host.addEventListener('mouseenter', stopAutoplay);
-    host.addEventListener('mouseleave', startAutoplay);
-    host.addEventListener('focusin', stopAutoplay);
-    host.addEventListener('focusout', startAutoplay);
-    document.addEventListener('visibilitychange', function(){ document.hidden ? stopAutoplay() : startAutoplay(); });
-
-    // Teclado (quando Portais estiver ativo)
-    document.addEventListener('keydown', function(e){
-      var activeSection = sections[currentIndex] || null;
-      if (!activeSection || activeSection.id !== 's-portais') return;
-      if (e.key === 'ArrowLeft'){ e.preventDefault(); prev(); }
-      if (e.key === 'ArrowRight'){ e.preventDefault(); next(); }
-    });
-
-    update(); startAutoplay();
-  })();
-  // --------------------------------------
+  if (typeof IMG_INDIQUE === 'string' && IMG_INDIQUE.startsWith('data:image')) {
+    imgIndique.src = IMG_INDIQUE;
+  } else {
+    imgIndique.src = fallbackIndique;
+  }
 
   function buildThresholdList(){ var t=[]; for (var i=0;i<=1.0;i+=0.05) t.push(i); return t; }
   setActiveByIdx(0);
