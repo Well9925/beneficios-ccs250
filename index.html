@@ -30,9 +30,9 @@
     background: var(--bg);
   }
 
-  /* Fundo global único — Dark Fiber Diagonal Glow+ (mais vivo) */
+  /* Fundo global único — Dark Fiber Diagonal Glow+ (vivo) */
   .site-bg{
-    position: fixed; inset: 0; z-index: -4; pointer-events: none;
+    position: fixed; inset: 0; z-index: -5; pointer-events: none;
     background-color:#0b0d12;
     background-image: url('data:image/svg+xml;utf8,\
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">\
@@ -46,9 +46,7 @@
     </filter>\
   </defs>\
   <rect width="2000" height="1400" fill="%230b0d12"/>\
-  <!-- Grupo rotacionado (~22°) para diagonal mais marcada -->\
   <g transform="rotate(-22 1000 700)">\
-    <!-- Fibras principais (glow + mais espessas) -->\
     <g fill="none" stroke="url(%23g1)" stroke-width="3.4" stroke-linecap="round" opacity="0.34" filter="url(%23glow)">\
       <path d="M-360,1250 C240,940 1200,1680 2360,930"/>\
       <path d="M-320,1100 C330,880 1250,1530 2300,820"/>\
@@ -56,7 +54,6 @@
       <path d="M-240,870  C520,780 1380,1270 2180,650"/>\
       <path d="M-200,760  C590,740 1430,1170 2120,590"/>\
     </g>\
-    <!-- Fibras secundárias (ciano suave, mais densas) -->\
     <g fill="none" stroke="%2300ffc6" stroke-width="2.2" stroke-linecap="round" opacity="0.18">\
       <path d="M-340,820 C560,660 1260,1100 2340,660"/>\
       <path d="M-380,680 C520,600 1300,960 2280,580"/>\
@@ -73,36 +70,53 @@
     filter: saturate(118%);
   }
 
-  /* Shimmer de luz mais presente e um pouco mais rápido */
+  /* Pulses correndo nas fibras (SVG DOM) */
+  .site-fibers{
+    position: fixed; inset: 0; z-index: -4; pointer-events: none;
+  }
+  .site-fibers svg{ width:100%; height:100%; display:block }
+  .site-fibers .pulse{
+    fill:none; stroke:#00eaff; stroke-linecap:round;
+    stroke-width:3.2; opacity:.9; filter:url(#pulse-glow);
+    /* um pequeno traço brilhante e um longo espaço para parecer “pontos de luz” */
+    stroke-dasharray: 28 720;
+    animation: dash 9s linear infinite;
+  }
+  .site-fibers .pulse.p2{ stroke:#7b5cff; stroke-dasharray: 22 640; animation-duration: 10.5s; animation-delay: -2.5s }
+  .site-fibers .pulse.p3{ stroke:#00ffc6; stroke-dasharray: 18 580; animation-duration: 8.5s; animation-delay: -1.2s }
+  .site-fibers .pulse.p4{ stroke:#4bd6ff; stroke-dasharray: 26 680; animation-duration: 11.2s; animation-delay: -4s }
+  .site-fibers .pulse.p5{ stroke:#8aa4ff; stroke-dasharray: 24 700; animation-duration: 12.8s; animation-delay: -6s }
+  @keyframes dash{
+    0%{ stroke-dashoffset: 0 }
+    100%{ stroke-dashoffset: -760 }
+  }
+
+  /* Shimmer de luz mais rápido cruzando diagonalmente */
   .site-shimmer{
     position: fixed; inset: 0; z-index: -3; pointer-events: none;
-    background: linear-gradient(22deg, transparent 40%, rgba(80,190,255,.16) 50%, transparent 60%);
+    background: linear-gradient(22deg, transparent 40%, rgba(80,190,255,.18) 50%, transparent 60%);
     background-size: 200% 200%;
     mix-blend-mode: screen;
-    animation: shimmer 20s ease-in-out infinite alternate;
+    animation: shimmer 12s ease-in-out infinite alternate;
   }
   @keyframes shimmer{
     0%{ background-position: 0% 0% }
     100%{ background-position: 100% 100% }
   }
 
-  /* Glows nos cantos (depth) */
+  /* Glows de cantos + noise + vinheta */
   .site-glows{
     position: fixed; inset: 0; z-index: -2; pointer-events: none;
     background:
       radial-gradient(800px 500px at 5% 10%, rgba(95,92,255,.18), transparent 60%),
       radial-gradient(700px 450px at 95% 95%, rgba(0,234,255,.16), transparent 60%);
   }
-
-  /* Noise sutil para acabamento */
   .site-noise{
     position: fixed; inset: 0; z-index: -2; pointer-events: none;
     opacity: .045; mix-blend-mode: soft-light;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
     background-size: 220px 220px;
   }
-
-  /* Vinheta leve para profundidade */
   .site-vignette{
     position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background: radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.28) 100%);
@@ -200,6 +214,7 @@
     background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.35);
   }
+
   /* Conecta (logo maior) */
   .section[data-mode="logo"] .frame{ width: 90%; }
   .section[data-mode="logo"] .art-img{ object-fit: contain; padding: min(2%, 12px); background: transparent; }
@@ -231,9 +246,7 @@
   .icon-cell img{ width:100%; height:100%; object-fit: contain; }
 
   /* Poster Suporte Premium — neutro e elegante */
-  .support-poster{
-    position:relative; width:100%; height:100%; background:#0f1420;
-  }
+  .support-poster{ position:relative; width:100%; height:100%; background:#0f1420; }
   .support-poster .bg{
     position:absolute; inset:0;
     background:
@@ -273,22 +286,49 @@
   .to-top.show{ opacity:1; pointer-events:auto }
   .to-top:hover{ transform: translateY(-2px) }
 
-  /* Acessibilidade e movimento reduzido */
-  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
+  /* Acessibilidade: reduzir movimento */
   @media (prefers-reduced-motion: reduce){
     .site-shimmer{ animation: none; display:none }
+    .site-fibers .pulse{ animation: none }
   }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 </style>
 </head>
 <body>
-  <!-- Fundo global: fibras diagonais + shimmer + glows + noise + vinheta -->
+  <!-- Fundo global: base estática + pulses nas fibras + shimmer + glows + noise + vinheta -->
   <div class="site-bg" aria-hidden="true"></div>
+
+  <!-- Pulses nas fibras (SVG DOM para animar stroke-dashoffset) -->
+  <div class="site-fibers" aria-hidden="true">
+    <svg viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="pulse-glow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g transform="rotate(-22 1000 700)">
+        <!-- Repete os mesmos caminhos com classes diferentes para variar velocidade/cores -->
+        <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930"/>
+        <path class="pulse p2" d="M-320,1100 C330,880 1250,1530 2300,820"/>
+        <path class="pulse p3" d="M-280,990  C430,820 1320,1400 2240,720"/>
+        <path class="pulse p4" d="M-240,870  C520,780 1380,1270 2180,650"/>
+        <path class="pulse p5" d="M-200,760  C590,740 1430,1170 2120,590"/>
+
+        <!-- Segunda camada de pulses (mais suaves) -->
+        <path class="pulse p3" d="M-340,820 C560,660 1260,1100 2340,660"/>
+        <path class="pulse p2" d="M-380,680 C520,600 1300,960 2280,580"/>
+        <path class="pulse p4" d="M-420,540 C460,520 1260,840 2220,520"/>
+      </g>
+    </svg>
+  </div>
+
   <div class="site-shimmer" aria-hidden="true"></div>
   <div class="site-glows" aria-hidden="true"></div>
   <div class="site-noise" aria-hidden="true"></div>
   <div class="site-vignette" aria-hidden="true"></div>
 
-  <!-- Sprite de ícones (mínimos) -->
+  <!-- Sprite de ícones -->
   <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs>
     <symbol id="ico-ticket" viewBox="0 0 24 24"><path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/><path fill="none" stroke="#0f0f10" stroke-linecap="round" stroke-width="1.6" d="M12 6v12"/></symbol>
     <symbol id="ico-play" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.6" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5z" fill="currentColor"/></symbol>
@@ -329,7 +369,7 @@
   <!-- Dots -->
   <div class="dots" id="dots" aria-hidden="false" aria-label="Ir para seção"></div>
 
-  <!-- Conecta Clube (logo maior) -->
+  <!-- Conecta Clube -->
   <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-dot="Conecta" data-icon="ico-ticket" data-mode="logo">
     <div class="card">
       <div class="media">
@@ -354,7 +394,7 @@
     </div>
   </section>
 
-  <!-- CCS TV + CCS Play (grid 2 ícones) -->
+  <!-- CCS TV + CCS Play -->
   <section class="section s2" id="s-ccsplay" data-title="CCS TV + CCS PLAY" data-dot="TV + PLAY" data-icon="ico-play">
     <div class="card">
       <div class="media">
@@ -410,7 +450,7 @@
     </div>
   </section>
 
-  <!-- Suporte Premium (poster neutro) -->
+  <!-- Suporte Premium -->
   <section class="section s4" id="s-suporte" data-title="Suporte Premium" data-dot="Suporte" data-icon="ico-support">
     <div class="card">
       <div class="media">
@@ -438,7 +478,7 @@
     </div>
   </section>
 
-  <!-- Indique & Ganhe (corte à esquerda; aceita base64) -->
+  <!-- Indique & Ganhe -->
   <section class="section" id="s-indique" data-title="Indique & Ganhe" data-dot="Indique" data-icon="ico-megaphone" data-crop="left-half">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
@@ -460,7 +500,7 @@
     </div>
   </section>
 
-  <!-- Portais (base64 ou fallback) -->
+  <!-- Portais -->
   <section class="section" id="s-portais" data-title="Portais" data-dot="Portais" data-icon="ico-portal">
     <div class="card">
       <div class="media">
