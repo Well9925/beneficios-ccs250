@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>CCS Telecom — Benefícios</title>
-<meta name="description" content="Conecta Clube, CCS TV + PLAY, Skeelo, Suporte Premium, Indique & Ganhe, Portais e FAQ.">
+<meta name="description" content="Conecta Clube, CCS TV + PLAY, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portais e FAQ.">
 
 <style>
   :root{
@@ -30,7 +30,7 @@
     background: var(--bg);
   }
 
-  /* Fundo Dark Fiber (com modo leve para mobile) */
+  /* Fundo Dark Fiber (animações com modo leve no mobile) */
   .site-bg{
     position: fixed; inset: 0; z-index: -5; pointer-events: none;
     background-color:#0b0d12;
@@ -95,7 +95,7 @@
     background: radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%);
   }
 
-  /* Modo leve: corta efeitos pesados automaticamente */
+  /* Modo leve (mobile/Save-Data/memória baixa) */
   .lowfx .site-fibers, .lowfx .site-shimmer{ display:none }
   @media (max-width: 768px){
     .site-fibers, .site-shimmer{ display:none !important }
@@ -110,7 +110,7 @@
   .topbar .wrap{ height: 100%; display:flex; align-items:center; justify-content:space-between; padding: 0 var(--side-pad); }
   .brand{display:flex; align-items:center; gap:10px}
   .logo{width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg,#2f6bff,#7b5cff); display:inline-flex; align-items:center; justify-content:center; font-weight:900; color:#fff}
-  .brand small{display:block; color:var(--muted); margin-top:-2px}
+  .brand small{display:block; color:#cfe0ff; margin-top:-2px}
   nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
   nav a:hover, nav a.active{background:#ffffff1a}
 
@@ -132,7 +132,7 @@
   }
   @media (max-width: 920px){ .card{ grid-template-columns: 1fr; } }
 
-  /* Mídia sem moldura (todas proporcionais) */
+  /* Área de mídia (sem moldura, proporcional para todas) */
   .media{ position:relative; min-height: 240px; background: transparent; display:flex; align-items:center; justify-content:center; }
   .frame{ position: relative; width:100%; max-width:none; aspect-ratio:auto; border:0; border-radius:0; overflow:visible; background:transparent; box-shadow:none; }
   .art-img{ width:100%; height:auto; object-fit: contain; display:block; background: transparent; }
@@ -140,28 +140,30 @@
   /* Conecta Clube — hero maior */
   #s-conecta .media{ padding: clamp(8px, 1.8vw, 14px) 0; }
 
-  /* Suporte Premium — moeda sem fundo (máscara circular) */
+  /* Suporte ao Assinante — máscara opcional quando arquivo local de moeda (classe .coin) */
   #s-suporte .media{ padding: clamp(10px, 2vw, 16px) 0; }
   #s-suporte .frame{ display:flex; justify-content:center; }
   #s-suporte .art-img{
     width:min(520px, 88%); height:auto; object-fit: contain;
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 49.3%, transparent 51%); /* esconde o fundo bege/quadrado */
-    mask-image: radial-gradient(circle at 50% 50%, #000 49.3%, transparent 51%);
     filter: drop-shadow(0 10px 24px rgba(0,0,0,.45));
+  }
+  #s-suporte .art-img.coin{
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 49.3%, transparent 51%);
+    mask-image: radial-gradient(circle at 50% 50%, #000 49.3%, transparent 51%);
   }
 
   /* Indique & Ganhe — proporcional, sem corte */
   #s-indique .frame{ display:flex; justify-content:center; }
-  #s-indique .art-img{ width:100%; max-width: 1100px; height:auto; object-fit: contain; }
+  #s-indique .art-img{ width:100%; max-width: 1200px; height:auto; object-fit: contain; }
 
-  /* Portal do Assinante — usa nova arte (wide) e mantém proporção */
+  /* Portais — proporcional; com glow leve atrás */
   #s-portais .frame{ display:flex; justify-content:center; align-items:center; }
   #s-portais .frame::before{
     content:""; position:absolute; inset:auto; width:min(700px, 78%); height:min(700px,78%);
     background: radial-gradient(closest-side, rgba(0,234,255,.16), transparent 70%); z-index:0; filter: blur(2px);
   }
   #s-portais .art-img{
-    position:relative; z-index:1; width:min(1200px, 100%); height:auto; object-fit: contain;
+    position:relative; z-index:1; width:min(1400px, 100%); height:auto; object-fit: contain;
     filter: drop-shadow(0 12px 28px rgba(0,0,0,.28));
   }
 
@@ -307,19 +309,16 @@
     </div>
   </section>
 
-  <!-- Suporte Premium (imagem 6 com máscara circular) -->
-  <section class="section s4" id="s-suporte" data-title="Suporte Premium">
+  <!-- Suporte ao Assinante -->
+  <section class="section s4" id="s-suporte" data-title="Suporte ao Assinante">
     <div class="card">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/suporte-premium.webp" type="image/webp">
-            <img id="imgSuporte" class="art-img" alt="Suporte Premium (medalha)" loading="lazy" decoding="async" sizes="(min-width:920px) 520px, 70vw">
-          </picture>
+          <img id="imgSuporte" class="art-img" alt="Suporte ao Assinante" loading="lazy" decoding="async" sizes="(min-width:920px) 520px, 70vw">
         </div>
       </div>
       <div class="content">
-        <div class="title"><h2>Suporte Premium</h2></div>
+        <div class="title"><h2>Suporte ao Assinante</h2></div>
         <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
         <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">1 visita técnica/ano</span></div>
         <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.">Solicitar suporte</a></div>
@@ -327,15 +326,12 @@
     </div>
   </section>
 
-  <!-- Indique & Ganhe (imagem 5) -->
+  <!-- Indique & Ganhe -->
   <section class="section" id="s-indique" data-title="Indique & Ganhe">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/indique-ganhe.webp" type="image/webp">
-            <img id="imgIndique" class="art-img" alt="Indique e Ganhe" loading="lazy" decoding="async" sizes="100vw">
-          </picture>
+          <img id="imgIndique" class="art-img" alt="Indique & Ganhe" loading="lazy" decoding="async" sizes="100vw">
         </div>
       </div>
       <div class="content">
@@ -351,15 +347,12 @@
     </div>
   </section>
 
-  <!-- Portais (imagem 4) -->
+  <!-- Portais -->
   <section class="section" id="s-portais" data-title="Portais">
     <div class="card">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/portal-app.webp" type="image/webp">
-            <img id="imgPortais" class="art-img" alt="Portal do Assinante — baixe o app" loading="lazy" decoding="async" sizes="100vw">
-          </picture>
+          <img id="imgPortais" class="art-img" alt="Portal do Assinante" loading="lazy" decoding="async" sizes="100vw">
         </div>
       </div>
       <div class="content">
@@ -407,12 +400,12 @@
 
 <script>
 (function(){
-  // Ajusta topbar
+  // Ajuste do topo
   const topbar = document.getElementById('topbar');
   function setTopbarH(){ const h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
   setTopbarH(); addEventListener('resize', setTopbarH, {passive:true});
 
-  // Copiar e‑mail (Conecta)
+  // Copiar e‑mail
   const copyBtn = document.getElementById('copyEmail');
   if (copyBtn){
     copyBtn.addEventListener('click', async function(){
@@ -423,26 +416,84 @@
     });
   }
 
-  // Carrega imagens locais; se não existirem, usa fallback externo
-  const fallbacks = {
-    suporte: 'https://framerusercontent.com/images/tpoEXD62FJeJMByHc7XiO9JFEH0.png',
-    indique: 'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png',
-    portal:  'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png'
+  // Links do Canva (com UTM)
+  const CANVA = {
+    indique: 'https://www.canva.com/design/DAGxN_TJbOk/LXrdhNL5w9ReD8sXEh68zQ/view?utm_content=DAGxN_TJbOk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h1f174695b3',
+    portal:  'https://www.canva.com/design/DAGxOIp-puQ/f0KTiQ_yOKaB16MaIuyrQA/view?utm_content=DAGxOIp-puQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h05df06485e',
+    suporte: 'https://www.canva.com/design/DAGxOCnfJ1o/ecuHggdOkkhRnHTjqoTNdA/view?utm_content=DAGxOCnfJ1o&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd7d84674a4'
   };
-  function setFallback(img, url){
-    if (!img) return;
-    img.addEventListener('error', ()=>{ if (img.src !== url) img.src = url; }, {once:true});
+
+  // Serviços de screenshot (sem chave)
+  function thum(url, w){ return `https://image.thum.io/get/width/${w||1600}/noanimate/${encodeURIComponent(url)}`; }
+  function mshot(url, w){ return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=${w||1600}`; }
+
+  // Ordem de fallback: local WebP/PNG -> screenshot Canva -> fallback final
+  const SRC = {
+    indique: [
+      'assets/indique-ganhe.webp',
+      'assets/indique-ganhe.png',
+      thum(CANVA.indique, 1600),
+      mshot(CANVA.indique, 1600),
+      'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png'
+    ],
+    portal: [
+      'assets/portal-app.webp',
+      'assets/portal-app.png',
+      thum(CANVA.portal, 1920),
+      mshot(CANVA.portal, 1600),
+      'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png'
+    ],
+    suporte: [
+      'assets/suporte-premium.webp',
+      'assets/suporte-premium.png',
+      thum(CANVA.suporte, 1200),
+      mshot(CANVA.suporte, 1200),
+      'https://framerusercontent.com/images/tpoEXD62FJeJMByHc7XiO9JFEH0.png'
+    ]
+  };
+
+  function loadWithFallback(img, list){
+    if (!img || !Array.isArray(list) || !list.length) return;
+    let i = 0;
+    const tryNext = () => {
+      if (i >= list.length) return;
+      img.src = list[i++];
+    };
+    img.addEventListener('error', tryNext);
+    tryNext();
   }
 
-  const elSup = document.getElementById('imgSuporte');
+  // Aplica nas peças
   const elInd = document.getElementById('imgIndique');
   const elPor = document.getElementById('imgPortais');
+  const elSup = document.getElementById('imgSuporte');
 
-  if (elSup){ elSup.src = 'assets/suporte-premium.png'; setFallback(elSup, fallbacks.suporte); }
-  if (elInd){ elInd.src = 'assets/indique-ganhe.png'; setFallback(elInd, fallbacks.indique); }
-  if (elPor){ elPor.src = 'assets/portal-app.png'; setFallback(elPor, fallbacks.portal); }
+  if (elInd){
+    elInd.alt = 'Indique & Ganhe — peça (Canva)';
+    elInd.loading = 'lazy'; elInd.decoding = 'async'; elInd.sizes = '100vw';
+    loadWithFallback(elInd, SRC.indique);
+  }
+  if (elPor){
+    elPor.alt = 'Portal do Assinante — peça (Canva)';
+    elPor.loading = 'lazy'; elPor.decoding = 'async'; elPor.sizes = '100vw';
+    loadWithFallback(elPor, SRC.portal);
+  }
+  if (elSup){
+    elSup.alt = 'Suporte ao Assinante — peça (Canva)';
+    elSup.loading = 'lazy'; elSup.decoding = 'async'; elSup.sizes = '(min-width:920px) 520px, 70vw';
+    // Liga máscara circular automaticamente se estiver usando o arquivo local de moeda
+    const applyCoinMask = () => {
+      try{
+        const path = new URL(elSup.src, location.href).pathname;
+        const isLocalCoin = /assets\/suporte-premium\.(webp|png)$/i.test(path);
+        elSup.classList.toggle('coin', isLocalCoin);
+      }catch(_){}
+    };
+    elSup.addEventListener('load', applyCoinMask);
+    loadWithFallback(elSup, SRC.suporte);
+  }
 
-  // Modo leve automático: economiza efeitos em devices modestos
+  // Modo leve automático: menos efeitos em dispositivos modestos
   const cn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const saveData = cn && cn.saveData;
   const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 2;
