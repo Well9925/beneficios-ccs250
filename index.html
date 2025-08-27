@@ -115,21 +115,20 @@
   .titlebar{ flex:1; display:flex; align-items:center; justify-content:center; min-width:0 }
   .chipset{
     display:inline-flex; align-items:center; gap:0; border-radius:999px; overflow:hidden;
-    /* borda e glass exterior */
     padding:2px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
     box-shadow: 0 6px 16px rgba(0,0,0,.25); border:1px solid #ffffff1f; backdrop-filter: blur(8px);
   }
   .chip{
     padding:8px 12px; font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:13px; line-height:1;
-    display:inline-flex; align-items:center; gap:8px; border-radius:999px; /* cantos arredondados */
+    display:inline-flex; align-items:center; gap:8px; border-radius:999px;
   }
   .chip.main{
     background: linear-gradient(90deg,#2f6bff,#7b5cff); color:#fff;
-    border-top-right-radius:0; border-bottom-right-radius:0; /* conecta sem risco */
+    border-top-right-radius:0; border-bottom-right-radius:0;
   }
   .chip.plan{
     background: linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0d12;
-    border-top-left-radius:0; border-bottom-left-radius:0; /* conecta sem risco */
+    border-top-left-radius:0; border-bottom-left-radius:0;
   }
 
   /* Seções e cartões em uma coluna: imagem em cima, conteúdo embaixo */
@@ -200,7 +199,21 @@
   .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; cursor:pointer; border-radius:12px; font-weight:900; padding:12px 16px; border:1px solid var(--line); color:#111; background:#fff; transition: transform .2s ease, filter .2s ease }
   .btn:hover{ transform: translateY(-2px); filter: brightness(1.04) }
   .btn.cta{ background: linear-gradient(90deg, var(--cta-a), var(--cta-b)); color:#111; border-color:transparent }
+  .btn-more .chev{ transition: transform .2s ease }
+  .btn-more[aria-expanded="true"] .chev{ transform: rotate(180deg) }
   .note{ color:#a8b6d9; font-size:14px }
+
+  /* Saiba mais (painel expansível) */
+  .more[hidden]{ display:none }
+  .more{ overflow:hidden; transition: height .22s ease, opacity .22s ease; opacity:0 }
+  .more.is-open{ opacity:1 }
+  .more-inner{
+    padding:12px 12px 14px; margin-top:10px;
+    background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px
+  }
+  .more-list{ margin:0; padding-left:18px }
+  .more-list li{ margin:6px 0; color:#dfe7ff }
+  .more small{ color:#a8b6d9 }
 
   .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad) }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
@@ -292,10 +305,26 @@
         <div class="title"><h2>Conecta Clube</h2></div>
         <p class="subtitle">Clube de Vantagens CCS</p>
         <div class="row"><span class="pill hi">1 voucher</span><span class="pill">a cada 90 dias</span></div>
-        <p class="muted">Parceiros da região com vouchers para você usar no prazo indicado.</p>
+        <p class="muted">Parceiros da região; você escolhe o voucher disponível no seu plano.</p>
         <div class="actions">
           <a class="btn cta" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
           <button class="btn" id="copyEmail" type="button">Copiar e‑mail</button>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-conecta" id="btn-more-conecta">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-conecta" class="more" role="region" aria-labelledby="btn-more-conecta" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>O que é:</strong> Clube de benefícios com diversas empresas parceiras da região.</li>
+              <li><strong>Como funciona:</strong> você escolhe o voucher disponível para o seu plano.</li>
+              <li><strong>Frequência:</strong> 1 voucher a cada 90 dias.</li>
+              <li><strong>Como consultar/solicitar:</strong> envie um e‑mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>.</li>
+              <li><strong>Regras:</strong> cliente ativo e adimplente; vouchers não são cumulativos nem transferíveis; validade e condições definidas pelo parceiro.</li>
+              <li><strong>Observação:</strong> Nível 1 não inclui atrações Nível 3 (Unipraias, Barco Pirata, Roda Gigante, Aquário).</li>
+              <li><strong>Ativação:</strong> benefícios disponíveis em até 72h úteis após a instalação.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -322,9 +351,27 @@
         <div class="title"><h2>CCS TV + CCS PLAY</h2></div>
         <p class="subtitle">Streaming completo para sua família</p>
         <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
-        <p class="note">Inclui SBT, Record e outros. Rede Globo não está incluída.</p>
+        <p class="note">Inclui SBT e Record. Rede Globo não está incluída.</p>
         <ul class="list"><li>Baixe o app: <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">https://onelink.to/ccsplay</a></li><li>Login: e‑mail cadastrado | Senha: CPF (só números)</li></ul>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-ccsplay" id="btn-more-ccsplay">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-ccsplay" class="more" role="region" aria-labelledby="btn-more-ccsplay" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>O que inclui:</strong> streaming com mais de 60 canais regionais e variados.</li>
+              <li><strong>Canais:</strong> inclui SBT, Record e outros; <em>Rede Globo não está incluída</em>.</li>
+              <li><strong>Como acessar:</strong> baixe o app pelo link <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> ou procure por “CCS PLAY” na sua loja de aplicativos.</li>
+              <li><strong>Credenciais:</strong> usuário = seu e‑mail cadastrado na CCS; senha = CPF do titular (somente números).</li>
+              <li><strong>Dispositivos:</strong> celular, tablet, computador e Smart TV.</li>
+              <li><strong>Compatibilidade:</strong> verifique se seu aparelho é compatível; disponível para iOS e Android.</li>
+              <li><strong>Ajuda:</strong> dificuldades de acesso? Fale com o <a href="https://wa.me/554797701300" target="_blank" rel="noopener">Suporte</a>.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -343,7 +390,23 @@
         <div class="title"><h2>Skeelo</h2></div>
         <p class="subtitle">Sua biblioteca de leitura e áudio</p>
         <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-skeelo" id="btn-more-skeelo">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-skeelo" class="more" role="region" aria-labelledby="btn-more-skeelo" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>Conteúdo:</strong> livros digitais liberados todo mês, audiobooks, minibooks e comics.</li>
+              <li><strong>Como acessar:</strong> baixe o app pelo link <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">onelink.to/hseuht</a> ou procure por “Skeelo” na sua loja.</li>
+              <li><strong>Dispositivos:</strong> disponível para celular e tablet.</li>
+              <li><strong>Compatibilidade:</strong> verifique a compatibilidade; disponível para iOS e Android.</li>
+              <li><strong>Ativação:</strong> benefícios liberados em até 72h úteis após a instalação do serviço.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -353,7 +416,6 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <!-- Responsive images: AVIF/WEBP (assets) com fallback (GitHub) -->
           <picture>
             <source type="image/avif"
               srcset="assets/suporte-640.avif 640w, assets/suporte-1024.avif 1024w, assets/suporte-1600.avif 1600w"
@@ -372,7 +434,23 @@
         <div class="title"><h2>Suporte ao Assinante</h2></div>
         <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
         <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">1 visita técnica/ano</span></div>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.">Solicitar suporte</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.">Solicitar suporte</a>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-suporte" id="btn-more-suporte">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-suporte" class="more" role="region" aria-labelledby="btn-more-suporte" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>SLA:</strong> atendimento em até 36h úteis.</li>
+              <li><strong>Incluso:</strong> 1 visita técnica gratuita por ano.</li>
+              <li><strong>Como abrir chamado:</strong> envie mensagem no <a href="https://wa.me/554797701300" target="_blank" rel="noopener">WhatsApp do Suporte</a>.</li>
+              <li><strong>Ativação de benefícios:</strong> ocorre em até 72h úteis após a instalação (prazo para validações internas).</li>
+              <li><small>Assim que tudo estiver OK, o acesso é liberado automaticamente.</small></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -404,7 +482,22 @@
           <div class="pill">Plano 450 • R$40</div>
           <div class="pill">Plano 650 • 1 mensalidade isenta</div>
         </div>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.">Indicar agora</a></div>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20quero%20indicar%20um%20amigo.">Indicar agora</a>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-indique" id="btn-more-indique">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-indique" class="more" role="region" aria-labelledby="btn-more-indique" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>Como funciona:</strong> indique pelo WhatsApp; após instalação e validação, o desconto é aplicado.</li>
+              <li><strong>Benefícios por plano:</strong> 250 = R$30 | 450 = R$40 | 650 = 1 mensalidade isenta (até 100%).</li>
+              <li><strong>Aplicação do desconto:</strong> ocorre na fatura subsequente à validação da indicação.</li>
+              <li><small>Condições e prazos são confirmados no atendimento no momento da indicação.</small></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -439,6 +532,18 @@
         <div class="actions">
           <a class="btn cta" target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">Acessar CCS TELECOM</a>
           <a class="btn" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar faturas</a>
+          <button class="btn btn-more" type="button" aria-expanded="false" aria-controls="more-portais" id="btn-more-portais">
+            <span class="ico" aria-hidden="true">ℹ️</span> <span class="txt">Saiba mais</span> <span class="chev" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div id="more-portais" class="more" role="region" aria-labelledby="btn-more-portais" hidden>
+          <div class="more-inner">
+            <ul class="more-list">
+              <li><strong>Acesso:</strong> app CCS em <a href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">bit.ly/CCS_APP</a> e portal de faturas/PIX em <a href="https://ccs.pix.7az.com.br/" target="_blank" rel="noopener">ccs.pix.7az.com.br</a>.</li>
+              <li><strong>Funcionalidades:</strong> pagamentos por PIX/Cartão, 2ª via de faturas, desbloqueio por confiança, extrato de conexão.</li>
+              <li><small>Dica: use seu e‑mail cadastrado e CPF (apenas números) quando solicitado.</small></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -562,7 +667,6 @@
       if (hash === '#'+id) a.classList.add('is-active'); else a.classList.remove('is-active');
     });
   }
-
   const sections = Array.from(document.querySelectorAll('.section'));
   const io = new IntersectionObserver((entries)=>{
     const visible = entries
@@ -572,19 +676,47 @@
   }, { threshold:[0.25, 0.5, 0.75] });
   sections.forEach(s => io.observe(s));
 
-  // Foco acessível após clicar em âncoras do dock
-  function enhanceAnchorClicks(anchors){
-    anchors.forEach(a=>{
-      a.addEventListener('click', ()=>{
-        const href = a.getAttribute('href') || '';
-        if (href.startsWith('#')){
-          const el = document.getElementById(href.slice(1));
-          if (el){ el.setAttribute('tabindex','-1'); setTimeout(()=> el.focus({preventScroll:true}), 400); }
+  // Saiba mais: animação acessível
+  function setupMoreToggles(){
+    const buttons = document.querySelectorAll('.btn-more');
+    buttons.forEach(btn=>{
+      const panelId = btn.getAttribute('aria-controls');
+      const panel = document.getElementById(panelId);
+      const txt = btn.querySelector('.txt');
+      if (!panel) return;
+
+      btn.addEventListener('click', ()=>{
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        if (expanded){
+          // fechar
+          const h = panel.offsetHeight;
+          panel.style.height = h + 'px';
+          requestAnimationFrame(()=>{
+            panel.style.height = '0px';
+            panel.classList.remove('is-open');
+          });
+          const onEnd = ()=>{ panel.hidden = true; panel.style.height = ''; panel.removeEventListener('transitionend', onEnd); };
+          panel.addEventListener('transitionend', onEnd);
+          btn.setAttribute('aria-expanded','false');
+          if (txt) txt.textContent = 'Saiba mais';
+        }else{
+          // abrir
+          panel.hidden = false;
+          panel.style.height = '0px';
+          requestAnimationFrame(()=>{
+            const target = panel.scrollHeight;
+            panel.style.height = target + 'px';
+            panel.classList.add('is-open');
+          });
+          const onEnd = ()=>{ panel.style.height = ''; panel.removeEventListener('transitionend', onEnd); };
+          panel.addEventListener('transitionend', onEnd);
+          btn.setAttribute('aria-expanded','true');
+          if (txt) txt.textContent = 'Ver menos';
         }
       });
     });
   }
-  enhanceAnchorClicks(dockLinks);
+  setupMoreToggles();
 })();
 </script>
 </body>
