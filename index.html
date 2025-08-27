@@ -270,10 +270,10 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/suporte-premium.webp" type="image/webp">
-            <img id="imgSuporte" class="art-img" alt="Suporte ao Assinante — medalha" src="assets/suporte-premium.png" loading="lazy" decoding="async" sizes="(min-width:920px) 520px, 70vw">
-          </picture>
+          <img id="imgSuporte" class="art-img"
+               alt="Suporte ao Assinante — medalha"
+               src="https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242"
+               loading="lazy" decoding="async" sizes="(min-width:920px) 520px, 70vw">
         </div>
       </div>
       <div class="content">
@@ -290,10 +290,10 @@
     <div class="card" style="grid-template-columns:1fr;">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/indique-ganhe.webp" type="image/webp">
-            <img id="imgIndique" class="art-img" alt="Indique e Ganhe — arte" src="assets/indique-ganhe.png" loading="lazy" decoding="async" sizes="100vw">
-          </picture>
+          <img id="imgIndique" class="art-img"
+               alt="Indique e Ganhe — arte"
+               src="https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4"
+               loading="lazy" decoding="async" sizes="100vw">
         </div>
       </div>
       <div class="content">
@@ -314,10 +314,10 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <picture>
-            <source srcset="assets/portal-app.webp" type="image/webp">
-            <img id="imgPortais" class="art-img" alt="Portal do Assinante — app" src="assets/portal-app.png" loading="lazy" decoding="async" sizes="100vw">
-          </picture>
+          <img id="imgPortais" class="art-img"
+               alt="Portal do Assinante — app"
+               src="https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d"
+               loading="lazy" decoding="async" sizes="100vw">
         </div>
       </div>
       <div class="content">
@@ -390,9 +390,9 @@
 
   // Fallbacks: se algum arquivo local faltar, usa um placeholder seguro
   const placeholders = {
-    indique: 'https://framerusercontent.com/images/sSGJSyKNpH424CUWsU2IwGY7iqI.png',
-    portal:  'https://framerusercontent.com/images/A3pvYZL9Js8Ffx6jTkNahTDsswE.png',
-    suporte: 'https://framerusercontent.com/images/tpoEXD62FJeJMByHc7XiO9JFEH0.png'
+    indique: 'https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4',
+    portal:  'https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d',
+    suporte: 'https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242'
   };
   function setFallback(img, url){ img && img.addEventListener('error', ()=>{ if (img.src !== url) img.src = url; }, {once:true}); }
   setFallback(document.getElementById('imgIndique'), placeholders.indique);
