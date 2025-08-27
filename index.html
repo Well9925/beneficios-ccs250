@@ -17,14 +17,20 @@
     --radius: clamp(16px, 1.8vw, 22px);
     --topbar-h:64px;
     --side-pad: clamp(16px, 5vw, 36px);
+
+    /* Alturas máximas padronizadas para artes (proporcional) */
+    --art-max-h-d: clamp(300px, 42vh, 480px);
+    --art-max-h-m: clamp(220px, 36vh, 360px);
   }
+
   *{box-sizing:border-box}
   html,body{height:100%; margin:0}
+  html{ scroll-behavior:smooth }
   body{
     color:var(--txt);
     font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     overflow-y: auto;
     padding-top: var(--topbar-h);
     background: var(--bg);
@@ -83,21 +89,38 @@
   @media (max-width:768px){ .site-fibers, .site-shimmer{ display:none!important } .site-noise{ opacity:.03 } }
 
   /* Topbar e layout */
-  .topbar{ position:fixed; left:0; right:0; top:0; z-index:50; height:var(--topbar-h); background:rgba(16,18,24,.6); backdrop-filter:blur(8px); border-bottom:1px solid var(--line) }
-  .topbar .wrap{ height:100%; display:flex; align-items:center; justify-content:space-between; padding:0 var(--side-pad) }
-  .brand{display:flex; align-items:center; gap:10px}
+  .topbar{ position:fixed; left:0; right:0; top:0; z-index:50; height:var(--topbar-h); background:rgba(16,18,24,.6); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); transition: height .2s ease, box-shadow .2s ease, border-color .2s ease }
+  .topbar.shrink{ height:56px; border-bottom-color: rgba(255,255,255,.18); box-shadow: 0 6px 18px rgba(0,0,0,.25) }
+  .topbar .wrap{ height:100%; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 var(--side-pad) }
+  .brand{display:flex; align-items:center; gap:10px; min-width:190px}
   .logo{width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg,#2f6bff,#7b5cff); display:inline-flex; align-items:center; justify-content:center; font-weight:900; color:#fff}
   .brand small{display:block; color:#cfe0ff; margin-top:-2px}
-  nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px}
+  .mid{ flex:1; text-align:center; min-width:120px }
+  #scrollTitle{ display:inline-block; font-weight:900; letter-spacing:.2px; opacity:.9; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:60vw }
+  nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px; position:relative }
   nav a:hover, nav a.active{background:#ffffff1a}
+  nav a.active::after{
+    content:""; position:absolute; left:10px; right:10px; bottom:4px; height:3px; border-radius:3px;
+    background: linear-gradient(90deg, #00d9ff, #00ffc6);
+  }
 
-  .section{ scroll-snap-align:start; min-height:calc(100svh - var(--topbar-h)); display:flex; align-items:stretch; justify-content:center; padding:18px var(--side-pad) 26px; position:relative; isolation:isolate }
-  .card{ width:min(1080px,100%); margin:auto; border-radius:clamp(18px,2.2vw,26px); border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); backdrop-filter:blur(10px); overflow:clip; display:grid; grid-template-columns:1.1fr 1fr; gap:0; box-shadow:0 18px 50px rgba(0,0,0,.35) }
+  .section{
+    scroll-snap-align:start;
+    min-height: auto;
+    display:flex; align-items:stretch; justify-content:center;
+    padding:18px var(--side-pad) 26px; position:relative; isolation:isolate;
+    scroll-margin-top: calc(var(--topbar-h) + 12px);
+  }
+  #s-conecta.section{ min-height: calc(100svh - var(--topbar-h)) }
+
+  .card{ width:min(1080px,100%); margin:auto; border-radius:clamp(18px,2.2vw,26px); border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); backdrop-filter:blur(10px); overflow:clip; display:grid; grid-template-columns:1fr 1fr; gap:0; box-shadow:0 18px 50px rgba(0,0,0,.35) }
   @media (max-width:920px){ .card{ grid-template-columns:1fr } }
 
   /* Mídia sem moldura (proporcional) */
-  .media{ position:relative; min-height:240px; background:transparent; display:flex; align-items:center; justify-content:center }
+  .media{ position:relative; min-height:200px; background:transparent; display:flex; align-items:center; justify-content:center }
   .frame{ position:relative; width:100%; max-width:none; aspect-ratio:auto; border:0; border-radius:0; overflow:visible; background:transparent; box-shadow:none }
+
+  /* Base das imagens (será refinada abaixo para padronização) */
   .art-img{ width:100%; height:auto; object-fit:contain; display:block; background:transparent }
 
   /* Conecta Clube — hero maior */
@@ -106,11 +129,10 @@
   /* Suporte — moeda transparente */
   #s-suporte .media{ padding: clamp(10px, 2vw, 16px) 0 }
   #s-suporte .frame{ display:flex; justify-content:center }
-  #s-suporte .art-img{ width:min(520px, 88%); filter: drop-shadow(0 10px 24px rgba(0,0,0,.45)) }
+  #s-suporte .art-img{ filter: drop-shadow(0 10px 24px rgba(0,0,0,.45)) }
 
   /* Indique & Ganhe — PNG quadrado transparente */
   #s-indique .frame{ display:flex; justify-content:center }
-  #s-indique .art-img{ width:min(1100px,100%); max-width:1100px }
 
   /* Portais — arte alinhada à esquerda (fone à esquerda e espaço à direita) */
   #s-portais .frame{ display:flex; justify-content:center; align-items:center }
@@ -119,9 +141,20 @@
     background: radial-gradient(500px 360px at 18% 60%, rgba(0,234,255,.16), transparent 70%);
     z-index:0; filter: blur(2px)
   }
+  #s-portais .art-img{ position:relative; z-index:1; object-fit:contain; object-position:left center; filter: drop-shadow(0 12px 28px rgba(0,0,0,.28)) }
+
+  /* Padronização das artes: proporções iguais e sem oversize */
+  .art-img{
+    max-height: var(--art-max-h-d);
+    width: auto;                /* não força largura; respeita proporção */
+    max-width: min(100%, 920px);
+    object-fit: contain; object-position: center;
+  }
+  /* Remover larguras especiais (padroniza) */
+  #s-suporte .art-img,
+  #s-indique .art-img,
   #s-portais .art-img{
-    position:relative; z-index:1; width:min(1400px, 100%); object-fit:contain; object-position:left center;
-    filter: drop-shadow(0 12px 28px rgba(0,0,0,.28))
+    width:auto; max-width:min(100%, 920px);
   }
 
   /* Conteúdo */
@@ -141,6 +174,39 @@
 
   .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad) }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
+
+  /* Quick Dock (atalhos com "menosinho") */
+  .quick-dock{
+    position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+    display:flex; flex-direction:column; gap:10px; z-index:60;
+  }
+  .quick-dock .dock-toggle{
+    width:36px; height:36px; border-radius:12px; border:1px solid var(--line);
+    background:rgba(255,255,255,.12); color:#fff; font-weight:900; cursor:pointer
+  }
+  .quick-dock .dock-items{
+    display:flex; flex-direction:column; gap:8px; padding:8px; border-radius:14px;
+    background:rgba(16,18,24,.55); backdrop-filter: blur(8px); border:1px solid var(--line)
+  }
+  .quick-dock a{
+    width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+    border-radius:10px; background:rgba(255,255,255,.08); border:1px solid var(--line);
+  }
+  .quick-dock a:hover{ background:rgba(255,255,255,.14) }
+  .quick-dock img{ width:24px; height:24px; object-fit:contain }
+  .quick-dock.is-collapsed .dock-items{ display:none }
+
+  /* Mobile: dock centralizado na base e conteúdo antes da mídia (melhor leitura) */
+  @media (max-width:920px){
+    .quick-dock{
+      right: 50%; bottom: 16px; top:auto; transform: translateX(50%);
+      flex-direction:row; gap:8px;
+    }
+    .quick-dock .dock-items{ flex-direction:row }
+    .section:not(#s-conecta) .content{ order:-1 }
+    .art-img{ max-height: var(--art-max-h-m); width:100%; max-width: 100% }
+    #scrollTitle{ max-width: 46vw }
+  }
 
   /* Acessibilidade */
   a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
@@ -185,6 +251,9 @@
           <strong>CCS Telecom</strong>
           <small>Seus benefícios ativos</small>
         </div>
+      </div>
+      <div class="mid">
+        <span id="scrollTitle">Benefícios</span>
       </div>
       <nav aria-label="Navegação principal">
         <a href="#s-conecta" class="active">Benefícios</a>
@@ -353,6 +422,31 @@
     </div>
   </section>
 
+  <!-- Quick Dock (atalhos) -->
+  <nav class="quick-dock" aria-label="Atalhos de seções">
+    <button class="dock-toggle" aria-expanded="true" aria-label="Recolher">—</button>
+    <div class="dock-items">
+      <a href="#s-conecta" aria-label="Conecta Clube" title="Conecta Clube">
+        <img src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=256" alt="">
+      </a>
+      <a href="#s-ccsplay" aria-label="CCS TV + PLAY" title="CCS TV + PLAY">
+        <img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt="">
+      </a>
+      <a href="#s-skeelo" aria-label="Skeelo" title="Skeelo">
+        <img src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp" alt="">
+      </a>
+      <a href="#s-suporte" aria-label="Suporte ao Assinante" title="Suporte ao Assinante">
+        <img src="https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242" alt="">
+      </a>
+      <a href="#s-indique" aria-label="Indique &amp; Ganhe" title="Indique &amp; Ganhe">
+        <img src="https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4" alt="">
+      </a>
+      <a href="#s-portais" aria-label="Portais" title="Portais">
+        <img src="https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d" alt="">
+      </a>
+    </div>
+  </nav>
+
   <footer class="footer">
     <div class="wrap">
       <p>© 2025 CCS Telecom — Todos os direitos reservados</p>
@@ -367,7 +461,11 @@
 (function(){
   // Ajuste do topo
   const topbar = document.getElementById('topbar');
-  function setTopbarH(){ const h = topbar.offsetHeight || 64; document.documentElement.style.setProperty('--topbar-h', h+'px'); document.body.style.paddingTop = h+'px'; }
+  function setTopbarH(){
+    const h = topbar.offsetHeight || 64;
+    document.documentElement.style.setProperty('--topbar-h', h+'px');
+    document.body.style.paddingTop = h+'px';
+  }
   setTopbarH(); addEventListener('resize', setTopbarH, {passive:true});
 
   // Copiar e‑mail do Conecta
@@ -394,10 +492,87 @@
     portal:  'https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d',
     suporte: 'https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242'
   };
-  function setFallback(img, url){ img && img.addEventListener('error', ()=>{ if (img.src !== url) img.src = url; }, {once:true}); }
+  function setFallback(img, url){
+    img && img.addEventListener('error', ()=>{ if (img.src !== url) img.src = url; }, {once:true});
+  }
   setFallback(document.getElementById('imgIndique'), placeholders.indique);
   setFallback(document.getElementById('imgPortais'), placeholders.portal);
   setFallback(document.getElementById('imgSuporte'), placeholders.suporte);
+
+  // Título dinâmico da seção + nav ativo + shrink da topbar
+  const scrollTitle = document.getElementById('scrollTitle');
+  const sections = Array.from(document.querySelectorAll('.section'));
+  const navLinks = Array.from(document.querySelectorAll('header nav a'));
+
+  function setActiveNav(id){
+    navLinks.forEach(a=>{
+      const hash = a.getAttribute('href') || '';
+      if (hash === '#'+id) a.classList.add('active'); else a.classList.remove('active');
+    });
+  }
+
+  const io = new IntersectionObserver((entries)=>{
+    const visible = entries
+      .filter(e=> e.isIntersecting)
+      .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible){
+      const t = visible.target.getAttribute('data-title') || '';
+      if (scrollTitle && t && scrollTitle.textContent !== t) scrollTitle.textContent = t;
+      setActiveNav(visible.target.id);
+    }
+  }, { threshold:[0.25, 0.5, 0.75] });
+
+  sections.forEach(s => io.observe(s));
+
+  function onScroll(){
+    if (window.scrollY > 16) topbar.classList.add('shrink'); else topbar.classList.remove('shrink');
+  }
+  onScroll();
+  addEventListener('scroll', onScroll, {passive:true});
+
+  // Quick Dock: toggle e feedback de ativo
+  const dock = document.querySelector('.quick-dock');
+  const toggle = dock?.querySelector('.dock-toggle');
+  toggle?.addEventListener('click', ()=>{
+    const collapsed = dock.classList.toggle('is-collapsed');
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+  });
+
+  // Realçar item do dock ativo acompanhando o nav
+  const dockLinks = Array.from(dock?.querySelectorAll('a') || []);
+  function setActiveDock(id){
+    dockLinks.forEach(a=>{
+      const hash = a.getAttribute('href') || '';
+      if (hash === '#'+id) a.style.outline = '2px solid var(--focus)';
+      else a.style.outline = 'none';
+    });
+  }
+  // Sincroniza quando o nav muda
+  const syncActive = (id)=>{ setActiveDock(id) };
+  // Observa mudanças de classe nos links do nav
+  const mo = new MutationObserver(()=>{
+    const active = navLinks.find(a=> a.classList.contains('active'));
+    if (active){
+      const id = (active.getAttribute('href') || '').replace('#','');
+      if (id) syncActive(id);
+    }
+  });
+  navLinks.forEach(a=> mo.observe(a, {attributes:true, attributeFilter:['class']}));
+
+  // Clique suave já é coberto por scroll-behavior; garante foco acessível
+  function enhanceAnchorClicks(anchors){
+    anchors.forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('#')){
+          const el = document.getElementById(href.slice(1));
+          if (el){ el.setAttribute('tabindex','-1'); setTimeout(()=> el.focus({preventScroll:true}), 400); }
+        }
+      });
+    });
+  }
+  enhanceAnchorClicks(navLinks);
+  enhanceAnchorClicks(dockLinks);
 })();
 </script>
 </body>
