@@ -6,6 +6,12 @@
 <title>CCS Telecom — Benefícios</title>
 <meta name="description" content="Conecta Clube, CCS TV + PLAY, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portais e FAQ.">
 
+<!-- Performance: aquece conexões para as origens das imagens -->
+<link rel="preconnect" href="https://github.com" crossorigin>
+<link rel="preconnect" href="https://framerusercontent.com" crossorigin>
+<link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
+<link rel="preconnect" href="https://ofertas.valenet.com.br" crossorigin>
+
 <style>
   :root{
     --bg:#0b0d12;
@@ -88,22 +94,29 @@
   .lowfx .site-fibers, .lowfx .site-shimmer{ display:none }
   @media (max-width:768px){ .site-fibers, .site-shimmer{ display:none!important } .site-noise{ opacity:.03 } }
 
-  /* Topbar e layout */
-  .topbar{ position:fixed; left:0; right:0; top:0; z-index:50; height:var(--topbar-h); background:rgba(16,18,24,.6); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); transition: height .2s ease, box-shadow .2s ease, border-color .2s ease }
+  /* Topbar: apenas título fixo com o plano (elegante/moderno) */
+  .topbar{
+    position:fixed; left:0; right:0; top:0; z-index:50; height:var(--topbar-h);
+    background:rgba(16,18,24,.6); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    transition: height .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
   .topbar.shrink{ height:56px; border-bottom-color: rgba(255,255,255,.18); box-shadow: 0 6px 18px rgba(0,0,0,.25) }
-  .topbar .wrap{ height:100%; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 var(--side-pad) }
-  .brand{display:flex; align-items:center; gap:10px; min-width:190px}
-  .logo{width:30px; height:30px; border-radius:10px; background:linear-gradient(135deg,#2f6bff,#7b5cff); display:inline-flex; align-items:center; justify-content:center; font-weight:900; color:#fff}
-  .brand small{display:block; color:#cfe0ff; margin-top:-2px}
-  .mid{ flex:1; text-align:center; min-width:120px }
-  #scrollTitle{ display:inline-block; font-weight:900; letter-spacing:.2px; opacity:.9; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:60vw }
-  nav a{color:#fff; text-decoration:none; font-weight:800; padding:8px 10px; border-radius:10px; position:relative }
-  nav a:hover, nav a.active{background:#ffffff1a}
-  nav a.active::after{
-    content:""; position:absolute; left:10px; right:10px; bottom:4px; height:3px; border-radius:3px;
-    background: linear-gradient(90deg, #00d9ff, #00ffc6);
+  .topbar .wrap{ height:100%; display:flex; align-items:center; justify-content:center; gap:12px; padding:0 var(--side-pad) }
+
+  .titlebar{
+    display:flex; align-items:center; justify-content:center; gap:12px; max-width:100%; flex:1;
+  }
+  .titlebar h1{
+    margin:0; font-size: clamp(16px, 2.2vw, 20px); line-height:1.2; font-weight:900; letter-spacing:.2px;
+    color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:70vw;
+  }
+  .plan-badge{
+    display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+    background: linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0d12; font-weight:900; font-size:13px; border:0;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
   }
 
+  /* Seções e cartões em uma coluna: imagem em cima, conteúdo embaixo */
   .section{
     scroll-snap-align:start;
     min-height: auto;
@@ -113,15 +126,30 @@
   }
   #s-conecta.section{ min-height: calc(100svh - var(--topbar-h)) }
 
-  .card{ width:min(1080px,100%); margin:auto; border-radius:clamp(18px,2.2vw,26px); border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); backdrop-filter:blur(10px); overflow:clip; display:grid; grid-template-columns:1fr 1fr; gap:0; box-shadow:0 18px 50px rgba(0,0,0,.35) }
-  @media (max-width:920px){ .card{ grid-template-columns:1fr } }
+  .card{
+    width:min(1080px,100%); margin:auto; border-radius:clamp(18px,2.2vw,26px);
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    backdrop-filter:blur(10px);
+    overflow:clip; display:grid; grid-template-columns:1fr; gap:0;
+    box-shadow:0 18px 50px rgba(0,0,0,.35)
+  }
 
   /* Mídia sem moldura (proporcional) */
   .media{ position:relative; min-height:200px; background:transparent; display:flex; align-items:center; justify-content:center }
   .frame{ position:relative; width:100%; max-width:none; aspect-ratio:auto; border:0; border-radius:0; overflow:visible; background:transparent; box-shadow:none }
 
-  /* Base das imagens (será refinada abaixo para padronização) */
-  .art-img{ width:100%; height:auto; object-fit:contain; display:block; background:transparent }
+  /* Base das imagens (padronizada) */
+  .art-img{
+    max-height: var(--art-max-h-d);
+    width: auto;                /* respeita proporção natural */
+    max-width: min(100%, 920px);
+    object-fit: contain; object-position: center;
+    height: auto; display:block; background:transparent
+  }
+  @media (max-width:920px){
+    .art-img{ max-height: var(--art-max-h-m); width:100%; max-width:100% }
+  }
 
   /* Conecta Clube — hero maior */
   #s-conecta .media{ padding: clamp(8px, 1.8vw, 14px) 0 }
@@ -134,7 +162,7 @@
   /* Indique & Ganhe — PNG quadrado transparente */
   #s-indique .frame{ display:flex; justify-content:center }
 
-  /* Portais — arte alinhada à esquerda (fone à esquerda e espaço à direita) */
+  /* Portais — leve realce à esquerda */
   #s-portais .frame{ display:flex; justify-content:center; align-items:center }
   #s-portais .frame::before{
     content:""; position:absolute; inset:0; pointer-events:none;
@@ -142,20 +170,6 @@
     z-index:0; filter: blur(2px)
   }
   #s-portais .art-img{ position:relative; z-index:1; object-fit:contain; object-position:left center; filter: drop-shadow(0 12px 28px rgba(0,0,0,.28)) }
-
-  /* Padronização das artes: proporções iguais e sem oversize */
-  .art-img{
-    max-height: var(--art-max-h-d);
-    width: auto;                /* não força largura; respeita proporção */
-    max-width: min(100%, 920px);
-    object-fit: contain; object-position: center;
-  }
-  /* Remover larguras especiais (padroniza) */
-  #s-suporte .art-img,
-  #s-indique .art-img,
-  #s-portais .art-img{
-    width:auto; max-width:min(100%, 920px);
-  }
 
   /* Conteúdo */
   .content{ padding: clamp(16px, 2.2vw, 24px) }
@@ -175,17 +189,13 @@
   .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad) }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
 
-  /* Quick Dock (atalhos com "menosinho") */
+  /* Quick Dock (menu inferior centralizado, com logo e ícones) */
   .quick-dock{
-    position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
-    display:flex; flex-direction:column; gap:10px; z-index:60;
-  }
-  .quick-dock .dock-toggle{
-    width:36px; height:36px; border-radius:12px; border:1px solid var(--line);
-    background:rgba(255,255,255,.12); color:#fff; font-weight:900; cursor:pointer
+    position: fixed; left:50%; bottom: 16px; transform: translateX(-50%);
+    display:flex; gap:8px; z-index:60;
   }
   .quick-dock .dock-items{
-    display:flex; flex-direction:column; gap:8px; padding:8px; border-radius:14px;
+    display:flex; flex-direction:row; gap:8px; padding:8px; border-radius:14px;
     background:rgba(16,18,24,.55); backdrop-filter: blur(8px); border:1px solid var(--line)
   }
   .quick-dock a{
@@ -193,19 +203,11 @@
     border-radius:10px; background:rgba(255,255,255,.08); border:1px solid var(--line);
   }
   .quick-dock a:hover{ background:rgba(255,255,255,.14) }
+  .quick-dock a.is-active{ outline: 2px solid var(--focus) }
   .quick-dock img{ width:24px; height:24px; object-fit:contain }
-  .quick-dock.is-collapsed .dock-items{ display:none }
-
-  /* Mobile: dock centralizado na base e conteúdo antes da mídia (melhor leitura) */
-  @media (max-width:920px){
-    .quick-dock{
-      right: 50%; bottom: 16px; top:auto; transform: translateX(50%);
-      flex-direction:row; gap:8px;
-    }
-    .quick-dock .dock-items{ flex-direction:row }
-    .section:not(#s-conecta) .content{ order:-1 }
-    .art-img{ max-height: var(--art-max-h-m); width:100%; max-width: 100% }
-    #scrollTitle{ max-width: 46vw }
+  .quick-dock .dock-logo{
+    width:24px; height:24px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#2f6bff,#7b5cff); color:#fff; font-weight:900; font-size:11px; letter-spacing:.2px
   }
 
   /* Acessibilidade */
@@ -242,25 +244,13 @@
   <div class="site-noise" aria-hidden="true"></div>
   <div class="site-vignette" aria-hidden="true"></div>
 
-  <!-- Topbar -->
+  <!-- Topbar somente com título + plano -->
   <header class="topbar" id="topbar">
     <div class="wrap">
-      <div class="brand">
-        <span class="logo" aria-hidden="true">CCS</span>
-        <div>
-          <strong>CCS Telecom</strong>
-          <small>Seus benefícios ativos</small>
-        </div>
+      <div class="titlebar" role="heading" aria-level="1">
+        <h1>Benefícios Nível 1</h1>
+        <span class="plan-badge" aria-label="Plano 250 megabits">Plano 250 MB</span>
       </div>
-      <div class="mid">
-        <span id="scrollTitle">Benefícios</span>
-      </div>
-      <nav aria-label="Navegação principal">
-        <a href="#s-conecta" class="active">Benefícios</a>
-        <a href="#s-indique">Indique &amp; Ganhe</a>
-        <a href="#s-portais">Portais</a>
-        <a href="#s-faq">FAQ</a>
-      </nav>
     </div>
   </header>
 
@@ -334,7 +324,7 @@
     </div>
   </section>
 
-  <!-- Suporte ao Assinante (imagem 9) -->
+  <!-- Suporte ao Assinante -->
   <section class="section s4" id="s-suporte" data-title="Suporte ao Assinante">
     <div class="card">
       <div class="media">
@@ -354,9 +344,9 @@
     </div>
   </section>
 
-  <!-- Indique & Ganhe (imagem 7) -->
+  <!-- Indique & Ganhe -->
   <section class="section" id="s-indique" data-title="Indique & Ganhe">
-    <div class="card" style="grid-template-columns:1fr;">
+    <div class="card">
       <div class="media">
         <div class="frame">
           <img id="imgIndique" class="art-img"
@@ -378,7 +368,7 @@
     </div>
   </section>
 
-  <!-- Portais (imagem 8) -->
+  <!-- Portais -->
   <section class="section" id="s-portais" data-title="Portais">
     <div class="card">
       <div class="media">
@@ -405,27 +395,12 @@
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section" id="s-faq" data-title="FAQ">
-    <div class="card" style="grid-template-columns:1fr;">
-      <div class="content">
-        <div class="title"><h2>Perguntas frequentes</h2></div>
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quando meus benefícios são ativados?</summary>
-          <div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação.</div>
-        </details>
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Não consigo acessar o CCS PLAY. E agora?</summary>
-          <div style="padding: 8px 12px 12px">Use e‑mail cadastrado e senha = CPF (só números). Persistindo, fale com o suporte.</div>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quick Dock (atalhos) -->
+  <!-- Quick Dock (menu inferior central) -->
   <nav class="quick-dock" aria-label="Atalhos de seções">
-    <button class="dock-toggle" aria-expanded="true" aria-label="Recolher">—</button>
     <div class="dock-items">
+      <a href="#s-conecta" aria-label="Início">
+        <span class="dock-logo" aria-hidden="true">CCS</span>
+      </a>
       <a href="#s-conecta" aria-label="Conecta Clube" title="Conecta Clube">
         <img src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=256" alt="">
       </a>
@@ -499,67 +474,33 @@
   setFallback(document.getElementById('imgPortais'), placeholders.portal);
   setFallback(document.getElementById('imgSuporte'), placeholders.suporte);
 
-  // Título dinâmico da seção + nav ativo + shrink da topbar
-  const scrollTitle = document.getElementById('scrollTitle');
-  const sections = Array.from(document.querySelectorAll('.section'));
-  const navLinks = Array.from(document.querySelectorAll('header nav a'));
-
-  function setActiveNav(id){
-    navLinks.forEach(a=>{
-      const hash = a.getAttribute('href') || '';
-      if (hash === '#'+id) a.classList.add('active'); else a.classList.remove('active');
-    });
-  }
-
-  const io = new IntersectionObserver((entries)=>{
-    const visible = entries
-      .filter(e=> e.isIntersecting)
-      .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible){
-      const t = visible.target.getAttribute('data-title') || '';
-      if (scrollTitle && t && scrollTitle.textContent !== t) scrollTitle.textContent = t;
-      setActiveNav(visible.target.id);
-    }
-  }, { threshold:[0.25, 0.5, 0.75] });
-
-  sections.forEach(s => io.observe(s));
-
+  // Shrink da topbar
   function onScroll(){
     if (window.scrollY > 16) topbar.classList.add('shrink'); else topbar.classList.remove('shrink');
   }
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
 
-  // Quick Dock: toggle e feedback de ativo
+  // Quick Dock: destacar item ativo conforme seção em foco
   const dock = document.querySelector('.quick-dock');
-  const toggle = dock?.querySelector('.dock-toggle');
-  toggle?.addEventListener('click', ()=>{
-    const collapsed = dock.classList.toggle('is-collapsed');
-    toggle.setAttribute('aria-expanded', String(!collapsed));
-  });
-
-  // Realçar item do dock ativo acompanhando o nav
   const dockLinks = Array.from(dock?.querySelectorAll('a') || []);
   function setActiveDock(id){
     dockLinks.forEach(a=>{
       const hash = a.getAttribute('href') || '';
-      if (hash === '#'+id) a.style.outline = '2px solid var(--focus)';
-      else a.style.outline = 'none';
+      if (hash === '#'+id) a.classList.add('is-active'); else a.classList.remove('is-active');
     });
   }
-  // Sincroniza quando o nav muda
-  const syncActive = (id)=>{ setActiveDock(id) };
-  // Observa mudanças de classe nos links do nav
-  const mo = new MutationObserver(()=>{
-    const active = navLinks.find(a=> a.classList.contains('active'));
-    if (active){
-      const id = (active.getAttribute('href') || '').replace('#','');
-      if (id) syncActive(id);
-    }
-  });
-  navLinks.forEach(a=> mo.observe(a, {attributes:true, attributeFilter:['class']}));
 
-  // Clique suave já é coberto por scroll-behavior; garante foco acessível
+  const sections = Array.from(document.querySelectorAll('.section'));
+  const io = new IntersectionObserver((entries)=>{
+    const visible = entries
+      .filter(e=> e.isIntersecting)
+      .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) setActiveDock(visible.target.id);
+  }, { threshold:[0.25, 0.5, 0.75] });
+  sections.forEach(s => io.observe(s));
+
+  // Foco acessível após clicar em âncoras do dock
   function enhanceAnchorClicks(anchors){
     anchors.forEach(a=>{
       a.addEventListener('click', (e)=>{
@@ -571,7 +512,6 @@
       });
     });
   }
-  enhanceAnchorClicks(navLinks);
   enhanceAnchorClicks(dockLinks);
 })();
 </script>
