@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
 <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://ofertas.valenet.com.br" crossorigin>
+<link rel="preconnect" href="https://drive.google.com" crossorigin>
 
 <style>
   :root{
@@ -94,26 +95,42 @@
   .lowfx .site-fibers, .lowfx .site-shimmer{ display:none }
   @media (max-width:768px){ .site-fibers, .site-shimmer{ display:none!important } .site-noise{ opacity:.03 } }
 
-  /* Topbar: apenas título fixo com o plano (elegante/moderno) */
+  /* Topbar com logos esquerda/direita e pílulas conectadas no centro */
   .topbar{
     position:fixed; left:0; right:0; top:0; z-index:50; height:var(--topbar-h);
     background:rgba(16,18,24,.6); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
     transition: height .2s ease, box-shadow .2s ease, border-color .2s ease;
   }
   .topbar.shrink{ height:56px; border-bottom-color: rgba(255,255,255,.18); box-shadow: 0 6px 18px rgba(0,0,0,.25) }
-  .topbar .wrap{ height:100%; display:flex; align-items:center; justify-content:center; gap:12px; padding:0 var(--side-pad) }
+  .topbar .wrap{
+    height:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 var(--side-pad)
+  }
+  .topbar .left, .topbar .right{ display:flex; align-items:center; justify-content:center; min-width:40px; gap:8px }
+  .logo-ccs, .logo-vctech{ display:block; width:32px; height:32px; object-fit:contain; border-radius:8px; background:rgba(255,255,255,.06); border:1px solid var(--line) }
+  @media (max-width:480px){
+    .logo-ccs, .logo-vctech{ width:24px; height:24px; border-radius:6px }
+  }
 
   .titlebar{
-    display:flex; align-items:center; justify-content:center; gap:12px; max-width:100%; flex:1;
+    flex:1; display:flex; align-items:center; justify-content:center; min-width:0;
   }
-  .titlebar h1{
-    margin:0; font-size: clamp(16px, 2.2vw, 20px); line-height:1.2; font-weight:900; letter-spacing:.2px;
-    color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:70vw;
+  .chipset{
+    display:inline-flex; align-items:center; gap:0; border-radius:999px; overflow:hidden;
+    box-shadow: 0 6px 16px rgba(0,0,0,.25); border:1px solid #ffffff26;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+    backdrop-filter: blur(8px);
   }
-  .plan-badge{
-    display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
-    background: linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0d12; font-weight:900; font-size:13px; border:0;
-    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+  .chip{
+    padding:8px 12px; font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:13px; line-height:1;
+    display:inline-flex; align-items:center; gap:8px; color:#fff;
+  }
+  .chip.main{
+    background: linear-gradient(90deg,#2f6bff,#7b5cff);
+    color:#fff; border-right:1px solid #ffffff2a;
+  }
+  .chip.plan{
+    background: linear-gradient(90deg,#00d9ff,#00ffc6);
+    color:#0b0d12;
   }
 
   /* Seções e cartões em uma coluna: imagem em cima, conteúdo embaixo */
@@ -139,10 +156,10 @@
   .media{ position:relative; min-height:200px; background:transparent; display:flex; align-items:center; justify-content:center }
   .frame{ position:relative; width:100%; max-width:none; aspect-ratio:auto; border:0; border-radius:0; overflow:visible; background:transparent; box-shadow:none }
 
-  /* Base das imagens (padronizada) */
+  /* Imagens padronizadas: mesmas proporções e limites */
   .art-img{
     max-height: var(--art-max-h-d);
-    width: auto;                /* respeita proporção natural */
+    width: auto;
     max-width: min(100%, 920px);
     object-fit: contain; object-position: center;
     height: auto; display:block; background:transparent
@@ -159,7 +176,7 @@
   #s-suporte .frame{ display:flex; justify-content:center }
   #s-suporte .art-img{ filter: drop-shadow(0 10px 24px rgba(0,0,0,.45)) }
 
-  /* Indique & Ganhe — PNG quadrado transparente */
+  /* Indique & Ganhe */
   #s-indique .frame{ display:flex; justify-content:center }
 
   /* Portais — leve realce à esquerda */
@@ -188,27 +205,6 @@
 
   .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad) }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
-
-  /* Quick Dock (menu inferior centralizado, com logo e ícones) */
-  .quick-dock{
-    position: fixed; left:50%; bottom: 16px; transform: translateX(-50%);
-    display:flex; gap:8px; z-index:60;
-  }
-  .quick-dock .dock-items{
-    display:flex; flex-direction:row; gap:8px; padding:8px; border-radius:14px;
-    background:rgba(16,18,24,.55); backdrop-filter: blur(8px); border:1px solid var(--line)
-  }
-  .quick-dock a{
-    width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
-    border-radius:10px; background:rgba(255,255,255,.08); border:1px solid var(--line);
-  }
-  .quick-dock a:hover{ background:rgba(255,255,255,.14) }
-  .quick-dock a.is-active{ outline: 2px solid var(--focus) }
-  .quick-dock img{ width:24px; height:24px; object-fit:contain }
-  .quick-dock .dock-logo{
-    width:24px; height:24px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
-    background:linear-gradient(135deg,#2f6bff,#7b5cff); color:#fff; font-weight:900; font-size:11px; letter-spacing:.2px
-  }
 
   /* Acessibilidade */
   a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
@@ -244,12 +240,20 @@
   <div class="site-noise" aria-hidden="true"></div>
   <div class="site-vignette" aria-hidden="true"></div>
 
-  <!-- Topbar somente com título + plano -->
+  <!-- Topbar com logos e pílulas conectadas -->
   <header class="topbar" id="topbar">
     <div class="wrap">
-      <div class="titlebar" role="heading" aria-level="1">
-        <h1>Benefícios Nível 1</h1>
-        <span class="plan-badge" aria-label="Plano 250 megabits">Plano 250 MB</span>
+      <div class="left">
+        <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
+      </div>
+      <div class="titlebar">
+        <div class="chipset" role="group" aria-label="Seu benefício e plano">
+          <span class="chip main" aria-label="Benefícios nível um">Benefícios Nível 1</span>
+          <span class="chip plan" aria-label="Plano duzentos e cinquenta megabits">Plano 250 MB</span>
+        </div>
+      </div>
+      <div class="right">
+        <img class="logo-vctech" alt="VCTECH" src="https://drive.google.com/uc?export=view&id=1CCC0CRnumjau-Itie3JbfEYAOt4F30lc" loading="eager" decoding="async">
       </div>
     </div>
   </header>
@@ -329,10 +333,19 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <img id="imgSuporte" class="art-img"
-               alt="Suporte ao Assinante — medalha"
-               src="https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242"
-               loading="lazy" decoding="async" sizes="(min-width:920px) 520px, 70vw">
+          <!-- Responsive images: AVIF/WEBP (assets) com fallback (GitHub) -->
+          <picture>
+            <source type="image/avif"
+              srcset="assets/suporte-640.avif 640w, assets/suporte-1024.avif 1024w, assets/suporte-1600.avif 1600w"
+              sizes="(min-width:920px) 520px, 70vw">
+            <source type="image/webp"
+              srcset="assets/suporte-640.webp 640w, assets/suporte-1024.webp 1024w, assets/suporte-1600.webp 1600w"
+              sizes="(min-width:920px) 520px, 70vw">
+            <img id="imgSuporte" class="art-img"
+                 alt="Suporte ao Assinante — medalha"
+                 src="https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242"
+                 loading="lazy" decoding="async">
+          </picture>
         </div>
       </div>
       <div class="content">
@@ -349,10 +362,18 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <img id="imgIndique" class="art-img"
-               alt="Indique e Ganhe — arte"
-               src="https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4"
-               loading="lazy" decoding="async" sizes="100vw">
+          <picture>
+            <source type="image/avif"
+              srcset="assets/indique-640.avif 640w, assets/indique-1024.avif 1024w, assets/indique-1600.avif 1600w"
+              sizes="100vw">
+            <source type="image/webp"
+              srcset="assets/indique-640.webp 640w, assets/indique-1024.webp 1024w, assets/indique-1600.webp 1600w"
+              sizes="100vw">
+            <img id="imgIndique" class="art-img"
+                 alt="Indique e Ganhe — arte"
+                 src="https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4"
+                 loading="lazy" decoding="async">
+          </picture>
         </div>
       </div>
       <div class="content">
@@ -373,10 +394,18 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <img id="imgPortais" class="art-img"
-               alt="Portal do Assinante — app"
-               src="https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d"
-               loading="lazy" decoding="async" sizes="100vw">
+          <picture>
+            <source type="image/avif"
+              srcset="assets/portais-640.avif 640w, assets/portais-1024.avif 1024w, assets/portais-1600.avif 1600w"
+              sizes="100vw">
+            <source type="image/webp"
+              srcset="assets/portais-640.webp 640w, assets/portais-1024.webp 1024w, assets/portais-1600.webp 1600w"
+              sizes="100vw">
+            <img id="imgPortais" class="art-img"
+                 alt="Portal do Assinante — app"
+                 src="https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d"
+                 loading="lazy" decoding="async">
+          </picture>
         </div>
       </div>
       <div class="content">
@@ -395,32 +424,22 @@
     </div>
   </section>
 
-  <!-- Quick Dock (menu inferior central) -->
-  <nav class="quick-dock" aria-label="Atalhos de seções">
-    <div class="dock-items">
-      <a href="#s-conecta" aria-label="Início">
-        <span class="dock-logo" aria-hidden="true">CCS</span>
-      </a>
-      <a href="#s-conecta" aria-label="Conecta Clube" title="Conecta Clube">
-        <img src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=256" alt="">
-      </a>
-      <a href="#s-ccsplay" aria-label="CCS TV + PLAY" title="CCS TV + PLAY">
-        <img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt="">
-      </a>
-      <a href="#s-skeelo" aria-label="Skeelo" title="Skeelo">
-        <img src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp" alt="">
-      </a>
-      <a href="#s-suporte" aria-label="Suporte ao Assinante" title="Suporte ao Assinante">
-        <img src="https://github.com/user-attachments/assets/c92af9df-b4b6-4e5c-966e-dd14da9bc242" alt="">
-      </a>
-      <a href="#s-indique" aria-label="Indique &amp; Ganhe" title="Indique &amp; Ganhe">
-        <img src="https://github.com/user-attachments/assets/7998f32a-4ba9-427c-98da-5a60fde766c4" alt="">
-      </a>
-      <a href="#s-portais" aria-label="Portais" title="Portais">
-        <img src="https://github.com/user-attachments/assets/0ac8bb0b-e06d-4c40-acb6-de44608f050d" alt="">
-      </a>
+  <!-- FAQ -->
+  <section class="section" id="s-faq" data-title="FAQ">
+    <div class="card" style="grid-template-columns:1fr;">
+      <div class="content">
+        <div class="title"><h2>Perguntas frequentes</h2></div>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
+          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quando meus benefícios são ativados?</summary>
+          <div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação.</div>
+        </details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
+          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Não consigo acessar o CCS PLAY. E agora?</summary>
+          <div style="padding: 8px 12px 12px">Use e‑mail cadastrado e senha = CPF (só números). Persistindo, fale com o suporte.</div>
+        </details>
+      </div>
     </div>
-  </nav>
+  </section>
 
   <footer class="footer">
     <div class="wrap">
@@ -480,39 +499,6 @@
   }
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
-
-  // Quick Dock: destacar item ativo conforme seção em foco
-  const dock = document.querySelector('.quick-dock');
-  const dockLinks = Array.from(dock?.querySelectorAll('a') || []);
-  function setActiveDock(id){
-    dockLinks.forEach(a=>{
-      const hash = a.getAttribute('href') || '';
-      if (hash === '#'+id) a.classList.add('is-active'); else a.classList.remove('is-active');
-    });
-  }
-
-  const sections = Array.from(document.querySelectorAll('.section'));
-  const io = new IntersectionObserver((entries)=>{
-    const visible = entries
-      .filter(e=> e.isIntersecting)
-      .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) setActiveDock(visible.target.id);
-  }, { threshold:[0.25, 0.5, 0.75] });
-  sections.forEach(s => io.observe(s));
-
-  // Foco acessível após clicar em âncoras do dock
-  function enhanceAnchorClicks(anchors){
-    anchors.forEach(a=>{
-      a.addEventListener('click', (e)=>{
-        const href = a.getAttribute('href') || '';
-        if (href.startsWith('#')){
-          const el = document.getElementById(href.slice(1));
-          if (el){ el.setAttribute('tabindex','-1'); setTimeout(()=> el.focus({preventScroll:true}), 400); }
-        }
-      });
-    });
-  }
-  enhanceAnchorClicks(dockLinks);
 })();
 </script>
 </body>
