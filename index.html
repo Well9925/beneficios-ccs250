@@ -6,7 +6,7 @@
 <title>CCS Telecom — Benefícios</title>
 <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portais, Resumo e FAQ.">
 
-<!-- Performance: aquece conexões para as origens das imagens -->
+<!-- Performance -->
 <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
 <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -25,8 +25,8 @@
     --side-pad: clamp(16px, 5vw, 36px);
 
     /* Alturas máximas padronizadas para artes (proporcional) */
-    --art-max-h-d: clamp(300px, 42vh, 480px);
-    --art-max-h-m: clamp(220px, 36vh, 360px);
+    --art-max-h-d: clamp(300px, 42vh, 500px);
+    --art-max-h-m: clamp(220px, 36vh, 380px);
   }
 
   *{box-sizing:border-box}
@@ -102,35 +102,32 @@
   }
   .topbar .left, .topbar .right{ display:flex; align-items:center; justify-content:center; min-width:40px; gap:8px }
   .logo-ccs, .logo-vctech{
-    display:block; width: clamp(44px, 5.2vw, 64px); height: clamp(44px, 5.2vw, 64px);
+    display:block; width: clamp(56px, 6.5vw, 76px); height: clamp(56px, 6.5vw, 76px);
     object-fit:contain; background:transparent; border:0; border-radius:0;
   }
 
   .titlebar{ flex:1; display:flex; align-items:center; justify-content:center; min-width:0 }
-  /* Conector externo com duas pílulas acopladas (sem risca no meio) */
+  /* Conector externo “glass” envolvendo as duas pílulas arredondadas */
   .chipset{
-    position:relative; display:inline-flex; align-items:center; gap:0; border-radius:999px; overflow:visible;
-    padding:2px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
-    border:1px solid #ffffff1f; box-shadow: 0 6px 16px rgba(0,0,0,.25); backdrop-filter: blur(8px);
+    position:relative; display:inline-flex; align-items:center; gap:8px; border-radius:999px; overflow:visible;
+    padding:6px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
+    border:1px solid #ffffff1f; box-shadow: 0 6px 16px rgba(0,0,0,.25); backdrop-filter: blur(10px);
   }
   .chip{
-    padding:7px 12px; font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:12.5px; line-height:1;
-    display:inline-flex; align-items:center; gap:8px; border:0;
+    padding:8px 14px; font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:13px; line-height:1;
+    display:inline-flex; align-items:center; gap:8px; border:0; border-radius:999px;
   }
   .chip.main{
-    background: linear-gradient(90deg,#2f6bff,#7b5cff); color:#fff;
-    border-top-left-radius:999px; border-bottom-left-radius:999px;
+    background: linear-gradient(90deg,#2f6bff,#7b5cff); color:#fff; /* Cores: Nível */
   }
   .chip.plan{
-    background: linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0d12;
-    border-top-right-radius:999px; border-bottom-right-radius:999px;
+    background: linear-gradient(90deg,#00d9ff,#00ffc6); color:#0b0d12; /* Cores: Plano (250/450/650) */
   }
-  /* Sobreposição e bridge para eliminar qualquer linha entre as duas pílulas */
-  .chip + .chip{ margin-left: -10px }
-  .chipset::after{
-    content:""; position:absolute; top:4px; bottom:4px; left:50%; width:18px; transform: translateX(-50%);
-    background: radial-gradient(18px 18px at 50% 50%, rgba(255,255,255,.18), transparent 70%);
-    pointer-events:none; filter: blur(6px);
+  /* Conector visual entre pílulas */
+  .chipset .bridge{
+    width:18px; height:8px; border-radius:999px;
+    background: linear-gradient(90deg, rgba(255,255,255,.28), rgba(255,255,255,.10));
+    box-shadow: 0 0 0 3px rgba(255,255,255,.06), inset 0 0 8px rgba(255,255,255,.25);
   }
 
   /* Seções e cartões */
@@ -168,9 +165,9 @@
     .art-img{ max-height: var(--art-max-h-m); width:100%; max-width:100% }
   }
 
-  /* Ajustes de escala por card para ficar "bonito" e não cortar */
-  #s-conecta .art-img{ max-height: calc(var(--art-max-h-d) + 60px) }
-  @media (max-width:920px){ #s-conecta .art-img{ max-height: calc(var(--art-max-h-m) + 40px) } }
+  /* Ajustes de escala por card */
+  #s-conecta .art-img{ max-height: calc(var(--art-max-h-d) + 80px) }
+  @media (max-width:920px){ #s-conecta .art-img{ max-height: calc(var(--art-max-h-m) + 50px) } }
 
   #s-skeelo .art-img{ max-height: calc(var(--art-max-h-d) + 40px) }
   @media (max-width:920px){ #s-skeelo .art-img{ max-height: calc(var(--art-max-h-m) + 30px) } }
@@ -180,7 +177,6 @@
 
   /* Conteúdo */
   .content{ padding: clamp(16px, 2.2vw, 24px) }
-  /* Cabeçalho do card: título cresce até 2 linhas e chip SEMPRE à direita */
   .title{
     display:grid; grid-template-columns: minmax(0,1fr) auto; align-items:center; gap:12px;
   }
@@ -199,7 +195,7 @@
   .btn.cta{ background: linear-gradient(90deg, var(--cta-a), var(--cta-b)); color:#111; border-color:transparent }
   .note{ color:#a8b6d9; font-size:14px }
 
-  /* Chip “Saiba mais” (sempre à direita) com pulso suave inicial */
+  /* Chip “Saiba mais” (sempre à direita) com pulso infinito */
   .chip-more{
     display:inline-flex; align-items:center; gap:8px;
     padding:6px 10px; border-radius:999px;
@@ -211,7 +207,7 @@
   .chip-more:focus-visible{ outline:2px solid var(--focus); outline-offset:2px }
   .chip-more[aria-expanded="true"]{ border-color: rgba(0,217,255,.6); box-shadow: 0 0 0 6px rgba(0,217,255,.12) }
   .chip-more .ico{ width:16px; height:16px; display:inline-block }
-  .chip-more.pulse{ animation: chipPulse 1.4s ease-in-out 3 }
+  .chip-more.pulse{ animation: chipPulse 1.4s ease-in-out infinite }
   @keyframes chipPulse{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 50%{ box-shadow:0 0 0 8px rgba(0,217,255,.12)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
 
   /* Saiba mais (painel expansível) */
@@ -257,8 +253,17 @@
   .gcard .gimg img{ width:100%; height:100%; object-fit:contain }
   .gcard .gtxt{ font-weight:800; text-align:center; font-size:13px; color:#eaf1ff }
 
-  .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad) }
+  /* Footer elevado e acabamento final */
+  .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad); margin-bottom:96px }
   .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
+
+  .page-tail{
+    width:100%; height:140px; margin-top:12px;
+    background:
+      radial-gradient(600px 120px at 50% 0%, rgba(0,217,255,.16), transparent 70%),
+      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+    border-top:1px solid rgba(255,255,255,.12);
+  }
 
   /* Quick Dock (menu inferior central) */
   .quick-dock{
@@ -277,7 +282,7 @@
   .quick-dock a.is-active{ outline: 2px solid var(--focus) }
   .quick-dock img{ width:24px; height:24px; object-fit:contain }
 
-  /* Acessibilidade: respeitar prefers-reduced-motion (mantém efeitos no padrão) */
+  /* Acessibilidade: respeitar prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce){
     .site-shimmer{ animation:none; display:none }
     .site-fibers .pulse{ animation:none }
@@ -322,6 +327,7 @@
       <div class="titlebar">
         <div class="chipset" role="group" aria-label="Seu benefício e plano">
           <span class="chip main" aria-label="Benefícios nível um">Benefícios Nível 1</span>
+          <span class="bridge" aria-hidden="true"></span>
           <span class="chip plan" aria-label="Plano duzentos e cinquenta megabits">Plano 250 MB</span>
         </div>
       </div>
@@ -366,7 +372,7 @@
               <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>Frequência:</strong> 1 voucher a cada 90 dias.</div></div>
               <div class="fact"><span class="ico">📩</span><div class="txt"><strong>Solicitação:</strong> <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>.</div></div>
               <div class="fact"><span class="ico">✅</span><div class="txt"><strong>Regras:</strong> ativo e adimplente; não cumulativo/transferível; validade conforme parceiro.</div></div>
-              <div class="fact"><span class="ico">ℹ️</span><div class="txt"><strong>Obs.:</strong> não inclui atrações Nível 3 (Unipraias, Barco Pirata, Roda Gigante, Aquário).</div></div>
+              <div class="fact"><span class="ico">ℹ️</span><div class="txt"><strong>Obs.:</strong> não inclui atrações Nível 3 (Unipraias, <a target="_blank" rel="noopener" href="https://www.barconopirata.com.br/">Barco Pirata</a>, <a target="_blank" rel="noopener" href="https://rodagigantebc.com.br/">Roda Gigante</a>, <a target="_blank" rel="noopener" href="https://aquariobc.com.br/">Aquário</a>).</div></div>
               <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após instalação.</div></div>
             </div>
           </div>
@@ -407,7 +413,7 @@
         </div>
         <p class="subtitle">Streaming completo para sua família</p>
         <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
-        <p class="note">Inclui SBT e Record. Rede Globo não está incluída.</p>
+        <p class="note">Inclui <a target="_blank" rel="noopener" href="https://www.sbt.com.br/">SBT</a> e <a target="_blank" rel="noopener" href="https://recordtv.r7.com/">Record</a>. Rede Globo não está incluída.</p>
 
         <div id="more-ccsplay" class="more" role="region" aria-labelledby="btn-more-ccsplay" hidden>
           <div class="more-inner">
@@ -440,7 +446,7 @@
       <div class="media">
         <div class="frame">
           <img class="art-img" alt="Skeelo"
-               src="https://ofertas.valenet.com.br/wp-content/uploads/2025/07/Imagem-Skeelo.webp"
+               src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png"
                loading="lazy" decoding="async" sizes="100vw">
         </div>
       </div>
@@ -463,7 +469,7 @@
             </div>
             <div class="facts">
               <div class="fact"><span class="ico">📚</span><div class="txt"><strong>Conteúdo:</strong> livros digitais mensais, audiobooks, minibooks e comics.</div></div>
-              <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">onelink.to/hseuht</a> ou procure “Skeelo”.</div></div>
+              <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">onelink.to/hseuht</a>.</div></div>
               <div class="fact"><span class="ico">📱</span><div class="txt"><strong>Dispositivos:</strong> celular e tablet (iOS e Android).</div></div>
               <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Compatibilidade:</strong> verifique requisitos na loja.</div></div>
               <div class="fact"><span class="ico">⏳</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após instalação.</div></div>
@@ -483,7 +489,6 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <!-- Imagem do card: suporte-premium -->
           <img id="imgSuporte" class="art-img" width="520" height="520"
                alt="Suporte ao Assinante — medalha"
                src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png"
@@ -510,7 +515,7 @@
             <div class="facts">
               <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>SLA:</strong> atendimento em até 36h úteis.</div></div>
               <div class="fact"><span class="ico">🛠️</span><div class="txt"><strong>Incluso:</strong> 1 visita técnica gratuita por ano.</div></div>
-              <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra seu chamado:</strong> <a href="https://wa.me/554797701300" target="_blank" rel="noopener">WhatsApp do Suporte</a>.</div></div>
+              <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra seu chamado:</strong> <a href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">WhatsApp do Suporte</a>.</div></div>
               <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> benefícios liberados em até 72h úteis após instalação.</div></div>
               <div class="fact"><span class="ico">✅</span><div class="txt"><small>Após validações internas, o acesso é liberado automaticamente.</small></div></div>
             </div>
@@ -518,7 +523,7 @@
         </div>
 
         <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1%20CCS%20Telecom%2C%20preciso%20de%20suporte.">Solicitar suporte</a>
+          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Solicitar suporte</a>
         </div>
       </div>
     </div>
@@ -529,7 +534,6 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <!-- Imagem do card: indique-ganhe (pode ocupar mais área) -->
           <img id="imgIndique" class="art-img" width="880" height="880"
                alt="Indique e Ganhe — arte"
                src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png"
@@ -544,7 +548,7 @@
             <span class="txt">Saiba mais</span>
           </button>
         </div>
-        <p class="muted">Ganhe até <strong>100% de desconto</strong> na próxima fatura indicando amigos.</p>
+        <p class="muted">Ganhe até <strong>100%</strong> de desconto na próxima fatura indicando amigos.</p>
         <div class="row" style="flex-wrap:wrap">
           <div class="pill">Plano 250 • R$30</div>
           <div class="pill">Plano 450 • R$40</div>
@@ -558,7 +562,7 @@
               <span>Como aproveitar</span>
             </div>
             <div class="facts">
-              <div class="fact"><span class="ico">🤝</span><div class="txt"><strong>Como funciona:</strong> indique pelo WhatsApp; após instalação/validação, o desconto é aplicado.</div></div>
+              <div class="fact"><span class="ico">🤝</span><div class="txt"><strong>Como funciona:</strong> <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">indique pelo WhatsApp</a>; após instalação/validação, o desconto é aplicado.</div></div>
               <div class="fact"><span class="ico">🎯</span><div class="txt"><strong>Por plano:</strong> 250 = R$30 | 450 = R$40 | 650 = 1 mensalidade isenta (até 100%).</div></div>
               <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Aplicação:</strong> na fatura subsequente à validação.</div></div>
               <div class="fact"><span class="ico">ℹ️</span><div class="txt"><small>Condições e prazos confirmados no atendimento.</small></div></div>
@@ -578,7 +582,6 @@
     <div class="card">
       <div class="media">
         <div class="frame">
-          <!-- Imagem do card PORTAL atualizada -->
           <img id="imgPortais" class="art-img" width="1200" height="800"
                alt="Portal do Assinante — app"
                src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/portal.png"
@@ -629,7 +632,7 @@
       <h3 class="gtitle">Resumo dos Benefícios</h3>
       <div class="grid">
         <a class="gcard" href="#s-conecta" aria-label="Ir para Conecta Clube">
-          <div class="gimg"><img alt="Conecta Clube" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" loading="lazy" decoding="async"></div>
+          <div class="gimg"><img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=512" loading="lazy" decoding="async"></div>
           <div class="gtxt">Conecta Clube</div>
         </a>
         <a class="gcard" href="#s-ccsplay" aria-label="Ir para CCS PLAY + CCS TV">
@@ -647,7 +650,7 @@
           <div class="gtxt">Suporte Premium</div>
         </a>
         <a class="gcard" href="#s-indique" aria-label="Ir para Indique e Ganhe">
-          <div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/logoindiqueeganhe.png" loading="lazy" decoding="async"></div>
+          <div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div>
           <div class="gtxt">Indique &amp; Ganhe</div>
         </a>
         <a class="gcard" href="#s-portais" aria-label="Ir para Portais">
@@ -679,7 +682,7 @@
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o CCS PLAY?</summary>
           <div style="padding: 8px 12px 12px">
-            Baixe em onelink.to/ccsplay. Use o e‑mail cadastrado e senha = CPF do titular (somente números).
+            Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Use o e‑mail cadastrado e senha = CPF do titular (somente números).
           </div>
         </details>
 
@@ -693,28 +696,28 @@
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais canais estão incluídos?</summary>
           <div style="padding: 8px 12px 12px">
-            Mais de 60 canais regionais e variados. Inclui SBT e Record. Rede Globo não está incluída.
+            Mais de 60 canais regionais e variados. Inclui <a target="_blank" rel="noopener" href="https://www.sbt.com.br/">SBT</a> e <a target="_blank" rel="noopener" href="https://recordtv.r7.com/">Record</a>. Rede Globo não está incluída.
           </div>
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como peço meu voucher do Conecta Clube?</summary>
           <div style="padding: 8px 12px 12px">
-            Envie e‑mail para ccs@ccstelecom.com.br. Você recebe 1 voucher a cada 90 dias (segundo o plano).
+            Envie e‑mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>. Você recebe 1 voucher a cada 90 dias (segundo o plano).
           </div>
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais são as regras do Conecta Clube?</summary>
           <div style="padding: 8px 12px 12px">
-            Cliente ativo e adimplente; vouchers não são cumulativos nem transferíveis; validade e condições definidas pelo parceiro. Nível 1 não inclui atrações Nível 3 (Unipraias, Barco Pirata, Roda Gigante e Aquário).
+            Cliente ativo e adimplente; vouchers não são cumulativos nem transferíveis; validade e condições definidas pelo parceiro. Nível 1 não inclui atrações Nível 3 (Unipraias, <a target="_blank" rel="noopener" href="https://www.barconopirata.com.br/">Barco Pirata</a>, <a target="_blank" rel="noopener" href="https://rodagigantebc.com.br/">Roda Gigante</a> e <a target="_blank" rel="noopener" href="https://aquariobc.com.br/">Aquário</a>).
           </div>
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como funciona o Indique &amp; Ganhe?</summary>
           <div style="padding: 8px 12px 12px">
-            Indique pelo WhatsApp. Após instalação e validação, aplicamos o desconto na fatura seguinte.
+            Indique pelo <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">WhatsApp</a>. Após instalação e validação, aplicamos o desconto na fatura seguinte.
           </div>
         </details>
 
@@ -726,30 +729,23 @@
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Qual é o SLA do Suporte?</summary>
-          <div style="padding: 8px 12px 12px">
-            Atendimento em até 36h úteis e direito a 1 visita técnica gratuita por ano.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Onde pago minhas faturas e faço PIX?</summary>
           <div style="padding: 8px 12px 12px">
-            Acesse ccs.pix.7az.com.br para PIX/Cartão, 2ª via, desbloqueio por confiança e extrato de conexão.
+            Acesse <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> para PIX/Cartão, 2ª via, desbloqueio por confiança e extrato de conexão.
           </div>
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o app CCS?</summary>
           <div style="padding: 8px 12px 12px">
-            Baixe em bit.ly/CCS_APP. Use seu e‑mail cadastrado e CPF (apenas números) quando solicitado.
+            Baixe em <a target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">bit.ly/CCS_APP</a>. Use seu e‑mail cadastrado e CPF (apenas números) quando solicitado.
           </div>
         </details>
 
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o Skeelo?</summary>
           <div style="padding: 8px 12px 12px">
-            Baixe em onelink.to/hseuht. Todos os meses há livros digitais liberados, além de audiobooks, minibooks e comics.
+            Baixe em <a target="_blank" rel="noopener" href="https://onelink.to/hseuht">onelink.to/hseuht</a>. Há livros digitais mensais, audiobooks, minibooks e comics.
           </div>
         </details>
 
@@ -763,7 +759,7 @@
         <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
           <summary style="cursor:pointer; padding:10px 12px; font-weight:900">E se eu trocar e‑mail ou CPF?</summary>
           <div style="padding: 8px 12px 12px">
-            Fale com o Suporte para atualizar seu cadastro e garantir o acesso aos benefícios.
+            Fale com o <a target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Preciso%20atualizar%20meu%20cadastro.">Suporte</a> para atualizar seu cadastro.
           </div>
         </details>
 
@@ -781,36 +777,33 @@
   <nav class="quick-dock" aria-label="Atalhos de seções">
     <div class="dock-items">
       <a href="#s-conecta" aria-label="Conecta Clube" title="Conecta Clube">
-        <!-- Conecta Clube no dock: ICONCONCTACLUBE -->
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt="">
       </a>
       <a href="#s-ccsplay" aria-label="CCS PLAY + CCS TV" title="CCS PLAY + CCS TV">
         <img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt="">
       </a>
       <a href="#s-skeelo" aria-label="Skeelo" title="Skeelo">
-        <!-- Skeelo no dock: ícone oficial -->
         <img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt="">
       </a>
       <a href="#s-suporte" aria-label="Suporte ao Assinante" title="Suporte ao Assinante">
-        <!-- Suporte no dock: usar sospremium -->
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt="">
       </a>
       <a href="#s-indique" aria-label="Indique &amp; Ganhe" title="Indique &amp; Ganhe">
-        <!-- Indique & Ganhe no dock: logoindiqueeganhe -->
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/logoindiqueeganhe.png" alt="">
       </a>
       <a href="#s-portais" aria-label="Portais" title="Portais">
-        <!-- Portais no dock: APP.png -->
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png" alt="">
       </a>
     </div>
   </nav>
 
+  <div class="page-tail" aria-hidden="true"></div>
+
   <footer class="footer">
     <div class="wrap">
-      <p>© 2025 CCS Telecom — Todos os direitos reservados</p>
+      <p>© 2025 V C TECH Representante Comercial - CCS TELECOM — Todos os direitos reservados</p>
       <div class="actions">
-        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554797701300">Falar com Suporte</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
         <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
       </div>
     </div>
@@ -909,9 +902,6 @@
         }
       });
     });
-
-    // Remover o pulso inicial após alguns segundos
-    setTimeout(()=> document.querySelectorAll('.chip-more.pulse').forEach(b=>b.classList.remove('pulse')), 6000);
   }
   setupMoreToggles();
 })();
