@@ -23,7 +23,7 @@
     --topbar-h:64px;
     --side-pad: clamp(16px, 5vw, 36px);
 
-    /* Cores por Nível e Plano */
+    /* Cores por Nível e Plano (base) */
     --level1-a:#2f6bff; --level1-b:#7b5cff;
     --level2-a:#ff6a00; --level2-b:#ff9f40;
     --level3-a:#00b894; --level3-b:#55efc4;
@@ -32,10 +32,29 @@
     --plan450-a:#ff7eb3; --plan450-b:#ffb86b;
     --plan650-a:#a18cd1; --plan650-b:#fbc2eb;
 
-    /* Alturas para artes */
+    /* Correntes (variáveis derivadas por data-atributo no body) */
+    --levelA: var(--level1-a);
+    --levelB: var(--level1-b);
+    --planA: var(--plan250-a);
+    --planB: var(--plan250-b);
+
+    /* Alturas máximas para artes */
     --art-max-h-d: clamp(300px, 42vh, 500px);
-    --art-max-h-m: clamp(220px, 36vh, 380px);
+    --art-max-h-m: clamp(220px, 36vh, 360px);
+
+    /* Deck */
+    --deck-gap: 16px;
+    --deck-pad: clamp(16px, 4vw, 32px);
   }
+
+  /* Ajuste das variáveis correntes conforme seleção */
+  body[data-level="1"]{ --levelA: var(--level1-a); --levelB: var(--level1-b) }
+  body[data-level="2"]{ --levelA: var(--level2-a); --levelB: var(--level2-b) }
+  body[data-level="3"]{ --levelA: var(--level3-a); --levelB: var(--level3-b) }
+
+  body[data-plano="250"]{ --planA: var(--plan250-a); --planB: var(--plan250-b) }
+  body[data-plano="450"]{ --planA: var(--plan450-a); --planB: var(--plan450-b) }
+  body[data-plano="650"]{ --planA: var(--plan650-a); --planB: var(--plan650-b) }
 
   *{box-sizing:border-box}
   html,body{height:100%; margin:0}
@@ -50,7 +69,7 @@
     background: var(--bg);
   }
 
-  /* Fundo com efeitos */
+  /* Fundo com efeitos — preservados e leves */
   .site-bg{
     position: fixed; inset: 0; z-index: -6; pointer-events: none;
     background-color:#0b0d12;
@@ -106,16 +125,15 @@
   }
   .topbar.shrink{ height:56px; border-bottom-color: rgba(255,255,255,.18); box-shadow: 0 6px 18px rgba(0,0,0,.25) }
   .topbar .wrap{
-    height:100%; display:grid; grid-template-columns: auto 1fr auto; align-items:center;
-    gap:12px; padding:0 var(--side-pad)
+    height:100%; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:8px; padding:0 var(--side-pad)
   }
   .logo-ccs, .logo-vctech{
-    display:block; width: clamp(56px, 6.5vw, 84px); height: clamp(56px, 6.5vw, 84px);
-    object-fit:contain; background:transparent; border:0; border-radius:0;
+    display:block; width: clamp(60px, 7vw, 80px); height: clamp(60px, 7vw, 80px);
+    object-fit:contain; background:transparent; border:0;
   }
   .titlebar{ display:flex; align-items:center; justify-content:center; min-width:0 }
 
-  /* Duas pílulas com contorno “glass” */
+  /* Pílulas — agora botões clicáveis para abrir seletores */
   .chipset{
     position:relative; display:inline-flex; align-items:center; gap:8px; border-radius:999px; overflow:visible;
     padding:6px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
@@ -125,61 +143,46 @@
     padding:8px 14px; font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:13px; line-height:1;
     display:inline-flex; align-items:center; gap:8px; border:0; border-radius:999px;
   }
-  .chip.main{  background: linear-gradient(90deg,var(--level1-a),var(--level1-b)); color:#fff; }
-  .chip.plan{  background: linear-gradient(90deg,var(--plan250-a),var(--plan250-b)); color:#0b0d12; }
-  .bridge{
+  .chip-btn{ cursor:pointer }
+  .chip.main{  background: linear-gradient(90deg,var(--levelA),var(--levelB)); color:#fff; }
+  .chip.plan{  background: linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; }
+  .chipset .bridge{
     width:18px; height:8px; border-radius:999px;
     background: linear-gradient(90deg, rgba(255,255,255,.28), rgba(255,255,255,.10));
     box-shadow: 0 0 0 3px rgba(255,255,255,.06), inset 0 0 8px rgba(255,255,255,.25);
   }
-
-  /* Empilhar pílulas no mobile (dentro da própria topbar) */
+  /* Mobile: empilhar as pílulas no centro da barra */
   @media (max-width:640px){
-    .titlebar .chipset{
-      display:flex; flex-direction:column; gap:6px; padding:6px 8px;
-    }
-    .titlebar .bridge{
-      width:24px; height:6px; /* apenas um separador discreto entre as pílulas */
-    }
+    .chipset{ flex-direction:column; gap:6px; padding:6px 8px }
+    .chipset .bridge{ display:none }
     .logo-ccs, .logo-vctech{ width:56px; height:56px }
   }
 
-  /* Controles do Deck (desktop) */
-  .deck-controls{
+  /* Popovers de nível e plano */
+  .backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:95; display:none;
+  }
+  .backdrop.show{ display:block }
+  .popover{
+    position:fixed; z-index:96; left:50%; transform: translateX(-50%);
+    top: calc(var(--topbar-h) + 8px);
+    background:rgba(20,22,28,.9); backdrop-filter: blur(8px); border:1px solid var(--line);
+    border-radius:14px; padding:10px; min-width:min(92vw, 440px);
     display:none;
-    padding:12px var(--side-pad) 0; gap:10px; align-items:center; justify-content:space-between;
   }
-  .level-switch{ display:flex; gap:8px; flex-wrap:wrap }
-  .level-btn{
-    padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06);
-    color:#fff; font-weight:900; cursor:pointer;
+  .popover.show{ display:block }
+  .popover h4{ margin:0 0 8px; font-size:14px; color:#eaf1ff }
+  .segmented{ display:flex; gap:6px; flex-wrap:wrap }
+  .segmented button{
+    flex:1 1 auto; min-width:88px;
+    padding:10px 12px; border-radius:999px; border:1px solid var(--line);
+    background:rgba(255,255,255,.08); color:#fff; font-weight:900; cursor:pointer
   }
-  .level-btn.active{ outline:2px solid var(--focus) }
-  .view-toggle{ display:flex; gap:8px; align-items:center }
-  .toggle-btn{
-    padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer
-  }
-
-  /* Deck horizontal (desktop) */
-  .deck{
-    display:block;
-  }
-  @media (min-width:1100px){
-    .deck-controls{ display:flex }
-    body:not([data-view="list"]) .deck{
-      display:grid; grid-auto-flow: column; grid-auto-columns: min(980px, 78vw);
-      gap:24px; overflow-x:auto; scroll-snap-type: x mandatory; padding: 18px 0 26px;
-    }
-    body:not([data-view="list"]) .deck .section{
-      scroll-snap-align: center; padding: 18px var(--side-pad) 26px;
-    }
-    /* mostrar “espiadinha” do próximo slide: espaço lateral */
-    body:not([data-view="list"]) .deck:before, body:not([data-view="list"]) .deck:after{
-      content:""; display:block; width: var(--side-pad)
-    }
+  .segmented button[aria-pressed="true"]{
+    background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent
   }
 
-  /* Seções e cartões */
+  /* Cards base */
   .section{
     display:flex; align-items:stretch; justify-content:center;
     padding:18px var(--side-pad) 26px; position:relative; isolation:isolate;
@@ -192,8 +195,6 @@
     overflow:clip; display:grid; grid-template-columns:1fr; gap:0;
     box-shadow:0 18px 50px rgba(0,0,0,.35)
   }
-
-  /* Mídia */
   .media{
     position:relative; background:transparent; display:flex; align-items:center; justify-content:center;
     padding: clamp(8px, 1.8vw, 16px) 0;
@@ -201,41 +202,40 @@
   .frame{ position:relative; width:100%; display:flex; align-items:center; justify-content:center }
   .art-img{
     max-height: var(--art-max-h-d);
-    width: auto;
-    max-width: min(100%, 920px);
-    object-fit: contain; object-position: center;
-    height: auto; display:block; background:transparent
+    width: auto; max-width: min(100%, 920px);
+    object-fit: contain; object-position: center; height: auto; display:block; background:transparent
   }
   @media (max-width:920px){
     .art-img{ max-height: var(--art-max-h-m); width:100%; max-width:100% }
   }
-  /* Ajustes de escala por card */
-  #s-conecta .art-img{ max-height: calc(var(--art-max-h-d) + 80px) }
-  @media (max-width:920px){ #s-conecta .art-img{ max-height: calc(var(--art-max-h-m) + 50px) } }
-  #s-skeelo .art-img{ max-height: calc(var(--art-max-h-d) + 40px) }
-  @media (max-width:920px){ #s-skeelo .art-img{ max-height: calc(var(--art-max-h-m) + 30px) } }
-  #s-indique .art-img{ max-height: calc(var(--art-max-h-d) + 80px) }
-  @media (max-width:920px){ #s-indique .art-img{ max-height: calc(var(--art-max-h-m) + 50px) } }
 
-  /* Conteúdo */
+  /* Ajustes por card */
+  #s-conecta .art-img{ max-height: calc(var(--art-max-h-d) + 60px) }
+  @media (max-width:920px){ #s-conecta .art-img{ max-height: calc(var(--art-max-h-m) + 40px) } }
+  #s-skeelo .art-img{ max-height: calc(var(--art-max-h-d) + 20px) }
+  @media (max-width:920px){ #s-skeelo .art-img{ max-height: calc(var(--art-max-h-m) + 16px) } }
+  #s-indique .art-img{ max-height: calc(var(--art-max-h-d) + 40px) }
+  @media (max-width:920px){ #s-indique .art-img{ max-height: calc(var(--art-max-h-m) + 24px) } }
+
+  /* Conteúdo dos cards */
   .content{ padding: clamp(16px, 2.2vw, 24px) }
-  .title{ display:grid; grid-template-columns: minmax(0,1fr) auto; align-items:center; gap:12px; }
+  .title{ display:grid; grid-template-columns: minmax(0,1fr) auto; align-items:center; gap:12px }
   .title h2{
     margin:0; font-size: clamp(20px, 2.6vw, 28px); font-weight:900; letter-spacing:.2px;
-    overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; line-clamp:2;
+    overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
   }
   .subtitle{ margin:6px 0 10px; color: var(--muted) }
   .row{ display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:10px 0 }
   .pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.1); font-weight:900; font-size:13px }
-  .pill.hi{ background:linear-gradient(90deg,var(--plan250-a),var(--plan250-b)); color:#0b0b0b; border-color:transparent }
+  .pill.hi{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border-color:transparent }
   .muted{ color:var(--muted) }
   .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px }
   .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; cursor:pointer; border-radius:12px; font-weight:900; padding:12px 16px; border:1px solid var(--line); color:#111; background:#fff; transition: transform .2s ease, filter .2s ease }
   .btn:hover{ transform: translateY(-2px); filter: brightness(1.04) }
   .btn.cta{ background: linear-gradient(90deg, var(--cta-a), var(--cta-b)); color:#111; border-color:transparent }
-  .note{ color:#a8b6d9; font-size:14px }
+  .btn.block{ width:100% }
 
-  /* Chip “Saiba mais” com pulso contínuo */
+  /* Chip “Saiba mais” — pulso suave infinito */
   .chip-more{
     display:inline-flex; align-items:center; gap:8px;
     padding:6px 10px; border-radius:999px;
@@ -245,15 +245,15 @@
     animation: chipPulse 1.8s ease-in-out infinite;
   }
   .chip-more:hover{ background:rgba(255,255,255,.14) }
-  .chip-more:focus-visible{ outline:2px solid var(--focus); outline-offset:2px }
   .chip-more[aria-expanded="true"]{ border-color: rgba(0,217,255,.6); box-shadow: 0 0 0 6px rgba(0,217,255,.12) }
   .chip-more .ico{ width:16px; height:16px; display:inline-block }
   @keyframes chipPulse{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.10)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
 
-  /* Painel Saiba mais */
+  /* Painel Saiba Mais — lógica confiável */
   .more[hidden]{ display:none }
-  .more{ overflow:hidden; height:0; opacity:0; transition: height .25s ease, opacity .25s ease }
+  .more{ overflow:hidden; max-height:0; opacity:.0; transition: max-height .28s ease, opacity .28s ease }
   .more.is-open{ opacity:1 }
+
   .more-inner{
     padding:14px; margin-top:12px;
     background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px
@@ -274,9 +274,9 @@
   .fact .txt strong{ color:#fff }
   .more small{ color:#a8b6d9 }
 
-  /* Resumo (grid) */
-  .summary{ width:min(1080px,100%); margin:auto; padding:0 var(--side-pad) }
-  .summary .gtitle{ margin:16px 0 12px; font-weight:900; font-size: clamp(18px, 2.2vw, 24px) }
+  /* Resumo */
+  .summary{ width:min(1080px,100%); margin:24px auto }
+  .summary .gtitle{ margin:0 0 12px; font-weight:900; font-size: clamp(18px, 2.2vw, 24px) }
   .grid{ display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0,1fr)) }
   @media (min-width:640px){ .grid{ grid-template-columns: repeat(3, minmax(0,1fr)) } }
   @media (min-width:920px){ .grid{ grid-template-columns: repeat(7, minmax(0,1fr)) } }
@@ -294,9 +294,8 @@
   .gcard .gtxt{ font-weight:800; text-align:center; font-size:13px; color:#eaf1ff }
 
   /* Final (agradecimento) */
-  .final-wrap{ padding: 0 var(--side-pad) }
   .final{
-    width:min(1080px,100%); margin:auto; text-align:center;
+    width:min(1080px,100%); margin:24px auto; text-align:center;
     background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
     border:1px solid var(--line); border-radius: clamp(18px,2.2vw,26px);
     padding: clamp(18px, 3vw, 28px);
@@ -305,17 +304,6 @@
   .final h3{ margin:0 0 8px; font-size: clamp(18px, 2.4vw, 26px); font-weight:900 }
   .final p{ margin:6px 0 14px; color:#cfe0ff }
   .final .actions{ justify-content:center }
-
-  /* Footer elevado e acabamento final */
-  .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad); margin-bottom:96px }
-  .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
-  .page-tail{
-    width:100%; height:160px; margin-top:12px;
-    background:
-      radial-gradient(800px 140px at 50% 0%, rgba(0,217,255,.18), transparent 70%),
-      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
-    border-top:1px solid rgba(255,255,255,.12);
-  }
 
   /* Quick Dock */
   .quick-dock{
@@ -334,23 +322,6 @@
   .quick-dock a.is-active{ outline: 2px solid var(--focus) }
   .quick-dock img{ width:24px; height:24px; object-fit:contain }
 
-  /* Setas do deck (desktop) */
-  .nav-arrow{
-    display:none;
-  }
-  @media (min-width:1100px){
-    body:not([data-view="list"]) .nav-arrow{
-      display:flex; position:fixed; top:50%; transform: translateY(-50%);
-      width:44px; height:44px; border-radius:50%;
-      align-items:center; justify-content:center;
-      border:1px solid var(--line); background:rgba(16,18,24,.65); backdrop-filter: blur(8px);
-      color:#fff; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.35); z-index:70;
-    }
-    .nav-left{ left:12px } .nav-right{ right:12px }
-    .nav-arrow[disabled]{ opacity:.35; pointer-events:none }
-    .nav-arrow svg{ width:22px; height:22px }
-  }
-
   /* FAB topo/rodapé */
   .fab{
     position:fixed; right:16px; bottom:88px; z-index:85;
@@ -361,9 +332,72 @@
     transition: transform .2s ease, background .2s ease;
   }
   .fab:hover{ transform: translateY(-2px); background:rgba(16,18,24,.75) }
-  .fab svg{ width:22px; height:22px }
+  .fab svg{ width:22px; height:22px; }
 
-  /* Acessibilidade */
+  /* Footer elevado e acabamento final */
+  .footer{ border-top:1px solid var(--line); padding:18px var(--side-pad); margin-bottom:96px }
+  .footer .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px }
+  .page-tail{
+    width:100%; height:160px; margin-top:12px;
+    background:
+      radial-gradient(800px 140px at 50% 0%, rgba(0,217,255,.18), transparent 70%),
+      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+    border-top:1px solid rgba(255,255,255,.12);
+  }
+
+  /* Deck horizontal (desktop) */
+  #deck{ display:block }
+  .slide{ scroll-snap-align:start }
+  @media (min-width:1100px){
+    #deck{
+      display:flex; gap:var(--deck-gap);
+      padding: 24px var(--deck-pad);
+      overflow-x:auto; overflow-y:visible;
+      scroll-snap-type:x mandatory;
+      scroll-padding-left: var(--deck-pad);
+      -webkit-overflow-scrolling: touch;
+    }
+    .slide{
+      flex: 0 0 min(980px, 84vw);
+      scroll-snap-align: center;
+    }
+    #deck::-webkit-scrollbar{ height:8px }
+    #deck::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.14); border-radius:8px }
+  }
+  .deck-nav{ display:none }
+  @media (min-width:1100px){
+    .deck-nav{ position:relative; z-index:70; height:0 }
+    .deck-btn{
+      position:fixed; top:50%; transform:translateY(-50%);
+      width:42px; height:42px; border-radius:50%;
+      display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid var(--line); background:rgba(16,18,24,.65); backdrop-filter: blur(8px);
+      color:#fff; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.35);
+    }
+    .deck-btn:hover{ background:rgba(16,18,24,.8) }
+    #deckPrev{ left:10px } #deckNext{ right:10px }
+  }
+  #viewToggleWrap{ display:none }
+  @media (min-width:1100px){
+    #viewToggleWrap{ display:flex; justify-content:flex-end; padding:0 var(--side-pad); margin-top:4px }
+    #viewToggle{
+      background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900;
+      border-radius:999px; padding:6px 12px; cursor:pointer;
+    }
+  }
+  body.view-list #deck{ display:block }
+  body.view-list .slide{ flex: unset; scroll-snap-align:start }
+  body.view-list .deck-nav{ display:none }
+  body.view-list #deck{ overflow-x:visible }
+
+  /* Indique & Ganhe — grid responsivo */
+  .plans{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:12px }
+  @media (min-width:700px){ .plans{ grid-template-columns: repeat(2, minmax(0,1fr)) } }
+  @media (min-width:1024px){ .plans{ grid-template-columns: repeat(3, minmax(0,1fr)) } }
+  .plan{ border:1px solid var(--line); border-radius:14px; padding:12px; background:rgba(255,255,255,.06) }
+
+  /* Acessibilidade / movimento reduzido */
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
   @media (prefers-reduced-motion: reduce){
     .site-shimmer{ animation:none; display:none }
     .site-fibers .pulse{ animation:none }
@@ -371,17 +405,14 @@
   }
 </style>
 </head>
-<body>
+
+<!-- Estado inicial: Nível 1, Plano 250 -->
+<body data-level="1" data-plano="250">
   <!-- Fundo -->
   <div class="site-bg" aria-hidden="true"></div>
   <div class="site-fibers" aria-hidden="true">
     <svg viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <filter id="pulse-glow">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
+      <defs><filter id="pulse-glow"><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
       <g transform="rotate(-22 1000 700)">
         <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930"/>
         <path class="pulse p2" d="M-320,1100 C330,880 1250,1530 2300,820"/>
@@ -397,41 +428,61 @@
   <div class="site-noise" aria-hidden="true"></div>
   <div class="site-vignette" aria-hidden="true"></div>
 
-  <!-- Topbar -->
+  <!-- Topbar com logos e pílulas dentro (mobile empilhado) -->
   <header class="topbar" id="topbar">
     <div class="wrap">
-      <img class="logo-ccs" alt="CCS Telecom"
-           src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png"
-           loading="eager" decoding="async" fetchpriority="high">
+      <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
-        <div class="chipset" role="group" aria-label="Seu benefício e plano">
-          <span class="chip main" id="chip-nivel">Benefícios Nível 1</span>
+        <div class="chipset" role="group" aria-label="Nível e plano">
+          <button class="chip chip-btn main" id="btnNivel" type="button" aria-haspopup="true" aria-expanded="false" title="Trocar nível">Benefícios Nível <span id="nivelTxt">1</span></button>
           <span class="bridge" aria-hidden="true"></span>
-          <span class="chip plan" id="chip-plano">Plano 250 MB</span>
+          <button class="chip chip-btn plan" id="btnPlano" type="button" aria-haspopup="true" aria-expanded="false" title="Trocar plano">Plano <span id="planoTxt">250</span> MB</button>
         </div>
       </div>
-      <img class="logo-vctech" alt="VCTECH"
-           src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png"
-           loading="eager" decoding="async">
+      <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
     </div>
   </header>
 
-  <!-- Controles do Deck (desktop) -->
-  <div class="deck-controls" id="deckControls" aria-label="Controles de visualização">
-    <div class="level-switch" role="tablist" aria-label="Selecionar nível">
-      <button class="level-btn active" data-level="1" role="tab" aria-selected="true">Nível 1</button>
-      <button class="level-btn" data-level="2" role="tab" aria-selected="false">Nível 2</button>
-      <button class="level-btn" data-level="3" role="tab" aria-selected="false">Nível 3</button>
-    </div>
-    <div class="view-toggle">
-      <button class="toggle-btn" id="toggleView" type="button" aria-pressed="false">Ver em lista</button>
+  <!-- Popovers (Seletores) -->
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <div class="popover" id="popNivel" role="dialog" aria-modal="true" aria-labelledby="popNivelTitle" hidden>
+    <h4 id="popNivelTitle">Selecione o Nível</h4>
+    <div class="segmented">
+      <button type="button" data-nivel="1" aria-pressed="true">Nível 1</button>
+      <button type="button" data-nivel="2" aria-pressed="false">Nível 2</button>
+      <button type="button" data-nivel="3" aria-pressed="false">Nível 3</button>
     </div>
   </div>
 
-  <!-- Deck de Benefícios (entra em carrossel no desktop) -->
-  <main class="deck" id="deck">
-    <!-- Conecta Clube (Nível 1) -->
-    <section class="section s1" id="s-conecta" data-title="Conecta Clube" data-level="1">
+  <div class="popover" id="popPlano" role="dialog" aria-modal="true" aria-labelledby="popPlanoTitle" hidden>
+    <h4 id="popPlanoTitle">Selecione o Plano</h4>
+    <div class="segmented">
+      <button type="button" data-plano="250" aria-pressed="true">250 MB</button>
+      <button type="button" data-plano="450" aria-pressed="false">450 MB</button>
+      <button type="button" data-plano="650" aria-pressed="false">650 MB</button>
+    </div>
+  </div>
+
+  <!-- Toggle de visualização (desktop) -->
+  <div id="viewToggleWrap">
+    <button id="viewToggle" type="button" aria-pressed="false" title="Alternar entre Deck e Lista">Ver em lista</button>
+  </div>
+
+  <!-- Setas do deck (desktop) -->
+  <div class="deck-nav" aria-hidden="true">
+    <button id="deckPrev" class="deck-btn" type="button" title="Anterior" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button id="deckNext" class="deck-btn" type="button" title="Próximo" aria-label="Próximo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Deck principal -->
+  <main id="deck" aria-label="Benefícios">
+    <!-- Conecta Clube -->
+    <section class="section slide" id="s-conecta" data-title="Conecta Clube" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
@@ -454,10 +505,7 @@
 
           <div id="more-conecta" class="more" role="region" aria-labelledby="btn-more-conecta" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Nível 1</span>
-                <span>Detalhes do benefício</span>
-              </div>
+              <div class="more-head"><span class="tag">Nível 1</span><span>Detalhes do benefício</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">🎟️</span><div class="txt"><strong>O que é:</strong> clube de benefícios com empresas parceiras da região.</div></div>
                 <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>Frequência:</strong> 1 voucher a cada 90 dias.</div></div>
@@ -477,8 +525,8 @@
       </div>
     </section>
 
-    <!-- CCS PLAY + CCS TV (Nível 1) -->
-    <section class="section s2" id="s-ccsplay" data-title="CCS PLAY + CCS TV" data-level="1">
+    <!-- CCS PLAY + CCS TV -->
+    <section class="section slide" id="s-ccsplay" data-title="CCS PLAY + CCS TV" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
@@ -508,17 +556,13 @@
 
           <div id="more-ccsplay" class="more" role="region" aria-labelledby="btn-more-ccsplay" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Nível 1</span>
-                <span>Detalhes do streaming</span>
-              </div>
+              <div class="more-head"><span class="tag">Nível 1</span><span>Detalhes do streaming</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">🎬</span><div class="txt"><strong>Inclui:</strong> mais de 60 canais regionais e variados.</div></div>
                 <div class="fact"><span class="ico">📺</span><div class="txt"><strong>Canais:</strong> SBT, Record e outros; <em>Rede Globo não incluída</em>.</div></div>
-                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> ou procure por “CCS PLAY”.</div></div>
-                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> usuário = e‑mail cadastrado; senha = CPF (só números).</div></div>
+                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>.</div></div>
+                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> usuário = e‑mail cadastrado; senha = CPF.</div></div>
                 <div class="fact"><span class="ico">💻</span><div class="txt"><strong>Dispositivos:</strong> celular, tablet, computador e Smart TV.</div></div>
-                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Compatibilidade:</strong> iOS e Android; verifique seu aparelho.</div></div>
                 <div class="fact"><span class="ico">🆘</span><div class="txt"><strong>Ajuda:</strong> <a href="https://wa.me/554797701300" target="_blank" rel="noopener">Suporte</a>.</div></div>
               </div>
             </div>
@@ -531,8 +575,8 @@
       </div>
     </section>
 
-    <!-- Skeelo (Nível 1) -->
-    <section class="section s3" id="s-skeelo" data-title="Skeelo" data-level="1">
+    <!-- Skeelo -->
+    <section class="section slide" id="s-skeelo" data-title="Skeelo" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
@@ -554,15 +598,11 @@
 
           <div id="more-skeelo" class="more" role="region" aria-labelledby="btn-more-skeelo" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Benefício</span>
-                <span>Detalhes do app</span>
-              </div>
+              <div class="more-head"><span class="tag">Benefício</span><span>Detalhes do app</span></div>
               <div class="facts">
-                <div class="fact"><span class="ico">📚</span><div class="txt"><strong>Conteúdo:</strong> livros digitais mensais, audiobooks, minibooks e comics.</div></div>
+                <div class="fact"><span class="ico">📚</span><div class="txt"><strong>Conteúdo:</strong> livros digitais, audiobooks, minibooks e comics.</div></div>
                 <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">onelink.to/hseuht</a>.</div></div>
-                <div class="fact"><span class="ico">📱</span><div class="txt"><strong>Dispositivos:</strong> celular e tablet (iOS e Android).</div></div>
-                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Compatibilidade:</strong> verifique requisitos na loja.</div></div>
+                <div class="fact"><span class="ico">📱</span><div class="txt"><strong>Dispositivos:</strong> iOS e Android.</div></div>
                 <div class="fact"><span class="ico">⏳</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após instalação.</div></div>
               </div>
             </div>
@@ -575,12 +615,12 @@
       </div>
     </section>
 
-    <!-- Suporte (Nível 1) -->
-    <section class="section s4" id="s-suporte" data-title="Suporte ao Assinante" data-level="1">
+    <!-- Suporte -->
+    <section class="section slide" id="s-suporte" data-title="Suporte ao Assinante" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
-            <img id="imgSuporte" class="art-img" width="520" height="520"
+            <img class="art-img" width="520" height="520"
                  alt="Suporte ao Assinante — medalha"
                  src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png"
                  loading="lazy" decoding="async">
@@ -599,16 +639,11 @@
 
           <div id="more-suporte" class="more" role="region" aria-labelledby="btn-more-suporte" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Nível 1</span>
-                <span>Como funciona o suporte</span>
-              </div>
+              <div class="more-head"><span class="tag">Nível 1</span><span>Como funciona</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>SLA:</strong> atendimento em até 36h úteis.</div></div>
-                <div class="fact"><span class="ico">🛠️</span><div class="txt"><strong>Incluso:</strong> 1 visita técnica gratuita por ano.</div></div>
-                <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra seu chamado:</strong> <a href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">WhatsApp do Suporte</a>.</div></div>
-                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> benefícios liberados em até 72h úteis após instalação.</div></div>
-                <div class="fact"><span class="ico">✅</span><div class="txt"><small>Após validações internas, o acesso é liberado automaticamente.</small></div></div>
+                <div class="fact"><span class="ico">🛠️</span><div class="txt"><strong>Incluso:</strong> 1 visita técnica gratuita/ano.</div></div>
+                <div class="fact"><span class="ico">💬</span><div class="txt"><strong>WhatsApp:</strong> <a href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">abrir chamado</a>.</div></div>
               </div>
             </div>
           </div>
@@ -620,12 +655,12 @@
       </div>
     </section>
 
-    <!-- Indique & Ganhe (ESPECIAL) (Todos os níveis) -->
-    <section class="section" id="s-indique" data-title="Indique & Ganhe" data-level="1 2 3">
+    <!-- Indique & Ganhe (especial, mobile ok) -->
+    <section class="section slide" id="s-indique" data-title="Indique & Ganhe" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
-            <img id="imgIndique" class="art-img" width="880" height="880"
+            <img class="art-img" width="880" height="880"
                  alt="Indique e Ganhe — arte"
                  src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png"
                  loading="lazy" decoding="async">
@@ -641,47 +676,43 @@
           </div>
           <p class="muted">Ganhe até <strong>100%</strong> de desconto na próxima fatura indicando amigos.</p>
 
-          <div class="plans" style="display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:12px">
-            <div class="plan" style="border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.06)">
+          <div class="plans">
+            <div class="plan">
               <div style="font-weight:900">Plano 250</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$30</div>
               <ul style="margin:0 0 10px 16px;color:#dfe7ff">
                 <li>Aplica na fatura seguinte</li>
                 <li>Válido após instalação</li>
               </ul>
-              <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar este plano</a>
+              <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar este plano</a>
             </div>
-            <div class="plan" style="border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.06)">
+            <div class="plan">
               <div style="font-weight:900">Plano 450</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$40</div>
               <ul style="margin:0 0 10px 16px;color:#dfe7ff">
                 <li>Aplica na fatura seguinte</li>
                 <li>Válido após instalação</li>
               </ul>
-              <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar este plano</a>
+              <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar este plano</a>
             </div>
-            <div class="plan" style="border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.06)">
+            <div class="plan">
               <div style="font-weight:900">Plano 650</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: 1 mensalidade</div>
               <ul style="margin:0 0 10px 16px;color:#dfe7ff">
                 <li>Até 100% (1 mensalidade)</li>
                 <li>Válido após instalação</li>
               </ul>
-              <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650.">Indicar este plano</a>
+              <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650.">Indicar este plano</a>
             </div>
           </div>
 
           <div id="more-indique" class="more" role="region" aria-labelledby="btn-more-indique" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Campanha</span>
-                <span>Como aproveitar</span>
-              </div>
+              <div class="more-head"><span class="tag">Campanha</span><span>Como aproveitar</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">🤝</span><div class="txt"><strong>Como funciona:</strong> <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">indique pelo WhatsApp</a>; após instalação/validação, o desconto é aplicado.</div></div>
                 <div class="fact"><span class="ico">🎯</span><div class="txt"><strong>Por plano:</strong> 250 = R$30 | 450 = R$40 | 650 = 1 mensalidade isenta (até 100%).</div></div>
                 <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Aplicação:</strong> na fatura subsequente à validação.</div></div>
-                <div class="fact"><span class="ico">ℹ️</span><div class="txt"><small>Condições e prazos confirmados no atendimento.</small></div></div>
               </div>
             </div>
           </div>
@@ -689,12 +720,12 @@
       </div>
     </section>
 
-    <!-- Portal do Assinante (App) (Todos os níveis) -->
-    <section class="section" id="s-portal-app" data-title="Portal do Assinante" data-level="1 2 3">
+    <!-- Portal do Assinante (App) -->
+    <section class="section slide" id="s-portal-app" data-title="Portal do Assinante (App CCS)" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
-            <img id="imgPortalApp" class="art-img" width="1200" height="800"
+            <img class="art-img" width="1200" height="800"
                  alt="Portal do Assinante — app"
                  src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/portal.png"
                  loading="lazy" decoding="async">
@@ -717,13 +748,10 @@
 
           <div id="more-portal-app" class="more" role="region" aria-labelledby="btn-more-portal-app" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">App</span>
-                <span>Links e acesso</span>
-              </div>
+              <div class="more-head"><span class="tag">App</span><span>Links e acesso</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App CCS:</strong> <a href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">bit.ly/CCS_APP</a></div></div>
-                <div class="fact"><span class="ico">🔑</span><div class="txt"><small>Use e‑mail cadastrado e CPF (apenas números) quando solicitado.</small></div></div>
+                <div class="fact"><span class="ico">🔑</span><div class="txt"><small>Use e‑mail cadastrado e CPF (apenas números).</small></div></div>
               </div>
             </div>
           </div>
@@ -735,8 +763,8 @@
       </div>
     </section>
 
-    <!-- Portal de Faturas (Todos os níveis) -->
-    <section class="section" id="s-faturas" data-title="Portal de Faturas" data-level="1 2 3">
+    <!-- Portal de Faturas -->
+    <section class="section slide" id="s-faturas" data-title="Portal de Faturas (sem login)" data-level="1">
       <div class="card">
         <div class="media">
           <div class="frame">
@@ -755,10 +783,7 @@
 
           <div id="more-faturas" class="more" role="region" aria-labelledby="btn-more-faturas" hidden>
             <div class="more-inner">
-              <div class="more-head">
-                <span class="tag">Faturas</span>
-                <span>Vantagens</span>
-              </div>
+              <div class="more-head"><span class="tag">Faturas</span><span>Vantagens</span></div>
               <div class="facts">
                 <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Sem senha:</strong> informe o CPF do titular e acesse na hora.</div></div>
                 <div class="fact"><span class="ico">💳</span><div class="txt"><strong>Pagamento:</strong> PIX/Cartão, copiar código, ver faturas em aberto.</div></div>
@@ -774,67 +799,31 @@
     </section>
   </main>
 
-  <!-- Setas do deck (desktop) -->
-  <button class="nav-arrow nav-left" id="navLeft" aria-label="Anterior" hidden>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
-  <button class="nav-arrow nav-right" id="navRight" aria-label="Próximo" hidden>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-  </button>
-
-  <!-- Resumo dos Benefícios -->
+  <!-- Resumo -->
   <section class="section" id="s-resumo" data-title="Resumo dos Benefícios">
     <div class="summary">
       <h3 class="gtitle">Resumo dos Benefícios</h3>
       <div class="grid">
-        <a class="gcard" href="#s-conecta" aria-label="Ir para Conecta Clube">
-          <div class="gimg"><img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=512" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Conecta Clube</div>
-        </a>
-        <a class="gcard" href="#s-ccsplay" aria-label="Ir para CCS PLAY + CCS TV">
-          <div class="gimg">
-            <img alt="CCS PLAY + CCS TV" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w240-h240-rw" loading="lazy" decoding="async">
-          </div>
-          <div class="gtxt">CCS PLAY + CCS TV</div>
-        </a>
-        <a class="gcard" href="#s-skeelo" aria-label="Ir para Skeelo">
-          <div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Skeelo</div>
-        </a>
-        <a class="gcard" href="#s-suporte" aria-label="Ir para Suporte ao Assinante">
-          <div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Suporte Premium</div>
-        </a>
-        <a class="gcard" href="#s-indique" aria-label="Ir para Indique e Ganhe">
-          <div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Indique &amp; Ganhe</div>
-        </a>
-        <a class="gcard" href="#s-portal-app" aria-label="Ir para Portal do Assinante">
-          <div class="gimg"><img alt="Portal do Assinante" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Portal do Assinante</div>
-        </a>
-        <a class="gcard" href="#s-faturas" aria-label="Ir para Portal de Faturas">
-          <div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=256" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Portal de Faturas</div>
-        </a>
-        <a class="gcard" target="_blank" rel="noopener" href="https://wa.me/554797701300" aria-label="Falar com Representante Comercial no WhatsApp">
-          <div class="gimg"><img alt="Representante Comercial" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async"></div>
-          <div class="gtxt">Representante Comercial</div>
-        </a>
+        <a class="gcard" href="#s-conecta"><div class="gimg"><img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=512"></div><div class="gtxt">Conecta Clube</div></a>
+        <a class="gcard" href="#s-ccsplay"><div class="gimg"><img alt="CCS PLAY + CCS TV" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w240-h240-rw"></div><div class="gtxt">CCS PLAY + CCS TV</div></a>
+        <a class="gcard" href="#s-skeelo"><div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg"></div><div class="gtxt">Skeelo</div></a>
+        <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png"></div><div class="gtxt">Suporte Premium</div></a>
+        <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
+        <a class="gcard" href="#s-portal-app"><div class="gimg"><img alt="Portal do Assinante" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png"></div><div class="gtxt">Portal do Assinante</div></a>
+        <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=256"></div><div class="gtxt">Portal de Faturas</div></a>
+        <a class="gcard" target="_blank" rel="noopener" href="https://wa.me/554797701300"><div class="gimg"><img alt="Representante Comercial" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png"></div><div class="gtxt">Representante Comercial</div></a>
       </div>
     </div>
   </section>
 
-  <!-- Final (agradecimento) -->
+  <!-- Final -->
   <section class="section" id="s-final" data-title="Final">
-    <div class="final-wrap">
-      <div class="final">
-        <h3>Obrigado por ser cliente CCS Telecom!</h3>
-        <p>Conte com a gente para uma experiência de internet cada vez melhor. Precisa de algo agora?</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
-          <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
-        </div>
+    <div class="final">
+      <h3>Obrigado por ser cliente CCS Telecom!</h3>
+      <p>Conte com a gente para uma experiência de internet cada vez melhor. Precisa de algo agora?</p>
+      <div class="actions">
+        <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
       </div>
     </div>
   </section>
@@ -843,113 +832,21 @@
   <section class="section" id="s-faq" data-title="FAQ">
     <div class="card" style="grid-template-columns:1fr;">
       <div class="content">
-        <div class="title">
-          <h2>Perguntas frequentes</h2>
-          <span aria-hidden="true"></span>
-        </div>
+        <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
 
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quando meus benefícios são ativados?</summary>
-          <div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação (tempo para validação interna). Assim que aprovado, o acesso é liberado automaticamente.</div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o CCS PLAY?</summary>
-          <div style="padding: 8px 12px 12px">
-            Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Use o e‑mail cadastrado e senha = CPF do titular (somente números).
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">O CCS PLAY funciona em quais dispositivos?</summary>
-          <div style="padding: 8px 12px 12px">
-            Celular, tablet, computador e Smart TV. Compatível com iOS e Android (verifique requisitos na loja).
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais canais estão incluídos?</summary>
-          <div style="padding: 8px 12px 12px">
-            Mais de 60 canais regionais e variados. Inclui <a target="_blank" rel="noopener" href="https://www.sbt.com.br/">SBT</a> e <a target="_blank" rel="noopener" href="https://recordtv.r7.com/">Record</a>. Rede Globo não está incluída.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como peço meu voucher do Conecta Clube?</summary>
-          <div style="padding: 8px 12px 12px">
-            Envie e‑mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>. Você recebe 1 voucher a cada 90 dias (segundo o plano).
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais são as regras do Conecta Clube?</summary>
-          <div style="padding: 8px 12px 12px">
-            Cliente ativo e adimplente; vouchers não são cumulativos nem transferíveis; validade e condições definidas pelo parceiro. Nível 1 não inclui atrações Nível 3 (Unipraias, <a target="_blank" rel="noopener" href="https://www.barconopirata.com.br/">Barco Pirata</a>, <a target="_blank" rel="noopener" href="https://rodagigantebc.com.br/">Roda Gigante</a> e <a target="_blank" rel="noopener" href="https://aquariobc.com.br/">Aquário</a>).
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como funciona o Indique &amp; Ganhe?</summary>
-          <div style="padding: 8px 12px 12px">
-            Indique pelo <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">WhatsApp</a>. Após instalação e validação, aplicamos o desconto na fatura seguinte.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais descontos por plano no Indique &amp; Ganhe?</summary>
-          <div style="padding: 8px 12px 12px">
-            Plano 250 = R$30 | Plano 450 = R$40 | Plano 650 = 1 mensalidade isenta (até 100%).
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Onde pago minhas faturas e faço PIX?</summary>
-          <div style="padding: 8px 12px 12px">
-            Acesse <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> para PIX/Cartão, 2ª via, desbloqueio por confiança e extrato de conexão.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o app CCS?</summary>
-          <div style="padding: 8px 12px 12px">
-            Baixe em <a target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">bit.ly/CCS_APP</a>. Use seu e‑mail cadastrado e CPF (apenas números) quando solicitado.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o Skeelo?</summary>
-          <div style="padding: 8px 12px 12px">
-            Baixe em <a target="_blank" rel="noopener" href="https://onelink.to/hseuht">onelink.to/hseuht</a>. Há livros digitais mensais, audiobooks, minibooks e comics.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Posso transferir benefícios para outro CPF?</summary>
-          <div style="padding: 8px 12px 12px">
-            Não. Os benefícios são pessoais e intransferíveis.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">E se eu trocar e‑mail ou CPF?</summary>
-          <div style="padding: 8px 12px 12px">
-            Fale com o <a target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Preciso%20atualizar%20meu%20cadastro.">Suporte</a> para atualizar seu cadastro.
-          </div>
-        </details>
-
-        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px">
-          <summary style="cursor:pointer; padding:10px 12px; font-weight:900">Se eu cancelar o plano, o que acontece?</summary>
-          <div style="padding: 8px 12px 12px">
-            Os benefícios são desativados com o encerramento do contrato.
-          </div>
-        </details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quando meus benefícios são ativados?</summary><div style="padding: 8px 12px 12px">Em até 72 horas úteis após a instalação. Assim que aprovado, o acesso é liberado automaticamente.</div></details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como acesso o CCS PLAY?</summary><div style="padding: 8px 12px 12px">Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Use o e‑mail cadastrado e senha = CPF.</div></details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Quais canais estão incluídos?</summary><div style="padding: 8px 12px 12px">Mais de 60 canais regionais e variados. Inclui <a target="_blank" rel="noopener" href="https://www.sbt.com.br/">SBT</a> e <a target="_blank" rel="noopener" href="https://recordtv.r7.com/">Record</a>. Rede Globo não está incluída.</div></details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como peço meu voucher do Conecta Clube?</summary><div style="padding: 8px 12px 12px">Envie e‑mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>. Você recebe 1 voucher a cada 90 dias.</div></details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Como funciona o Indique &amp; Ganhe?</summary><div style="padding: 8px 12px 12px">Indique pelo <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">WhatsApp</a>. Após instalação e validação, o desconto é aplicado na fatura seguinte.</div></details>
+        <details style="margin:8px 0; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:12px"><summary style="cursor:pointer; padding:10px 12px; font-weight:900">Onde pago minhas faturas e faço PIX?</summary><div style="padding: 8px 12px 12px">Acesse <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> (CPF, sem senha).</div></details>
       </div>
     </div>
   </section>
 
   <!-- Quick Dock -->
   <nav class="quick-dock" aria-label="Atalhos de seções">
-    <div class="dock-items" id="dockItems">
+    <div class="dock-items">
       <a href="#s-conecta" aria-label="Conecta Clube" title="Conecta Clube">
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt="">
       </a>
@@ -963,19 +860,19 @@
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt="">
       </a>
       <a href="#s-indique" aria-label="Indique &amp; Ganhe" title="Indique &amp; Ganhe">
-        <!-- Ícone do dock usando a mesma imagem oficial do card -->
+        <!-- Ícone do dock: arte oficial do card -->
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt="">
       </a>
       <a href="#s-portal-app" aria-label="Portal do Assinante" title="Portal do Assinante">
         <img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png" alt="">
       </a>
       <a href="#s-faturas" aria-label="Portal de Faturas" title="Portal de Faturas">
-        <img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=64" alt="">
+        <img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt="">
       </a>
     </div>
   </nav>
 
-  <!-- FAB topo/rodapé -->
+  <!-- FAB -->
   <button class="fab" id="fab" aria-label="Ir para o topo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
@@ -994,22 +891,84 @@
 
 <script>
 (function(){
-  // Medir topbar dinamicamente
+  // Estado inicial a partir do body data-*
+  const body = document.body;
+
+  // Ajuste de topbar (altura/padding) e shrink
   const topbar = document.getElementById('topbar');
   function setTopbarH(){
     const h = topbar.offsetHeight || 64;
     document.documentElement.style.setProperty('--topbar-h', h+'px');
   }
   setTopbarH(); addEventListener('resize', setTopbarH, {passive:true});
-
   function onScroll(){
     if (window.scrollY > 16) topbar.classList.add('shrink'); else topbar.classList.remove('shrink');
     updateFab();
-    updateArrows();
   }
   onScroll(); addEventListener('scroll', onScroll, {passive:true});
 
-  // Copiar e‑mail do Conecta
+  // Quick Dock: destacar item ativo
+  const dock = document.querySelector('.quick-dock');
+  const dockLinks = Array.from(dock?.querySelectorAll('a') || []);
+  function setActiveDock(id){
+    dockLinks.forEach(a=>{
+      const hash = a.getAttribute('href') || '';
+      if (hash === '#'+id) a.classList.add('is-active'); else a.classList.remove('is-active');
+    });
+  }
+  const sections = Array.from(document.querySelectorAll('main .section.slide'));
+  const io = new IntersectionObserver((entries)=>{
+    const visible = entries.filter(e=> e.isIntersecting)
+      .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) setActiveDock(visible.target.id);
+  }, { threshold:[0.25, 0.5, 0.75] });
+  sections.forEach(s => io.observe(s));
+
+  // "Saiba mais" — abertura confiável
+  function setupMoreToggles(){
+    document.addEventListener('click', (ev)=>{
+      const btn = ev.target.closest('.chip-more');
+      if (!btn) return;
+      const panelId = btn.getAttribute('aria-controls');
+      const panel = document.getElementById(panelId);
+      const txt = btn.querySelector('.txt');
+      if (!panel) return;
+
+      const opened = btn.getAttribute('aria-expanded') === 'true';
+      if (opened){
+        // fechar
+        const current = panel.scrollHeight;
+        panel.style.maxHeight = current+'px';
+        requestAnimationFrame(()=>{ panel.style.maxHeight = '0px'; });
+        panel.classList.remove('is-open');
+        const onEnd = ()=>{ panel.hidden = true; panel.removeEventListener('transitionend', onEnd); };
+        panel.addEventListener('transitionend', onEnd);
+        btn.setAttribute('aria-expanded','false');
+        if (txt) txt.textContent = 'Saiba mais';
+      } else {
+        // abrir
+        panel.hidden = false;
+        panel.style.maxHeight = '0px';
+        panel.classList.add('is-open');
+        requestAnimationFrame(()=>{
+          const target = panel.scrollHeight;
+          panel.style.maxHeight = target + 'px';
+        });
+        btn.setAttribute('aria-expanded','true');
+        if (txt) txt.textContent = 'Ver menos';
+        // garantir visibilidade sob a topbar
+        const rect = panel.getBoundingClientRect();
+        const topPad = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h'))||64);
+        if (rect.top < topPad + 12){
+          const y = window.scrollY + rect.top - topPad - 12;
+          window.scrollTo({ top: y, behavior:'smooth' });
+        }
+      }
+    });
+  }
+  setupMoreToggles();
+
+  // Botão copiar e‑mail
   const copyBtn = document.getElementById('copyEmail');
   if (copyBtn){
     copyBtn.addEventListener('click', async function(){
@@ -1020,138 +979,7 @@
     });
   }
 
-  // Toggle "Saiba mais" — robusto
-  function setupMoreToggles(){
-    const buttons = document.querySelectorAll('.chip-more');
-    buttons.forEach(btn=>{
-      const panelId = btn.getAttribute('aria-controls');
-      const panel = document.getElementById(panelId);
-      const txt = btn.querySelector('.txt');
-      if (!panel) return;
-      btn.addEventListener('click', ()=>{
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        if (expanded){
-          const h = panel.scrollHeight;
-          panel.style.height = h + 'px';
-          panel.offsetHeight; // force reflow
-          panel.style.height = '0px';
-          panel.classList.remove('is-open');
-          const onEnd = ()=>{ panel.hidden = true; panel.style.height = ''; panel.removeEventListener('transitionend', onEnd); };
-          panel.addEventListener('transitionend', onEnd, {once:true});
-          btn.setAttribute('aria-expanded','false');
-          if (txt) txt.textContent = 'Saiba mais';
-        }else{
-          panel.hidden = false;
-          panel.style.height = '0px';
-          panel.offsetHeight;
-          const target = panel.scrollHeight;
-          panel.style.height = target + 'px';
-          panel.classList.add('is-open');
-          panel.addEventListener('transitionend', ()=>{ panel.style.height = '' }, {once:true});
-          btn.setAttribute('aria-expanded','true');
-          if (txt) txt.textContent = 'Ver menos';
-          // Garantir visibilidade do topo do painel
-          const rect = panel.getBoundingClientRect();
-          const topPad = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h'))||64);
-          if (rect.top < topPad + 12){
-            const y = window.scrollY + rect.top - topPad - 12;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          }
-        }
-      });
-    });
-  }
-  setupMoreToggles();
-
-  // Quick Dock: destacar item ativo
-  const dock = document.querySelector('.quick-dock');
-  const deckEl = document.getElementById('deck');
-  const deckSections = Array.from(deckEl.querySelectorAll('.section'));
-  const dockLinks = Array.from(dock?.querySelectorAll('a') || []);
-  function setActiveDockById(id){
-    dockLinks.forEach(a=>{
-      const hash = a.getAttribute('href') || '';
-      if (hash === '#'+id) a.classList.add('is-active'); else a.classList.remove('is-active');
-    });
-  }
-
-  // Desktop: Deck horizontal com setas/teclado
-  const navLeft = document.getElementById('navLeft');
-  const navRight = document.getElementById('navRight');
-  function isDeckMode(){
-    return matchMedia('(min-width:1100px)').matches && !document.body.hasAttribute('data-view');
-  }
-  function visibleSlides(){
-    return deckSections.filter(s => s.style.display !== 'none');
-  }
-  function snapTo(index){
-    const slides = visibleSlides();
-    if (!slides.length) return;
-    const clamped = Math.max(0, Math.min(index, slides.length-1));
-    const el = slides[clamped];
-    deckEl.scrollTo({ left: el.offsetLeft - deckEl.offsetLeft, behavior: 'smooth' });
-  }
-  function currentIndex(){
-    const slides = visibleSlides();
-    if (!slides.length) return 0;
-    const scroll = deckEl.scrollLeft + deckEl.clientWidth/2;
-    let best = 0, bestDist = Infinity;
-    slides.forEach((s, i)=>{
-      const center = s.offsetLeft + s.offsetWidth/2;
-      const d = Math.abs(center - scroll);
-      if (d < bestDist){ bestDist = d; best = i; }
-    });
-    return best;
-  }
-  function updateArrows(){
-    if (!isDeckMode()){ navLeft.hidden = true; navRight.hidden = true; return; }
-    const idx = currentIndex();
-    const slides = visibleSlides();
-    navLeft.hidden = false; navRight.hidden = false;
-    navLeft.toggleAttribute('disabled', idx <= 0);
-    navRight.toggleAttribute('disabled', idx >= slides.length-1);
-  }
-  if (navLeft && navRight){
-    navLeft.addEventListener('click', ()=> snapTo(currentIndex()-1));
-    navRight.addEventListener('click', ()=> snapTo(currentIndex()+1));
-    addEventListener('resize', updateArrows, {passive:true});
-    deckEl.addEventListener('scroll', ()=>{ updateArrows(); syncDockWithDeck(); }, {passive:true});
-    updateArrows();
-  }
-  // Teclado no deck
-  addEventListener('keydown', (e)=>{
-    if (!isDeckMode()) return;
-    if (e.key === 'ArrowLeft'){ e.preventDefault(); snapTo(currentIndex()-1); }
-    if (e.key === 'ArrowRight'){ e.preventDefault(); snapTo(currentIndex()+1); }
-    if (e.key === 'Home'){ e.preventDefault(); snapTo(0); }
-    if (e.key === 'End'){ e.preventDefault(); snapTo(visibleSlides().length-1); }
-  });
-
-  // Dock: âncoras integradas ao deck
-  dockLinks.forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      const href = a.getAttribute('href') || '';
-      if (!href.startsWith('#')) return;
-      const target = document.querySelector(href);
-      if (!target) return;
-      if (isDeckMode()){
-        e.preventDefault();
-        const slides = visibleSlides();
-        const idx = slides.indexOf(target);
-        if (idx >= 0){ snapTo(idx); setActiveDockById(target.id); }
-      }
-    });
-  });
-
-  function syncDockWithDeck(){
-    if (!isDeckMode()) return;
-    const slides = visibleSlides();
-    const idx = currentIndex();
-    const id = slides[idx]?.id;
-    if (id) setActiveDockById(id);
-  }
-
-  // FAB Topo/Rodapé
+  // FAB topo/rodapé
   const fab = document.getElementById('fab');
   function updateFab(){
     const nearTop = window.scrollY < 100;
@@ -1171,120 +999,98 @@
   fab.addEventListener('click', ()=>{
     const nearTop = window.scrollY < 100;
     if (nearTop){
-      const tail = document.getElementById('s-final') || document.querySelector('footer');
-      const y = tail.getBoundingClientRect().top + window.scrollY - 16;
+      const finalSec = document.getElementById('s-final') || document.querySelector('footer');
+      const y = finalSec.getBoundingClientRect().top + window.scrollY - 16;
       window.scrollTo({ top: y, behavior: 'smooth' });
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   });
 
-  // Seletor de Nível (filtro)
-  const levelBtns = Array.from(document.querySelectorAll('.level-btn'));
-  const chipNivel = document.getElementById('chip-nivel');
-  const chipPlano = document.getElementById('chip-plano');
-
-  function applyThemeByLevel(level){
-    // Ajusta o gradiente da pílula Nível
-    const map = {
-      1: ['--level1-a','--level1-b'],
-      2: ['--level2-a','--level2-b'],
-      3: ['--level3-a','--level3-b'],
-    };
-    const [a,b] = map[level] || map[1];
-    chipNivel.style.background = `linear-gradient(90deg, var(${a}), var(${b}))`;
-    chipNivel.textContent = `Benefícios Nível ${level}`;
-  }
-  function applyPlanGradient(plan){
-    const map = {
-      '250': ['--plan250-a','--plan250-b'],
-      '450': ['--plan450-a','--plan450-b'],
-      '650': ['--plan650-a','--plan650-b'],
-    };
-    const [a,b] = map[plan] || map['250'];
-    chipPlano.style.background = `linear-gradient(90deg, var(${a}), var(${b}))`;
-    chipPlano.textContent = `Plano ${plan} MB`;
-  }
-
-  function setLevel(level){
-    // marcar botão
-    levelBtns.forEach(b=>{
-      const is = b.dataset.level == String(level);
-      b.classList.toggle('active', is);
-      b.setAttribute('aria-selected', is ? 'true':'false');
-    });
-    // filtrar seções do deck
-    deckSections.forEach(sec=>{
-      const lv = (sec.dataset.level || '').split(/\s+/);
-      sec.style.display = lv.includes(String(level)) ? '' : 'none';
-    });
-    // ajustar tema das pílulas
-    applyThemeByLevel(level);
-    // lembrar
-    localStorage.setItem('nivel', String(level));
-    // se estiver em deck mode, corrigir snap
-    if (isDeckMode()){ snapTo(0); updateArrows(); }
-  }
-
-  levelBtns.forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const lvl = parseInt(b.dataset.level, 10);
-      setLevel(lvl);
-      const url = new URL(location.href);
-      url.searchParams.set('nivel', String(lvl));
-      history.replaceState({}, '', url);
-    });
-  });
-
-  // Toggle "Ver em lista" (desktop)
-  const toggleView = document.getElementById('toggleView');
-  toggleView.addEventListener('click', ()=>{
-    const isList = document.body.getAttribute('data-view') === 'list';
-    if (isList){
-      document.body.removeAttribute('data-view');
-      toggleView.setAttribute('aria-pressed','false');
-      toggleView.textContent = 'Ver em lista';
-    }else{
-      document.body.setAttribute('data-view','list');
-      toggleView.setAttribute('aria-pressed','true');
-      toggleView.textContent = 'Ver em carrossel';
+  // Deck setas e teclado (desktop)
+  const deck = document.getElementById('deck');
+  const btnPrev = document.getElementById('deckPrev');
+  const btnNext = document.getElementById('deckNext');
+  function snapTo(dir){
+    const slides = Array.from(deck.querySelectorAll('.slide'));
+    const vw = deck.clientWidth;
+    const x = deck.scrollLeft;
+    const idx = slides.findIndex(s => (s.offsetLeft + s.offsetWidth/2) > (x + vw/2));
+    let target;
+    if (dir === -1){
+      target = slides[Math.max(0, (idx === -1 ? slides.length-2 : idx-1))];
+    } else {
+      target = slides[Math.min(slides.length-1, (idx === -1 ? 1 : idx+1))];
     }
-    updateArrows();
-  });
-
-  // Inicialização por URL/localStorage
-  (function initRouting(){
-    const url = new URL(location.href);
-    const nivelURL = parseInt(url.searchParams.get('nivel') || '', 10);
-    const planURL = url.searchParams.get('plano');
-    const nivelSaved = parseInt(localStorage.getItem('nivel') || '1', 10);
-    const nivel = [1,2,3].includes(nivelURL) ? nivelURL : ( [1,2,3].includes(nivelSaved) ? nivelSaved : 1 );
-    const plan = ['250','450','650'].includes(planURL) ? planURL : '250';
-    setLevel(nivel);
-    applyPlanGradient(plan);
-    // se veio com hash de seção, rolar corretamente
-    if (location.hash){
-      const target = document.querySelector(location.hash);
-      if (target){
-        // se deck mode, ajustar horizontal
-        if (isDeckMode()){
-          const slides = visibleSlides();
-          const idx = slides.indexOf(target);
-          if (idx >= 0) setTimeout(()=> snapTo(idx), 50);
-        }else{
-          setTimeout(()=> target.scrollIntoView({behavior:'smooth', block:'start'}), 50);
-        }
+    if (target) deck.scrollTo({ left: target.offsetLeft - 24, behavior:'smooth' });
+  }
+  if (btnPrev && btnNext){
+    btnPrev.addEventListener('click', ()=>snapTo(-1));
+    btnNext.addEventListener('click', ()=>snapTo(1));
+    window.addEventListener('keydown', (e)=>{
+      if (window.matchMedia('(min-width:1100px)').matches){
+        if (e.key === 'ArrowLeft') snapTo(-1);
+        if (e.key === 'ArrowRight') snapTo(1);
       }
-    }
-  })();
+    });
+  }
+  // Toggle Lista/Deck
+  const viewToggle = document.getElementById('viewToggle');
+  if (viewToggle){
+    viewToggle.addEventListener('click', ()=>{
+      const list = document.body.classList.toggle('view-list');
+      viewToggle.setAttribute('aria-pressed', list ? 'true':'false');
+      viewToggle.textContent = list ? 'Ver em deck' : 'Ver em lista';
+    });
+  }
 
-  // Realçar dock conforme visibilidade (mobile/vertical)
-  const sectionsAll = Array.from(document.querySelectorAll('.section'));
-  const io = new IntersectionObserver((entries)=>{
-    const visible = entries.filter(e=> e.isIntersecting).sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) setActiveDockById(visible.target.id);
-  }, { threshold:[0.25, 0.5, 0.75] });
-  sectionsAll.forEach(s => io.observe(s));
+  // POPovers (Nível e Plano)
+  const btnNivel = document.getElementById('btnNivel');
+  const btnPlano = document.getElementById('btnPlano');
+  const popNivel = document.getElementById('popNivel');
+  const popPlano = document.getElementById('popPlano');
+  const backdrop = document.getElementById('backdrop');
+  const nivelTxt = document.getElementById('nivelTxt');
+  const planoTxt = document.getElementById('planoTxt');
+
+  function openPop(pop, btn){
+    backdrop.hidden = false; backdrop.classList.add('show');
+    pop.hidden = false; pop.classList.add('show');
+    btn.setAttribute('aria-expanded','true');
+  }
+  function closePops(){
+    [popNivel, popPlano].forEach(pop=>{
+      if (!pop.hidden){ pop.classList.remove('show'); pop.hidden = true; }
+    });
+    backdrop.classList.remove('show'); backdrop.hidden = true;
+    btnNivel.setAttribute('aria-expanded','false');
+    btnPlano.setAttribute('aria-expanded','false');
+  }
+  btnNivel.addEventListener('click', ()=> openPop(popNivel, btnNivel));
+  btnPlano.addEventListener('click', ()=> openPop(popPlano, btnPlano));
+  backdrop.addEventListener('click', closePops);
+  window.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closePops() });
+
+  popNivel.addEventListener('click', (e)=>{
+    const b = e.target.closest('button[data-nivel]');
+    if (!b) return;
+    const n = b.getAttribute('data-nivel');
+    body.setAttribute('data-level', n);
+    nivelTxt.textContent = n;
+    // atualizar pressed
+    popNivel.querySelectorAll('button[data-nivel]').forEach(x=> x.setAttribute('aria-pressed', x===b?'true':'false'));
+    closePops();
+  });
+
+  popPlano.addEventListener('click', (e)=>{
+    const b = e.target.closest('button[data-plano]');
+    if (!b) return;
+    const p = b.getAttribute('data-plano');
+    body.setAttribute('data-plano', p);
+    planoTxt.textContent = p;
+    popPlano.querySelectorAll('button[data-plano]').forEach(x=> x.setAttribute('aria-pressed', x===b?'true':'false'));
+    closePops();
+  });
 
 })();
 </script>
