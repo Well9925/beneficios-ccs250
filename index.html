@@ -1,249 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CCS Telecom — Benefícios</title>
-<meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portal do Assinante, Portal de Faturas, Resumo e FAQ.">
-
-<link rel="preconnect" href="https://framerusercontent.com" crossorigin>
-<link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://skeelo.com" crossorigin>
-
-<style>
-  :root{
-    --bg:#0b0d12;
-    --line:rgba(255,255,255,.12);
-    --txt:#f6f8ff;
-    --muted:#cfe0ff;
-    --cta-a:#ff8a25; --cta-b:#ffb04a;
-    --focus:#00d9ff;
-
-    /* Cores (padrão) */
-    --levelA:#2f6bff; --levelB:#7b5cff;   /* Nível 1 */
-    --planA:#00d9ff;  --planB:#00ffc6;    /* 250 MB */
-
-    /* Tamanhos */
-    --side-pad: clamp(14px, 4.5vw, 36px);
-    --art-max-h-d: clamp(300px, 42vh, 500px);
-    --art-max-h-m: clamp(220px, 36vh, 360px);
-
-    /* Deck */
-    --deck-gap: 16px;
-    --deck-pad: clamp(12px, 3.5vw, 32px);
-  }
-
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
-  html{scroll-behavior:smooth}
-  body{
-    color:var(--txt);
-    font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-    background:var(--bg);
-    padding-top:0; /* ajustado via JS conforme altura da topbar */
-    padding-bottom:calc(130px + env(safe-area-inset-bottom));
-  }
-
-  /* Fundo leve */
-  .site-bg{position:fixed;inset:0;z-index:-6;pointer-events:none;background:
-    radial-gradient(700px 480px at 5% 8%, rgba(95,92,255,.14), transparent 60%),
-    radial-gradient(700px 480px at 95% 92%, rgba(0,234,255,.12), transparent 60%),
-    #0b0d12}
-  .site-noise{position:fixed;inset:0;z-index:-5;pointer-events:none;opacity:.04;
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
-    background-size:220px 220px}
-
-  /* Topbar fixa: logos nas pontas e badges centralizadas dentro da barra */
-  .topbar{
-    position:fixed;left:0;right:0;top:0;z-index:60;
-    background:rgba(16,18,24,.55);
-    border-bottom:1px solid var(--line);
-    backdrop-filter:blur(10px);
-  }
-  .topbar .wrap{
-    display:grid;grid-template-columns:auto 1fr auto;align-items:center;
-    gap:10px;padding:8px var(--side-pad);
-  }
-  .logo-ccs,.logo-vctech{
-    width: clamp(54px, 7vw, 80px);
-    height: clamp(54px, 7vw, 80px);
-    object-fit:contain;display:block
-  }
-  .titlebar{display:flex;justify-content:center;align-items:center;min-width:0}
-
-  /* Badges (pílulas) unificadas e elegantes */
-  .badges{
-    display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:center;
-    padding:6px 8px;border-radius:14px;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.10));
-    border:1px solid #ffffff1f;backdrop-filter:blur(8px);box-shadow:0 6px 16px rgba(0,0,0,.25)
-  }
-  .badge{
-    border-radius:999px;padding:8px 12px;font-weight:900;font-size:13px;white-space:nowrap;border:0
-  }
-  .badge.level{background:linear-gradient(90deg,var(--levelA),var(--levelB));color:#fff}
-  .badge.plan{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12}
-
-  /* Mobile: empilhar as duas pílulas no centro, sem conectores */
-  @media (max-width:640px){
-    .badges{flex-direction:column;gap:6px}
-    .logo-ccs,.logo-vctech{width:56px;height:56px}
-  }
-
-  /* Seções/cards base */
-  .section{padding:18px var(--side-pad) 26px;display:flex;justify-content:center}
-  .card{
-    width:min(1080px,100%);border-radius:18px;border:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-    backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.35);
-    overflow:hidden
-  }
-  .media{display:flex;justify-content:center;align-items:center;padding:12px 0}
-  .frame{width:100%;display:flex;justify-content:center;align-items:center}
-  .art-img{
-    max-height:var(--art-max-h-d);max-width:min(100%,920px);width:auto;height:auto;object-fit:contain
-  }
-  @media (max-width:920px){
-    .art-img{max-height:var(--art-max-h-m);max-width:100%;width:100%}
-  }
-  #s-conecta .art-img{max-height:calc(var(--art-max-h-d) + 40px)}
-  #s-indique .art-img{max-height:calc(var(--art-max-h-d) + 40px)}
-
-  .content{padding:16px}
-  .title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
-  .title h2{margin:0;font-size: clamp(20px, 2.4vw, 28px);font-weight:900}
-  .subtitle{margin:6px 0 10px;color:var(--muted)}
-  .row{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
-  .pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:900;background:rgba(255,255,255,.08)}
-  .pill.hi{background:linear-gradient(90deg,var(--planA),var(--planB));color:#0b0b0b;border-color:transparent}
-  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-  .btn{border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:900;background:#fff;color:#111;text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
-  .btn.cta{background:linear-gradient(90deg,var(--cta-a),var(--cta-b));border-color:transparent}
-  .btn.block{width:100%}
-
-  /* Saiba mais (completo, confiável) */
-  .chip-more{
-    display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-    background:rgba(255,255,255,.10);border:1px solid var(--line);color:#fff;font-weight:900;font-size:13px;cursor:pointer;
-    animation:chipPulse 1.8s ease-in-out infinite
-  }
-  @keyframes chipPulse{0%{box-shadow:0 0 0 0 rgba(0,217,255,0)}60%{box-shadow:0 0 0 8px rgba(0,217,255,.10)}100%{box-shadow:0 0 0 0 rgba(0,217,255,0)}}
-  .more[hidden]{display:none}
-  .more{overflow:hidden;height:0;opacity:0;transition:height .28s ease,opacity .28s ease}
-  .more.is-open{opacity:1}
-  .more-inner{padding:14px;margin-top:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px}
-  .facts{display:grid;grid-template-columns:1fr;gap:10px;margin:0}
-  @media (min-width:700px){.facts{grid-template-columns:1fr 1fr}}
-  .fact{display:flex;gap:10px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.08)}
-  .fact .ico{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.10);border:1px solid var(--line);font-size:14px}
-  .fact .txt{color:#dfe7ff}
-  .fact .txt strong{color:#fff}
-  .note{color:#a8b6d9;font-size:14px}
-
-  /* Resumo */
-  .summary{width:min(1080px,100%);margin:auto}
-  .summary .gtitle{margin:0 0 12px;font-weight:900;font-size: clamp(18px, 2.2vw, 24px)}
-  .grid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
-  @media (min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-  @media (min-width:920px){.grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
-  .gcard{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.06);padding:10px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px}
-  .gimg{width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center}
-  .gimg img{width:100%;height:100%;object-fit:contain}
-  .gtxt{font-weight:800;text-align:center;font-size:13px;color:#eaf1ff}
-
-  /* Indique & Ganhe — grid responsivo */
-  .plans{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
-  @media (min-width:700px){.plans{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (min-width:1024px){.plans{grid-template-columns:repeat(3,minmax(0,1fr))}}
-  .plan{border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.06)}
-
-  /* Deck desktop */
-  #deck{display:block}
-  .slide{scroll-snap-align:start}
-  @media (min-width:1100px){
-    #deck{display:flex;gap:var(--deck-gap);padding:24px var(--deck-pad);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left: var(--deck-pad)}
-    .slide{flex:0 0 min(980px,84vw);scroll-snap-align:center}
-    #deck::-webkit-scrollbar{height:8px} #deck::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
-  }
-  .deck-nav{display:none}
-  @media (min-width:1100px){
-    .deck-nav{position:relative;z-index:70;height:0}
-    .deck-btn{position:fixed;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(16,18,24,.65);color:#fff}
-    #deckPrev{left:10px} #deckNext{right:10px}
-  }
-  #viewToggleWrap{display:none}
-  @media (min-width:1100px){
-    #viewToggleWrap{display:flex;justify-content:flex-end;padding:0 var(--side-pad);margin-top:4px}
-    #viewToggle{border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.10);color:#fff;font-weight:900;cursor:pointer}
-  }
-  body.view-list #deck{display:block;overflow-x:visible}
-  body.view-list .slide{flex:unset;scroll-snap-align:start}
-  body.view-list .deck-nav{display:none}
-
-  /* Quick Dock */
-  .quick-dock{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:80}
-  .quick-dock .dock-items{display:flex;gap:8px;padding:8px;border:1px solid var(--line);border-radius:14px;background:rgba(16,18,24,.55);backdrop-filter:blur(8px)}
-  .quick-dock a{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.08)}
-  .quick-dock img{width:24px;height:24px;object-fit:contain}
-  .quick-dock a.is-active{outline:2px solid var(--focus)}
-
-  /* FAB */
-  .fab{position:fixed;right:16px;bottom:88px;z-index:85;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(16,18,24,.65);color:#fff;display:inline-flex;align-items:center;justify-content:center}
-  .fab svg{width:22px;height:22px}
-
-  /* Footer / final */
-  .final{width:min(1080px,100%);margin:auto;text-align:center;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));padding:18px}
-  .footer{border-top:1px solid var(--line);padding:18px var(--side-pad);margin-bottom:96px}
-  .footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
-
-  /* A11y */
-  a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:10px}
-  @media (prefers-reduced-motion:reduce){.chip-more{animation:none}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CCS Telecom — Benefícios</title>
+  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portal do Assinante, Portal de Faturas, Resumo e FAQ.">
+  <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://skeelo.com" crossorigin>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
-
 <body>
-  <!-- Fundo -->
-  <div class="site-bg" aria-hidden="true"></div>
-  <div class="site-noise" aria-hidden="true"></div>
+  <!-- Camada de efeitos (leves e estáveis) -->
+  <div class="fx fx-bg" aria-hidden="true"></div>
+  <svg class="fx fx-fibers" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <filter id="glow"><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#5e5bff"/><stop offset="55%" stop-color="#7b5cff"/><stop offset="100%" stop-color="#00eaff"/>
+      </linearGradient>
+    </defs>
+    <g transform="rotate(-22 1000 700)" filter="url(#glow)" opacity="0.9">
+      <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930" stroke="url(#gA)"/>
+      <path class="pulse p2" d="M-320,1100 C330,880 1250,1530 2300,820" stroke="#00ffc6"/>
+      <path class="pulse p3" d="M-280,990  C430,820 1320,1400 2240,720" stroke="#4bd6ff"/>
+      <path class="pulse p4" d="M-240,870  C520,780 1380,1270 2180,650" stroke="#7b5cff"/>
+    </g>
+  </svg>
+  <div class="fx fx-shimmer" aria-hidden="true"></div>
+  <div class="fx fx-noise" aria-hidden="true"></div>
+  <div class="fx fx-vignette" aria-hidden="true"></div>
 
-  <!-- Topo fixo: logos + badges centralizadas DENTRO da barra -->
+  <!-- Topo fixo com logos e título compacto no mobile -->
   <header class="topbar" id="topbar">
     <div class="wrap">
-      <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
+      <img class="logo-ccs" alt="CCS Telecom"
+           src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png"
+           loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
-        <div class="badges" role="group" aria-label="Nível e plano">
-          <span class="badge level" id="badgeNivel">Benefícios Nível 1</span>
-          <span class="badge plan"  id="badgePlano">Plano 250 MB</span>
+        <div class="meta" role="group" aria-label="Nível e plano">
+          <!-- Desktop: duas pílulas -->
+          <div class="badges-two" aria-hidden="true">
+            <span class="badge level">Benefícios Nível 1</span>
+            <span class="badge plan">Plano 250 MB</span>
+          </div>
+          <!-- Mobile: 1 cápsula curta que encolhe ao rolar -->
+          <div class="badge-one">
+            <span class="t-full">Nível 1 • 250 MB</span>
+            <span class="t-short" aria-hidden="true">N1 • 250</span>
+          </div>
         </div>
       </div>
-      <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
+      <img class="logo-vctech" alt="VCTECH"
+           src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png"
+           loading="eager" decoding="async">
     </div>
   </header>
 
-  <!-- Toggle de visualização (desktop) -->
-  <div id="viewToggleWrap"><button id="viewToggle" type="button" aria-pressed="false">Ver em lista</button></div>
-
-  <!-- Setas Deck (desktop) -->
-  <div class="deck-nav" aria-hidden="true">
-    <button id="deckPrev" class="deck-btn" type="button" title="Anterior" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <button id="deckNext" class="deck-btn" type="button" title="Próximo" aria-label="Próximo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-
-  <!-- Deck / Lista -->
-  <main id="deck" aria-label="Benefícios">
+  <main id="content">
     <!-- Conecta Clube -->
-    <section class="section slide" id="s-conecta" data-title="Conecta Clube">
+    <section class="section" id="s-conecta" data-title="Conecta Clube">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async">
+          <img class="art-img" alt="Conecta Clube"
+               src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024"
+               loading="eager" decoding="async" fetchpriority="high">
         </div></div>
         <div class="content">
           <div class="title">
@@ -279,12 +101,16 @@
     </section>
 
     <!-- CCS PLAY + CCS TV -->
-    <section class="section slide" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
+    <section class="section" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
       <div class="card">
         <div class="media"><div class="frame">
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px">
-            <img alt="CCS Play" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" style="width:100%;height:100%;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#0f1420">
-            <img alt="CCS TV"   src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" style="width:100%;height:100%;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#0f1420">
+          <div class="two-icons">
+            <img alt="CCS Play"
+                 src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw"
+                 loading="lazy" decoding="async">
+            <img alt="CCS TV"
+                 src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw"
+                 loading="lazy" decoding="async">
           </div>
         </div></div>
         <div class="content">
@@ -319,10 +145,12 @@
     </section>
 
     <!-- Skeelo -->
-    <section class="section slide" id="s-skeelo" data-title="Skeelo">
+    <section class="section" id="s-skeelo" data-title="Skeelo">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
+          <img class="art-img" alt="Skeelo"
+               src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png"
+               loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -353,11 +181,13 @@
       </div>
     </section>
 
-    <!-- Suporte ao Assinante -->
-    <section class="section slide" id="s-suporte" data-title="Suporte ao Assinante">
+    <!-- Suporte -->
+    <section class="section" id="s-suporte" data-title="Suporte ao Assinante">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
+          <img class="art-img" alt="Suporte Premium"
+               src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png"
+               loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -389,10 +219,12 @@
     </section>
 
     <!-- Indique & Ganhe -->
-    <section class="section slide" id="s-indique" data-title="Indique & Ganhe">
+    <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Indique & Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async">
+          <img class="art-img" alt="Indique & Ganhe"
+               src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png"
+               loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -406,27 +238,27 @@
 
           <div class="plans">
             <div class="plan">
-              <div style="font-weight:900">Plano 250</div>
-              <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$30</div>
-              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+              <div class="pl-title">Plano 250</div>
+              <div class="pl-benef">Desconto: R$30</div>
+              <ul class="pl-ul">
                 <li>Aplica na fatura seguinte</li>
                 <li>Válido após instalação</li>
               </ul>
               <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar este plano</a>
             </div>
             <div class="plan">
-              <div style="font-weight:900">Plano 450</div>
-              <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$40</div>
-              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+              <div class="pl-title">Plano 450</div>
+              <div class="pl-benef">Desconto: R$40</div>
+              <ul class="pl-ul">
                 <li>Aplica na fatura seguinte</li>
                 <li>Válido após instalação</li>
               </ul>
               <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar este plano</a>
             </div>
             <div class="plan">
-              <div style="font-weight:900">Plano 650</div>
-              <div style="margin:6px 0 8px;color:#cfe0ff">1 mensalidade (até 100%)</div>
-              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+              <div class="pl-title">Plano 650</div>
+              <div class="pl-benef">1 mensalidade (até 100%)</div>
+              <ul class="pl-ul">
                 <li>Até 100% (1 mensalidade)</li>
                 <li>Válido após instalação</li>
               </ul>
@@ -449,11 +281,13 @@
       </div>
     </section>
 
-    <!-- Portal do Assinante (App) -->
-    <section class="section slide" id="s-portal-app" data-title="Portal do Assinante (App CCS)">
+    <!-- Portais -->
+    <section class="section" id="s-portal-app" data-title="Portal do Assinante (App CCS)">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal App" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/portal.png" loading="lazy" decoding="async">
+          <img class="art-img" alt="Portal App"
+               src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/portal.png"
+               loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -481,11 +315,12 @@
       </div>
     </section>
 
-    <!-- Portal de Faturas -->
-    <section class="section slide" id="s-faturas" data-title="Portal de Faturas (sem login)">
+    <section class="section" id="s-faturas" data-title="Portal de Faturas (sem login)">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=512" loading="lazy" decoding="async">
+          <img class="art-img" alt="Portal de Faturas"
+               src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=512"
+               loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -495,7 +330,7 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <p class="subtitle">Digite o CPF e veja faturas em aberto, copie PIX e pague.</p>
+          <p class="subtitle">CPF, sem senha. Veja faturas e copie o PIX.</p>
 
           <div id="more-faturas" class="more" role="region">
             <div class="more-inner">
@@ -513,54 +348,45 @@
         </div>
       </div>
     </section>
+
+    <!-- Resumo -->
+    <section class="section" id="s-resumo" data-title="Resumo dos Benefícios">
+      <div class="summary">
+        <h3 class="gtitle">Resumo dos Benefícios</h3>
+        <div class="grid">
+          <a class="gcard" href="#s-conecta"><div class="gimg"><img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=512" loading="lazy" decoding="async"></div><div class="gtxt">Conecta Clube</div></a>
+          <a class="gcard" href="#s-ccsplay"><div class="gimg"><img alt="CCS PLAY + CCS TV" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w240-h240-rw" loading="lazy" decoding="async"></div><div class="gtxt">CCS PLAY + CCS TV</div></a>
+          <a class="gcard" href="#s-skeelo"><div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg" loading="lazy" decoding="async"></div><div class="gtxt">Skeelo</div></a>
+          <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async"></div><div class="gtxt">Suporte Premium</div></a>
+          <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
+          <a class="gcard" href="#s-portal-app"><div class="gimg"><img alt="Portal do Assinante" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png" loading="lazy" decoding="async"></div><div class="gtxt">Portal do Assinante</div></a>
+          <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=256" loading="lazy" decoding="async"></div><div class="gtxt">Portal de Faturas</div></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="section" id="s-final" data-title="Final">
+      <div class="final">
+        <h3>Obrigado por ser cliente CCS Telecom!</h3>
+        <p>Conte com a gente para uma experiência de internet cada vez melhor.</p>
+        <div class="actions">
+          <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (curta, pois os Saiba mais já estão completos) -->
+    <section class="section" id="s-faq" data-title="FAQ">
+      <div class="card"><div class="content">
+        <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
+        <details class="faq"><summary>Quando meus benefícios são ativados?</summary><div>Em até 72 horas úteis após a instalação (validações internas).</div></details>
+        <details class="faq"><summary>Como acesso o CCS PLAY?</summary><div>Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div></details>
+        <details class="faq"><summary>Onde pago minhas faturas e faço PIX?</summary><div>Acesse <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> (CPF, sem senha).</div></details>
+      </div></div>
+    </section>
   </main>
-
-  <!-- Resumo -->
-  <section class="section" id="s-resumo">
-    <div class="summary">
-      <h3 class="gtitle">Resumo dos Benefícios</h3>
-      <div class="grid">
-        <a class="gcard" href="#s-conecta"><div class="gimg"><img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=512"></div><div class="gtxt">Conecta Clube</div></a>
-        <a class="gcard" href="#s-ccsplay"><div class="gimg"><img alt="CCS PLAY + CCS TV" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w240-h240-rw"></div><div class="gtxt">CCS PLAY + CCS TV</div></a>
-        <a class="gcard" href="#s-skeelo"><div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg"></div><div class="gtxt">Skeelo</div></a>
-        <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png"></div><div class="gtxt">Suporte Premium</div></a>
-        <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
-        <a class="gcard" href="#s-portal-app"><div class="gimg"><img alt="Portal do Assinante" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png"></div><div class="gtxt">Portal do Assinante</div></a>
-        <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=256"></div><div class="gtxt">Portal de Faturas</div></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Final -->
-  <section class="section" id="s-final">
-    <div class="final">
-      <h3>Obrigado por ser cliente CCS Telecom!</h3>
-      <p>Conte com a gente para uma experiência de internet cada vez melhor.</p>
-      <div class="actions">
-        <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
-        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ reduzida (mantemos principais porque os “Saiba mais” agora estão completos) -->
-  <section class="section" id="s-faq">
-    <div class="card"><div class="content">
-      <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
-      <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
-        <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Quando meus benefícios são ativados?</summary>
-        <div style="padding:8px 12px 12px">Em até 72 horas úteis após a instalação (validações internas).</div>
-      </details>
-      <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
-        <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Como acesso o CCS PLAY?</summary>
-        <div style="padding:8px 12px 12px">Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div>
-      </details>
-      <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
-        <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Onde pago minhas faturas e faço PIX?</summary>
-        <div style="padding:8px 12px 12px">Acesse <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> (CPF, sem senha).</div>
-      </details>
-    </div></div>
-  </section>
 
   <!-- Quick Dock -->
   <nav class="quick-dock" aria-label="Atalhos">
@@ -590,151 +416,6 @@
     </div>
   </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Ajustar padding-top conforme altura real da topbar (mantém tudo DENTRO da barra)
-  const topbar = document.getElementById('topbar');
-  const setTopPad = () => {
-    const h = topbar.offsetHeight || 64;
-    document.body.style.paddingTop = h + 'px';
-  };
-  setTopPad();
-  window.addEventListener('resize', setTopPad, {passive:true});
-
-  // Saiba mais — abertura confiável (todas as seções)
-  function setupMore(){
-    document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
-    document.addEventListener('click', (ev)=>{
-      const btn = ev.target.closest('.chip-more');
-      if (!btn) return;
-      const id = btn.getAttribute('aria-controls');
-      const panel = id && document.getElementById(id);
-      const txt = btn.querySelector('.txt');
-      if (!panel) return;
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      if (expanded){
-        const h = panel.scrollHeight;
-        panel.style.height = h + 'px';
-        panel.getBoundingClientRect(); // reflow
-        panel.style.height = '0px';
-        panel.classList.remove('is-open');
-        const onEnd = () => {
-          panel.hidden = true;
-          panel.style.height = '';
-          panel.removeEventListener('transitionend', onEnd);
-        };
-        panel.addEventListener('transitionend', onEnd);
-        btn.setAttribute('aria-expanded','false');
-        if (txt) txt.textContent = 'Saiba mais';
-      } else {
-        panel.hidden = false;
-        panel.style.height = '0px';
-        panel.classList.add('is-open');
-        requestAnimationFrame(()=> panel.style.height = panel.scrollHeight + 'px');
-        const onEnd = () => {
-          panel.style.height = 'auto';
-          panel.removeEventListener('transitionend', onEnd);
-        };
-        panel.addEventListener('transitionend', onEnd);
-        btn.setAttribute('aria-expanded','true');
-        if (txt) txt.textContent = 'Ver menos';
-        // garantir visibilidade abaixo da topbar
-        const rect = panel.getBoundingClientRect();
-        const topOffset = (topbar.offsetHeight || 64) + 12;
-        if (rect.top < topOffset){
-          const y = window.scrollY + rect.top - topOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      }
-    });
-  }
-  setupMore();
-
-  // Botão copiar e‑mail (Conecta)
-  const copyBtn = document.getElementById('copyEmail');
-  if (copyBtn){
-    copyBtn.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); copyBtn.textContent='✅ E‑mail copiado'; }
-      catch{ copyBtn.textContent='✅ E‑mail copiado'; }
-      setTimeout(()=> copyBtn.textContent='Copiar e‑mail', 1400);
-    });
-  }
-
-  // Quick Dock: destacar conforme seção
-  const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
-  const setActiveDock = (id) => {
-    dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
-  };
-  const slides = Array.from(document.querySelectorAll('main .section.slide'));
-  const io = new IntersectionObserver(entries => {
-    const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-    if (vis) setActiveDock(vis.target.id);
-  }, { threshold:[0.25,0.5,0.75] });
-  slides.forEach(s => io.observe(s));
-
-  // FAB subir/ir ao final
-  const fab = document.getElementById('fab');
-  function updateFabIcon(){
-    const nearTop = window.scrollY < 100;
-    if (nearTop){
-      fab.setAttribute('aria-label','Ir para o final');
-      fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
-    } else {
-      fab.setAttribute('aria-label','Ir para o topo');
-      fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-    }
-  }
-  updateFabIcon();
-  window.addEventListener('scroll', updateFabIcon, {passive:true});
-  fab.addEventListener('click', () => {
-    const nearTop = window.scrollY < 100;
-    if (nearTop){
-      const fin = document.getElementById('s-final') || document.querySelector('footer');
-      const y = fin.getBoundingClientRect().top + window.scrollY - 16;
-      window.scrollTo({ top:y, behavior:'smooth' });
-    } else {
-      window.scrollTo({ top:0, behavior:'smooth' });
-    }
-  });
-
-  // Deck setas/teclado (desktop)
-  const deck = document.getElementById('deck');
-  const prev = document.getElementById('deckPrev');
-  const next = document.getElementById('deckNext');
-  function nextSlide(dir){
-    if (!window.matchMedia('(min-width:1100px)').matches) return;
-    const cards = Array.from(deck.querySelectorAll('.slide'));
-    const x = deck.scrollLeft, vw = deck.clientWidth;
-    let target = cards[0], min = Infinity;
-    cards.forEach(s=>{
-      const mid = s.offsetLeft + s.offsetWidth/2;
-      const d = Math.abs(mid - (x + vw/2));
-      if (d < min){ min = d; target = s; }
-    });
-    let i = cards.indexOf(target);
-    i = Math.max(0, Math.min(cards.length-1, i + (dir>0?1:-1)));
-    deck.scrollTo({ left: cards[i].offsetLeft - 24, behavior:'smooth' });
-  }
-  if (prev && next){
-    prev.addEventListener('click', ()=>nextSlide(-1));
-    next.addEventListener('click', ()=>nextSlide(1));
-    window.addEventListener('keydown', (e)=>{
-      if (!window.matchMedia('(min-width:1100px)').matches) return;
-      if (e.key==='ArrowLeft') nextSlide(-1);
-      if (e.key==='ArrowRight') nextSlide(1);
-    });
-  }
-
-  // Ver em lista (desktop)
-  const toggleBtn = document.getElementById('viewToggle');
-  if (toggleBtn){
-    toggleBtn.addEventListener('click', ()=>{
-      const list = document.body.classList.toggle('view-list');
-      toggleBtn.setAttribute('aria-pressed', list ? 'true' : 'false');
-      toggleBtn.textContent = list ? 'Ver em deck' : 'Ver em lista';
-    });
-  }
-});
-</script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
