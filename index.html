@@ -19,13 +19,13 @@
     --muted:#cfe0ff;
     --cta-a:#ff8a25; --cta-b:#ffb04a;
     --focus:#00d9ff;
+
+    /* Cores (padrão) */
+    --levelA:#2f6bff; --levelB:#7b5cff;   /* Nível 1 */
+    --planA:#00d9ff;  --planB:#00ffc6;    /* 250 MB */
+
+    /* Tamanhos */
     --side-pad: clamp(14px, 4.5vw, 36px);
-
-    /* Cores por nível e plano */
-    --level1-a:#2f6bff; --level1-b:#7b5cff;
-    --plan250-a:#00d9ff; --plan250-b:#00ffc6;
-
-    /* Alturas de mídia */
     --art-max-h-d: clamp(300px, 42vh, 500px);
     --art-max-h-m: clamp(220px, 36vh, 360px);
 
@@ -43,11 +43,11 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     background:var(--bg);
-    padding-top:0; /* definido via JS conforme topbar */
+    padding-top:0; /* ajustado via JS conforme altura da topbar */
     padding-bottom:calc(130px + env(safe-area-inset-bottom));
   }
 
-  /* Fundo visual leve */
+  /* Fundo leve */
   .site-bg{position:fixed;inset:0;z-index:-6;pointer-events:none;background:
     radial-gradient(700px 480px at 5% 8%, rgba(95,92,255,.14), transparent 60%),
     radial-gradient(700px 480px at 95% 92%, rgba(0,234,255,.12), transparent 60%),
@@ -56,7 +56,7 @@
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
     background-size:220px 220px}
 
-  /* Topbar: altura automática (NÃO fixa) para evitar sobreposição */
+  /* Topbar fixa: logos nas pontas e badges centralizadas dentro da barra */
   .topbar{
     position:fixed;left:0;right:0;top:0;z-index:60;
     background:rgba(16,18,24,.55);
@@ -74,21 +74,23 @@
   }
   .titlebar{display:flex;justify-content:center;align-items:center;min-width:0}
 
-  /* Pílulas do título dentro da barra */
-  .chipset{
-    display:inline-flex;align-items:center;gap:8px;border-radius:16px;padding:6px 8px;
+  /* Badges (pílulas) unificadas e elegantes */
+  .badges{
+    display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:center;
+    padding:6px 8px;border-radius:14px;
     background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.10));
-    border:1px solid #ffffff1f;box-shadow:0 6px 16px rgba(0,0,0,.25);backdrop-filter:blur(8px)
+    border:1px solid #ffffff1f;backdrop-filter:blur(8px);box-shadow:0 6px 16px rgba(0,0,0,.25)
   }
-  .chip{
-    border-radius:999px;padding:8px 12px;font-weight:900;font-size:13px;white-space:nowrap
+  .badge{
+    border-radius:999px;padding:8px 12px;font-weight:900;font-size:13px;white-space:nowrap;border:0
   }
-  .chip.level{background:linear-gradient(90deg,var(--level1-a),var(--level1-b));color:#fff}
-  .chip.plan{background:linear-gradient(90deg,var(--plan250-a),var(--plan250-b));color:#0b0d12}
+  .badge.level{background:linear-gradient(90deg,var(--levelA),var(--levelB));color:#fff}
+  .badge.plan{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12}
 
-  /* Mobile: empilhar pílulas uma acima da outra dentro da barra */
+  /* Mobile: empilhar as duas pílulas no centro, sem conectores */
   @media (max-width:640px){
-    .chipset{flex-direction:column;gap:6px}
+    .badges{flex-direction:column;gap:6px}
+    .logo-ccs,.logo-vctech{width:56px;height:56px}
   }
 
   /* Seções/cards base */
@@ -116,13 +118,13 @@
   .subtitle{margin:6px 0 10px;color:var(--muted)}
   .row{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
   .pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:900;background:rgba(255,255,255,.08)}
-  .pill.hi{background:linear-gradient(90deg,var(--plan250-a),var(--plan250-b));color:#0b0b0b;border-color:transparent}
+  .pill.hi{background:linear-gradient(90deg,var(--planA),var(--planB));color:#0b0b0b;border-color:transparent}
   .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
   .btn{border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:900;background:#fff;color:#111;text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
   .btn.cta{background:linear-gradient(90deg,var(--cta-a),var(--cta-b));border-color:transparent}
   .btn.block{width:100%}
 
-  /* Saiba mais (animação estável) */
+  /* Saiba mais (completo, confiável) */
   .chip-more{
     display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
     background:rgba(255,255,255,.10);border:1px solid var(--line);color:#fff;font-weight:900;font-size:13px;cursor:pointer;
@@ -132,6 +134,14 @@
   .more[hidden]{display:none}
   .more{overflow:hidden;height:0;opacity:0;transition:height .28s ease,opacity .28s ease}
   .more.is-open{opacity:1}
+  .more-inner{padding:14px;margin-top:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px}
+  .facts{display:grid;grid-template-columns:1fr;gap:10px;margin:0}
+  @media (min-width:700px){.facts{grid-template-columns:1fr 1fr}}
+  .fact{display:flex;gap:10px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.08)}
+  .fact .ico{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.10);border:1px solid var(--line);font-size:14px}
+  .fact .txt{color:#dfe7ff}
+  .fact .txt strong{color:#fff}
+  .note{color:#a8b6d9;font-size:14px}
 
   /* Resumo */
   .summary{width:min(1080px,100%);margin:auto}
@@ -154,7 +164,7 @@
   #deck{display:block}
   .slide{scroll-snap-align:start}
   @media (min-width:1100px){
-    #deck{display:flex;gap:var(--deck-gap);padding:24px var(--deck-pad);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--deck-pad)}
+    #deck{display:flex;gap:var(--deck-gap);padding:24px var(--deck-pad);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left: var(--deck-pad)}
     .slide{flex:0 0 min(980px,84vw);scroll-snap-align:center}
     #deck::-webkit-scrollbar{height:8px} #deck::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
   }
@@ -191,9 +201,7 @@
 
   /* A11y */
   a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:10px}
-  @media (prefers-reduced-motion:reduce){
-    .chip-more{animation:none}
-  }
+  @media (prefers-reduced-motion:reduce){.chip-more{animation:none}}
 </style>
 </head>
 
@@ -202,21 +210,21 @@
   <div class="site-bg" aria-hidden="true"></div>
   <div class="site-noise" aria-hidden="true"></div>
 
-  <!-- Topbar com tudo DENTRO (desktop e mobile) -->
+  <!-- Topo fixo: logos + badges centralizadas DENTRO da barra -->
   <header class="topbar" id="topbar">
     <div class="wrap">
       <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
-        <div class="chipset" role="group" aria-label="Nível e plano">
-          <span class="chip level" id="chipNivel">Benefícios Nível 1</span>
-          <span class="chip plan" id="chipPlano">Plano 250 MB</span>
+        <div class="badges" role="group" aria-label="Nível e plano">
+          <span class="badge level" id="badgeNivel">Benefícios Nível 1</span>
+          <span class="badge plan"  id="badgePlano">Plano 250 MB</span>
         </div>
       </div>
       <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
     </div>
   </header>
 
-  <!-- Alternador Lista/Deck (desktop) -->
+  <!-- Toggle de visualização (desktop) -->
   <div id="viewToggleWrap"><button id="viewToggle" type="button" aria-pressed="false">Ver em lista</button></div>
 
   <!-- Setas Deck (desktop) -->
@@ -247,15 +255,21 @@
           </div>
           <p class="subtitle">Clube de Vantagens CCS</p>
           <div class="row"><span class="pill hi">1 voucher</span><span class="pill">a cada 90 dias</span></div>
+          <p class="note">Válido para clientes ativos e adimplentes.</p>
+
           <div id="more-conecta" class="more" role="region">
             <div class="more-inner">
               <div class="facts">
-                <div class="fact"><span class="ico">🎟️</span><div class="txt"><strong>O que é:</strong> clube de benefícios com empresas parceiras.</div></div>
-                <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>Frequência:</strong> 1 voucher a cada 90 dias.</div></div>
-                <div class="fact"><span class="ico">📩</span><div class="txt"><strong>Solicitação:</strong> <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a></div></div>
+                <div class="fact"><span class="ico">🎟️</span><div class="txt"><strong>O que é:</strong> clube com parceiros da região oferecendo vantagens e descontos.</div></div>
+                <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>Frequência:</strong> 1 voucher a cada 90 dias (conforme seu plano).</div></div>
+                <div class="fact"><span class="ico">📩</span><div class="txt"><strong>Como solicitar:</strong> envie e‑mail para <a href="mailto:ccs@ccstelecom.com.br">ccs@ccstelecom.com.br</a>.</div></div>
+                <div class="fact"><span class="ico">✅</span><div class="txt"><strong>Regras:</strong> não cumulativo, intransferível; validade e condições definidas pelo parceiro.</div></div>
+                <div class="fact"><span class="ico">ℹ️</span><div class="txt"><strong>Não incluído no Nível 1:</strong> atrações Nível 3 (Unipraias, <a target="_blank" rel="noopener" href="https://www.barconopirata.com.br/">Barco Pirata</a>, <a target="_blank" rel="noopener" href="https://rodagigantebc.com.br/">Roda Gigante</a>, <a target="_blank" rel="noopener" href="https://aquariobc.com.br/">Aquário</a>).</div></div>
+                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após a instalação (validações internas).</div></div>
               </div>
             </div>
           </div>
+
           <div class="actions">
             <a class="btn cta" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
             <button class="btn" id="copyEmail" type="button">Copiar e‑mail</button>
@@ -281,16 +295,22 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <p class="subtitle">Streaming completo para sua família</p>
+          <p class="subtitle">Streaming completo e canais de TV</p>
           <div class="row"><span class="pill hi">60+ canais</span><span class="pill">regionais e variados</span></div>
+          <p class="note">Inclui <a target="_blank" rel="noopener" href="https://www.sbt.com.br/">SBT</a> e <a target="_blank" rel="noopener" href="https://recordtv.r7.com/">Record</a>. Rede Globo não está incluída.</p>
+
           <div id="more-ccsplay" class="more" role="region">
             <div class="more-inner">
               <div class="facts">
-                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a target="_blank" rel="noopener" href="https://onelink.to/ccsplay">onelink.to/ccsplay</a></div></div>
-                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail + CPF (só números)</div></div>
+                <div class="fact"><span class="ico">🎬</span><div class="txt"><strong>Conteúdo:</strong> mais de 60 canais regionais e variados.</div></div>
+                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>Apps:</strong> <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> (busque por “CCS PLAY” e “CCS TV”).</div></div>
+                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail cadastrado; senha = CPF (apenas números).</div></div>
+                <div class="fact"><span class="ico">💻</span><div class="txt"><strong>Dispositivos:</strong> celular, tablet, computador e Smart TV (iOS/Android).</div></div>
+                <div class="fact"><span class="ico">🆘</span><div class="txt"><strong>Ajuda:</strong> <a href="https://wa.me/554797701300" target="_blank" rel="noopener">WhatsApp do Suporte</a>.</div></div>
               </div>
             </div>
           </div>
+
           <div class="actions">
             <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
           </div>
@@ -314,17 +334,26 @@
           </div>
           <p class="subtitle">Sua biblioteca de leitura e áudio</p>
           <div class="row"><span class="pill hi">Livros + Audiobooks</span><span class="pill">Minibooks e Comics</span></div>
-          <div id="more-skeelo" class="more" role="region"><div class="more-inner">
-            <div class="facts">
-              <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a target="_blank" rel="noopener" href="https://onelink.to/hseuht">onelink.to/hseuht</a></div></div>
+
+          <div id="more-skeelo" class="more" role="region">
+            <div class="more-inner">
+              <div class="facts">
+                <div class="fact"><span class="ico">📚</span><div class="txt"><strong>Conteúdo:</strong> livros digitais mensais, audiobooks, minibooks e comics.</div></div>
+                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a href="https://onelink.to/hseuht" target="_blank" rel="noopener">onelink.to/hseuht</a> (iOS/Android).</div></div>
+                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Compatibilidade:</strong> verifique requisitos na loja do app.</div></div>
+                <div class="fact"><span class="ico">⏳</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após instalação do serviço.</div></div>
+              </div>
             </div>
-          </div></div>
-          <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a></div>
+          </div>
+
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Suporte -->
+    <!-- Suporte ao Assinante -->
     <section class="section slide" id="s-suporte" data-title="Suporte ao Assinante">
       <div class="card">
         <div class="media"><div class="frame">
@@ -338,14 +367,23 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <p class="subtitle">Prioridade e prazo garantido</p>
+          <p class="subtitle">Atendimento com prioridade e prazo garantido</p>
           <div class="row"><span class="pill hi">SLA 36h úteis</span><span class="pill">1 visita técnica/ano</span></div>
-          <div id="more-suporte" class="more" role="region"><div class="more-inner">
-            <div class="facts">
-              <div class="fact"><span class="ico">💬</span><div class="txt"><strong>WhatsApp:</strong> <a target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">abrir chamado</a></div></div>
+
+          <div id="more-suporte" class="more" role="region">
+            <div class="more-inner">
+              <div class="facts">
+                <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>SLA:</strong> atendimento em até 36h úteis.</div></div>
+                <div class="fact"><span class="ico">🛠️</span><div class="txt"><strong>Incluso:</strong> 1 visita técnica gratuita/ano.</div></div>
+                <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra chamado:</strong> <a href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">WhatsApp do Suporte</a>.</div></div>
+                <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> benefícios liberados em até 72h úteis após instalação.</div></div>
+              </div>
             </div>
-          </div></div>
-          <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Solicitar suporte</a></div>
+          </div>
+
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Solicitar suporte</a>
+          </div>
         </div>
       </div>
     </section>
@@ -364,34 +402,54 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <p class="subtitle">Até 100% de desconto na próxima fatura indicando amigos.</p>
+          <p class="subtitle">Ganhe até 100% na próxima fatura indicando amigos.</p>
+
           <div class="plans">
             <div class="plan">
               <div style="font-weight:900">Plano 250</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$30</div>
+              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+                <li>Aplica na fatura seguinte</li>
+                <li>Válido após instalação</li>
+              </ul>
               <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar este plano</a>
             </div>
             <div class="plan">
               <div style="font-weight:900">Plano 450</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">Desconto: R$40</div>
+              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+                <li>Aplica na fatura seguinte</li>
+                <li>Válido após instalação</li>
+              </ul>
               <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar este plano</a>
             </div>
             <div class="plan">
               <div style="font-weight:900">Plano 650</div>
               <div style="margin:6px 0 8px;color:#cfe0ff">1 mensalidade (até 100%)</div>
+              <ul style="margin:0 0 10px 16px;color:#dfe7ff">
+                <li>Até 100% (1 mensalidade)</li>
+                <li>Válido após instalação</li>
+              </ul>
               <a class="btn cta block" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650.">Indicar este plano</a>
             </div>
           </div>
-          <div id="more-indique" class="more" role="region"><div class="more-inner">
-            <div class="facts">
-              <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Aplicação:</strong> na fatura seguinte após validação.</div></div>
+
+          <div id="more-indique" class="more" role="region">
+            <div class="more-inner">
+              <div class="facts">
+                <div class="fact"><span class="ico">🤝</span><div class="txt"><strong>Como funciona:</strong> indique pelo <a target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo.">WhatsApp</a>; após instalação/validação, aplicamos o desconto.</div></div>
+                <div class="fact"><span class="ico">🎯</span><div class="txt"><strong>Por plano:</strong> 250=R$30 | 450=R$40 | 650=1 mensalidade isenta (até 100%).</div></div>
+                <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Aplicação:</strong> fatura subsequente à validação.</div></div>
+                <div class="fact"><span class="ico">ℹ️</span><div class="txt"><small>Condições e prazos confirmados no atendimento.</small></div></div>
+              </div>
             </div>
-          </div></div>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <!-- Portal do Assinante -->
+    <!-- Portal do Assinante (App) -->
     <section class="section slide" id="s-portal-app" data-title="Portal do Assinante (App CCS)">
       <div class="card">
         <div class="media"><div class="frame">
@@ -405,12 +463,20 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <div id="more-portal-app" class="more" role="region"><div class="more-inner">
-            <div class="facts">
-              <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App CCS:</strong> <a target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">bit.ly/CCS_APP</a></div></div>
+
+          <div id="more-portal-app" class="more" role="region">
+            <div class="more-inner">
+              <div class="facts">
+                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App:</strong> <a href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">bit.ly/CCS_APP</a></div></div>
+                <div class="fact"><span class="ico">✅</span><div class="txt"><strong>Funções:</strong> pagamentos (PIX/Cartão), 2ª via, desbloqueio por confiança, extrato de conexão.</div></div>
+                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail cadastrado e CPF (apenas números), quando solicitado.</div></div>
+              </div>
             </div>
-          </div></div>
-          <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">Acessar App</a></div>
+          </div>
+
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">Acessar App</a>
+          </div>
         </div>
       </div>
     </section>
@@ -429,13 +495,21 @@
               <span class="txt">Saiba mais</span>
             </button>
           </div>
-          <p class="subtitle">CPF, sem senha. Veja faturas e copie o PIX.</p>
-          <div id="more-faturas" class="more" role="region"><div class="more-inner">
-            <div class="facts">
-              <div class="fact"><span class="ico">💳</span><div class="txt"><strong>Link:</strong> <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a></div></div>
+          <p class="subtitle">Digite o CPF e veja faturas em aberto, copie PIX e pague.</p>
+
+          <div id="more-faturas" class="more" role="region">
+            <div class="more-inner">
+              <div class="facts">
+                <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Sem senha:</strong> acesse com o CPF do titular.</div></div>
+                <div class="fact"><span class="ico">💳</span><div class="txt"><strong>Pagamento:</strong> PIX/Cartão, copiar código, visualizar faturas em aberto.</div></div>
+                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>Link:</strong> <a target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a></div></div>
+              </div>
             </div>
-          </div></div>
-          <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a></div>
+          </div>
+
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a>
+          </div>
         </div>
       </div>
     </section>
@@ -469,17 +543,17 @@
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- FAQ reduzida (mantemos principais porque os “Saiba mais” agora estão completos) -->
   <section class="section" id="s-faq">
     <div class="card"><div class="content">
       <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
       <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
         <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Quando meus benefícios são ativados?</summary>
-        <div style="padding:8px 12px 12px">Em até 72 horas úteis após a instalação.</div>
+        <div style="padding:8px 12px 12px">Em até 72 horas úteis após a instalação (validações internas).</div>
       </details>
       <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
         <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Como acesso o CCS PLAY?</summary>
-        <div style="padding:8px 12px 12px">Baixe em <a target="_blank" rel="noopener" href="https://onelink.to/ccsplay">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div>
+        <div style="padding:8px 12px 12px">Baixe em <a href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div>
       </details>
       <details style="margin:8px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08)">
         <summary style="cursor:pointer;padding:10px 12px;font-weight:900">Onde pago minhas faturas e faço PIX?</summary>
@@ -493,11 +567,11 @@
     <div class="dock-items">
       <a href="#s-conecta" title="Conecta Clube"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt=""></a>
       <a href="#s-ccsplay" title="CCS PLAY + CCS TV"><img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt=""></a>
-      <a href="#s-skeelo" title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
-      <a href="#s-suporte" title="Suporte"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
-      <a href="#s-indique" title="Indique & Ganhe"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt=""></a>
+      <a href="#s-skeelo"  title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
+      <a href="#s-suporte"  title="Suporte"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
+      <a href="#s-indique"  title="Indique & Ganhe"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt=""></a>
       <a href="#s-portal-app" title="Portal do Assinante"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/APP.png" alt=""></a>
-      <a href="#s-faturas" title="Portal de Faturas"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
+      <a href="#s-faturas"   title="Portal de Faturas"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
     </div>
   </nav>
 
@@ -518,7 +592,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) Calcular padding-top do body baseado na altura real da topbar (auto)
+  // Ajustar padding-top conforme altura real da topbar (mantém tudo DENTRO da barra)
   const topbar = document.getElementById('topbar');
   const setTopPad = () => {
     const h = topbar.offsetHeight || 64;
@@ -527,60 +601,56 @@ document.addEventListener('DOMContentLoaded', () => {
   setTopPad();
   window.addEventListener('resize', setTopPad, {passive:true});
 
-  // 2) Saiba mais: abrir/fechar com animação confiável
-  function toggleMore(btn){
-    const panelId = btn.getAttribute('aria-controls');
-    const panel = panelId && document.getElementById(panelId);
-    const txt = btn.querySelector('.txt');
-    if (!panel) return;
-
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    if (expanded){
-      // fechar
-      const h = panel.scrollHeight;
-      panel.style.height = h + 'px';
-      panel.getBoundingClientRect(); // reflow
-      panel.style.height = '0px';
-      panel.classList.remove('is-open');
-      const onEnd = () => {
-        panel.hidden = true;
-        panel.style.height = '';
-        panel.removeEventListener('transitionend', onEnd);
-      };
-      panel.addEventListener('transitionend', onEnd);
-      btn.setAttribute('aria-expanded','false');
-      if (txt) txt.textContent = 'Saiba mais';
-    } else {
-      // abrir
-      panel.hidden = false;
-      panel.style.height = '0px';
-      panel.classList.add('is-open');
-      requestAnimationFrame(()=>{
-        panel.style.height = panel.scrollHeight + 'px';
-      });
-      const onEnd = () => {
-        panel.style.height = 'auto';
-        panel.removeEventListener('transitionend', onEnd);
-      };
-      panel.addEventListener('transitionend', onEnd);
-      btn.setAttribute('aria-expanded','true');
-      if (txt) txt.textContent = 'Ver menos';
-      // garantir visibilidade abaixo da topbar
-      const rect = panel.getBoundingClientRect();
-      const topOffset = (topbar.offsetHeight || 64) + 12;
-      if (rect.top < topOffset){
-        const y = window.scrollY + rect.top - topOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+  // Saiba mais — abertura confiável (todas as seções)
+  function setupMore(){
+    document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
+    document.addEventListener('click', (ev)=>{
+      const btn = ev.target.closest('.chip-more');
+      if (!btn) return;
+      const id = btn.getAttribute('aria-controls');
+      const panel = id && document.getElementById(id);
+      const txt = btn.querySelector('.txt');
+      if (!panel) return;
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      if (expanded){
+        const h = panel.scrollHeight;
+        panel.style.height = h + 'px';
+        panel.getBoundingClientRect(); // reflow
+        panel.style.height = '0px';
+        panel.classList.remove('is-open');
+        const onEnd = () => {
+          panel.hidden = true;
+          panel.style.height = '';
+          panel.removeEventListener('transitionend', onEnd);
+        };
+        panel.addEventListener('transitionend', onEnd);
+        btn.setAttribute('aria-expanded','false');
+        if (txt) txt.textContent = 'Saiba mais';
+      } else {
+        panel.hidden = false;
+        panel.style.height = '0px';
+        panel.classList.add('is-open');
+        requestAnimationFrame(()=> panel.style.height = panel.scrollHeight + 'px');
+        const onEnd = () => {
+          panel.style.height = 'auto';
+          panel.removeEventListener('transitionend', onEnd);
+        };
+        panel.addEventListener('transitionend', onEnd);
+        btn.setAttribute('aria-expanded','true');
+        if (txt) txt.textContent = 'Ver menos';
+        // garantir visibilidade abaixo da topbar
+        const rect = panel.getBoundingClientRect();
+        const topOffset = (topbar.offsetHeight || 64) + 12;
+        if (rect.top < topOffset){
+          const y = window.scrollY + rect.top - topOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
       }
-    }
+    });
   }
+  setupMore();
 
-  document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
-  document.querySelectorAll('.chip-more').forEach(btn => {
-    btn.addEventListener('click', () => toggleMore(btn));
-  });
-
-  // 3) Botão copiar e‑mail
+  // Botão copiar e‑mail (Conecta)
   const copyBtn = document.getElementById('copyEmail');
   if (copyBtn){
     copyBtn.addEventListener('click', async () => {
@@ -590,23 +660,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4) Quick dock: destacar conforme seção
+  // Quick Dock: destacar conforme seção
   const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
   const setActiveDock = (id) => {
     dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
   };
-  const sections = Array.from(document.querySelectorAll('main .section.slide'));
+  const slides = Array.from(document.querySelectorAll('main .section.slide'));
   const io = new IntersectionObserver(entries => {
     const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
     if (vis) setActiveDock(vis.target.id);
   }, { threshold:[0.25,0.5,0.75] });
-  sections.forEach(s => io.observe(s));
+  slides.forEach(s => io.observe(s));
 
-  // 5) FAB subir/ir ao final
+  // FAB subir/ir ao final
   const fab = document.getElementById('fab');
   function updateFabIcon(){
     const nearTop = window.scrollY < 100;
-    const nearBottom = window.innerHeight + window.scrollY > document.body.offsetHeight - 120;
     if (nearTop){
       fab.setAttribute('aria-label','Ir para o final');
       fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
@@ -628,38 +697,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6) Deck setas/teclado (desktop)
+  // Deck setas/teclado (desktop)
   const deck = document.getElementById('deck');
   const prev = document.getElementById('deckPrev');
   const next = document.getElementById('deckNext');
-
   function nextSlide(dir){
     if (!window.matchMedia('(min-width:1100px)').matches) return;
-    const slides = Array.from(deck.querySelectorAll('.slide'));
+    const cards = Array.from(deck.querySelectorAll('.slide'));
     const x = deck.scrollLeft, vw = deck.clientWidth;
-    let target = slides[0];
-    // achar slide mais próximo do centro
-    let minDist = Infinity;
-    slides.forEach(s=>{
+    let target = cards[0], min = Infinity;
+    cards.forEach(s=>{
       const mid = s.offsetLeft + s.offsetWidth/2;
-      const dist = Math.abs(mid - (x + vw/2));
-      if (dist < minDist){ minDist = dist; target = s; }
+      const d = Math.abs(mid - (x + vw/2));
+      if (d < min){ min = d; target = s; }
     });
-    let idx = slides.indexOf(target);
-    idx = Math.max(0, Math.min(slides.length-1, idx + (dir>0?1:-1)));
-    deck.scrollTo({ left: slides[idx].offsetLeft - 24, behavior:'smooth' });
+    let i = cards.indexOf(target);
+    i = Math.max(0, Math.min(cards.length-1, i + (dir>0?1:-1)));
+    deck.scrollTo({ left: cards[i].offsetLeft - 24, behavior:'smooth' });
   }
   if (prev && next){
-    prev.addEventListener('click', () => nextSlide(-1));
-    next.addEventListener('click', () => nextSlide(1));
+    prev.addEventListener('click', ()=>nextSlide(-1));
+    next.addEventListener('click', ()=>nextSlide(1));
     window.addEventListener('keydown', (e)=>{
       if (!window.matchMedia('(min-width:1100px)').matches) return;
-      if (e.key === 'ArrowLeft') nextSlide(-1);
-      if (e.key === 'ArrowRight') nextSlide(1);
+      if (e.key==='ArrowLeft') nextSlide(-1);
+      if (e.key==='ArrowRight') nextSlide(1);
     });
   }
 
-  // 7) Ver em lista (desktop)
+  // Ver em lista (desktop)
   const toggleBtn = document.getElementById('viewToggle');
   if (toggleBtn){
     toggleBtn.addEventListener('click', ()=>{
