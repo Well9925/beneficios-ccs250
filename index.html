@@ -66,7 +66,7 @@
 
     .fx.fx-noise{
       z-index:-3; opacity:.04; mix-blend-mode:soft-light;
-      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)" opacity="0.55"/></svg>');
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
       background-size:220px 220px
     }
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
@@ -227,10 +227,12 @@
     .more{ overflow:hidden; height:0; opacity:0; transition: height .28s ease, opacity .28s ease }
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
+
+    /* Facts: restaura estilo padrão global (caixinha), e remove caixinha só no Conecta Clube */
     .facts{ display:grid; grid-template-columns:1fr; gap:10px; margin:0 }
     @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:8px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
-    .fact .ico{ width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px }
+    .fact .ico{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.10); border:1px solid var(--line); font-size:14px }
     .fact .txt{ color:#dfe7ff }
     .fact .txt strong{ color:#fff }
 
@@ -295,7 +297,7 @@
 
     /* Botões de comparação Nível 2/3 */
     #s-conecta .compare-tabs{
-      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; width:100%; max-width:480px
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
     }
     #s-conecta .compare-tabs button{
       border:1px solid var(--line); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.06);
@@ -308,13 +310,15 @@
     #s-conecta .compare-tabs .dot{
       width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB))
     }
-    /* Ver meu nível */
-    #s-conecta .back-row{ display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap }
-    #s-conecta .link-back{
-      color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px; font-weight:900; cursor:pointer; background:none; border:0; padding:0
+    /* Ver meu nível (destaque sutil na primeira aparição) */
+    #s-conecta .btn-back{
+      display:inline-flex; align-items:center; gap:6px; margin-left:auto;
+      padding:6px 12px; border-radius:999px; border:1px solid var(--line);
+      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
     }
-    #s-conecta .cc-viewing{ display:none; color:#cfe0ff; font-weight:800 }
-    #s-conecta .cc-viewing.show{ display:block }
+    #s-conecta .btn-back .ico{ width:16px; height:16px }
+    #s-conecta .btn-back.hint{ animation:pulseHint 1.2s ease-in-out 2 }
+    @keyframes pulseHint{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.12)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
 
     /* Plano necessário (aparece quando comparando 2/3) */
     #s-conecta .plan-pill{
@@ -322,6 +326,30 @@
       padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900
     }
     #s-conecta .plan-pill.show{ display:inline-flex }
+
+    /* Pílula Premium */
+    #s-conecta .pill-premium{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--line); border-radius:999px; padding:8px 12px;
+      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+    }
+    #s-conecta .pill-premium .ico{ font-size:16px }
+    #s-conecta .pill-premium.included{
+      background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent
+    }
+
+    /* Ações do Conecta Clube: grade lado a lado no mobile */
+    #s-conecta .actions{
+      display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:10px; align-items:stretch
+    }
+    @media (min-width:760px){
+      #s-conecta .actions{ grid-template-columns:repeat(3, minmax(160px,1fr)) }
+    }
+
+    /* “Saiba mais” — sem caixinha nos emojis somente no Conecta Clube */
+    #s-conecta .fact .ico{
+      width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px
+    }
 
     /* Transição de conteúdo por nível (crossfade com autoheight) */
     #s-conecta .cc-dyn{ position:relative }
@@ -419,14 +447,17 @@
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
           <div class="compare-area">
-            <!-- Botões de comparação (Nível 2 e 3) -->
+            <!-- Botões de comparação (Nível 2 e 3) + Ver meu nível -->
             <div class="compare-tabs" role="group" aria-label="Comparar níveis">
               <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
               <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
+              <button type="button" id="btn-my" class="btn-back" aria-label="Voltar ao meu nível" style="display:none">
+                <svg class="ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                Ver meu nível
+              </button>
             </div>
             <div class="back-row">
               <span id="cc-viewing" class="cc-viewing" aria-live="polite"></span>
-              <button type="button" id="btn-my" class="link-back" aria-label="Voltar ao meu nível">Ver meu nível</button>
             </div>
 
             <!-- Plano necessário (mostra em 2/3) -->
@@ -437,6 +468,9 @@
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
               <div class="row cc-pills" id="cc-pills">
                 <span class="pill hi" id="cc-pill-main">1 voucher • a cada 90 dias</span>
+                <span class="pill-premium" id="cc-pill-premium" role="status" aria-live="polite">
+                  <span class="ico">🏆</span><span id="cc-premium-text">Premium não incluídas</span>
+                </span>
               </div>
               <p class="note" id="cc-note">Válido para clientes ativos e adimplentes.</p>
 
@@ -880,32 +914,33 @@
 
       /* ====== Conecta Clube — comparação de níveis ====== */
       const LEVELS_KEY = 'ccs-cc-compare-level';
-      const CLIENT_LEVEL = 1; // pílula fixa ao lado do título
 
       const CC_CONTENT = {
         1: {
           plan: '250 MB',
           pill: '1 voucher • a cada 90 dias',
+          premiumIncluded: false,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
             { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
             { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
             { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano', label:'Enviar e‑mail ↗' } },
             { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 90 dias.' },
-            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
           ],
           upgrade: null
         },
         2: {
           plan: '450 MB',
           pill: '1 voucher • a cada 60 dias',
+          premiumIncluded: false,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
             { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
             { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
             { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202', label:'Enviar e‑mail ↗' } },
             { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
-            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
           ],
           upgrade: {
             label: 'Atualizar para 450 MB',
@@ -915,13 +950,14 @@
         3: {
           plan: '650 MB',
           pill: '1 voucher • a cada 60 dias',
+          premiumIncluded: true,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
             { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
             { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
             { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%203', label:'Enviar e‑mail ↗' } },
             { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
-            { emoji:'🏆', text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+            { emoji:'🏆', text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
           ],
           upgrade: {
             label: 'Atualizar para 650 MB',
@@ -934,6 +970,8 @@
       const ccDyn = document.getElementById('cc-dyn');
       const ccSwap = document.getElementById('cc-swap');
       const ccPillMain = document.getElementById('cc-pill-main');
+      const ccPremiumPill = document.getElementById('cc-pill-premium');
+      const ccPremiumText = document.getElementById('cc-premium-text');
       const ccNote = document.getElementById('cc-note');
       const ccFacts = document.getElementById('cc-facts');
       const ccPlanPill = document.getElementById('cc-plan-pill');
@@ -953,6 +991,7 @@
         facts.forEach(f=>{
           const row = document.createElement('div');
           row.className = 'fact';
+          if (f.anchorId) row.id = f.anchorId;
           const ico = document.createElement('span');
           ico.className = 'ico'; ico.textContent = f.emoji || '•';
           const txt = document.createElement('div');
@@ -996,6 +1035,18 @@
         btnL3.setAttribute('aria-pressed', String(level === 3));
       }
 
+      function updatePremiumPill(data){
+        if (data.premiumIncluded){
+          ccPremiumPill.classList.add('included');
+          ccPremiumText.textContent = 'Premium incluídas';
+          ccPremiumPill.setAttribute('aria-label','Atrações premium: incluídas');
+        } else {
+          ccPremiumPill.classList.remove('included');
+          ccPremiumText.textContent = 'Premium não incluídas';
+          ccPremiumPill.setAttribute('aria-label','Atrações premium: não incluídas');
+        }
+      }
+
       function applyCompare(level,{remember=true, smoothIntoView=false}={}){
         const data = CC_CONTENT[level] || CC_CONTENT[1];
         currentCompare = level;
@@ -1006,15 +1057,20 @@
           viewing.textContent = '';
           viewing.classList.remove('show');
           btnMy.style.display = 'none';
+          btnMy.classList.remove('hint');
         } else {
           viewing.textContent = `Visualizando: Nível ${level}`;
           viewing.classList.add('show');
-          btnMy.style.display = 'inline';
+          btnMy.style.display = 'inline-flex';
+          // destaque sutil na primeira aparição
+          btnMy.classList.add('hint');
+          setTimeout(()=> btnMy.classList.remove('hint'), 1600);
         }
 
         animateSwap(()=>{
           ccPillMain.textContent = data.pill;
           ccNote.textContent = data.note || '';
+          updatePremiumPill(data);
           renderFacts(data.facts || []);
         });
 
@@ -1042,14 +1098,28 @@
 
         if (remember) localStorage.setItem(LEVELS_KEY, String(level));
 
-        // foco/visibilidade
         if (smoothIntoView){
           const topY = ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
           window.scrollTo({ top: topY, behavior: 'smooth' });
         }
       }
 
-      // Botões
+      // Pílula Premium: abre "Saiba mais" e rola ao item de atrações
+      ccPremiumPill.addEventListener('click', ()=>{
+        const panel = document.getElementById('more-conecta');
+        const btn = document.querySelector('[aria-controls="more-conecta"].chip-more');
+        if (btn.getAttribute('aria-expanded') !== 'true') btn.click();
+        setTimeout(()=>{
+          const anchor = document.getElementById('cc-premium');
+          if (anchor){
+            const topOffset = (topbar.offsetHeight || 64) + 16;
+            const y = window.scrollY + anchor.getBoundingClientRect().top - topOffset;
+            window.scrollTo({ top:y, behavior:'smooth' });
+          }
+        }, 60);
+      });
+
+      // Botões de comparação
       function onCompareClick(level){
         lastCompareClickAt = Date.now();
         applyCompare(level, {remember:true, smoothIntoView:false});
