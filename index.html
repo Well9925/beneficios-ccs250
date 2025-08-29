@@ -65,7 +65,7 @@
     .pulse.p4{ stroke-dasharray:24 680; animation-duration:15s; animation-delay:-3.4s }
     @keyframes dash{ to{ stroke-dashoffset: -760 } }
     .fx.fx-shimmer{ z-index:-4; mix-blend-mode:screen; background:linear-gradient(22deg,transparent 40%,rgba(80,190,255,.16) 50%,transparent 60%); background-size:200% 200%; animation:shimmer 16s ease-in-out infinite alternate }
-    @keyframes shimmer{ from{background-position:0% 0%} to{background-position:100% 100%} }
+    @keyframes shimmer{ from{background-position:0% 0%} to{background-position:100% 100% } }
     .fx.fx-noise{ z-index:-3; opacity:.04; mix-blend-mode:soft-light; background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>'); background-size:220px 220px }
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
     @media (prefers-reduced-motion:reduce){ .pulse,.fx.fx-shimmer{ animation:none } }
@@ -215,7 +215,7 @@
     /* Rótulo ATUAL (fora da pílula, no canto sup-esq do Nível 1) */
     .label-actual{
       position:absolute; z-index:2;
-      top:4px; left:12px; /* reposicionado via JS para alinhar com o seg-l1 */
+      top:4px; left:12px;
       font-size:11px; font-weight:900;
       padding:3px 8px; border-radius:999px;
       color:#0b0d12; background:rgba(255,255,255,.85);
@@ -259,7 +259,7 @@
     .plan-pill{ display:none; align-items:center; gap:8px; margin:6px 0 0; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900 }
     .plan-pill.show{ display:inline-flex }
 
-    /* Pílulas de benefícios lado a lado; dot mágico no começo do voucher */
+    /* Pílulas de benefícios lado a lado; voucher com dot no começo e sem quebra */
     .cc-pills{ display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:10px 0 }
     .cc-pills > *{ min-width:0 }
 
@@ -267,8 +267,10 @@
 
     .pill-voucher{
       display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px; line-height:1.25;
-      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900; font-size:var(--pill-fs); min-height:var(--pill-min-h)
+      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900; font-size:var(--pill-fs); min-height:var(--pill-min-h);
+      white-space:nowrap; /* não quebra a frase */
     }
+    .pill-voucher .text{ font-weight:900; }
 
     .pill-premium{
       display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25; font-size:var(--pill-fs); min-height:var(--pill-min-h);
@@ -375,13 +377,10 @@
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
 
               <div class="cc-pills" id="cc-pills">
-                <!-- Voucher: bolinha no início -->
+                <!-- Voucher: bolinha no início, texto único -->
                 <span class="pill-voucher" id="cc-pill-main" aria-label="Vouchers por período">
                   <span class="dot-magic" aria-hidden="true"></span>
-                  <span>1 voucher</span>
-                  <span> a cada </span>
-                  <span id="cc-days">90</span>
-                  <span> dias</span>
+                  <span id="cc-voucher-text" class="text">1 voucher a cada 90 dias</span>
                 </span>
 
                 <!-- Premium -->
@@ -759,6 +758,11 @@
     const dockLinks=[...document.querySelectorAll('.quick-dock a')];
     const sections=[...document.querySelectorAll('main .section')];
     const setActiveDock=id=> dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id));
+    function maybeAutoReset(){
+      const now=Date.now(); if (now-lastCompareClickAt<1500) return;
+      const saved=parseInt(localStorage.getItem('ccs-cc-compare-level')||'1',10);
+      if (saved!==1){ applyCompare(1); }
+    }
     if ('IntersectionObserver' in window){
       const io=new IntersectionObserver(entries=>{
         const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
@@ -796,7 +800,8 @@
           {emoji:'⏳',text:'Receba 1 voucher a cada 60 dias.'},
           {emoji:'ℹ️',text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
         ],
-        upgrade:{label:'Atualizar para 650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'} },
+        /* Corrigido: upgrade para 450 MB (não 650) */
+        upgrade:{label:'Atualizar para 450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'} },
       3:{ plan:'650 MB', days:60, premiumIncluded:true, note:'Válido para clientes ativos e adimplentes.',
         facts:[
           {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
@@ -805,7 +810,8 @@
           {emoji:'⏳',text:'Receba 1 voucher a cada 60 dias.'},
           {emoji:'🏆',text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
         ],
-        upgrade:null }
+        /* Corrigido: upgrade aparece para levar direto ao 650 MB */
+        upgrade:{label:'Atualizar para 650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'} }
     };
 
     const segmented=document.getElementById('segmented');
@@ -818,7 +824,7 @@
     const ccDyn=document.getElementById('cc-dyn');
     const ccSwap=document.getElementById('cc-swap');
 
-    const ccDays=document.getElementById('cc-days');
+    const ccVoucherText=document.getElementById('cc-voucher-text');
     const ccPremiumPill=document.getElementById('cc-pill-premium');
     const ccPremiumText=document.getElementById('cc-premium-text');
     const ccNote=document.getElementById('cc-note');
@@ -830,7 +836,7 @@
     const upgradeBtn=document.getElementById('cc-upgrade');
     const actions=document.getElementById('cc-actions');
 
-    let lastCompareClickAt=0, resetTimer=null;
+    let lastCompareClickAt=0;
 
     function renderFacts(facts){
       ccFacts.innerHTML='';
@@ -870,7 +876,7 @@
         btn.setAttribute('aria-pressed', String(pressed));
         btn.classList.toggle('is-current', pressed && level===1);
       });
-      positionActualLabel(); // reposiciona o rótulo ATUAL
+      positionActualLabel();
     }
 
     /* Ajuste dos 3 botões: caibam SEMPRE lado a lado */
@@ -895,13 +901,13 @@
       positionActualLabel();
     }
 
-    /* Posiciona o rótulo ATUAL acima à esquerda do Nível 1, fora da pílula */
+    /* Rótulo “ATUAL” fora da pílula do Nível 1 */
     function positionActualLabel(){
       const btn=segL1;
       if (!btn || !labelActual) return;
       const cont=segmented.getBoundingClientRect();
       const b=btn.getBoundingClientRect();
-      const left = Math.max(8, Math.round(b.left - cont.left + 10)); // 10px para alinhar com padding do botão
+      const left = Math.max(8, Math.round(b.left - cont.left + 10));
       const topWanted = Math.round(b.top - cont.top - labelActual.offsetHeight - 6);
       const top = Math.max(4, topWanted);
       labelActual.style.left = left+'px';
@@ -909,7 +915,20 @@
       labelActual.style.visibility='visible';
     }
 
-    function updatePremiumUI(included){
+    function updateVoucher(level, days){
+      const text = `1 voucher a cada ${days} dias`;
+      ccVoucherText.textContent = text;
+
+      // Auto-fit para garantir que não quebre
+      const pill = document.getElementById('cc-pill-main');
+      pill.style.setProperty('--pill-fs','15px');
+      let fs=15, tries=0;
+      while (pill.scrollWidth > pill.clientWidth + 1 && fs > 13 && tries < 8){
+        fs -= 0.5; tries++; pill.style.setProperty('--pill-fs', fs+'px');
+      }
+    }
+
+    function updatePremium(included){
       if (included){
         ccPremiumPill.classList.add('included');
         ccPremiumText.textContent='Atração premium inclusa';
@@ -927,14 +946,14 @@
       setSegmented(level);
 
       animateSwap(()=>{
-        ccDays.textContent = String(data.days);
+        updateVoucher(level, data.days);
         ccNote.textContent = data.note || '';
         viewing.textContent=`Visualizando: Nível ${level}`;
-        updatePremiumUI(data.premiumIncluded);
+        updatePremium(data.premiumIncluded);
         renderFacts(data.facts || []);
       });
 
-      /* Plano necessário: oculto quando Nível 1 (atual) */
+      /* Plano necessário e Upgrade */
       if (level===1){
         ccPlanPill.classList.remove('show');
         upgradeBtn.style.display='none';
@@ -943,8 +962,13 @@
       } else {
         ccPlanText.textContent=data.plan;
         ccPlanPill.classList.add('show');
-        if (data.upgrade){ upgradeBtn.style.display='inline-flex'; upgradeBtn.textContent=data.upgrade.label; upgradeBtn.href=data.upgrade.href; }
-        else { upgradeBtn.style.display='none'; }
+        if (data.upgrade){
+          upgradeBtn.style.display='inline-flex';
+          upgradeBtn.textContent=data.upgrade.label;
+          upgradeBtn.href=data.upgrade.href;
+        }else{
+          upgradeBtn.style.display='none';
+        }
         emailBtn.classList.remove('cta');
         actions.classList.remove('is-level1');
       }
@@ -1010,6 +1034,8 @@
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       applyCompare([1,2,3].includes(start)?start:1,{remember:false});
       recalcAll();
+      // Ajuste final do voucher após layout
+      setTimeout(()=> updateVoucher(1, CC_CONTENT[1].days), 60);
     }
 
     init();
