@@ -75,7 +75,7 @@
       .pulse,.fx.fx-shimmer{ animation:none }
     }
 
-    /* TOPBAR com cápsula reativa + brilho mágico */
+    /* TOPBAR reativa + brilho mágico */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes glowPulse { 0%,100%{ opacity:.60; filter:blur(14px)} 50%{ opacity:.98; filter:blur(18px)} }
     @keyframes sweep { 0%{ transform:translateX(-140%)} 100%{ transform:translateX(140%)} }
@@ -91,28 +91,25 @@
       align-items:center; gap:10px; padding:8px var(--side-pad);
     }
     .logo-ccs,.logo-vctech{
-      width: clamp(52px, 6.6vw, 76px); height: clamp(52px, 6.6vw, 76px);
+      width: clamp(48px, 6.6vw, 76px); height: clamp(48px, 6.6vw, 76px);
       object-fit:contain; display:block;
     }
     .titlebar{ display:flex; justify-content:center; align-items:center; min-width:0 }
 
     .capsule{
-      position:relative; display:inline-flex; align-items:center; gap:10px;
+      position:relative; display:inline-flex; align-items:center;
       padding:10px 16px; border-radius:999px;
       background:rgba(16,18,24,.45);
       border:1px solid rgba(255,255,255,.10);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.38);
       backdrop-filter: blur(10px);
-      white-space:nowrap; /* nunca quebra */
-      overflow:hidden; text-overflow:clip;
       font-weight:900; line-height:1;
-      font-size: clamp(13px, 2.2vw, 16px); /* base mais contida */
-      transition: padding .22s ease, transform .22s ease, box-shadow .22s ease, font-size .12s linear;
-      /* Espaço máximo será definido via JS para caber entre as logos */
-      max-width: 80vw;
+      font-size: clamp(12.5px, 2.2vw, 16px);
+      transition: padding .22s ease, font-size .12s linear, box-shadow .22s ease;
+      max-width:80vw;
     }
 
-    /* Camadas e z-index para o brilho varrer toda a cápsula */
+    /* Aro + aura + faixa varrendo TODA a cápsula */
     header[data-style="aurora"] .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -120,7 +117,7 @@
       animation:ringShift 12s ease-in-out infinite alternate;
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude;
-      pointer-events:none; opacity:.98; z-index:3; /* aro acima */
+      pointer-events:none; opacity:.98; z-index:3;
     }
     header[data-glow="magic"] .capsule::after{
       content:""; position:absolute; inset:-25% -12%; border-radius:inherit;
@@ -128,27 +125,43 @@
         radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.22), transparent 60%),
         radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.22), transparent 60%);
       filter: blur(16px); mix-blend-mode:screen; pointer-events:none; opacity:.85;
-      animation:glowPulse 3s ease-in-out infinite; z-index:0; /* aura abaixo */
+      animation:glowPulse 3s ease-in-out infinite; z-index:0;
     }
     header[data-glow="magic"] .capsule .glint{
-      position:absolute; top:-15%; bottom:-15%; left:0; width:60%;
-      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.85) 50%, transparent 100%);
+      position:absolute; top:-18%; bottom:-18%; left:0; width:110%;
+      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.88) 50%, transparent 100%);
       filter: blur(12px); pointer-events:none;
       transform:translateX(-140%);
       animation:sweep 2.8s ease-in-out infinite;
-      z-index:1; /* faixa varrendo sob o texto */
-      opacity:.9;
-    }
-    @media (prefers-reduced-motion:reduce){
-      header[data-style="aurora"] .capsule::before,
-      header[data-glow="magic"] .capsule::after,
-      header[data-glow="magic"] .capsule .glint{ animation:none }
+      z-index:1; opacity:.9;
     }
 
-    .capsule .txt{
-      position:relative; z-index:2; /* texto acima do glint */
+    /* Viewport do texto (permite marquee/scroll horizontal) */
+    .cap-viewport{
+      position:relative; z-index:2;
+      display:block; max-width:100%;
+      overflow-x:auto; overflow-y:hidden; white-space:nowrap;
+      scrollbar-width:none; -webkit-overflow-scrolling:touch;
+    }
+    .cap-viewport::-webkit-scrollbar{ display:none }
+    /* Fades nas bordas quando há conteúdo extra */
+    .cap-viewport[data-scrollable="true"]::before,
+    .cap-viewport[data-scrollable="true"]::after{
+      content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none; z-index:2;
+    }
+    .cap-viewport[data-scrollable="true"]::before{
+      left:0; background:linear-gradient(90deg, rgba(11,13,18,1) 0%, rgba(11,13,18,0) 100%);
+      mix-blend-mode:multiply;
+    }
+    .cap-viewport[data-scrollable="true"]::after{
+      right:0; background:linear-gradient(270deg, rgba(11,13,18,1) 0%, rgba(11,13,18,0) 100%);
+      mix-blend-mode:multiply;
+    }
+
+    /* Trilhas (longa/curta). Só a ativa fica visível. */
+    .track{ display:none; will-change:transform }
+    .track .txt{
       display:inline-flex; align-items:center; gap:10px;
-      font-weight:900; letter-spacing:.2px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
                  linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
       background-clip:text; -webkit-background-clip:text; color:transparent;
@@ -163,30 +176,23 @@
       flex:0 0 auto;
     }
 
+    /* Exibição por estado */
+    .topbar:not(.is-condensed) .track.t-full{ display:inline-block }
+    .topbar.is-condensed .track.t-short{ display:inline-block }
+
     /* Condensado ao rolar */
     .topbar.is-condensed .capsule{
       padding:6px 12px; font-size: clamp(12px, 1.9vw, 14px);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 16px rgba(0,0,0,.28)
     }
-    .capsule .t-short{ display:none }
-    .topbar.is-condensed .capsule .t-full{ display:none }
-    .topbar.is-condensed .capsule .t-short{ display:inline-flex }
-    .topbar.is-condensed .capsule .txt{ text-shadow:0 0 8px rgba(0,217,255,.35) }
 
-    /* Ajustes mobile: sem duplicar, sem quebra e sem estourar */
-    @media (max-width:560px){
-      .capsule{ font-size: clamp(12px, 3.4vw, 15px); max-width:88vw; }
-      .dot-mid{ display:inline-block; margin:0 6px; vertical-align:middle }
-      /* Nunca forçar display de ambos; apenas o estado atual aparece */
-      .topbar:not(.is-condensed) .capsule .t-full{ display:inline-flex }
-      .topbar.is-condensed .capsule .t-short{ display:inline-flex }
-    }
-    @media (max-width:380px){
+    /* Responsivo de logos e gaps */
+    @media (max-width:420px){
       .logo-ccs,.logo-vctech{ width:46px; height:46px }
       .topbar .wrap{ gap:6px }
     }
 
-    /* SEÇÕES/CARDS */
+    /* SEÇÕES/CARDS (conteúdo) */
     .section{ padding:18px var(--side-pad) 26px; display:flex; justify-content:center }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
@@ -199,7 +205,6 @@
       max-height:var(--art-max-h-d); max-width:min(100%,920px); width:auto; height:auto; object-fit:contain
     }
     @media (max-width:920px){ .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% } }
-    #s-conecta .art-img,#s-indique .art-img{ max-height:calc(var(--art-max-h-d) + 40px) }
 
     .content{ padding:16px }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
@@ -301,18 +306,25 @@
       <div class="titlebar">
         <div class="capsule" role="group" aria-label="Nível e plano">
           <span class="glint" aria-hidden="true"></span>
-          <!-- Texto longo -->
-          <span class="txt t-full">
-            <span class="label-left">Benefícios Nível 1</span>
-            <span class="dot-mid" aria-hidden="true"></span>
-            <span class="label-right">Plano 250 MB</span>
-          </span>
-          <!-- Texto curto -->
-          <span class="txt t-short" aria-hidden="true">
-            <span class="label-left">Nível 1</span>
-            <span class="dot-mid" aria-hidden="true"></span>
-            <span class="label-right">250 MB</span>
-          </span>
+
+          <div class="cap-viewport" id="capViewport" data-scrollable="false">
+            <!-- Texto longo -->
+            <div class="track t-full" id="trackFull">
+              <span class="txt">
+                <span class="label-left">Benefícios Nível 1</span>
+                <span class="dot-mid" aria-hidden="true"></span>
+                <span class="label-right">Plano 250 MB</span>
+              </span>
+            </div>
+            <!-- Texto curto -->
+            <div class="track t-short" id="trackShort" aria-hidden="true">
+              <span class="txt">
+                <span class="label-left">Nível 1</span>
+                <span class="dot-mid" aria-hidden="true"></span>
+                <span class="label-right">250 MB</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -669,99 +681,126 @@
       const topbar = document.getElementById('topbar');
       const wrap = document.querySelector('.topbar .wrap');
       const capsule = document.querySelector('.capsule');
+      const viewport = document.getElementById('capViewport');
+      const trackFull = document.getElementById('trackFull');
+      const trackShort = document.getElementById('trackShort');
       const logoL = document.querySelector('.logo-ccs');
       const logoR = document.querySelector('.logo-vctech');
+      const fab = document.getElementById('fab');
+      const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function setTopPad(){ document.body.style.paddingTop = (topbar.offsetHeight || 64) + 'px'; }
 
-      // Calcula espaço disponível entre as logos e ajusta max-width + font-size para caber 1 linha
-      function fitCapsule(){
-        if (!wrap || !capsule) return;
-
-        // Espaço disponível entre as logos
-        const wrapW = wrap.clientWidth;
-        const styleW = getComputedStyle(wrap);
-        const gap = parseFloat(styleW.columnGap) || 10;
-        const padL = parseFloat(styleW.paddingLeft) || 0;
-        const padR = parseFloat(styleW.paddingRight) || 0;
-        const lW = logoL ? logoL.getBoundingClientRect().width : 0;
-        const rW = logoR ? logoR.getBoundingClientRect().width : 0;
-        const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2)); // px
-
-        // Define largura máxima da cápsula para não estourar
-        capsule.style.maxWidth = available + 'px';
-
-        // Span ativo (depende do estado)
-        const useShort = topbar.classList.contains('is-condensed');
-        const spanActive = capsule.querySelector(useShort ? '.t-short' : '.t-full');
-        const spanInactive = capsule.querySelector(useShort ? '.t-full' : '.t-short');
-
-        // Garante que apenas o ativo seja medido
-        if (spanInactive) spanInactive.style.display = 'none';
-        if (spanActive) spanActive.style.display = 'inline-flex';
-
-        // Reset de font-size para medir em base currente (usa valor atual do CSS)
-        capsule.style.fontSize = '';
-        const padX = parseFloat(getComputedStyle(capsule).paddingLeft) + parseFloat(getComputedStyle(capsule).paddingRight);
-        const target = Math.max(80, available - padX - 4); // margem interna
-
-        // Se mesmo em base já couber, finaliza
-        let fits = spanActive.scrollWidth <= target;
-
-        // Se não couber, reduz gradualmente até caber (limite mínimo)
-        if (!fits){
-          let fs = parseFloat(getComputedStyle(capsule).fontSize) || 14;
-          const minFS = 10.5;
-          let tries = 0;
-          while (spanActive.scrollWidth > target && fs > minFS && tries < 18){
-            fs -= 0.6;
-            capsule.style.fontSize = fs + 'px';
-            tries++;
-          }
-          fits = spanActive.scrollWidth <= target;
-        }
-
-        // Se ainda não couber no texto longo, troca para curto automaticamente e repete o ajuste
-        if (!fits && !useShort){
-          topbar.classList.add('is-condensed');
-          // chama de novo no próximo frame para medir o curto
-          requestAnimationFrame(fitCapsule);
-          return;
-        }
-
-        // Restaura display do inativo conforme regra de estado
-        if (!useShort && spanInactive) spanInactive.style.display = '';
-        if (useShort && spanInactive) spanInactive.style.display = '';
+      // Controla a animação de marquee via Web Animations API
+      function stopMarquee(track){
+        if (!track) return;
+        const anim = track._marqueeAnim;
+        if (anim){ anim.cancel(); track._marqueeAnim = null; track.style.transform = ''; }
+      }
+      function startMarquee(track){
+        if (!track || prefersReduced) return;
+        const vw = viewport.clientWidth;
+        const sw = track.scrollWidth;
+        const distance = Math.max(0, sw - vw);
+        if (distance < 4){ stopMarquee(track); viewport.dataset.scrollable = 'false'; return; }
+        viewport.dataset.scrollable = 'true';
+        // duração ~30ms por px, mínimo 3s, máximo 14s
+        const dur = Math.max(3000, Math.min(14000, Math.round(distance * 30)));
+        const anim = track.animate(
+          [
+            {transform:'translateX(0)'},
+            {transform:`translateX(${-distance}px)`}
+          ],
+          { duration: dur, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' }
+        );
+        track._marqueeAnim = anim;
+        // Pausar ao interagir
+        const pause = () => { try{ track._marqueeAnim?.pause(); }catch{} };
+        const play  = () => { try{ track._marqueeAnim?.play(); }catch{} };
+        track.addEventListener('pointerdown', pause, {passive:true});
+        track.addEventListener('pointerup', play, {passive:true});
+        track.addEventListener('mouseenter', pause);
+        track.addEventListener('mouseleave', play);
+        viewport.addEventListener('scroll', pause, {passive:true});
+        document.addEventListener('visibilitychange', ()=> document.hidden ? pause() : play());
       }
 
-      // Condensa/expande com histerese + chama o fit
+      // SmartFit: ajusta fonte + decide entre longo/curto; se ainda exceder, ativa marquee
+      function fitCapsule(){
+        if (!wrap || !capsule || !viewport) return;
+
+        const wrapW = wrap.clientWidth;
+        const gap = parseFloat(getComputedStyle(wrap).columnGap) || 10;
+        const lW = logoL ? logoL.getBoundingClientRect().width : 0;
+        const rW = logoR ? logoR.getBoundingClientRect().width : 0;
+        const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
+        capsule.style.maxWidth = available + 'px';
+
+        // Seleciona a trilha ativa pelo estado
+        const condensed = topbar.classList.contains('is-condensed');
+        const active = condensed ? trackShort : trackFull;
+        const inactive = condensed ? trackFull : trackShort;
+
+        // Exibe somente a ativa para medir
+        active.style.display = 'inline-block';
+        inactive.style.display = 'none';
+
+        // Reset de font-size para recalcular
+        capsule.style.fontSize = '';
+        const padX = parseFloat(getComputedStyle(capsule).paddingLeft) + parseFloat(getComputedStyle(capsule).paddingRight);
+        const target = Math.max(80, available - padX - 4);
+
+        // Reduz gradualmente até caber sem marquee
+        let fs = parseFloat(getComputedStyle(capsule).fontSize) || 14;
+        const minFS = condensed ? 11 : 12;
+        let tried = 0;
+        while (active.scrollWidth > target && fs > minFS && tried < 20){
+          fs -= 0.6; capsule.style.fontSize = fs + 'px'; tried++;
+        }
+
+        // Se ainda exceder, ativa marquee; senão, garante sem marquee
+        stopMarquee(active);
+        if (active.scrollWidth > target){
+          startMarquee(active);
+        } else {
+          viewport.dataset.scrollable = 'false';
+          active.style.transform = '';
+        }
+      }
+
+      // Lógica de condensar/expandir com histerese + debounce
       let lastY = window.scrollY || 0;
       let condensed = false;
-      const CONDENSE_AT = 24;
+      const CLOSE_AT = 60; // fecha (condensa) ao passar disso
+      const OPEN_AT  = 24; // abre (expande) ao voltar disso
       const DELTA = 6;
+      let scrollTimer = null;
+
       function applyCondensed(on){
         if (on === condensed) return;
         condensed = on;
         topbar.classList.toggle('is-condensed', condensed);
-        fitCapsule(); // refaz o ajuste quando muda o estado
+        fitCapsule();
       }
+
       function onScroll(){
         const y = window.scrollY || 0;
         const dy = y - lastY;
-
-        if (y <= 2){ applyCondensed(false); }
-        else if (dy > DELTA && y > CONDENSE_AT){ applyCondensed(true); }
-        else if (dy < -DELTA){ applyCondensed(false); }
-        else {
-          if (y > CONDENSE_AT) applyCondensed(true);
-          if (y < CONDENSE_AT/2) applyCondensed(false);
-        }
         lastY = y;
+
+        // Debounce curto para estabilidade
+        if (scrollTimer) clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(()=>{
+          if (y <= 1){ applyCondensed(false); return; }
+          if (dy > DELTA && y > CLOSE_AT){ applyCondensed(true); return; }
+          if (dy < -DELTA && y < CLOSE_AT){ applyCondensed(false); return; }
+          if (y < OPEN_AT){ applyCondensed(false); }
+        }, 120);
+
         updateFabIcon();
       }
 
       // FAB topo/rodapé
-      const fab = document.getElementById('fab');
       function updateFabIcon(){
         const nearTop = window.scrollY < 100;
         if (nearTop){
@@ -772,91 +811,6 @@
           fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
         }
       }
-
-      // “Saiba mais”
-      function setupMore(){
-        document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
-        document.addEventListener('click', (ev)=>{
-          const btn = ev.target.closest('.chip-more');
-          if (!btn) return;
-          const id = btn.getAttribute('aria-controls');
-          const panel = id && document.getElementById(id);
-          const txt = btn.querySelector('.txt');
-          if (!panel) return;
-          const expanded = btn.getAttribute('aria-expanded') === 'true';
-          if (expanded){
-            const h = panel.scrollHeight;
-            panel.style.height = h + 'px';
-            panel.getBoundingClientRect();
-            panel.style.height = '0px';
-            panel.classList.remove('is-open');
-            const onEnd = () => {
-              panel.hidden = true; panel.style.height = '';
-              panel.removeEventListener('transitionend', onEnd);
-            };
-            panel.addEventListener('transitionend', onEnd);
-            btn.setAttribute('aria-expanded','false');
-            if (txt) txt.textContent = 'Saiba mais';
-          } else {
-            panel.hidden = false;
-            panel.style.height = '0px';
-            panel.classList.add('is-open');
-            requestAnimationFrame(()=> panel.style.height = panel.scrollHeight + 'px');
-            const onEnd = () => {
-              panel.style.height = 'auto';
-              panel.removeEventListener('transitionend', onEnd);
-            };
-            panel.addEventListener('transitionend', onEnd);
-            btn.setAttribute('aria-expanded','true');
-            if (txt) txt.textContent = 'Ver menos';
-            const rect = panel.getBoundingClientRect();
-            const topOffset = (topbar.offsetHeight || 64) + 12;
-            if (rect.top < topOffset){
-              const y = window.scrollY + rect.top - topOffset;
-              window.scrollTo({ top:y, behavior:'smooth' });
-            }
-          }
-        });
-      }
-
-      // Quick Dock ativo
-      const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
-      const setActiveDock = (id) => { dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id)); };
-      const sections = Array.from(document.querySelectorAll('main .section'));
-      function setupDock(){
-        if ('IntersectionObserver' in window){
-          const io = new IntersectionObserver(entries => {
-            const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-            if (vis) setActiveDock(vis.target.id);
-          }, { threshold:[0.25,0.5,0.75] });
-          sections.forEach(s => io.observe(s));
-        }
-      }
-
-      // Copiar e‑mail
-      function setupCopy(){
-        const copyBtn = document.getElementById('copyEmail');
-        if (!copyBtn) return;
-        copyBtn.addEventListener('click', async () => {
-          try { await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); } catch {}
-          copyBtn.textContent='✅ E‑mail copiado';
-          setTimeout(()=> copyBtn.textContent='Copiar e‑mail', 1400);
-        });
-      }
-
-      // Eventos
-      setTopPad();
-      fitCapsule();
-      onScroll();
-      updateFabIcon();
-      addEventListener('resize', () => { setTopPad(); fitCapsule(); }, {passive:true});
-      addEventListener('scroll', onScroll, {passive:true});
-
-      setupMore();
-      setupDock();
-      setupCopy();
-
-      // FAB click
       fab.addEventListener('click', () => {
         const nearTop = window.scrollY < 100;
         if (nearTop){
@@ -867,6 +821,65 @@
           window.scrollTo({ top:0, behavior:'smooth' });
         }
       });
+
+      // “Saiba mais”
+      document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
+      document.addEventListener('click', (ev)=>{
+        const btn = ev.target.closest('.chip-more'); if (!btn) return;
+        const id = btn.getAttribute('aria-controls'); const panel = id && document.getElementById(id);
+        const txt = btn.querySelector('.txt'); if (!panel) return;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        if (expanded){
+          const h = panel.scrollHeight; panel.style.height = h + 'px'; panel.getBoundingClientRect();
+          panel.style.height = '0px'; panel.classList.remove('is-open');
+          const onEnd = () => { panel.hidden = true; panel.style.height = ''; panel.removeEventListener('transitionend', onEnd); };
+          panel.addEventListener('transitionend', onEnd);
+          btn.setAttribute('aria-expanded','false'); if (txt) txt.textContent = 'Saiba mais';
+        } else {
+          panel.hidden = false; panel.style.height = '0px'; panel.classList.add('is-open');
+          requestAnimationFrame(()=> panel.style.height = panel.scrollHeight + 'px');
+          const onEnd = () => { panel.style.height = 'auto'; panel.removeEventListener('transitionend', onEnd); };
+          panel.addEventListener('transitionend', onEnd);
+          btn.setAttribute('aria-expanded','true'); if (txt) txt.textContent = 'Ver menos';
+          const rect = panel.getBoundingClientRect(); const topOffset = (topbar.offsetHeight || 64) + 12;
+          if (rect.top < topOffset){
+            const y = window.scrollY + rect.top - topOffset; window.scrollTo({ top:y, behavior:'smooth' });
+          }
+        }
+      });
+
+      // Quick Dock ativo
+      const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
+      const sections = Array.from(document.querySelectorAll('main .section'));
+      const setActiveDock = (id) => { dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id)); };
+      if ('IntersectionObserver' in window){
+        const io = new IntersectionObserver(entries => {
+          const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+          if (vis) setActiveDock(vis.target.id);
+        }, { threshold:[0.25,0.5,0.75] });
+        sections.forEach(s => io.observe(s));
+      }
+
+      // Copiar e‑mail
+      const copyBtn = document.getElementById('copyEmail');
+      if (copyBtn){
+        copyBtn.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); } catch {}
+          copyBtn.textContent='✅ E‑mail copiado'; setTimeout(()=> copyBtn.textContent='Copiar e‑mail', 1400);
+        });
+      }
+
+      // Ajustes iniciais e eventos
+      function recalcAll(){
+        setTopPad();
+        fitCapsule();
+        updateFabIcon();
+      }
+      recalcAll();
+      addEventListener('resize', recalcAll, {passive:true});
+      addEventListener('orientationchange', recalcAll);
+      addEventListener('pageshow', recalcAll);
+      addEventListener('scroll', onScroll, {passive:true});
     })();
   </script>
 </body>
