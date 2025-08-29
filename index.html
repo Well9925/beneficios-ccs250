@@ -28,7 +28,7 @@
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0}
+    html,body{height:100%;margin:0; max-width:100%; overflow-x:hidden}
     html{scroll-behavior:smooth}
     body{
       color:var(--txt);
@@ -75,10 +75,10 @@
       .pulse,.fx.fx-shimmer{ animation:none }
     }
 
-    /* TOPBAR com cápsula reativa + brilho mágico (SmartFit + Marquee) */
+    /* TOPBAR reativa + brilho mágico (SmartFit + Marquee) */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes glowPulse { 0%,100%{ opacity:.60; filter:blur(14px)} 50%{ opacity:.98; filter:blur(18px)} }
-    @keyframes sweep { 0%{ transform:translateX(-140%)} 100%{ transform:translateX(140%)} }
+    @keyframes sweep { 0%{ transform:translateX(-120%)} 100%{ transform:translateX(120%)} }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
 
     .topbar{
@@ -107,6 +107,7 @@
       font-size: clamp(12.5px, 2.2vw, 16px);
       transition: padding .22s ease, font-size .12s linear, box-shadow .22s ease;
       max-width:80vw;
+      overflow:hidden; contain:paint; /* evita estourar no mobile */
     }
     header[data-style="aurora"] .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -126,10 +127,10 @@
       animation:glowPulse 3s ease-in-out infinite; z-index:0;
     }
     header[data-glow="magic"] .capsule .glint{
-      position:absolute; top:-18%; bottom:-18%; left:0; width:110%;
+      position:absolute; top:-18%; bottom:-18%; left:0; width:100%;
       background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.88) 50%, transparent 100%);
       filter: blur(12px); pointer-events:none;
-      transform:translateX(-140%);
+      transform:translateX(-120%);
       animation:sweep 2.8s ease-in-out infinite;
       z-index:1; opacity:.9;
     }
@@ -210,6 +211,7 @@
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
     .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent }
+    .btn.cta2{ background:linear-gradient(90deg,var(--planA),var(--planB)); border-color:transparent; color:#0b0d12 }
     .btn.block{ width:100% }
 
     /* Saiba mais (geral) */
@@ -228,11 +230,11 @@
     .facts{ display:grid; grid-template-columns:1fr; gap:10px; margin:0 }
     @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:8px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
-    .fact .ico{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.10); border:1px solid var(--line); font-size:14px }
+    .fact .ico{ width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px }
     .fact .txt{ color:#dfe7ff }
     .fact .txt strong{ color:#fff }
 
-    /* Links em geral (inline) mais suaves */
+    /* Links inline mais suaves */
     a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
     a.inline-link:hover{ color:#ffffff; text-decoration:underline }
 
@@ -257,66 +259,57 @@
 
     /* ========================= Conecta Clube — apenas este bloco novo abaixo ========================= */
 
-    /* Selector de nível (segmented control) */
-    #s-conecta .level-tabs{
-      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-      margin:4px 0 10px;
+    /* Cabeçalho do card: título + pílula do nível do cliente */
+    #s-conecta .cc-header{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between;
     }
-    #s-conecta .level-tabs [role="tab"]{
-      position:relative; border:1px solid var(--line); border-radius:999px; padding:6px 12px;
-      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+    #s-conecta .cc-header .left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+    /* Pílula “Seu nível (ATUAL)” */
+    #s-conecta .pill-current{
       display:inline-flex; align-items:center; gap:8px;
-      transition:transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    #s-conecta .level-tabs [role="tab"][aria-selected="true"]{
-      background:linear-gradient(90deg, var(--levelA), var(--planB)); color:#0b0d12; border-color:transparent;
+      padding:6px 12px; border-radius:999px; border:1px solid transparent;
+      background:linear-gradient(90deg, var(--levelA), var(--planB)); color:#0b0d12; font-weight:900;
       box-shadow:0 6px 18px rgba(0,0,0,.25), 0 0 0 4px rgba(0,217,255,.15) inset;
     }
-    #s-conecta .level-tabs .dot{
+    #s-conecta .pill-current .dot{
       width:10px;height:10px;border-radius:50%;
       background:linear-gradient(90deg,var(--levelA),var(--planB));
       filter:drop-shadow(0 0 8px rgba(0,217,255,.55));
     }
-    #s-conecta .badge{
+    #s-conecta .pill-current .badge{
       font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.10); color:#fff
+      border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.65); color:#0b0d12
     }
 
-    /* Header do card (título + tabs responsivo) */
-    #s-conecta .cc-header{
-      display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+    /* Subtítulo acima dos botões de comparação */
+    #s-conecta .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
+
+    /* Botões de comparação Nível 2/3 */
+    #s-conecta .compare-tabs{
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; width:100%; max-width:440px
     }
-    #s-conecta .cc-header .left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-    #s-conecta .cc-header .right{ margin-left:auto }
-    @media (max-width:640px){
-      #s-conecta .cc-header{ flex-direction:column; align-items:flex-start }
-      #s-conecta .cc-header .right{ margin-left:0 }
+    #s-conecta .compare-tabs button{
+      border:1px solid var(--line); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.06);
+      color:#fff; font-weight:900; display:inline-flex; gap:8px; align-items:center; justify-content:center; cursor:pointer;
+      transition:background .12s ease, border-color .12s ease, transform .12s ease
+    }
+    #s-conecta .compare-tabs button[aria-pressed="true"]{
+      background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22)
+    }
+    #s-conecta .compare-tabs .dot{
+      width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB))
     }
 
-    /* Pílulas unificadas */
-    #s-conecta .cc-pills .pill.hi{
-      display:inline-flex; align-items:center; gap:10px;
+    /* Plano necessário (aparece quando comparando 2/3) */
+    #s-conecta .plan-pill{
+      display:none; align-items:center; gap:8px; margin-top:8px;
+      padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900
     }
-    #s-conecta .cc-pills .pill .sep{ width:6px; height:6px; border-radius:50%; background:#0b0d12; opacity:.5 }
-
-    /* “Saiba mais” — sem caixinha nos emojis (escopo local) */
-    #s-conecta .fact .ico{
-      width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px
-    }
-
-    /* Mini botões ghost para links importantes dentro dos fatos */
-    #s-conecta .link-mini{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:6px 10px; border-radius:999px; border:1px solid var(--line);
-      background:rgba(255,255,255,.06); color:#fff; text-decoration:none; font-weight:900; font-size:13px;
-    }
-    #s-conecta .link-mini:hover{ background:rgba(255,255,255,.10) }
+    #s-conecta .plan-pill.show{ display:inline-flex }
 
     /* Transição de conteúdo por nível (crossfade com autoheight) */
     #s-conecta .cc-dyn{ position:relative }
-    #s-conecta .cc-swap{
-      position:relative;
-    }
+    #s-conecta .cc-swap{ position:relative }
     #s-conecta .fade-enter{ opacity:0; transform:translateY(6px) }
     #s-conecta .fade-enter-active{ opacity:1; transform:translateY(0); transition:opacity .18s ease, transform .18s ease }
     #s-conecta .fade-exit{ opacity:1; transform:translateY(0) }
@@ -395,57 +388,60 @@
           <div class="cc-header">
             <div class="left">
               <h2 style="margin:0">Conecta Clube</h2>
-              <span class="badge" id="cc-badge" aria-live="polite" style="display:none">Seu nível: 1 (ATUAL)</span>
-            </div>
-            <div class="right">
-              <div class="level-tabs" role="tablist" aria-label="Níveis do Conecta Clube">
-                <button type="button" role="tab" aria-selected="true" aria-controls="cc-tabpanel" id="tab-l1" data-level="1">
-                  <span class="dot" aria-hidden="true"></span><span>Nível 1</span><span class="badge" id="badge-atual" style="margin-left:6px;display:none">ATUAL</span>
-                </button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="cc-tabpanel" id="tab-l2" data-level="2">
-                  <span class="dot" aria-hidden="true"></span><span>Nível 2</span>
-                </button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="cc-tabpanel" id="tab-l3" data-level="3">
-                  <span class="dot" aria-hidden="true"></span><span>Nível 3</span>
-                </button>
-              </div>
+              <!-- Pílula do nível do cliente (fixo: Nível 1 ATUAL) -->
+              <span class="pill-current" id="cc-your-level" aria-label="Seu nível atual">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 1</span>
+                <span class="badge">ATUAL</span>
+              </span>
             </div>
           </div>
 
-          <p class="subtitle" id="cc-sub">Compare seus benefícios por nível</p>
+          <p class="cc-subtitle">Compare seus benefícios por nível</p>
+
+          <!-- Botões de comparação (Nível 2 e 3) -->
+          <div class="compare-tabs" role="group" aria-label="Comparar níveis">
+            <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
+            <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
+          </div>
+
+          <!-- Plano necessário (mostra em 2/3) -->
+          <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
 
           <div class="cc-dyn" id="cc-dyn">
-            <div class="cc-swap" id="cc-swap" role="tabpanel" aria-labelledby="tab-l1">
+            <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
               <div class="row cc-pills" id="cc-pills">
                 <span class="pill hi" id="cc-pill-main">1 voucher • a cada 90 dias</span>
               </div>
               <p class="note" id="cc-note">Válido para clientes ativos e adimplentes.</p>
-            </div>
-          </div>
 
-          <div class="title" style="margin-top:6px">
-            <div class="left" aria-hidden="true"></div>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
-              <span class="txt">Saiba mais</span>
-            </button>
-          </div>
+              <!-- Saiba mais -->
+              <div class="title" style="margin-top:6px">
+                <div class="left" aria-hidden="true"></div>
+                <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
+                  <span class="txt">Saiba mais</span>
+                </button>
+              </div>
 
-          <div id="more-conecta" class="more" role="region">
-            <div class="more-inner">
-              <div class="facts" id="cc-facts">
-                <!-- populado via JS conforme o nível -->
+              <div id="more-conecta" class="more" role="region">
+                <div class="more-inner">
+                  <div class="facts" id="cc-facts"></div>
+                </div>
+              </div>
+
+              <!-- Ações -->
+              <div class="actions" id="cc-actions">
+                <a class="btn cta" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
+                <a class="btn" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
+                <button class="btn" id="copyEmail" type="button">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                  Copiar e‑mail
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="actions">
-            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
-            <button class="btn" id="copyEmail" type="button">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-              Copiar e‑mail
-            </button>
-          </div>
         </div>
       </div>
     </section>
@@ -479,10 +475,10 @@
             <div class="more-inner">
               <div class="facts">
                 <div class="fact"><span class="ico">🎬</span><div class="txt"><strong>Conteúdo:</strong> mais de 60 canais regionais e variados.</div></div>
-                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>Apps:</strong> <a class="link-mini" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">Abrir onelink.to/ccsplay ↗</a></div></div>
+                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>Apps:</strong> <a class="link-mini inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">Abrir onelink.to/ccsplay ↗</a></div></div>
                 <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail cadastrado; senha = CPF (apenas números).</div></div>
                 <div class="fact"><span class="ico">💻</span><div class="txt"><strong>Dispositivos:</strong> celular, tablet, computador e Smart TV (iOS/Android).</div></div>
-                <div class="fact"><span class="ico">🆘</span><div class="txt"><strong>Ajuda:</strong> <a class="link-mini" href="https://wa.me/554797701300" target="_blank" rel="noopener">WhatsApp do Suporte ↗</a></div></div>
+                <div class="fact"><span class="ico">🆘</span><div class="txt"><strong>Ajuda:</strong> <a class="link-mini inline-link" href="https://wa.me/554797701300" target="_blank" rel="noopener">WhatsApp do Suporte ↗</a></div></div>
               </div>
             </div>
           </div>
@@ -517,7 +513,7 @@
             <div class="more-inner">
               <div class="facts">
                 <div class="fact"><span class="ico">📚</span><div class="txt"><strong>Conteúdo:</strong> livros digitais mensais, audiobooks, minibooks e comics.</div></div>
-                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a class="link-mini" href="https://onelink.to/hseuht" target="_blank" rel="noopener">Abrir onelink.to/hseuht ↗</a></div></div>
+                <div class="fact"><span class="ico">⬇️</span><div class="txt"><strong>App:</strong> <a class="link-mini inline-link" href="https://onelink.to/hseuht" target="_blank" rel="noopener">Abrir onelink.to/hseuht ↗</a></div></div>
                 <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Compatibilidade:</strong> verifique requisitos na loja do app.</div></div>
                 <div class="fact"><span class="ico">⏳</span><div class="txt"><strong>Ativação:</strong> até 72h úteis após instalação do serviço.</div></div>
               </div>
@@ -555,7 +551,7 @@
               <div class="facts">
                 <div class="fact"><span class="ico">⏱️</span><div class="txt"><strong>SLA:</strong> atendimento em até 36h úteis.</div></div>
                 <div class="fact"><span class="ico">🛠️</span><div class="txt"><strong>Incluso:</strong> 1 visita técnica gratuita/ano.</div></div>
-                <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra chamado:</strong> <a class="link-mini" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">WhatsApp do Suporte ↗</a></div></div>
+                <div class="fact"><span class="ico">💬</span><div class="txt"><strong>Abra chamado:</strong> <a class="link-mini inline-link" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." target="_blank" rel="noopener">WhatsApp do Suporte ↗</a></div></div>
                 <div class="fact"><span class="ico">⚙️</span><div class="txt"><strong>Ativação:</strong> benefícios liberados em até 72h úteis após instalação.</div></div>
               </div>
             </div>
@@ -636,7 +632,7 @@
           <div id="more-portal-app" class="more" role="region">
             <div class="more-inner">
               <div class="facts">
-                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App:</strong> <a class="link-mini" href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">Abrir bit.ly/CCS_APP ↗</a></div></div>
+                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App:</strong> <a class="link-mini inline-link" href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">Abrir bit.ly/CCS_APP ↗</a></div></div>
                 <div class="fact"><span class="ico">✅</span><div class="txt"><strong>Funções:</strong> pagamentos (PIX/Cartão), 2ª via, desbloqueio por confiança, extrato de conexão.</div></div>
                 <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail cadastrado e CPF (apenas números), quando solicitado.</div></div>
               </div>
@@ -672,7 +668,7 @@
               <div class="facts">
                 <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Sem senha:</strong> acesse com o CPF do titular.</div></div>
                 <div class="fact"><span class="ico">💳</span><div class="txt"><strong>Pagamento:</strong> PIX/Cartão, copiar código, visualizar faturas em aberto.</div></div>
-                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>Link:</strong> <a class="link-mini" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Abrir ccs.pix.7az.com.br ↗</a></div></div>
+                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>Link:</strong> <a class="link-mini inline-link" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Abrir ccs.pix.7az.com.br ↗</a></div></div>
               </div>
             </div>
           </div>
@@ -753,7 +749,7 @@
 
   <script>
     (function(){
-      /* ====== Título (SmartFit + Marquee) — já aprovado, preservado ====== */
+      /* ====== Título (SmartFit + Marquee) — preservado e com overflow corrigido ====== */
       const topbar = document.getElementById('topbar');
       const wrap = document.querySelector('.topbar .wrap');
       const capsule = document.querySelector('.capsule');
@@ -910,61 +906,160 @@
         });
       }
 
-      /* ====== Conecta Clube — níveis ====== */
-      const LEVELS_KEY = 'ccs-cc-level';
-      // Se seus dados oficiais forem diferentes, ajuste aqui:
-      const CC_LEVELS = {
+      /* ====== Conecta Clube — comparação de níveis ====== */
+      const LEVELS_KEY = 'ccs-cc-compare-level';
+      const CLIENT_LEVEL = 1; // nível do cliente exibido na pílula ao lado do título
+
+      // Conteúdo oficial enviado
+      const CC_CONTENT = {
         1: {
-          badge: 'Seu nível: 1 (ATUAL)',
+          plan: '250 MB',
           pill: '1 voucher • a cada 90 dias',
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
-            { emoji:'🎟️', text:'O que é: clube com parceiros da região oferecendo vantagens e descontos.' },
-            { emoji:'⏱️', text:'Frequência: 1 voucher a cada 90 dias.' },
-            { emoji:'📩', text:'Como solicitar: envie um e‑mail para ccs@ccstelecom.com.br.', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano', label:'Enviar e‑mail ↗' } },
-            { emoji:'✅', text:'Regras: não cumulativo, intransferível; validade e condições definidas pelo parceiro.' },
-            { emoji:'⚙️', text:'Ativação: até 72h úteis após a instalação (validações internas).' }
-          ]
+            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
+            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
+            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano', label:'Enviar e‑mail ↗' } },
+            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 90 dias.' },
+            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+          ],
+          upgrade: null
         },
         2: {
-          badge: 'Visualizando Nível 2',
-          pill: '2 vouchers • a cada 60 dias',
+          plan: '450 MB',
+          pill: '1 voucher • a cada 60 dias',
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
-            { emoji:'🎟️', text:'O que é: mais vantagens com parceiros selecionados.' },
-            { emoji:'⏱️', text:'Frequência: 2 vouchers a cada 60 dias.' },
-            { emoji:'📩', text:'Solicite por e‑mail: ccs@ccstelecom.com.br.', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202', label:'Enviar e‑mail ↗' } },
-            { emoji:'✅', text:'Regras: não cumulativo, intransferível; condições definidas pelo parceiro.' },
-            { emoji:'⚙️', text:'Ativação: até 72h úteis após a instalação.' }
-          ]
+            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
+            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
+            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202', label:'Enviar e‑mail ↗' } },
+            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
+            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+          ],
+          upgrade: {
+            label: 'Atualizar para 450 MB',
+            href: 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'
+          }
         },
         3: {
-          badge: 'Visualizando Nível 3',
-          pill: '3 vouchers • a cada 30 dias',
+          plan: '650 MB',
+          pill: '1 voucher • a cada 60 dias',
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
-            { emoji:'🎟️', text:'O que é: nível máximo de ofertas e vantagens.' },
-            { emoji:'⏱️', text:'Frequência: 3 vouchers a cada 30 dias.' },
-            { emoji:'📩', text:'Solicite por e‑mail: ccs@ccstelecom.com.br.', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%203', label:'Enviar e‑mail ↗' } },
-            { emoji:'✅', text:'Regras: não cumulativo, intransferível; condições definidas pelo parceiro.' },
-            { emoji:'⚙️', text:'Ativação: até 72h úteis após a instalação.' }
-          ]
+            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
+            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
+            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%203', label:'Enviar e‑mail ↗' } },
+            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
+            { emoji:'🏆', text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.' }
+          ],
+          upgrade: {
+            label: 'Atualizar para 650 MB',
+            href: 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'
+          }
         }
       };
 
       const ccDyn = document.getElementById('cc-dyn');
       const ccSwap = document.getElementById('cc-swap');
       const ccPills = document.getElementById('cc-pills');
+      const ccPillMain = document.getElementById('cc-pill-main');
       const ccNote = document.getElementById('cc-note');
       const ccFacts = document.getElementById('cc-facts');
-      const ccSub = document.getElementById('cc-sub');
-      const ccBadge = document.getElementById('cc-badge');
-      const badgeAtual = document.getElementById('badge-atual');
+      const ccPlanPill = document.getElementById('cc-plan-pill');
+      const ccPlanText = document.getElementById('cc-plan-text');
+      const btnL2 = document.getElementById('btn-l2');
+      const btnL3 = document.getElementById('btn-l3');
       const emailBtn = document.getElementById('cc-email-link');
+      const upgradeBtn = document.getElementById('cc-upgrade');
 
-      const tabButtons = Array.from(document.querySelectorAll('#s-conecta .level-tabs [role="tab"]'));
+      function renderFacts(facts){
+        ccFacts.innerHTML = '';
+        facts.forEach(f=>{
+          const row = document.createElement('div');
+          row.className = 'fact';
+          const ico = document.createElement('span');
+          ico.className = 'ico'; ico.textContent = f.emoji || '•';
+          const txt = document.createElement('div');
+          txt.className = 'txt';
+          txt.innerHTML = `<span>${f.text}</span>`;
+          if (f.link && f.link.href){
+            const a = document.createElement('a');
+            a.href = f.link.href; a.target = '_blank'; a.rel = 'noopener';
+            a.className = 'link-mini inline-link'; a.textContent = f.link.label || 'Abrir ↗';
+            a.style.marginLeft = '8px';
+            txt.appendChild(a);
+          }
+          row.appendChild(ico); row.appendChild(txt);
+          ccFacts.appendChild(row);
+        });
+      }
 
-      // Util: ler nível inicial de query (?n=2) ou hash (#s-conecta?n=2)
+      function animateSwap(updateFn){
+        const startH = ccSwap.offsetHeight;
+        ccSwap.classList.add('fade-exit','fade-exit-active');
+        setTimeout(()=>{
+          ccSwap.classList.remove('fade-exit','fade-exit-active');
+          updateFn();
+          ccSwap.classList.add('fade-enter');
+          const targetH = ccSwap.scrollHeight;
+          ccDyn.style.height = startH + 'px';
+          void ccDyn.offsetHeight;
+          ccDyn.style.transition = 'height .18s ease';
+          ccDyn.style.height = targetH + 'px';
+          setTimeout(()=>{
+            ccDyn.style.height = '';
+            ccDyn.style.transition = '';
+            ccSwap.classList.add('fade-enter-active');
+            setTimeout(()=> ccSwap.classList.remove('fade-enter','fade-enter-active'), 180);
+          }, 10);
+        }, 90);
+      }
+
+      function setCompareButtons(level){
+        btnL2.setAttribute('aria-pressed', String(level === 2));
+        btnL3.setAttribute('aria-pressed', String(level === 3));
+      }
+
+      function applyCompare(level,{remember=true}={}){
+        const data = CC_CONTENT[level] || CC_CONTENT[1];
+        setCompareButtons(level);
+
+        animateSwap(()=>{
+          // pílulas e textos
+          ccPillMain.textContent = data.pill;
+          ccNote.textContent = data.note || '';
+          renderFacts(data.facts || []);
+        });
+
+        // Plano necessário mostra apenas em 2/3
+        if (level === 2 || level === 3){
+          ccPlanText.textContent = data.plan;
+          ccPlanPill.classList.add('show');
+          // CTA comercial
+          if (data.upgrade){
+            upgradeBtn.style.display = 'inline-flex';
+            upgradeBtn.classList.add('cta2');
+            upgradeBtn.textContent = data.upgrade.label;
+            upgradeBtn.href = data.upgrade.href;
+            // Deixa “Enviar e‑mail” como botão secundário quando houver upgrade
+            emailBtn.classList.remove('cta');
+          }
+        } else {
+          ccPlanPill.classList.remove('show');
+          upgradeBtn.style.display = 'none';
+          // Em 1, “Enviar e‑mail” volta a ser CTA
+          emailBtn.classList.add('cta');
+        }
+
+        // Atualiza assunto padrão do e‑mail com o nível visualizado
+        try{
+          const subj = encodeURIComponent(`Conecta Clube - Nível ${level}`);
+          emailBtn.href = `mailto:ccs@ccstelecom.com.br?subject=${subj}`;
+        }catch{}
+
+        if (remember) localStorage.setItem(LEVELS_KEY, String(level));
+      }
+
       function getLevelFromURL(){
         try{
           const u = new URL(window.location.href);
@@ -980,143 +1075,24 @@
         return null;
       }
 
-      function setURLLevel(n, replace=true){
-        try{
-          const u = new URL(window.location.href);
-          // mantém hash atual; se hash já é #s-conecta, adiciona ?n=
-          if (!u.hash || u.hash.startsWith('#s-conecta')){
-            const baseHash = '#s-conecta';
-            const newHash = `${baseHash}?n=${n}`;
-            if (replace) history.replaceState(null, '', newHash);
-            else location.hash = newHash;
-          } else {
-            u.searchParams.set('n', n);
-            history.replaceState(null, '', u.toString());
-          }
-        }catch{}
-      }
+      btnL2.addEventListener('click', ()=> applyCompare(2));
+      btnL3.addEventListener('click', ()=> applyCompare(3));
 
-      function setActiveTab(n){
-        tabButtons.forEach(btn=>{
-          const sel = +btn.dataset.level === n;
-          btn.setAttribute('aria-selected', sel ? 'true':'false');
-          if (sel) ccSwap.setAttribute('aria-labelledby', btn.id);
-        });
-      }
-
-      function renderFacts(facts){
-        ccFacts.innerHTML = '';
-        facts.forEach(f=>{
-          const row = document.createElement('div');
-          row.className = 'fact';
-          const ico = document.createElement('span');
-          ico.className = 'ico'; ico.textContent = f.emoji || '•';
-          const txt = document.createElement('div');
-          txt.className = 'txt';
-          txt.innerHTML = `<span>${f.text}</span>`;
-          if (f.link && f.link.href){
-            const a = document.createElement('a');
-            a.href = f.link.href; a.target = '_blank'; a.rel = 'noopener';
-            a.className = 'link-mini'; a.textContent = f.link.label || 'Abrir ↗';
-            a.style.marginLeft = '8px';
-            txt.appendChild(a);
-          }
-          row.appendChild(ico); row.appendChild(txt);
-          ccFacts.appendChild(row);
-        });
-      }
-
-      function animateSwap(updateFn){
-        const startH = ccSwap.offsetHeight;
-        ccSwap.classList.add('fade-exit');
-        ccSwap.classList.add('fade-exit-active');
-        // após a transição de saída
-        setTimeout(()=>{
-          ccSwap.classList.remove('fade-exit','fade-exit-active');
-          updateFn();
-          ccSwap.classList.add('fade-enter');
-          const targetH = ccSwap.scrollHeight;
-          ccDyn.style.height = startH + 'px';
-          // forçar reflow
-          void ccDyn.offsetHeight;
-          ccDyn.style.transition = 'height .18s ease';
-          ccDyn.style.height = targetH + 'px';
-          setTimeout(()=>{
-            ccDyn.style.height = '';
-            ccDyn.style.transition = '';
-            ccSwap.classList.add('fade-enter-active');
-            setTimeout(()=> ccSwap.classList.remove('fade-enter','fade-enter-active'), 180);
-          }, 10);
-        }, 90);
-      }
-
-      let currentLevel = 1;
-      function applyLevel(n, {scrollIntoView=false, replaceURL=true} = {}){
-        const data = CC_LEVELS[n] || CC_LEVELS[1];
-        setActiveTab(n);
-        const isUserLevel1 = (n === 1);
-        // badge de nível atual
-        ccBadge.style.display = isUserLevel1 ? 'inline-flex' : 'inline-flex';
-        ccBadge.textContent = data.badge || (isUserLevel1 ? 'Seu nível: 1 (ATUAL)' : `Visualizando Nível ${n}`);
-        badgeAtual.style.display = isUserLevel1 ? 'inline-flex' : 'none';
-
-        animateSwap(()=>{
-          // pílula
-          document.getElementById('cc-pill-main').textContent = data.pill;
-          // nota
-          ccNote.textContent = data.note || '';
-          // facts
-          renderFacts(data.facts || []);
-        });
-
-        // atualizar e‑mail (mantém assunto coerente)
-        try{
-          const subj = encodeURIComponent(`Conecta Clube - Nível ${n}`);
-          emailBtn.href = `mailto:ccs@ccstelecom.com.br?subject=${subj}`;
-        }catch{}
-
-        currentLevel = n;
-        localStorage.setItem(LEVELS_KEY, String(n));
-        if (replaceURL) setURLLevel(n, true);
-        if (scrollIntoView){
-          const sec = document.getElementById('s-conecta');
-          const y = sec.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
-          window.scrollTo({ top:y, behavior:'smooth' });
-        }
-      }
-
-      tabButtons.forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const n = +btn.dataset.level;
-          if (n === currentLevel) return;
-          applyLevel(n, {scrollIntoView:false, replaceURL:false});
-        });
-        // Acessibilidade: setas navegam
-        btn.addEventListener('keydown', (e)=>{
-          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-            e.preventDefault();
-            const idx = tabButtons.indexOf(btn);
-            const dir = e.key === 'ArrowRight' ? 1 : -1;
-            const next = (idx + dir + tabButtons.length) % tabButtons.length;
-            tabButtons[next].focus();
-            tabButtons[next].click();
-          }
-        });
-      });
-
-      function initLevel(){
+      // Inicialização
+      function initConecta(){
+        // nível inicial exibido é o do cliente (1). Compare inicia no salvo ou URL, caindo para 1.
         const urlN = getLevelFromURL();
         const saved = +localStorage.getItem(LEVELS_KEY) || 1;
-        const n = urlN || saved || 1;
-        applyLevel([1,2,3].includes(n) ? n : 1, {replaceURL:!urlN});
+        const start = urlN || saved || 1;
+        applyCompare([1,2,3].includes(start) ? start : 1, {remember:false});
       }
 
-      /* ====== Inicialização ====== */
+      // Inicial geral
       function recalcAll(){
         setTopPad(); fitCapsule(); updateFabIcon();
       }
       recalcAll();
-      initLevel();
+      initConecta();
 
       addEventListener('resize', recalcAll, {passive:true});
       addEventListener('orientationchange', recalcAll);
