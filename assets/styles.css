@@ -6,8 +6,8 @@
   --cta-a:#ff8a25; --cta-b:#ffb04a;
   --focus:#00d9ff;
 
-  --levelA:#2f6bff; --levelB:#7b5cff;   /* Nível 1 (roxo/azulado) */
-  --planA:#00d9ff;  --planB:#00ffc6;    /* Plano 250 (ciano/verde) */
+  --levelA:#2f6bff; --levelB:#7b5cff;   /* Nível 1 */
+  --planA:#00d9ff;  --planB:#00ffc6;    /* 250 MB */
 
   --side-pad: clamp(14px, 4.5vw, 36px);
   --art-max-h-d: clamp(300px, 42vh, 500px);
@@ -23,7 +23,7 @@ body{
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   background:var(--bg);
-  padding-top:0; /* ajustado via JS */
+  padding-top:0; /* setado via JS */
   padding-bottom:calc(130px + env(safe-area-inset-bottom));
 }
 
@@ -81,93 +81,41 @@ body{
 }
 .titlebar{ display:flex; justify-content:center; align-items:center; min-width:0 }
 
-/* Container de vidro escuro com aro em degradê animado */
-@keyframes ringShift {
-  0% { background-position: 0% 50% }
-  100%{ background-position: 100% 50% }
-}
-.topbar .meta{
-  position:relative;
-  padding:6px 12px;
-  border-radius:14px;
-  background:rgba(16,18,24,.45);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 8px 22px rgba(0,0,0,.35);
-  backdrop-filter: blur(10px);
-}
-.topbar .meta::before{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:inherit;
-  padding:1px; /* espessura do aro */
-  background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
-  background-size:300% 300%;
-  animation: ringShift 12s ease-in-out infinite alternate;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; /* Safari */
-  mask-composite:exclude;      /* Outros */
-  pointer-events:none;
-  opacity:.9;
-}
-@media (prefers-reduced-motion:reduce){
-  .topbar .meta::before{ animation:none }
+/* Container título com duas variações */
+.meta{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:6px 8px; border-radius:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+  border:1px solid #ffffff20; backdrop-filter: blur(8px);
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
 
-/* Desktop por padrão: duas pílulas; Mobile: 1 cápsula */
-.badges-two{ display:flex; gap:12px; align-items:center; position:relative }
-.badge-one{ display:none }
-
-/* Separador sutil no desktop */
-.badges-two::after{
-  content:"";
-  position:absolute; left:50%; top:50%;
-  width:1px; height:18px; transform:translate(-50%,-50%);
-  background:linear-gradient(180deg,#ffffff55,#ffffff12);
-  border-radius:1px;
-}
-
-/* Rótulos clean, sem blocos, com ponto de cor */
+/* Desktop: duas pílulas lado a lado */
+.badges-two{ display:flex; gap:8px; align-items:center }
 .badge{
-  border:0; background:transparent; color:#fff;
-  border-radius:999px; height:26px; padding:0 10px;
-  font-weight:900; font-size:13px; line-height:26px; white-space:nowrap; letter-spacing:.2px;
+  border-radius:999px; height:28px; padding:0 12px;
+  font-weight:900; font-size:13px; line-height:28px; white-space:nowrap; border:0
 }
-.badge.level::before,
-.badge.plan::before{
-  content:""; display:inline-block; vertical-align:middle;
-  width:8px; height:8px; margin-right:6px; border-radius:50%;
-  filter: drop-shadow(0 0 6px rgba(123,92,255,.55));
+.badge.level{ background:linear-gradient(90deg,var(--levelA),var(--levelB)); color:#fff }
+.badge.plan { background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12 }
+
+/* Mobile: cápsula curta */
+.badge-one{
+  display:none;
+  border-radius:999px; height:28px; padding:0 12px;
+  font-weight:900; font-size:13px; line-height:28px; white-space:nowrap;
+  color:#0b0d12; background:#fff;
 }
-.badge.level::before{ background:linear-gradient(90deg,var(--levelA),var(--levelB)) }
-.badge.plan::before { background:linear-gradient(90deg,var(--planA),var(--planB)) }
+.badge-one .t-short{ display:none }
 
 @media (max-width:640px){
   .badges-two{ display:none }
-  .badge-one{
-    display:inline-block;
-    background:transparent; color:#fff;
-    border-radius:999px; height:28px; padding:0 12px; line-height:28px;
-    font-weight:900; font-size:13px; white-space:nowrap; letter-spacing:.2px;
-    max-width:70vw; overflow:hidden; text-overflow:ellipsis;
-  }
+  .badge-one{ display:inline-block; max-width:70vw; overflow:hidden; text-overflow:ellipsis }
   .logo-ccs,.logo-vctech{ width:56px; height:56px }
 }
+/* Shrink ao rolar: ainda menor no mobile */
 .topbar.shrink .badge-one .t-full{ display:none }
 .topbar.shrink .badge-one .t-short{ display:inline }
-
-/* Shrink ao rolar: mais contido */
-.topbar.shrink .meta{
-  background:rgba(16,18,24,.30);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 6px 16px rgba(0,0,0,.28);
-}
-.topbar.shrink .badge{ height:24px; line-height:24px; font-size:12px }
-.topbar.shrink .badge-one{ height:24px; line-height:24px; font-size:12px }
 
 /* SEÇÕES/CARDS */
 .section{ padding:18px var(--side-pad) 26px; display:flex; justify-content:center }
@@ -184,17 +132,6 @@ body{
 @media (max-width:920px){ .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% } }
 #s-conecta .art-img{ max-height:calc(var(--art-max-h-d) + 40px) }
 #s-indique .art-img{ max-height:calc(var(--art-max-h-d) + 40px) }
-
-/* Duas logos (CCS Play/TV) */
-.two-icons{
-  display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
-  padding:8px; background:rgba(0,0,0,.25); border-radius:12px;
-  border:1px solid var(--line);
-}
-.two-icons img{
-  width:100%; height:100%; object-fit:contain; background:#0f1420;
-  border-radius:10px; border:1px solid var(--line)
-}
 
 .content{ padding:16px }
 .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
