@@ -221,10 +221,6 @@
     .fact .txt{ color:#dfe7ff }
     .fact .txt strong{ color:#fff }
 
-    /* Links inline */
-    a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
-    a.inline-link:hover{ color:#ffffff; text-decoration:underline }
-
     /* Quick Dock */
     .quick-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:80 }
     .quick-dock .dock-items{ display:flex; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
@@ -255,7 +251,7 @@
     /* Compare: 3 pílulas fixas lado a lado, sem “pular” e sem scroll */
     #s-conecta .compare-area{
       border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.05);
-      padding:10px; margin:4px 0 8px; overflow:hidden; /* impede “saltar” da caixa */
+      padding:10px; margin:4px 0 8px; overflow:hidden;
     }
     #s-conecta .segmented{
       display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px;
@@ -269,7 +265,7 @@
     #s-conecta .segmented button[aria-pressed="true"]{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22) }
     #s-conecta .segmented .dot{ width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)) }
 
-    /* Destaque mágico do ATUAL (com “magia” interna) */
+    /* Destaque mágico do ATUAL (com “magia” interna contida) */
     #s-conecta .segmented .is-current{
       position:relative; background:rgba(255,255,255,.10); border-color:transparent;
     }
@@ -312,13 +308,14 @@
       width:10px; height:10px; border-radius:50%;
       background:linear-gradient(90deg, var(--levelA), var(--planB));
       box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45);
-      display:inline-block; flex:0 0 auto;
+      display:inline-block; flex:0 0 auto; vertical-align:middle;
     }
 
     /* Voucher */
     #s-conecta .pill-voucher{
       display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25;
-      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900;
+      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900; min-height:64px;
+      font-size: var(--pill-fs,15px);
     }
     #s-conecta .pill-voucher .line-1{ font-weight:900 }
     #s-conecta .pill-voucher .line-2{ font-weight:800 }
@@ -328,14 +325,14 @@
     /* Premium */
     #s-conecta .pill-premium{
       display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25;
-      border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-weight:900;
+      border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-weight:900; min-height:64px;
+      font-size: var(--pill-fs,15px);
     }
     #s-conecta .pill-premium.included{ background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent }
     #s-conecta .pill-premium .wrap{ display:flex; gap:8px; align-items:center; flex-wrap:nowrap }
     #s-conecta .pill-premium .line-1{ font-weight:900 }
     #s-conecta .pill-premium .line-2{ font-weight:800; opacity:.95 }
     #s-conecta .pill-premium.is-stacked .wrap{ flex-direction:column; align-items:flex-start; gap:4px }
-    /* Badge sutil para a 2ª linha quando empilhado */
     #s-conecta .pill-premium.is-stacked .line-2{
       padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.12);
     }
@@ -367,9 +364,7 @@
   <svg class="fx fx-fibers" viewBox="0 0 2000 1400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <filter id="glow"><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#5e5bff"/><stop offset="55%" stop-color="#7b5cff"/><stop offset="100%" stop-color="#00eaff"/>
-      </linearGradient>
+      <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5e5bff"/><stop offset="55%" stop-color="#7b5cff"/><stop offset="100%" stop-color="#00eaff"/></linearGradient>
     </defs>
     <g transform="rotate(-22 1000 700)" filter="url(#glow)" opacity="0.9">
       <path class="pulse p1" d="M-360,1250 C240,940 1200,1680 2360,930" stroke="url(#gA)"/>
@@ -1010,7 +1005,6 @@
           ccNote.textContent = data.note || '';
           updatePremiumPill(data.premiumIncluded);
           renderFacts(data.facts || []);
-          // ajustar pílulas após re-render
           setTimeout(fitAllBenefits, 0);
         });
 
