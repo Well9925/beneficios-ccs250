@@ -66,7 +66,7 @@
 
     .fx.fx-noise{
       z-index:-3; opacity:.04; mix-blend-mode:soft-light;
-      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)" opacity="0.55"/></svg>');
       background-size:220px 220px
     }
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
@@ -281,12 +281,21 @@
       border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.65); color:#0b0d12
     }
 
-    /* Subtítulo acima dos botões de comparação */
+    /* Subtítulo do bloco de comparação */
     #s-conecta .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
+
+    /* Bloco de comparação isolado */
+    #s-conecta .compare-area{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,.05);
+      padding:10px;
+      margin:4px 0 8px;
+    }
 
     /* Botões de comparação Nível 2/3 */
     #s-conecta .compare-tabs{
-      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; width:100%; max-width:440px
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; width:100%; max-width:480px
     }
     #s-conecta .compare-tabs button{
       border:1px solid var(--line); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.06);
@@ -299,10 +308,17 @@
     #s-conecta .compare-tabs .dot{
       width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB))
     }
+    /* Ver meu nível */
+    #s-conecta .back-row{ display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap }
+    #s-conecta .link-back{
+      color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px; font-weight:900; cursor:pointer; background:none; border:0; padding:0
+    }
+    #s-conecta .cc-viewing{ display:none; color:#cfe0ff; font-weight:800 }
+    #s-conecta .cc-viewing.show{ display:block }
 
     /* Plano necessário (aparece quando comparando 2/3) */
     #s-conecta .plan-pill{
-      display:none; align-items:center; gap:8px; margin-top:8px;
+      display:none; align-items:center; gap:8px; margin:10px 0 0;
       padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900
     }
     #s-conecta .plan-pill.show{ display:inline-flex }
@@ -375,6 +391,9 @@
     </div>
   </header>
 
+  <!-- Sentinela para condensa/expande a topbar -->
+  <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
+
   <main id="content">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
@@ -399,14 +418,20 @@
 
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
-          <!-- Botões de comparação (Nível 2 e 3) -->
-          <div class="compare-tabs" role="group" aria-label="Comparar níveis">
-            <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
-            <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
-          </div>
+          <div class="compare-area">
+            <!-- Botões de comparação (Nível 2 e 3) -->
+            <div class="compare-tabs" role="group" aria-label="Comparar níveis">
+              <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
+              <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
+            </div>
+            <div class="back-row">
+              <span id="cc-viewing" class="cc-viewing" aria-live="polite"></span>
+              <button type="button" id="btn-my" class="link-back" aria-label="Voltar ao meu nível">Ver meu nível</button>
+            </div>
 
-          <!-- Plano necessário (mostra em 2/3) -->
-          <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
+            <!-- Plano necessário (mostra em 2/3) -->
+            <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
+          </div>
 
           <div class="cc-dyn" id="cc-dyn">
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
@@ -432,8 +457,8 @@
 
               <!-- Ações -->
               <div class="actions" id="cc-actions">
-                <a class="btn cta" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
-                <a class="btn" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
+                <a class="btn cta2" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
+                <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
                 <button class="btn" id="copyEmail" type="button">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
                   Copiar e‑mail
@@ -612,74 +637,6 @@
       </div>
     </section>
 
-    <!-- Portais -->
-    <section class="section" id="s-portal-app" data-title="Portal do Assinante (App CCS)">
-      <div class="card">
-        <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal App"
-               src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/portal.png"
-               loading="lazy" decoding="async">
-        </div></div>
-        <div class="content">
-          <div class="title">
-            <h2>Portal do Assinante (App CCS)</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-portal-app">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
-              <span class="txt">Saiba mais</span>
-            </button>
-          </div>
-
-          <div id="more-portal-app" class="more" role="region">
-            <div class="more-inner">
-              <div class="facts">
-                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>App:</strong> <a class="link-mini inline-link" href="https://bit.ly/CCS_APP" target="_blank" rel="noopener">Abrir bit.ly/CCS_APP ↗</a></div></div>
-                <div class="fact"><span class="ico">✅</span><div class="txt"><strong>Funções:</strong> pagamentos (PIX/Cartão), 2ª via, desbloqueio por confiança, extrato de conexão.</div></div>
-                <div class="fact"><span class="ico">🔑</span><div class="txt"><strong>Login:</strong> e‑mail cadastrado e CPF (apenas números), quando solicitado.</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://bit.ly/CCS_APP">Acessar App</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="s-faturas" data-title="Portal de Faturas (sem login)">
-      <div class="card">
-        <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal de Faturas"
-               src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=512"
-               loading="lazy" decoding="async">
-        </div></div>
-        <div class="content">
-          <div class="title">
-            <h2>Portal de Faturas (sem login)</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-faturas">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
-              <span class="txt">Saiba mais</span>
-            </button>
-          </div>
-          <p class="subtitle">CPF, sem senha. Veja faturas e copie o PIX.</p>
-
-          <div id="more-faturas" class="more" role="region">
-            <div class="more-inner">
-              <div class="facts">
-                <div class="fact"><span class="ico">🧾</span><div class="txt"><strong>Sem senha:</strong> acesse com o CPF do titular.</div></div>
-                <div class="fact"><span class="ico">💳</span><div class="txt"><strong>Pagamento:</strong> PIX/Cartão, copiar código, visualizar faturas em aberto.</div></div>
-                <div class="fact"><span class="ico">🔗</span><div class="txt"><strong>Link:</strong> <a class="link-mini inline-link" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Abrir ccs.pix.7az.com.br ↗</a></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Resumo -->
     <section class="section" id="s-resumo" data-title="Resumo dos Benefícios">
       <div class="summary">
@@ -749,8 +706,9 @@
 
   <script>
     (function(){
-      /* ====== Título (SmartFit + Marquee) — preservado e com overflow corrigido ====== */
+      /* ====== Título (SmartFit + Marquee) com sentinela ====== */
       const topbar = document.getElementById('topbar');
+      const topSentinel = document.getElementById('top-sentinel');
       const wrap = document.querySelector('.topbar .wrap');
       const capsule = document.querySelector('.capsule');
       const viewport = document.getElementById('capViewport');
@@ -859,6 +817,15 @@
         }
       });
 
+      // Sentinela: condensa quando ele sai de vista
+      if ('IntersectionObserver' in window){
+        const ioTop = new IntersectionObserver(entries=>{
+          const e = entries[0];
+          applyCondensed(!e.isIntersecting);
+        }, {threshold:[0, 0.01, 1]});
+        ioTop.observe(topSentinel);
+      }
+
       /* ====== “Saiba mais” (geral) ====== */
       document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
       document.addEventListener('click', (ev)=>{
@@ -889,10 +856,15 @@
       const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
       const sections = Array.from(document.querySelectorAll('main .section'));
       const setActiveDock = (id) => { dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id)); };
+
       if ('IntersectionObserver' in window){
         const io = new IntersectionObserver(entries => {
           const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-          if (vis) setActiveDock(vis.target.id);
+          if (vis) {
+            setActiveDock(vis.target.id);
+            // auto-reset ao mudar para outra seção
+            if (vis.target.id !== 's-conecta') maybeAutoReset('dock-change');
+          }
         }, { threshold:[0.25,0.5,0.75] });
         sections.forEach(s => io.observe(s));
       }
@@ -908,9 +880,8 @@
 
       /* ====== Conecta Clube — comparação de níveis ====== */
       const LEVELS_KEY = 'ccs-cc-compare-level';
-      const CLIENT_LEVEL = 1; // nível do cliente exibido na pílula ao lado do título
+      const CLIENT_LEVEL = 1; // pílula fixa ao lado do título
 
-      // Conteúdo oficial enviado
       const CC_CONTENT = {
         1: {
           plan: '250 MB',
@@ -959,9 +930,9 @@
         }
       };
 
+      const ccSection = document.getElementById('s-conecta');
       const ccDyn = document.getElementById('cc-dyn');
       const ccSwap = document.getElementById('cc-swap');
-      const ccPills = document.getElementById('cc-pills');
       const ccPillMain = document.getElementById('cc-pill-main');
       const ccNote = document.getElementById('cc-note');
       const ccFacts = document.getElementById('cc-facts');
@@ -969,8 +940,13 @@
       const ccPlanText = document.getElementById('cc-plan-text');
       const btnL2 = document.getElementById('btn-l2');
       const btnL3 = document.getElementById('btn-l3');
+      const btnMy = document.getElementById('btn-my');
+      const viewing = document.getElementById('cc-viewing');
       const emailBtn = document.getElementById('cc-email-link');
       const upgradeBtn = document.getElementById('cc-upgrade');
+
+      let currentCompare = 1;
+      let lastCompareClickAt = 0;
 
       function renderFacts(facts){
         ccFacts.innerHTML = '';
@@ -1020,46 +996,98 @@
         btnL3.setAttribute('aria-pressed', String(level === 3));
       }
 
-      function applyCompare(level,{remember=true}={}){
+      function applyCompare(level,{remember=true, smoothIntoView=false}={}){
         const data = CC_CONTENT[level] || CC_CONTENT[1];
+        currentCompare = level;
         setCompareButtons(level);
 
+        // Label de contexto + "Ver meu nível"
+        if (level === 1){
+          viewing.textContent = '';
+          viewing.classList.remove('show');
+          btnMy.style.display = 'none';
+        } else {
+          viewing.textContent = `Visualizando: Nível ${level}`;
+          viewing.classList.add('show');
+          btnMy.style.display = 'inline';
+        }
+
         animateSwap(()=>{
-          // pílulas e textos
           ccPillMain.textContent = data.pill;
           ccNote.textContent = data.note || '';
           renderFacts(data.facts || []);
         });
 
-        // Plano necessário mostra apenas em 2/3
+        // Plano necessário + CTA
         if (level === 2 || level === 3){
           ccPlanText.textContent = data.plan;
           ccPlanPill.classList.add('show');
-          // CTA comercial
           if (data.upgrade){
             upgradeBtn.style.display = 'inline-flex';
-            upgradeBtn.classList.add('cta2');
             upgradeBtn.textContent = data.upgrade.label;
             upgradeBtn.href = data.upgrade.href;
-            // Deixa “Enviar e‑mail” como botão secundário quando houver upgrade
-            emailBtn.classList.remove('cta');
           }
+          emailBtn.classList.remove('cta'); // fica secundário quando há upgrade
         } else {
           ccPlanPill.classList.remove('show');
           upgradeBtn.style.display = 'none';
-          // Em 1, “Enviar e‑mail” volta a ser CTA
-          emailBtn.classList.add('cta');
+          emailBtn.classList.add('cta'); // em 1 volta a ser CTA
         }
 
-        // Atualiza assunto padrão do e‑mail com o nível visualizado
+        // assunto do e‑mail
         try{
           const subj = encodeURIComponent(`Conecta Clube - Nível ${level}`);
           emailBtn.href = `mailto:ccs@ccstelecom.com.br?subject=${subj}`;
         }catch{}
 
         if (remember) localStorage.setItem(LEVELS_KEY, String(level));
+
+        // foco/visibilidade
+        if (smoothIntoView){
+          const topY = ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
+          window.scrollTo({ top: topY, behavior: 'smooth' });
+        }
       }
 
+      // Botões
+      function onCompareClick(level){
+        lastCompareClickAt = Date.now();
+        applyCompare(level, {remember:true, smoothIntoView:false});
+      }
+      btnL2.addEventListener('click', ()=> onCompareClick(2));
+      btnL3.addEventListener('click', ()=> onCompareClick(3));
+      btnMy.addEventListener('click', ()=> onCompareClick(1));
+
+      // Auto-reset quando sai do contexto
+      const indiquesec = document.getElementById('s-indique');
+      let resetTimer = null;
+      function maybeAutoReset(reason){
+        const now = Date.now();
+        if (now - lastCompareClickAt < 1500) return; // evita reset logo após clique
+        if (currentCompare === 1) return;
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(()=>{
+          applyCompare(1, {remember:true});
+        }, 300); // histerese
+      }
+
+      if ('IntersectionObserver' in window){
+        // Quando Conecta Clube sai de vista (<10%)
+        const ioCC = new IntersectionObserver(entries=>{
+          const e = entries[0];
+          if (!e.isIntersecting || e.intersectionRatio < 0.1) maybeAutoReset('cc-out');
+        }, {threshold:[0, 0.1, 0.25]});
+        ioCC.observe(ccSection);
+
+        // Seção Indique & Ganhe — ao passar dela, também reseta
+        const ioInd = new IntersectionObserver(entries=>{
+          const e = entries[0];
+          if (!e.isIntersecting) maybeAutoReset('indique-out');
+        }, {threshold:[0.25]});
+        ioInd.observe(indiquesec);
+      }
+
+      // Inicialização (persistência + URL)
       function getLevelFromURL(){
         try{
           const u = new URL(window.location.href);
@@ -1074,13 +1102,7 @@
         }catch{}
         return null;
       }
-
-      btnL2.addEventListener('click', ()=> applyCompare(2));
-      btnL3.addEventListener('click', ()=> applyCompare(3));
-
-      // Inicialização
       function initConecta(){
-        // nível inicial exibido é o do cliente (1). Compare inicia no salvo ou URL, caindo para 1.
         const urlN = getLevelFromURL();
         const saved = +localStorage.getItem(LEVELS_KEY) || 1;
         const start = urlN || saved || 1;
