@@ -209,7 +209,7 @@
     .pill.hi{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border-color:transparent }
     .note{ color:#a8b6d9; font-size:14px }
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
-    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer }
+    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; font-size: var(--btn-fs,15px) }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent }
     .btn.cta2{ background:linear-gradient(90deg,var(--planA),var(--planB)); border-color:transparent; color:#0b0d12 }
     .btn.block{ width:100% }
@@ -259,103 +259,96 @@
     /* Foco/Acessibilidade */
     a:focus-visible,button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 
-    /* ========================= Conecta Clube — apenas este bloco novo abaixo ========================= */
+    /* ========================= Conecta Clube — somente este bloco abaixo ========================= */
 
-    /* Cabeçalho do card: título + pílula do nível do cliente */
+    /* Cabeçalho do card: título */
     #s-conecta .cc-header{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between;
     }
     #s-conecta .cc-header .left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-    /* Pílula “Seu nível (ATUAL)” */
-    #s-conecta .pill-current{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 12px; border-radius:999px; border:1px solid transparent;
-      background:linear-gradient(90deg, var(--levelA), var(--planB)); color:#0b0d12; font-weight:900;
-      box-shadow:0 6px 18px rgba(0,0,0,.25), 0 0 0 4px rgba(0,217,255,.15) inset;
-    }
-    #s-conecta .pill-current .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:linear-gradient(90deg,var(--levelA),var(--planB));
-      filter:drop-shadow(0 0 8px rgba(0,217,255,.55));
-    }
-    #s-conecta .pill-current .badge{
-      font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
-      border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.65); color:#0b0d12
-    }
+    #s-conecta h2{ margin:0 }
 
-    /* Subtítulo do bloco de comparação */
-    #s-conecta .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
+    .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
 
-    /* Bloco de comparação isolado */
+    /* Área de comparação isolada com segmented control */
     #s-conecta .compare-area{
-      border:1px solid var(--line);
-      border-radius:12px;
+      border:1px solid var(--line); border-radius:12px;
       background:rgba(255,255,255,.05);
-      padding:10px;
-      margin:4px 0 8px;
+      padding:10px; margin:4px 0 8px;
     }
-
-    /* Botões de comparação: Ver meu nível antes de N2/N3 */
-    #s-conecta .compare-tabs{
-      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    #s-conecta .seg-wrap{ position:relative }
+    #s-conecta .segmented{
+      display:flex; gap:8px; align-items:center; flex-wrap:nowrap; overflow:hidden;
+      font-size:var(--seg-fs,14px);
     }
-    #s-conecta .compare-tabs button{
-      border:1px solid var(--line); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.06);
-      color:#fff; font-weight:900; display:inline-flex; gap:8px; align-items:center; justify-content:center; cursor:pointer;
-      transition:background .12s ease, border-color .12s ease, transform .12s ease
+    #s-conecta .segmented button{
+      border:1px solid var(--line); border-radius:999px; padding:8px 12px;
+      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+      transition:background .12s ease, border-color .12s ease
     }
-    #s-conecta .compare-tabs button[aria-pressed="true"]{
+    #s-conecta .segmented button[aria-pressed="true"]{
       background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22)
     }
-    #s-conecta .compare-tabs .dot{
-      width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB))
+    #s-conecta .segmented .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(90deg,var(--levelA),var(--planB))
     }
-    /* Ver meu nível (destaque sutil na primeira aparição) */
-    #s-conecta .btn-back{
-      display:none; align-items:center; gap:6px;
-      padding:8px 12px; border-radius:999px; border:1px solid var(--line);
-      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+    #s-conecta .segmented .badge{
+      font-size:10.5px; font-weight:900; padding:3px 7px; border-radius:999px;
+      border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.7); color:#0b0d12
     }
-    #s-conecta .btn-back .ico{ width:16px; height:16px }
-    #s-conecta .btn-back.hint{ animation:pulseHint 1.2s ease-in-out 2 }
-    @keyframes pulseHint{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.12)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
+    /* Dica de overflow */
+    #s-conecta .seg-hint{
+      position:absolute; right:0; top:50%; transform:translateY(-50%);
+      font-size:12px; color:#cfe0ff; padding:2px 6px; border-radius:999px;
+      background:rgba(255,255,255,.08); border:1px solid var(--line);
+      display:none; pointer-events:none;
+    }
+    #s-conecta .seg-wrap[data-overflow="true"] .seg-hint{ display:block }
 
-    /* Plano necessário (aparece quando comparando 2/3) */
+    #s-conecta .cc-viewing{ margin-top:6px; color:#cfe0ff; font-weight:800 }
+
+    /* Plano necessário */
     #s-conecta .plan-pill{
       display:none; align-items:center; gap:8px; margin:10px 0 0;
       padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900
     }
     #s-conecta .plan-pill.show{ display:inline-flex }
 
-    /* Pílulas (voucher e premium) lado a lado com rolagem horizontal suave */
+    /* Pílulas principais (voucher + premium) lado a lado com fallback inteligente */
     #s-conecta .cc-pills{
-      display:flex; gap:10px; margin:10px 0;
-      flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+      display:flex; gap:10px; margin:10px 0; flex-wrap:nowrap;
+      align-items:stretch;
     }
-    #s-conecta .cc-pills::-webkit-scrollbar{ display:none }
-    #s-conecta .cc-pills > *{ flex:0 0 auto }
-
-    /* Pílula Premium */
+    #s-conecta .pill.hi, #s-conecta .pill-premium{
+      display:inline-flex; align-items:center; gap:8px; white-space:nowrap; font-size:var(--pill-fs,15px)
+    }
     #s-conecta .pill-premium{
-      display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--line); border-radius:999px; padding:8px 12px;
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
-      white-space:nowrap
     }
-    #s-conecta .pill-premium .ico{ font-size:16px }
     #s-conecta .pill-premium.included{
       background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent
     }
 
-    /* Ações do Conecta Clube: grade estável no mobile */
+    /* Marquee para textos longos nas pílulas (fallback) */
+    @keyframes pillMarq { 0%{ transform:translateX(0) } 100%{ transform:translateX(var(--marq-dist,-40%)) } }
+    #s-conecta .marquee{
+      overflow:hidden; position:relative;
+    }
+    #s-conecta .marquee .inner{
+      display:inline-block; padding-right:32px; will-change:transform;
+      animation:pillMarq var(--marq-dur,6s) linear infinite alternate;
+    }
+
+    /* Ações do Conecta Clube: grade estável e sem quebra */
     #s-conecta .actions{
       display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:10px; align-items:stretch
     }
-    /* Posições padrão (Nível 2/3): upgrade esquerda, e-mail direita, copiar linha de baixo inteira */
     #s-conecta .actions .btn-upgrade{ grid-column:1 }
     #s-conecta .actions .btn-email{ grid-column:2 }
     #s-conecta .actions .btn-copy{ grid-column:1 / span 2 }
-    /* Nível 1: e-mail esquerda, copiar direita (sem upgrade) */
     #s-conecta .actions.is-level1 .btn-email{ grid-column:1 }
     #s-conecta .actions.is-level1 .btn-copy{ grid-column:2 }
 
@@ -364,7 +357,7 @@
       width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px
     }
 
-    /* Transição de conteúdo por nível (crossfade com autoheight) */
+    /* Transições */
     #s-conecta .cc-dyn{ position:relative }
     #s-conecta .cc-swap{ position:relative }
     #s-conecta .fade-enter{ opacity:0; transform:translateY(6px) }
@@ -447,47 +440,51 @@
         <div class="content">
           <div class="cc-header">
             <div class="left">
-              <h2 style="margin:0">Conecta Clube</h2>
-              <!-- Pílula do nível do cliente (fixo: Nível 1 ATUAL) -->
-              <span class="pill-current" id="cc-your-level" aria-label="Seu nível atual">
-                <span class="dot" aria-hidden="true"></span>
-                <span>Nível 1</span>
-                <span class="badge">ATUAL</span>
-              </span>
+              <h2>Conecta Clube</h2>
             </div>
           </div>
 
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
           <div class="compare-area">
-            <!-- Botões de comparação (Ver meu nível antes de N2/N3) -->
-            <div class="compare-tabs" role="group" aria-label="Comparar níveis">
-              <button type="button" id="btn-my" class="btn-back" aria-label="Voltar ao meu nível">
-                <svg class="ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-                Ver meu nível
-              </button>
-              <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
-              <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
-            </div>
-            <div class="back-row">
-              <span id="cc-viewing" class="cc-viewing" aria-live="polite"></span>
+            <div class="seg-wrap" id="segWrap">
+              <div class="segmented" id="segmented" role="group" aria-label="Selecionar nível para visualizar">
+                <button type="button" id="seg-l1" data-level="1" aria-pressed="true">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span>Nível 1</span>
+                  <span class="badge">ATUAL</span>
+                </button>
+                <button type="button" id="seg-l2" data-level="2" aria-pressed="false">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span>Nível 2</span>
+                </button>
+                <button type="button" id="seg-l3" data-level="3" aria-pressed="false">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span>Nível 3</span>
+                </button>
+              </div>
+              <div class="seg-hint" id="segHint">↔ deslize</div>
             </div>
 
-            <!-- Plano necessário (mostra em 2/3) -->
+            <div id="cc-viewing" class="cc-viewing" aria-live="polite"></div>
+
             <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
           </div>
 
           <div class="cc-dyn" id="cc-dyn">
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
               <div class="cc-pills" id="cc-pills">
-                <span class="pill hi" id="cc-pill-main">1 voucher • a cada 90 dias</span>
+                <span class="pill hi" id="cc-pill-main">
+                  <span class="txt">1 voucher / 90 dias</span>
+                </span>
                 <span class="pill-premium" id="cc-pill-premium" role="status" aria-live="polite">
-                  <span class="ico">🏆</span><span id="cc-premium-text">Atrações premium não incluídas</span>
+                  <span class="ico">🏆</span>
+                  <span id="cc-premium-text">Atrações premium não incluídas</span>
                 </span>
               </div>
+
               <p class="note" id="cc-note">Válido para clientes ativos e adimplentes.</p>
 
-              <!-- Saiba mais -->
               <div class="title" style="margin-top:6px">
                 <div class="left" aria-hidden="true"></div>
                 <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta">
@@ -502,9 +499,8 @@
                 </div>
               </div>
 
-              <!-- Ações -->
               <div class="actions is-level1" id="cc-actions">
-                <a class="btn cta2 btn-upgrade" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
+                <a class="btn cta2 btn-upgrade" id="cc-upgrade" href="#" style="display:none">Atualizar para 650 MB</a>
                 <a class="btn cta btn-email" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
                 <button class="btn btn-copy" id="copyEmail" type="button">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
@@ -864,7 +860,7 @@
         }
       });
 
-      // Sentinela: condensa quando ele sai de vista
+      // Sentinela: condensa quando sai de vista
       if ('IntersectionObserver' in window){
         const ioTop = new IntersectionObserver(entries=>{
           const e = entries[0];
@@ -907,7 +903,7 @@
       if ('IntersectionObserver' in window){
         const io = new IntersectionObserver(entries => {
           const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-        if (vis) {
+          if (vis) {
             setActiveDock(vis.target.id);
             if (vis.target.id !== 's-conecta') maybeAutoReset('dock-change');
           }
@@ -915,22 +911,23 @@
         sections.forEach(s => io.observe(s));
       }
 
-      /* ====== Copiar e‑mail (geral) ====== */
+      /* ====== Copiar e‑mail ====== */
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn){
         copyBtn.addEventListener('click', async () => {
           try { await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); } catch {}
-          copyBtn.innerHTML = '✅ E‑mail copiado'; setTimeout(()=> copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
+          copyBtn.innerHTML = '✅ E‑mail copiado';
+          setTimeout(()=> copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
         });
       }
 
-      /* ====== Conecta Clube — comparação de níveis ====== */
+      /* ====== Conecta Clube ====== */
       const LEVELS_KEY = 'ccs-cc-compare-level';
 
       const CC_CONTENT = {
         1: {
           plan: '250 MB',
-          pill: '1 voucher • a cada 90 dias',
+          pill: '1 voucher / 90 dias',
           premiumIncluded: false,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
@@ -944,7 +941,7 @@
         },
         2: {
           plan: '450 MB',
-          pill: '1 voucher • a cada 60 dias',
+          pill: '1 voucher / 60 dias',
           premiumIncluded: false,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
@@ -961,7 +958,7 @@
         },
         3: {
           plan: '650 MB',
-          pill: '1 voucher • a cada 60 dias',
+          pill: '1 voucher / 60 dias',
           premiumIncluded: true,
           note: 'Válido para clientes ativos e adimplentes.',
           facts: [
@@ -979,6 +976,13 @@
       };
 
       const ccSection = document.getElementById('s-conecta');
+      const segmented = document.getElementById('segmented');
+      const segWrap = document.getElementById('segWrap');
+      const segHint = document.getElementById('segHint');
+      const segL1 = document.getElementById('seg-l1');
+      const segL2 = document.getElementById('seg-l2');
+      const segL3 = document.getElementById('seg-l3');
+
       const ccDyn = document.getElementById('cc-dyn');
       const ccSwap = document.getElementById('cc-swap');
       const ccPillMain = document.getElementById('cc-pill-main');
@@ -988,9 +992,6 @@
       const ccFacts = document.getElementById('cc-facts');
       const ccPlanPill = document.getElementById('cc-plan-pill');
       const ccPlanText = document.getElementById('cc-plan-text');
-      const btnL2 = document.getElementById('btn-l2');
-      const btnL3 = document.getElementById('btn-l3');
-      const btnMy = document.getElementById('btn-my');
       const viewing = document.getElementById('cc-viewing');
       const emailBtn = document.getElementById('cc-email-link');
       const upgradeBtn = document.getElementById('cc-upgrade');
@@ -1043,9 +1044,70 @@
         }, 90);
       }
 
-      function setCompareButtons(level){
-        btnL2.setAttribute('aria-pressed', String(level === 2));
-        btnL3.setAttribute('aria-pressed', String(level === 3));
+      function setSegmented(level){
+        [segL1,segL2,segL3].forEach(btn=> btn.setAttribute('aria-pressed', String(+btn.dataset.level === level)));
+      }
+
+      // Ajuste automático do segmented: tenta caber sem scroll; se não, mostra dica e permite overflow
+      function fitSegmented(){
+        if (!segmented) return;
+        const max = segmented.parentElement.clientWidth - 4;
+        let fs = 14; let tries = 0;
+        segmented.style.setProperty('--seg-fs', fs + 'px');
+        function totalW(){ return segmented.scrollWidth; }
+        while (totalW() > max && fs > 11 && tries < 12){
+          fs -= 0.5; tries++; segmented.style.setProperty('--seg-fs', fs + 'px');
+        }
+        const overflow = totalW() > max;
+        segWrap.dataset.overflow = String(overflow);
+        segmented.style.overflowX = overflow ? 'auto' : 'hidden';
+        segmented.style.webkitOverflowScrolling = overflow ? 'touch' : '';
+      }
+
+      // Ajuste por botão das ações (evita quebra em zoom alto)
+      function fitActionButtons(){
+        document.querySelectorAll('#cc-actions .btn').forEach(btn=>{
+          btn.style.setProperty('--btn-fs','15px');
+          let fs = 15, tries=0;
+          const max = btn.clientWidth - 14;
+          const measure = ()=> btn.scrollWidth;
+          while (measure() > max && fs > 13 && tries < 8){
+            fs -= 0.5; tries++; btn.style.setProperty('--btn-fs', fs + 'px');
+          }
+        });
+      }
+
+      // Marquee dentro da pílula se o texto não couber
+      function applyPillFit(pillEl){
+        if (!pillEl) return;
+        // reset
+        const txt = pillEl.querySelector('.txt') || pillEl.querySelector('#cc-premium-text');
+        if (!txt) return;
+        // remover wrappers antigos
+        const oldInner = pillEl.querySelector('.marquee .inner');
+        if (oldInner){
+          const parent = pillEl.querySelector('.marquee');
+          if (parent){ parent.replaceWith(txt); }
+        }
+        // medir
+        const need = txt.scrollWidth > pillEl.clientWidth - 10;
+        if (need){
+          const wrap = document.createElement('span');
+          wrap.className = 'marquee';
+          const inner = document.createElement('span');
+          inner.className = 'inner';
+          inner.textContent = txt.textContent;
+          wrap.style.setProperty('--marq-dur', Math.min(12, Math.max(6, Math.round((txt.scrollWidth - pillEl.clientWidth)/10))) + 's');
+          const dist = -Math.min(0, pillEl.clientWidth - txt.scrollWidth - 28);
+          wrap.style.setProperty('--marq-dist', dist + 'px');
+          wrap.appendChild(inner);
+          txt.replaceWith(wrap);
+          // pausa em interação
+          wrap.addEventListener('pointerdown', ()=> inner.style.animationPlayState='paused');
+          wrap.addEventListener('pointerup', ()=> inner.style.animationPlayState='running');
+          wrap.addEventListener('mouseenter', ()=> inner.style.animationPlayState='paused');
+          wrap.addEventListener('mouseleave', ()=> inner.style.animationPlayState='running');
+        }
       }
 
       function updatePremiumPill(data){
@@ -1058,35 +1120,27 @@
           ccPremiumText.textContent = 'Atrações premium não incluídas';
           ccPremiumPill.setAttribute('aria-label','Atrações premium: não incluídas');
         }
+        applyPillFit(ccPremiumPill);
       }
 
       function applyCompare(level,{remember=true, smoothIntoView=false}={}){
         const data = CC_CONTENT[level] || CC_CONTENT[1];
         currentCompare = level;
-        setCompareButtons(level);
+        setSegmented(level);
 
-        // "Ver meu nível" aparece antes de N2/N3 quando comparando
-        if (level === 1){
-          viewing.textContent = '';
-          viewing.classList.remove('show');
-          btnMy.style.display = 'none';
-          btnMy.classList.remove('hint');
-        } else {
-          viewing.textContent = `Visualizando: Nível ${level}`;
-          viewing.classList.add('show');
-          btnMy.style.display = 'inline-flex';
-          btnMy.classList.add('hint');
-          setTimeout(()=> btnMy.classList.remove('hint'), 1600);
-        }
+        // rótulo
+        viewing.textContent = `Visualizando: Nível ${level}`;
+        viewing.classList.toggle('show', true);
 
         animateSwap(()=>{
-          ccPillMain.textContent = data.pill;
+          ccPillMain.querySelector('.txt').textContent = data.pill;
           ccNote.textContent = data.note || '';
           updatePremiumPill(data);
           renderFacts(data.facts || []);
+          // ajuste de pílula de voucher
+          applyPillFit(ccPillMain);
         });
 
-        // Plano necessário + CTA + layout dos botões
         if (level === 2 || level === 3){
           ccPlanText.textContent = data.plan;
           ccPlanPill.classList.add('show');
@@ -1095,22 +1149,24 @@
             upgradeBtn.textContent = data.upgrade.label;
             upgradeBtn.href = data.upgrade.href;
           }
-          emailBtn.classList.remove('cta'); // secundário quando há upgrade
-          actions.classList.remove('is-level1'); // usa layout padrão (upgrade|email na 1ª linha)
+          emailBtn.classList.remove('cta');
+          actions.classList.remove('is-level1');
         } else {
           ccPlanPill.classList.remove('show');
           upgradeBtn.style.display = 'none';
-          emailBtn.classList.add('cta'); // em 1 volta a ser CTA
-          actions.classList.add('is-level1'); // e‑mail esquerda, copiar direita
+          emailBtn.classList.add('cta');
+          actions.classList.add('is-level1');
         }
 
-        // assunto do e‑mail
         try{
           const subj = encodeURIComponent(`Conecta Clube - Nível ${level}`);
           emailBtn.href = `mailto:ccs@ccstelecom.com.br?subject=${subj}`;
         }catch{}
 
         if (remember) localStorage.setItem(LEVELS_KEY, String(level));
+
+        // reposiciona e ajusta botões após mudar conteúdo
+        setTimeout(()=> { fitActionButtons(); }, 0);
 
         if (smoothIntoView){
           const topY = ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
@@ -1132,14 +1188,14 @@
         }, 60);
       });
 
-      // Botões de comparação
-      function onCompareClick(level){
+      // cliques do segmented
+      function onSegClick(level){
         lastCompareClickAt = Date.now();
         applyCompare(level, {remember:true, smoothIntoView:false});
       }
-      btnL2.addEventListener('click', ()=> onCompareClick(2));
-      btnL3.addEventListener('click', ()=> onCompareClick(3));
-      btnMy.addEventListener('click', ()=> onCompareClick(1));
+      segL1.addEventListener('click', ()=> onSegClick(1));
+      segL2.addEventListener('click', ()=> onSegClick(2));
+      segL3.addEventListener('click', ()=> onSegClick(3));
 
       // Auto-reset quando sai do contexto
       const indiquesec = document.getElementById('s-indique');
@@ -1151,7 +1207,6 @@
         if (resetTimer) clearTimeout(resetTimer);
         resetTimer = setTimeout(()=>{ applyCompare(1, {remember:true}); }, 300);
       }
-
       if ('IntersectionObserver' in window){
         const ioCC = new IntersectionObserver(entries=>{
           const e = entries[0];
@@ -1186,11 +1241,19 @@
         const saved = +localStorage.getItem(LEVELS_KEY) || 1;
         const start = urlN || saved || 1;
         applyCompare([1,2,3].includes(start) ? start : 1, {remember:false});
+        fitSegmented();
+        fitActionButtons();
+        // ajustar pílulas na carga
+        applyPillFit(ccPillMain);
+        applyPillFit(ccPremiumPill);
       }
 
       // Inicial geral
       function recalcAll(){
-        setTopPad(); fitCapsule(); updateFabIcon();
+        setTopPad(); fitCapsule(); fitSegmented(); fitActionButtons();
+        // reavaliar pílulas após resize
+        applyPillFit(ccPillMain);
+        applyPillFit(ccPremiumPill);
       }
       recalcAll();
       initConecta();
