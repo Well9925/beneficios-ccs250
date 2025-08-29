@@ -75,10 +75,11 @@
       .pulse,.fx.fx-shimmer{ animation:none }
     }
 
-    /* TOPBAR com cápsula única reativa (expandido/compacto) */
+    /* TOPBAR com cápsula única reativa (expandido/compacto) e brilho mágico correndo */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
-    @keyframes glowPulse { 0%,100%{ opacity:.65; filter:blur(14px)} 50%{ opacity:.95; filter:blur(18px)} }
-    @keyframes twinkle { 0%{transform:translateX(-20%) scale(.8); opacity:.0} 50%{opacity:.9} 100%{transform:translateX(120%) scale(1.05); opacity:0} }
+    @keyframes glowPulse { 0%,100%{ opacity:.60; filter:blur(14px)} 50%{ opacity:.98; filter:blur(18px)} }
+    @keyframes sweep { 0%{ transform:translateX(-120%)} 100%{ transform:translateX(120%)} }
+    @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -108,7 +109,7 @@
       transition: padding .22s ease, transform .22s ease, box-shadow .22s ease;
     }
 
-    /* Estilo: Aurora + brilho (data-glow) */
+    /* Aro mágico nas bordas */
     header[data-style="aurora"] .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -118,41 +119,56 @@
       -webkit-mask-composite:xor; mask-composite:exclude;
       pointer-events:none; opacity:.98;
     }
-    /* Aura de brilho externa (magic) */
+
+    /* Aura/varredura sobre toda a cápsula (visível) */
     header[data-glow="magic"] .capsule::after{
-      content:""; position:absolute; inset:-30% -18%; border-radius:inherit;
+      content:""; position:absolute; inset:-25% -12%; border-radius:inherit;
       background:
-        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.18), transparent 60%),
-        radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.18), transparent 60%);
-      filter: blur(16px);
-      mix-blend-mode:screen; pointer-events:none; opacity:.85;
-      animation:glowPulse 3.6s ease-in-out infinite;
+        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.22), transparent 60%),
+        radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.22), transparent 60%);
+      filter: blur(16px); mix-blend-mode:screen; pointer-events:none; opacity:.85;
+      animation:glowPulse 3s ease-in-out infinite;
     }
-    /* Faísca passando (glint) */
+
+    /* Faixa de luz varrendo toda a pílula */
     header[data-glow="magic"] .capsule .glint{
-      position:absolute; left:-20%; top:0; bottom:0; width:28%;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent);
-      filter: blur(8px); pointer-events:none; animation:twinkle 2.8s ease-in-out infinite;
+      position:absolute; top:-10%; bottom:-10%; left:0; width:28%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
+      filter: blur(10px); pointer-events:none;
+      transform:translateX(-120%);
+      animation:sweep 2.8s ease-in-out infinite;
     }
+
     @media (prefers-reduced-motion:reduce){
       header[data-style="aurora"] .capsule::before,
       header[data-glow="magic"] .capsule::after,
       header[data-glow="magic"] .capsule .glint{ animation:none }
     }
 
-    /* Texto com leve brilho */
+    /* Texto do título com degradê mágico visível correndo */
     .capsule .txt{
-      color:#fff; letter-spacing:.2px;
+      display:inline-flex; align-items:center; gap:10px;
+      font-weight:900; letter-spacing:.2px;
+      background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
+                 linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
+      /* gradiente animado nas letras */
+      background-clip:text;
+      -webkit-background-clip:text;
+      color:transparent;
+      background-size:200% 100%, 100% 100%;
+      animation:textShift 3.2s linear infinite;
       text-shadow:0 0 10px rgba(123,92,255,.35), 0 0 16px rgba(0,255,198,.25);
     }
-    .capsule .dot{
-      width:10px; height:10px; border-radius:50%;
+
+    /* Bolinha separadora colorida central (substitui “•”) */
+    .dot-mid{
+      width:12px; height:12px; border-radius:50%;
       background:linear-gradient(90deg,var(--levelA),var(--planB));
-      filter: drop-shadow(0 0 8px rgba(0,217,255,.55));
+      box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45);
       flex:0 0 auto;
     }
 
-    /* Alternativas de estilo */
+    /* Alternativas de estilo (se quiser trocar) */
     header[data-style="outline"] .capsule{
       background:transparent; border:1px solid rgba(255,255,255,.25);
       box-shadow: 0 6px 18px rgba(0,0,0,.28);
@@ -172,7 +188,7 @@
     .capsule .t-short{ display:none }
     .topbar.is-condensed .capsule{ padding:6px 12px; transform:translateY(0); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 16px rgba(0,0,0,.28) }
     .topbar.is-condensed .capsule .t-full{ display:none }
-    .topbar.is-condensed .capsule .t-short{ display:inline }
+    .topbar.is-condensed .capsule .t-short{ display:inline-flex }
     .topbar.is-condensed .capsule .txt{ text-shadow:0 0 8px rgba(0,217,255,.35) }
 
     @media (max-width:560px){
@@ -285,8 +301,8 @@
   <div class="fx fx-noise" aria-hidden="true"></div>
   <div class="fx fx-vignette" aria-hidden="true"></div>
 
-  <!-- Topo: mude data-style (aurora|outline|solid) e data-glow (magic|soft|off) se quiser -->
-  <header class="topbar is-expanded" id="topbar" data-style="aurora" data-glow="magic">
+  <!-- Topo: estilo aurora + brilho magic -->
+  <header class="topbar" id="topbar" data-style="aurora" data-glow="magic">
     <div class="wrap">
       <img class="logo-ccs" alt="CCS Telecom"
            src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png"
@@ -295,9 +311,18 @@
       <div class="titlebar">
         <div class="capsule" role="group" aria-label="Nível e plano">
           <span class="glint" aria-hidden="true"></span>
-          <span class="dot" aria-hidden="true"></span>
-          <span class="txt t-full">Benefícios • Nível 1</span>
-          <span class="txt t-short" aria-hidden="true">Nível 1 • 250 MB</span>
+          <!-- Texto longo: Benefícios Nível 1 · Plano 250 MB -->
+          <span class="txt t-full">
+            <span class="label-left">Benefícios Nível 1</span>
+            <span class="dot-mid" aria-hidden="true"></span>
+            <span class="label-right">Plano 250 MB</span>
+          </span>
+          <!-- Texto curto: Nível 1 · 250 MB -->
+          <span class="txt t-short" aria-hidden="true">
+            <span class="label-left">Nível 1</span>
+            <span class="dot-mid" aria-hidden="true"></span>
+            <span class="label-right">250 MB</span>
+          </span>
         </div>
       </div>
 
@@ -656,20 +681,42 @@
       function setTopPad(){ document.body.style.paddingTop = (topbar.offsetHeight || 64) + 'px'; }
       setTopPad(); addEventListener('resize', setTopPad, {passive:true});
 
-      // 2) Título reativo: condensa ao rolar para baixo e expande ao rolar para cima/próximo ao topo
+      // 2) Título reativo robusto:
+      // - Condensa ao rolar para baixo (detecção por direção + posição)
+      // - Expande ao rolar para cima (com histerese) e quando perto do topo
       let lastY = window.scrollY || 0;
-      const CONDENSE_AT = 24;  // quando passar disso rolando para baixo, condensa
-      const EXPAND_AT = 12;    // quando voltar perto do topo ou rolando para cima, expande
+      let condensed = false;
+      const CONDENSE_AT = 24; // se passar disso, pode condensar
+      const DELTA = 6;        // histerese mínima
+      function applyCondensed(on){
+        if (on === condensed) return;
+        condensed = on;
+        topbar.classList.toggle('is-condensed', condensed);
+      }
       function onScroll(){
         const y = window.scrollY || 0;
-        const goingDown = y > lastY + 6;
-        const goingUp   = y < lastY - 6;
-        if (goingDown && y > CONDENSE_AT) topbar.classList.add('is-condensed');
-        else if (goingUp || y <= EXPAND_AT) topbar.classList.remove('is-condensed');
+        const dy = y - lastY;
+
+        if (y <= 2){
+          // sempre expande no topo
+          applyCondensed(false);
+        } else if (dy > DELTA && y > CONDENSE_AT){
+          // rolou para baixo – condensa
+          applyCondensed(true);
+        } else if (dy < -DELTA){
+          // rolou para cima – expande
+          applyCondensed(false);
+        } else {
+          // fallback por posição (garantia)
+          if (y > CONDENSE_AT) applyCondensed(true);
+          if (y < CONDENSE_AT/2) applyCondensed(false);
+        }
+
         lastY = y;
         updateFabIcon();
       }
-      onScroll(); addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+      addEventListener('scroll', onScroll, {passive:true});
 
       // 3) “Saiba mais” confiável (todos os cards)
       function setupMore(){
@@ -719,7 +766,7 @@
       }
       setupMore();
 
-      // 4) Quick Dock — seção ativa
+      // 4) Quick Dock — destaca seção visível
       const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
       const setActiveDock = (id) => {
         dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
