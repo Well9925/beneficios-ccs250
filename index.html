@@ -75,7 +75,7 @@
       .pulse,.fx.fx-shimmer{ animation:none }
     }
 
-    /* TOPBAR com cápsula única reativa (expandido/compacto) e brilho mágico correndo */
+    /* TOPBAR com cápsula reativa + brilho mágico */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes glowPulse { 0%,100%{ opacity:.60; filter:blur(14px)} 50%{ opacity:.98; filter:blur(18px)} }
     @keyframes sweep { 0%{ transform:translateX(-120%)} 100%{ transform:translateX(120%)} }
@@ -96,7 +96,6 @@
     }
     .titlebar{ display:flex; justify-content:center; align-items:center; min-width:0 }
 
-    /* Cápsula base */
     .capsule{
       position:relative; display:inline-flex; align-items:center; gap:10px;
       padding:10px 16px; border-radius:999px;
@@ -106,10 +105,10 @@
       backdrop-filter: blur(10px);
       white-space:nowrap; max-width:80vw; overflow:hidden; text-overflow:ellipsis;
       font-weight:900; line-height:1;
-      transition: padding .22s ease, transform .22s ease, box-shadow .22s ease;
+      font-size: clamp(13px, 2.4vw, 16px); /* proporcional */
+      transition: padding .22s ease, transform .22s ease, box-shadow .22s ease, font-size .22s ease;
     }
 
-    /* Aro mágico nas bordas */
     header[data-style="aurora"] .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -119,8 +118,6 @@
       -webkit-mask-composite:xor; mask-composite:exclude;
       pointer-events:none; opacity:.98;
     }
-
-    /* Aura/varredura sobre toda a cápsula (visível) */
     header[data-glow="magic"] .capsule::after{
       content:""; position:absolute; inset:-25% -12%; border-radius:inherit;
       background:
@@ -129,8 +126,6 @@
       filter: blur(16px); mix-blend-mode:screen; pointer-events:none; opacity:.85;
       animation:glowPulse 3s ease-in-out infinite;
     }
-
-    /* Faixa de luz varrendo toda a pílula */
     header[data-glow="magic"] .capsule .glint{
       position:absolute; top:-10%; bottom:-10%; left:0; width:28%;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
@@ -138,29 +133,22 @@
       transform:translateX(-120%);
       animation:sweep 2.8s ease-in-out infinite;
     }
-
     @media (prefers-reduced-motion:reduce){
       header[data-style="aurora"] .capsule::before,
       header[data-glow="magic"] .capsule::after,
       header[data-glow="magic"] .capsule .glint{ animation:none }
     }
 
-    /* Texto do título com degradê mágico visível correndo */
     .capsule .txt{
       display:inline-flex; align-items:center; gap:10px;
       font-weight:900; letter-spacing:.2px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
                  linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
-      /* gradiente animado nas letras */
-      background-clip:text;
-      -webkit-background-clip:text;
-      color:transparent;
+      background-clip:text; -webkit-background-clip:text; color:transparent;
       background-size:200% 100%, 100% 100%;
       animation:textShift 3.2s linear infinite;
       text-shadow:0 0 10px rgba(123,92,255,.35), 0 0 16px rgba(0,255,198,.25);
     }
-
-    /* Bolinha separadora colorida central (substitui “•”) */
     .dot-mid{
       width:12px; height:12px; border-radius:50%;
       background:linear-gradient(90deg,var(--levelA),var(--planB));
@@ -168,32 +156,38 @@
       flex:0 0 auto;
     }
 
-    /* Alternativas de estilo (se quiser trocar) */
-    header[data-style="outline"] .capsule{
-      background:transparent; border:1px solid rgba(255,255,255,.25);
-      box-shadow: 0 6px 18px rgba(0,0,0,.28);
+    /* Condensado ao rolar */
+    .topbar.is-condensed .capsule{
+      padding:6px 12px; font-size: clamp(12px, 2.0vw, 14px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 16px rgba(0,0,0,.28)
     }
-    header[data-style="outline"] .capsule::before,
-    header[data-style="outline"] .capsule::after,
-    header[data-style="outline"] .capsule .glint{ display:none }
-    header[data-style="solid"] .capsule{
-      background:linear-gradient(90deg, rgba(47,107,255,.25), rgba(0,255,198,.18));
-      border-color:transparent;
-    }
-    header[data-style="solid"] .capsule::before,
-    header[data-style="solid"] .capsule::after,
-    header[data-style="solid"] .capsule .glint{ display:none }
-
-    /* Texto longo/curto controlado por estado */
     .capsule .t-short{ display:none }
-    .topbar.is-condensed .capsule{ padding:6px 12px; transform:translateY(0); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 16px rgba(0,0,0,.28) }
     .topbar.is-condensed .capsule .t-full{ display:none }
     .topbar.is-condensed .capsule .t-short{ display:inline-flex }
     .topbar.is-condensed .capsule .txt{ text-shadow:0 0 8px rgba(0,217,255,.35) }
 
+    /* Responsivo mobile: reduzir tamanho e permitir quebra quando necessário */
     @media (max-width:560px){
-      .capsule{ padding:8px 12px; }
-      .topbar.is-condensed .capsule{ padding:6px 10px }
+      .capsule{
+        font-size: clamp(12px, 3.7vw, 15px);
+        max-width:86vw;
+        white-space:normal; /* permite quebrar em 2 linhas se necessário */
+      }
+      .capsule .txt{ display:inline; background-size:240% 100%, 100% 100% }
+      .dot-mid{ display:inline-block; margin:0 6px; vertical-align:middle }
+    }
+    @media (max-width:420px){
+      .capsule{ font-size: clamp(12px, 4.2vw, 14px); max-width:88vw }
+      .logo-ccs,.logo-vctech{ width:52px; height:52px }
+      .topbar .wrap{ gap:8px }
+    }
+    /* Telas muito estreitas: já começa curto para nunca estourar */
+    @media (max-width:380px){
+      .capsule{ max-width:92vw }
+      .capsule .t-full{ display:none !important }
+      .capsule .t-short{ display:inline-flex !important }
+      .logo-ccs,.logo-vctech{ width:46px; height:46px }
+      .topbar .wrap{ gap:6px }
     }
 
     /* SEÇÕES/CARDS */
@@ -681,13 +675,11 @@
       function setTopPad(){ document.body.style.paddingTop = (topbar.offsetHeight || 64) + 'px'; }
       setTopPad(); addEventListener('resize', setTopPad, {passive:true});
 
-      // 2) Título reativo robusto:
-      // - Condensa ao rolar para baixo (detecção por direção + posição)
-      // - Expande ao rolar para cima (com histerese) e quando perto do topo
+      // 2) Título reativo robusto (condensa/expande com histerese + fallback por posição)
       let lastY = window.scrollY || 0;
       let condensed = false;
-      const CONDENSE_AT = 24; // se passar disso, pode condensar
-      const DELTA = 6;        // histerese mínima
+      const CONDENSE_AT = 24;
+      const DELTA = 6;
       function applyCondensed(on){
         if (on === condensed) return;
         condensed = on;
@@ -698,20 +690,15 @@
         const dy = y - lastY;
 
         if (y <= 2){
-          // sempre expande no topo
           applyCondensed(false);
         } else if (dy > DELTA && y > CONDENSE_AT){
-          // rolou para baixo – condensa
           applyCondensed(true);
         } else if (dy < -DELTA){
-          // rolou para cima – expande
           applyCondensed(false);
         } else {
-          // fallback por posição (garantia)
           if (y > CONDENSE_AT) applyCondensed(true);
           if (y < CONDENSE_AT/2) applyCondensed(false);
         }
-
         lastY = y;
         updateFabIcon();
       }
@@ -732,7 +719,7 @@
           if (expanded){
             const h = panel.scrollHeight;
             panel.style.height = h + 'px';
-            panel.getBoundingClientRect(); // reflow
+            panel.getBoundingClientRect();
             panel.style.height = '0px';
             panel.classList.remove('is-open');
             const onEnd = () => {
@@ -779,7 +766,6 @@
         }, { threshold:[0.25,0.5,0.75] });
         sections.forEach(s => io.observe(s));
       } else {
-        // fallback simples
         const onScrollDock = () => {
           const tops = sections.map(s=>({ id:s.id, top: Math.abs(s.getBoundingClientRect().top) }));
           tops.sort((a,b)=>a.top-b.top);
