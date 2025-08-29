@@ -24,9 +24,9 @@
 
       --side-pad: clamp(14px, 4.5vw, 36px);
 
-      /* Alturas de imagem mais contidas (reduz espaço vazio) */
-      --art-max-h-d: clamp(160px, 30vh, 320px);
-      --art-max-h-m: clamp(140px, 26vh, 240px);
+      /* Imagens menores (remove espaços vazios) */
+      --art-max-h-d: clamp(160px, 28vh, 300px);
+      --art-max-h-m: clamp(140px, 24vh, 220px);
 
       /* Segmentado */
       --seg-fs:14px;
@@ -35,7 +35,7 @@
 
       /* Pílulas de benefícios */
       --pill-fs:15px;
-      --pill-min-h:64px;
+      --pill-min-h:58px;
     }
 
     *{box-sizing:border-box}
@@ -51,7 +51,7 @@
       padding-bottom:calc(140px + env(safe-area-inset-bottom));
     }
 
-    /* Fundo/FX (suaves) */
+    /* FX de fundo (suaves) */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -139,19 +139,12 @@
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden
     }
-    .media{ display:flex; justify-content:center; align-items:center; padding:8px 0 } /* menos padding */
+    .media{ display:flex; justify-content:center; align-items:center; padding:8px 0 }
     .frame{ width:100%; display:flex; justify-content:center; align-items:center }
-    .art-img{
-      max-height:var(--art-max-h-d);
-      max-width:min(100%,900px);
-      width:auto; height:auto; object-fit:contain
-    }
-    @media (max-width:900px){
-      .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% }
-    }
-    /* Ajuste fino por seção onde o banner é muito alto */
-    #s-conecta .art-img{ max-height:clamp(150px, 26vh, 240px) }
-    #s-indique .art-img{ max-height:clamp(150px, 26vh, 240px) }
+    .art-img{ max-height:var(--art-max-h-d); max-width:min(100%,880px); width:auto; height:auto; object-fit:contain }
+    @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% } }
+    #s-conecta .art-img{ max-height:clamp(150px, 24vh, 220px) }
+    #s-indique .art-img{ max-height:clamp(150px, 24vh, 220px) }
 
     .content{ padding:16px }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
@@ -209,50 +202,42 @@
     a:focus-visible,button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 
     /* ========================= Conecta Clube ========================= */
-
-    .cc-header{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between }
     .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
 
     .compare-area{
+      position:relative;
       border:1px solid var(--line); border-radius:12px;
       background:rgba(255,255,255,.05);
-      padding:10px; margin:4px 0 8px; overflow:hidden;
+      padding:18px 10px 10px; /* top extra para o rótulo ATUAL */
+      margin:4px 0 8px; overflow:hidden;
     }
 
-    /* Em telas grandes: 3 colunas; em mobile: empilha (1 col) */
-    #s-conecta .segmented{
-      display:grid; gap:8px;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-    }
-    @media (max-width:520px){
-      #s-conecta .segmented{ grid-template-columns:1fr }
+    /* Rótulo ATUAL (fora da pílula, no canto sup-esq do Nível 1) */
+    .label-actual{
+      position:absolute; z-index:2;
+      top:4px; left:12px; /* reposicionado via JS para alinhar com o seg-l1 */
+      font-size:11px; font-weight:900;
+      padding:3px 8px; border-radius:999px;
+      color:#0b0d12; background:rgba(255,255,255,.85);
+      border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 8px rgba(0,0,0,.25)
     }
 
-    /* Botão de nível com rótulo ATUAL acima do título (só no atual) */
+    /* 3 botões lado a lado SEMPRE */
+    #s-conecta .segmented{ display:grid; gap:8px; grid-template-columns:repeat(3, minmax(0,1fr)) }
+
+    /* Botão de nível com “magia” no atual */
     #s-conecta .seg-btn{
-      position:relative;
-      width:100%; min-height:56px;
+      position:relative; width:100%; min-height:50px;
       border:1px solid var(--line); border-radius:999px;
       padding: var(--seg-py) var(--seg-px);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
-      display:grid; grid-template-rows:auto 1fr; align-items:center; justify-items:center;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap;
       transition:background .12s ease, border-color .12s ease; font-size:var(--seg-fs);
+      overflow:hidden; /* contém o glow */
     }
     #s-conecta .seg-btn[aria-pressed="true"]{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22) }
-    #s-conecta .seg-btn .cap{
-      font-size:11px; font-weight:800; opacity:.9;
-      align-self:start; justify-self:start;
-      padding:2px 8px; border-radius:999px;
-      background:rgba(255,255,255,.18); color:#0b0d12; border:1px solid rgba(0,0,0,.12);
-      transform:translateY(-2px);
-    }
-    #s-conecta .seg-btn .ttl{ line-height:1; display:inline-flex; gap:8px; align-items:center; justify-content:center }
     #s-conecta .seg-btn .dot{ width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)) }
 
-    /* Só mostra o cap no atual; os outros mantêm a mesma altura pelo min-height */
-    #s-conecta .seg-btn:not(.is-current) .cap{ display:none }
-
-    /* “Magia” do atual contida */
     #s-conecta .seg-btn.is-current{ background:rgba(255,255,255,.10); border-color:transparent }
     #s-conecta .seg-btn.is-current::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:999px;
@@ -270,59 +255,38 @@
       filter: blur(12px); mix-blend-mode:screen; opacity:.9; animation:glowPulse 3s ease-in-out infinite; pointer-events:none;
     }
 
-    #s-conecta .cc-viewing{ margin-top:6px; color:#cfe0ff; font-weight:800 }
+    .cc-viewing{ margin-top:8px; color:#cfe0ff; font-weight:800 }
+    .plan-pill{ display:none; align-items:center; gap:8px; margin:6px 0 0; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900 }
+    .plan-pill.show{ display:inline-flex }
 
-    /* Pílulas de benefícios: 2 colunas; mobile empilha */
-    #s-conecta .cc-pills{ display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:10px 0 }
-    @media (max-width:520px){
-      #s-conecta .cc-pills{ grid-template-columns:1fr }
-    }
-    #s-conecta .cc-pills > *{ min-width:0 }
+    /* Pílulas de benefícios lado a lado; dot mágico no começo do voucher */
+    .cc-pills{ display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:10px 0 }
+    .cc-pills > *{ min-width:0 }
 
-    .dot-magic{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg, var(--levelA), var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); display:inline-block; vertical-align:middle }
+    .dot-magic{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg, var(--levelA), var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); display:inline-block; vertical-align:middle; flex:0 0 auto }
 
-    /* Voucher */
-    #s-conecta .pill-voucher{
+    .pill-voucher{
       display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px; line-height:1.25;
       background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900; font-size:var(--pill-fs); min-height:var(--pill-min-h)
     }
-    /* Premium */
-    #s-conecta .pill-premium{
+
+    .pill-premium{
       display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25; font-size:var(--pill-fs); min-height:var(--pill-min-h);
       border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-weight:900;
     }
-    #s-conecta .pill-premium.included{ background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent }
+    .pill-premium.included{ background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent }
 
-    /* Ações Conecta */
-    #s-conecta .actions{ display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:10px; align-items:stretch }
-    #s-conecta .actions .btn-upgrade{ grid-column:1 }
-    #s-conecta .actions .btn-email{ grid-column:2 }
-    #s-conecta .actions .btn-copy{ grid-column:1 / span 2 }
-    #s-conecta .actions.is-level1 .btn-email{ grid-column:1 }
-    #s-conecta .actions.is-level1 .btn-copy{ grid-column:2 }
-
-    /* Emojis sem caixa no Conecta */
-    #s-conecta .fact .ico{ width:auto; height:auto; border:0; background:transparent; font-size:22px; margin-top:2px }
-
-    /* Transições */
-    #s-conecta .cc-dyn{ position:relative }
-    #s-conecta .cc-swap{ position:relative }
-    #s-conecta .fade-enter{ opacity:0; transform:translateY(6px) }
-    #s-conecta .fade-enter-active{ opacity:1; transform:translateY(0); transition:opacity .18s ease, transform .18s ease }
-    #s-conecta .fade-exit{ opacity:1; transform:translateY(0) }
-    #s-conecta .fade-exit-active{ opacity:0; transform:translateY(-6px); transition:opacity .18s ease, transform .18s ease }
-
-    /* ========================= Resumo (2 colunas fixas) ========================= */
+    /* Resumo (2 colunas) */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
-    .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr } /* caixas de 2 */
+    .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
     .gcard{ display:grid; grid-template-rows:auto 1fr; gap:8px; padding:10px; border:1px solid var(--line); border-radius:12px; text-decoration:none; color:#fff; background:rgba(255,255,255,.06) }
     .gcard:hover{ background:rgba(255,255,255,.10) }
     .gimg{ display:flex; justify-content:center; align-items:center; padding:8px; border-radius:10px; background:rgba(0,0,0,.25); border:1px solid var(--line) }
     .gimg img{ width:64px; height:64px; object-fit:contain }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* ========================= Final/Footer ========================= */
+    /* Final/Footer */
     .final{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .footer{ padding:24px var(--side-pad); color:#cfe0ff; text-align:center }
     .footer .wrap{ display:grid; gap:14px; justify-items:center }
@@ -384,18 +348,21 @@
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
           <div class="compare-area">
+            <!-- Rótulo ATUAL fora da pílula do Nível 1 -->
+            <span id="label-actual" class="label-actual" aria-hidden="true">ATUAL</span>
+
             <div class="segmented" id="segmented" role="group" aria-label="Selecionar nível para visualizar">
               <button type="button" id="seg-l1" data-level="1" class="seg-btn is-current" aria-pressed="true">
-                <span class="cap">ATUAL</span>
-                <span class="ttl"><span class="dot" aria-hidden="true"></span><span>Nível 1</span></span>
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 1</span>
               </button>
               <button type="button" id="seg-l2" data-level="2" class="seg-btn" aria-pressed="false">
-                <span class="cap" aria-hidden="true"></span>
-                <span class="ttl"><span class="dot" aria-hidden="true"></span><span>Nível 2</span></span>
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 2</span>
               </button>
               <button type="button" id="seg-l3" data-level="3" class="seg-btn" aria-pressed="false">
-                <span class="cap" aria-hidden="true"></span>
-                <span class="ttl"><span class="dot" aria-hidden="true"></span><span>Nível 3</span></span>
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 3</span>
               </button>
             </div>
 
@@ -408,10 +375,10 @@
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
 
               <div class="cc-pills" id="cc-pills">
-                <!-- Voucher -->
+                <!-- Voucher: bolinha no início -->
                 <span class="pill-voucher" id="cc-pill-main" aria-label="Vouchers por período">
-                  <span>1 voucher</span>
                   <span class="dot-magic" aria-hidden="true"></span>
+                  <span>1 voucher</span>
                   <span> a cada </span>
                   <span id="cc-days">90</span>
                   <span> dias</span>
@@ -419,7 +386,7 @@
 
                 <!-- Premium -->
                 <span class="pill-premium" id="cc-pill-premium" role="status" aria-live="polite" aria-label="Atração premium não inclusa">
-                  <span class="ico">🏆</span>
+                  <span class="ico" aria-hidden="true">🏆</span>
                   <span id="cc-premium-text">Atração premium não inclusa</span>
                 </span>
               </div>
@@ -606,7 +573,7 @@
       </div>
     </section>
 
-    <!-- (Opcional) Sessão curta VCTECH para âncora do resumo -->
+    <!-- VCTECH (para âncora do resumo) -->
     <section class="section" id="s-vctech" data-title="VCTECH">
       <div class="card">
         <div class="media"><div class="frame">
@@ -622,7 +589,7 @@
       </div>
     </section>
 
-    <!-- Resumo (duas colunas) -->
+    <!-- Resumo (duas colunas fixas) -->
     <section class="section" id="s-resumo" data-title="Resumo dos Benefícios">
       <div class="summary">
         <h3 class="gtitle">Resumo dos Benefícios</h3>
@@ -792,11 +759,6 @@
     const dockLinks=[...document.querySelectorAll('.quick-dock a')];
     const sections=[...document.querySelectorAll('main .section')];
     const setActiveDock=id=> dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id));
-    function maybeAutoReset(){
-      const now=Date.now(); if (now-lastCompareClickAt<1500) return;
-      const saved=parseInt(localStorage.getItem('ccs-cc-compare-level')||'1',10);
-      if (saved!==1){ clearTimeout(resetTimer); resetTimer=setTimeout(()=> applyCompare(1,{remember:true}),300); }
-    }
     if ('IntersectionObserver' in window){
       const io=new IntersectionObserver(entries=>{
         const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
@@ -850,6 +812,7 @@
     const segL1=document.getElementById('seg-l1');
     const segL2=document.getElementById('seg-l2');
     const segL3=document.getElementById('seg-l3');
+    const labelActual=document.getElementById('label-actual');
 
     const ccSection=document.getElementById('s-conecta');
     const ccDyn=document.getElementById('cc-dyn');
@@ -907,6 +870,43 @@
         btn.setAttribute('aria-pressed', String(pressed));
         btn.classList.toggle('is-current', pressed && level===1);
       });
+      positionActualLabel(); // reposiciona o rótulo ATUAL
+    }
+
+    /* Ajuste dos 3 botões: caibam SEMPRE lado a lado */
+    function fitSegmentedStrict(){
+      segmented.style.setProperty('--seg-fs','14px');
+      segmented.style.setProperty('--seg-px','12px');
+      segmented.style.setProperty('--seg-py','8px');
+
+      const buttons=[...segmented.querySelectorAll('.seg-btn')];
+      let fs=14, px=12, py=8, tries=0;
+
+      function allFit(){
+        return buttons.every(b=> b.scrollWidth <= b.clientWidth + 1);
+      }
+      while (!allFit() && tries<28){
+        if (fs>12){ fs-=0.5; segmented.style.setProperty('--seg-fs',fs+'px'); }
+        else if (px>8){ px-=1; segmented.style.setProperty('--seg-px',px+'px'); }
+        else if (py>6){ py-=1; segmented.style.setProperty('--seg-py',py+'px'); }
+        else break;
+        tries++;
+      }
+      positionActualLabel();
+    }
+
+    /* Posiciona o rótulo ATUAL acima à esquerda do Nível 1, fora da pílula */
+    function positionActualLabel(){
+      const btn=segL1;
+      if (!btn || !labelActual) return;
+      const cont=segmented.getBoundingClientRect();
+      const b=btn.getBoundingClientRect();
+      const left = Math.max(8, Math.round(b.left - cont.left + 10)); // 10px para alinhar com padding do botão
+      const topWanted = Math.round(b.top - cont.top - labelActual.offsetHeight - 6);
+      const top = Math.max(4, topWanted);
+      labelActual.style.left = left+'px';
+      labelActual.style.top = top+'px';
+      labelActual.style.visibility='visible';
     }
 
     function updatePremiumUI(included){
@@ -925,6 +925,7 @@
       const data=CC_CONTENT[level]||CC_CONTENT[1];
       lastCompareClickAt=Date.now();
       setSegmented(level);
+
       animateSwap(()=>{
         ccDays.textContent = String(data.days);
         ccNote.textContent = data.note || '';
@@ -933,21 +934,26 @@
         renderFacts(data.facts || []);
       });
 
-      if (level===2 || level===3){
-        ccPlanText.textContent=data.plan; ccPlanPill.classList.add('show');
+      /* Plano necessário: oculto quando Nível 1 (atual) */
+      if (level===1){
+        ccPlanPill.classList.remove('show');
+        upgradeBtn.style.display='none';
+        emailBtn.classList.add('cta');
+        actions.classList.add('is-level1');
+      } else {
+        ccPlanText.textContent=data.plan;
+        ccPlanPill.classList.add('show');
         if (data.upgrade){ upgradeBtn.style.display='inline-flex'; upgradeBtn.textContent=data.upgrade.label; upgradeBtn.href=data.upgrade.href; }
         else { upgradeBtn.style.display='none'; }
-        emailBtn.classList.remove('cta'); actions.classList.remove('is-level1');
-      } else {
-        ccPlanPill.classList.remove('show'); upgradeBtn.style.display='none';
-        emailBtn.classList.add('cta'); actions.classList.add('is-level1');
+        emailBtn.classList.remove('cta');
+        actions.classList.remove('is-level1');
       }
 
       try{ emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Nível '+level)}`; }catch{}
       if (remember) localStorage.setItem(LEVELS_KEY,String(level));
     }
 
-    // Pílula Premium leva ao detalhe de atrações
+    /* Premium -> abre Saiba Mais na âncora */
     ccPremiumPill.addEventListener('click',()=>{
       const btn=document.querySelector('[aria-controls="more-conecta"].chip-more');
       if (btn.getAttribute('aria-expanded')!=='true') btn.click();
@@ -961,19 +967,22 @@
       },60);
     });
 
-    // Cliques
+    /* Cliques */
     segL1.addEventListener('click',()=>applyCompare(1));
     segL2.addEventListener('click',()=>applyCompare(2));
     segL3.addEventListener('click',()=>applyCompare(3));
 
-    // Auto-reset ao sair
+    /* Auto-reset quando sai da seção */
+    function maybeAutoReset(){
+      const now=Date.now(); if (now-lastCompareClickAt<1500) return;
+      const saved=parseInt(localStorage.getItem(LEVELS_KEY)||'1',10);
+      if (saved!==1) applyCompare(1);
+    }
     if ('IntersectionObserver' in window){
       const ioCC=new IntersectionObserver(entries=>{
-        const e=entries[0]; if (!e.isIntersecting || e.intersectionRatio<0.1){
-          const now=Date.now(); if (now-lastCompareClickAt>1500) applyCompare(1);
-        }
+        const e=entries[0]; if (!e.isIntersecting || e.intersectionRatio<0.1) maybeAutoReset();
       }, {threshold:[0,0.1,0.25]});
-      ioCC.observe(ccSection);
+      ioCC.observe(document.getElementById('s-conecta'));
     }
 
     /* Iniciais e utilidades */
@@ -995,9 +1004,7 @@
       }catch{} return null;
     }
 
-    function recalcAll(){
-      setTopPad(); fitCapsule(); fitActionButtons();
-    }
+    function recalcAll(){ setTopPad(); fitCapsule(); fitActionButtons(); fitSegmentedStrict(); positionActualLabel(); }
 
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
