@@ -107,7 +107,7 @@
       font-size: clamp(12.5px, 2.2vw, 16px);
       transition: padding .22s ease, font-size .12s linear, box-shadow .22s ease;
       max-width:80vw;
-      overflow:hidden; contain:paint; /* evita estourar no mobile */
+      overflow:hidden; contain:paint;
     }
     header[data-style="aurora"] .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -142,18 +142,6 @@
       scrollbar-width:none; -webkit-overflow-scrolling:touch;
     }
     .cap-viewport::-webkit-scrollbar{ display:none }
-    .cap-viewport[data-scrollable="true"]::before,
-    .cap-viewport[data-scrollable="true"]::after{
-      content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none; z-index:2;
-    }
-    .cap-viewport[data-scrollable="true"]::before{
-      left:0; background:linear-gradient(90deg, rgba(11,13,18,1) 0%, rgba(11,13,18,0) 100%);
-      mix-blend-mode:multiply;
-    }
-    .cap-viewport[data-scrollable="true"]::after{
-      right:0; background:linear-gradient(270deg, rgba(11,13,18,1) 0%, rgba(11,13,18,0) 100%);
-      mix-blend-mode:multiply;
-    }
 
     .track{ display:none; will-change:transform }
     .track .txt{
@@ -259,32 +247,28 @@
     /* Foco/Acessibilidade */
     a:focus-visible,button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
 
-    /* ========================= Conecta Clube — somente este bloco abaixo ========================= */
+    /* ========================= Conecta Clube ========================= */
 
-    /* Cabeçalho do card: título */
-    #s-conecta .cc-header{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between;
-    }
-    #s-conecta .cc-header .left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+    .cc-header{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between }
+    .cc-header .left{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
     #s-conecta h2{ margin:0 }
 
     .cc-subtitle{ margin:8px 0 6px; color:var(--muted) }
 
-    /* Área de comparação isolada com segmented control */
+    /* Compare: grid adaptativa SEM scroll (2 linhas se precisar) */
     #s-conecta .compare-area{
       border:1px solid var(--line); border-radius:12px;
       background:rgba(255,255,255,.05);
       padding:10px; margin:4px 0 8px;
     }
-    #s-conecta .seg-wrap{ position:relative }
     #s-conecta .segmented{
-      display:flex; gap:8px; align-items:center; flex-wrap:nowrap; overflow:hidden;
-      font-size:var(--seg-fs,14px);
+      display:grid; gap:8px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
     #s-conecta .segmented button{
-      border:1px solid var(--line); border-radius:999px; padding:8px 12px;
+      width:100%; border:1px solid var(--line); border-radius:999px; padding:8px 12px;
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
-      display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+      display:inline-flex; align-items:center; gap:8px; justify-content:center; white-space:nowrap;
       transition:background .12s ease, border-color .12s ease
     }
     #s-conecta .segmented button[aria-pressed="true"]{
@@ -294,18 +278,31 @@
       width:10px;height:10px;border-radius:50%;
       background:linear-gradient(90deg,var(--levelA),var(--planB))
     }
+    /* “Magia” para o ATUAL (sempre destacado) */
+    #s-conecta .segmented .is-current{
+      position:relative;
+      background:rgba(255,255,255,.10);
+      border-color:transparent;
+    }
+    #s-conecta .segmented .is-current::before{
+      content:""; position:absolute; inset:0; padding:1px; border-radius:999px;
+      background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
+      background-size:300% 300%; animation:ringShift 10s ease-in-out infinite alternate;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+    }
+    #s-conecta .segmented .is-current::after{
+      content:""; position:absolute; inset:-25% -10%; border-radius:999px;
+      background:
+        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.22), transparent 60%),
+        radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.22), transparent 60%);
+      filter: blur(16px); mix-blend-mode:screen; opacity:.85; animation:glowPulse 3s ease-in-out infinite;
+      pointer-events:none;
+    }
     #s-conecta .segmented .badge{
       font-size:10.5px; font-weight:900; padding:3px 7px; border-radius:999px;
       border:1px solid rgba(0,0,0,.12); background:rgba(255,255,255,.7); color:#0b0d12
     }
-    /* Dica de overflow */
-    #s-conecta .seg-hint{
-      position:absolute; right:0; top:50%; transform:translateY(-50%);
-      font-size:12px; color:#cfe0ff; padding:2px 6px; border-radius:999px;
-      background:rgba(255,255,255,.08); border:1px solid var(--line);
-      display:none; pointer-events:none;
-    }
-    #s-conecta .seg-wrap[data-overflow="true"] .seg-hint{ display:block }
 
     #s-conecta .cc-viewing{ margin-top:6px; color:#cfe0ff; font-weight:800 }
 
@@ -316,33 +313,25 @@
     }
     #s-conecta .plan-pill.show{ display:inline-flex }
 
-    /* Pílulas principais (voucher + premium) lado a lado com fallback inteligente */
+    /* Pílulas principais — SEM scroll, SEM marquee, quebram para 2 linhas se precisar */
     #s-conecta .cc-pills{
-      display:flex; gap:10px; margin:10px 0; flex-wrap:nowrap;
-      align-items:stretch;
+      display:grid; gap:10px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin:10px 0;
     }
     #s-conecta .pill.hi, #s-conecta .pill-premium{
-      display:inline-flex; align-items:center; gap:8px; white-space:nowrap; font-size:var(--pill-fs,15px)
+      display:inline-flex; align-items:center; gap:8px; white-space:normal; /* pode quebrar texto */
+      padding:10px 14px; border-radius:999px;
+      font-weight:900; line-height:1.2;
     }
     #s-conecta .pill-premium{
-      border:1px solid var(--line); border-radius:999px; padding:8px 12px;
-      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+      border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; cursor:pointer;
     }
     #s-conecta .pill-premium.included{
       background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent
     }
 
-    /* Marquee para textos longos nas pílulas (fallback) */
-    @keyframes pillMarq { 0%{ transform:translateX(0) } 100%{ transform:translateX(var(--marq-dist,-40%)) } }
-    #s-conecta .marquee{
-      overflow:hidden; position:relative;
-    }
-    #s-conecta .marquee .inner{
-      display:inline-block; padding-right:32px; will-change:transform;
-      animation:pillMarq var(--marq-dur,6s) linear infinite alternate;
-    }
-
-    /* Ações do Conecta Clube: grade estável e sem quebra */
+    /* Ações do Conecta Clube: grade estável e sem quebra feia */
     #s-conecta .actions{
       display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:10px; align-items:stretch
     }
@@ -397,9 +386,7 @@
       <div class="titlebar">
         <div class="capsule" role="group" aria-label="Nível e plano">
           <span class="glint" aria-hidden="true"></span>
-
           <div class="cap-viewport" id="capViewport" data-scrollable="false">
-            <!-- Texto longo -->
             <div class="track t-full" id="trackFull">
               <span class="txt">
                 <span class="label-left">Benefícios Nível 1</span>
@@ -407,7 +394,6 @@
                 <span class="label-right">Plano 250 MB</span>
               </span>
             </div>
-            <!-- Texto curto -->
             <div class="track t-short" id="trackShort" aria-hidden="true">
               <span class="txt">
                 <span class="label-left">Nível 1</span>
@@ -425,7 +411,7 @@
     </div>
   </header>
 
-  <!-- Sentinela para condensa/expande a topbar -->
+  <!-- Sentinela -->
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
 
   <main id="content">
@@ -438,35 +424,28 @@
                loading="eager" decoding="async" fetchpriority="high">
         </div></div>
         <div class="content">
-          <div class="cc-header">
-            <div class="left">
-              <h2>Conecta Clube</h2>
-            </div>
-          </div>
+          <div class="cc-header"><div class="left"><h2>Conecta Clube</h2></div></div>
 
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
           <div class="compare-area">
-            <div class="seg-wrap" id="segWrap">
-              <div class="segmented" id="segmented" role="group" aria-label="Selecionar nível para visualizar">
-                <button type="button" id="seg-l1" data-level="1" aria-pressed="true">
-                  <span class="dot" aria-hidden="true"></span>
-                  <span>Nível 1</span>
-                  <span class="badge">ATUAL</span>
-                </button>
-                <button type="button" id="seg-l2" data-level="2" aria-pressed="false">
-                  <span class="dot" aria-hidden="true"></span>
-                  <span>Nível 2</span>
-                </button>
-                <button type="button" id="seg-l3" data-level="3" aria-pressed="false">
-                  <span class="dot" aria-hidden="true"></span>
-                  <span>Nível 3</span>
-                </button>
-              </div>
-              <div class="seg-hint" id="segHint">↔ deslize</div>
+            <div class="segmented" id="segmented" role="group" aria-label="Selecionar nível para visualizar">
+              <button type="button" id="seg-l1" data-level="1" aria-pressed="true" class="is-current">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 1</span>
+                <span class="badge">ATUAL</span>
+              </button>
+              <button type="button" id="seg-l2" data-level="2" aria-pressed="false">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 2</span>
+              </button>
+              <button type="button" id="seg-l3" data-level="3" aria-pressed="false">
+                <span class="dot" aria-hidden="true"></span>
+                <span>Nível 3</span>
+              </button>
             </div>
 
-            <div id="cc-viewing" class="cc-viewing" aria-live="polite"></div>
+            <div id="cc-viewing" class="cc-viewing" aria-live="polite">Visualizando: Nível 1</div>
 
             <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
           </div>
@@ -474,12 +453,9 @@
           <div class="cc-dyn" id="cc-dyn">
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
               <div class="cc-pills" id="cc-pills">
-                <span class="pill hi" id="cc-pill-main">
-                  <span class="txt">1 voucher / 90 dias</span>
-                </span>
+                <span class="pill hi" id="cc-pill-main"><span class="txt">1 voucher / 90 dias</span></span>
                 <span class="pill-premium" id="cc-pill-premium" role="status" aria-live="polite">
-                  <span class="ico">🏆</span>
-                  <span id="cc-premium-text">Atrações premium não incluídas</span>
+                  <span class="ico">🏆</span><span id="cc-premium-text">Atrações premium não incluídas</span>
                 </span>
               </div>
 
@@ -732,7 +708,7 @@
     </div>
   </nav>
 
-  <!-- FAB topo/rodapé -->
+  <!-- FAB -->
   <button class="fab" id="fab" aria-label="Ir para o topo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
@@ -749,7 +725,7 @@
 
   <script>
     (function(){
-      /* ====== Título (SmartFit + Marquee) com sentinela ====== */
+      /* ====== Topbar com sentinela ====== */
       const topbar = document.getElementById('topbar');
       const topSentinel = document.getElementById('top-sentinel');
       const wrap = document.querySelector('.topbar .wrap');
@@ -764,500 +740,316 @@
 
       function setTopPad(){ document.body.style.paddingTop = (topbar.offsetHeight || 64) + 'px'; }
 
-      function stopMarquee(track){
-        if (!track) return;
-        const anim = track._marqueeAnim;
-        if (anim){ anim.cancel(); track._marqueeAnim = null; track.style.transform = ''; }
-      }
+      function stopMarquee(track){ const anim = track?._marqueeAnim; if (anim){ anim.cancel(); track._marqueeAnim = null; track.style.transform=''; } }
       function startMarquee(track){
         if (!track || prefersReduced) return;
-        const vw = viewport.clientWidth;
-        const sw = track.scrollWidth;
-        const distance = Math.max(0, sw - vw);
+        const vw = viewport.clientWidth, sw = track.scrollWidth, distance = Math.max(0, sw - vw);
         if (distance < 4){ stopMarquee(track); viewport.dataset.scrollable = 'false'; return; }
         viewport.dataset.scrollable = 'true';
         const dur = Math.max(3000, Math.min(14000, Math.round(distance * 30)));
-        const anim = track.animate(
-          [{transform:'translateX(0)'},{transform:`translateX(${-distance}px)`}],
-          { duration: dur, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' }
-        );
+        const anim = track.animate([{transform:'translateX(0)'},{transform:`translateX(${-distance}px)`}], { duration: dur, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
         track._marqueeAnim = anim;
-        const pause = () => { try{ track._marqueeAnim?.pause(); }catch{} };
-        const play  = () => { try{ track._marqueeAnim?.play(); }catch{} };
-        track.addEventListener('pointerdown', pause, {passive:true});
-        track.addEventListener('pointerup', play, {passive:true});
-        track.addEventListener('mouseenter', pause);
-        track.addEventListener('mouseleave', play);
-        viewport.addEventListener('scroll', pause, {passive:true});
-        document.addEventListener('visibilitychange', ()=> document.hidden ? pause() : play());
       }
 
       function fitCapsule(){
-        if (!wrap || !capsule || !viewport) return;
-        const wrapW = wrap.clientWidth;
-        const gap = parseFloat(getComputedStyle(wrap).columnGap) || 10;
-        const lW = logoL ? logoL.getBoundingClientRect().width : 0;
-        const rW = logoR ? logoR.getBoundingClientRect().width : 0;
+        const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
+        const lW = logoL?.getBoundingClientRect().width||0, rW = logoR?.getBoundingClientRect().width||0;
         const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
         capsule.style.maxWidth = available + 'px';
         const condensed = topbar.classList.contains('is-condensed');
         const active = condensed ? trackShort : trackFull;
         const inactive = condensed ? trackFull : trackShort;
-        active.style.display = 'inline-block';
-        inactive.style.display = 'none';
-        capsule.style.fontSize = '';
-        const padX = parseFloat(getComputedStyle(capsule).paddingLeft) + parseFloat(getComputedStyle(capsule).paddingRight);
+        active.style.display='inline-block'; inactive.style.display='none';
+        capsule.style.fontSize='';
+        const padX = parseFloat(getComputedStyle(capsule).paddingLeft)+parseFloat(getComputedStyle(capsule).paddingRight);
         const target = Math.max(80, available - padX - 4);
-        let fs = parseFloat(getComputedStyle(capsule).fontSize) || 14;
-        const minFS = condensed ? 11 : 12;
-        let tried = 0;
-        while (active.scrollWidth > target && fs > minFS && tried < 20){
-          fs -= 0.6; capsule.style.fontSize = fs + 'px'; tried++;
-        }
+        let fs = parseFloat(getComputedStyle(capsule).fontSize)||14, tried=0, minFS = condensed?11:12;
+        while (active.scrollWidth > target && fs > minFS && tried < 20){ fs-=0.6; capsule.style.fontSize=fs+'px'; tried++; }
         stopMarquee(active);
-        if (active.scrollWidth > target){ startMarquee(active); } else { viewport.dataset.scrollable = 'false'; active.style.transform = ''; }
+        if (active.scrollWidth > target) startMarquee(active); else { viewport.dataset.scrollable='false'; active.style.transform=''; }
       }
 
-      let lastY = window.scrollY || 0;
-      let condensed = false;
-      const CLOSE_AT = 60, OPEN_AT = 24, DELTA = 6;
-      let scrollTimer = null;
-      function applyCondensed(on){
-        if (on === condensed) return;
-        condensed = on;
-        topbar.classList.toggle('is-condensed', condensed);
-        fitCapsule();
-      }
+      let lastY = window.scrollY||0; let condensed=false; const CLOSE_AT=60, OPEN_AT=24, DELTA=6; let t=null;
+      function applyCondensed(on){ if (on===condensed) return; condensed=on; topbar.classList.toggle('is-condensed',condensed); fitCapsule(); }
       function onScroll(){
-        const y = window.scrollY || 0; const dy = y - lastY; lastY = y;
-        if (scrollTimer) clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(()=>{
-          if (y <= 1){ applyCondensed(false); return; }
-          if (dy > DELTA && y > CLOSE_AT){ applyCondensed(true); return; }
-          if (dy < -DELTA && y < CLOSE_AT){ applyCondensed(false); return; }
-          if (y < OPEN_AT){ applyCondensed(false); }
-        }, 120);
+        const y=window.scrollY||0, dy=y-lastY; lastY=y; if (t) clearTimeout(t);
+        t=setTimeout(()=>{
+          if (y<=1) { applyCondensed(false); return; }
+          if (dy>DELTA && y>CLOSE_AT){ applyCondensed(true); return; }
+          if (dy<-DELTA && y<CLOSE_AT){ applyCondensed(false); return; }
+          if (y<OPEN_AT){ applyCondensed(false); }
+        },120);
         updateFabIcon();
       }
       function updateFabIcon(){
-        const nearTop = window.scrollY < 100;
-        if (nearTop){
-          fab.setAttribute('aria-label','Ir para o final');
-          fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
-        } else {
-          fab.setAttribute('aria-label','Ir para o topo');
-          fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-        }
+        const nearTop = window.scrollY<100;
+        fab.setAttribute('aria-label', nearTop?'Ir para o final':'Ir para o topo');
+        fab.innerHTML = nearTop
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
       }
-      fab.addEventListener('click', () => {
-        const nearTop = window.scrollY < 100;
+      fab.addEventListener('click',()=>{
+        const nearTop = window.scrollY<100;
         if (nearTop){
-          const fin = document.getElementById('s-final') || document.querySelector('footer');
+          const fin = document.getElementById('s-final')||document.querySelector('footer');
           const y = fin.getBoundingClientRect().top + window.scrollY - 16;
-          window.scrollTo({ top:y, behavior:'smooth' });
-        } else {
-          window.scrollTo({ top:0, behavior:'smooth' });
-        }
+          window.scrollTo({top:y,behavior:'smooth'});
+        } else { window.scrollTo({top:0,behavior:'smooth'}); }
       });
 
-      // Sentinela: condensa quando sai de vista
       if ('IntersectionObserver' in window){
-        const ioTop = new IntersectionObserver(entries=>{
-          const e = entries[0];
-          applyCondensed(!e.isIntersecting);
-        }, {threshold:[0, 0.01, 1]});
+        const ioTop = new IntersectionObserver(entries=>{ const e=entries[0]; applyCondensed(!e.isIntersecting); }, {threshold:[0,0.01,1]});
         ioTop.observe(topSentinel);
       }
 
-      /* ====== “Saiba mais” (geral) ====== */
-      document.querySelectorAll('.more').forEach(p => { p.hidden = true; p.style.height = '0px'; });
-      document.addEventListener('click', (ev)=>{
+      /* ====== “Saiba mais” ====== */
+      document.querySelectorAll('.more').forEach(p=>{ p.hidden=true; p.style.height='0px'; });
+      document.addEventListener('click', ev=>{
         const btn = ev.target.closest('.chip-more'); if (!btn) return;
         const id = btn.getAttribute('aria-controls'); const panel = id && document.getElementById(id);
         const txt = btn.querySelector('.txt'); if (!panel) return;
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        const expanded = btn.getAttribute('aria-expanded')==='true';
         if (expanded){
-          const h = panel.scrollHeight; panel.style.height = h + 'px'; panel.getBoundingClientRect();
-          panel.style.height = '0px'; panel.classList.remove('is-open');
-          const onEnd = () => { panel.hidden = true; panel.style.height = ''; panel.removeEventListener('transitionend', onEnd); };
-          panel.addEventListener('transitionend', onEnd);
-          btn.setAttribute('aria-expanded','false'); if (txt) txt.textContent = 'Saiba mais';
+          const h = panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
+          panel.style.height='0px'; panel.classList.remove('is-open');
+          const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); };
+          panel.addEventListener('transitionend',onEnd);
+          btn.setAttribute('aria-expanded','false'); if (txt) txt.textContent='Saiba mais';
         } else {
-          panel.hidden = false; panel.style.height = '0px'; panel.classList.add('is-open');
-          requestAnimationFrame(()=> panel.style.height = panel.scrollHeight + 'px');
-          const onEnd = () => { panel.style.height = 'auto'; panel.removeEventListener('transitionend', onEnd); };
-          panel.addEventListener('transitionend', onEnd);
-          btn.setAttribute('aria-expanded','true'); if (txt) txt.textContent = 'Ver menos';
-          const rect = panel.getBoundingClientRect(); const topOffset = (topbar.offsetHeight || 64) + 12;
-          if (rect.top < topOffset){
-            const y = window.scrollY + rect.top - topOffset; window.scrollTo({ top:y, behavior:'smooth' });
-          }
+          panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
+          requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
+          const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); };
+          panel.addEventListener('transitionend',onEnd);
+          btn.setAttribute('aria-expanded','true'); if (txt) txt.textContent='Ver menos';
+          const rect = panel.getBoundingClientRect(); const topOffset=(topbar.offsetHeight||64)+12;
+          if (rect.top < topOffset){ const y=window.scrollY+rect.top-topOffset; window.scrollTo({top:y,behavior:'smooth'}); }
         }
       });
 
-      /* ====== Quick Dock ====== */
-      const dockLinks = Array.from(document.querySelectorAll('.quick-dock a'));
-      const sections = Array.from(document.querySelectorAll('main .section'));
-      const setActiveDock = (id) => { dockLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id)); };
-
+      /* ====== Quick Dock highlight + reset ====== */
+      const dockLinks=[...document.querySelectorAll('.quick-dock a')];
+      const sections=[...document.querySelectorAll('main .section')];
+      const setActiveDock=id=> dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id));
+      function maybeAutoReset(){
+        if (Date.now()-lastCompareClickAt<1500) return;
+        if (currentCompare===1) return;
+        clearTimeout(resetTimer);
+        resetTimer=setTimeout(()=> applyCompare(1,{remember:true}),300);
+      }
       if ('IntersectionObserver' in window){
-        const io = new IntersectionObserver(entries => {
-          const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-          if (vis) {
-            setActiveDock(vis.target.id);
-            if (vis.target.id !== 's-conecta') maybeAutoReset('dock-change');
-          }
-        }, { threshold:[0.25,0.5,0.75] });
-        sections.forEach(s => io.observe(s));
+        const io=new IntersectionObserver(entries=>{
+          const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+          if (vis){ setActiveDock(vis.target.id); if (vis.target.id!=='s-conecta') maybeAutoReset(); }
+        },{threshold:[0.25,0.5,0.75]});
+        sections.forEach(s=>io.observe(s));
       }
 
       /* ====== Copiar e‑mail ====== */
       const copyBtn = document.getElementById('copyEmail');
       if (copyBtn){
-        copyBtn.addEventListener('click', async () => {
-          try { await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); } catch {}
-          copyBtn.innerHTML = '✅ E‑mail copiado';
-          setTimeout(()=> copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
+        copyBtn.addEventListener('click', async ()=>{
+          try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
+          copyBtn.innerHTML='✅ E‑mail copiado';
+          setTimeout(()=> copyBtn.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
         });
       }
 
       /* ====== Conecta Clube ====== */
-      const LEVELS_KEY = 'ccs-cc-compare-level';
-
-      const CC_CONTENT = {
-        1: {
-          plan: '250 MB',
-          pill: '1 voucher / 90 dias',
-          premiumIncluded: false,
-          note: 'Válido para clientes ativos e adimplentes.',
-          facts: [
-            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
-            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
-            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano', label:'Enviar e‑mail ↗' } },
-            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 90 dias.' },
-            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
+      const LEVELS_KEY='ccs-cc-compare-level';
+      const CC_CONTENT={
+        1:{ plan:'250 MB', pill:'1 voucher / 90 dias', premiumIncluded:false, note:'Válido para clientes ativos e adimplentes.',
+          facts:[
+            {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
+            {emoji:'🎁',text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!'},
+            {emoji:'📩',text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano',label:'Enviar e‑mail ↗'}},
+            {emoji:'⏳',text:'Receba 1 voucher de benefício a cada 90 dias.'},
+            {emoji:'ℹ️',text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
+          ], upgrade:null },
+        2:{ plan:'450 MB', pill:'1 voucher / 60 dias', premiumIncluded:false, note:'Válido para clientes ativos e adimplentes.',
+          facts:[
+            {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
+            {emoji:'🎁',text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!'},
+            {emoji:'📩',text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202',label:'Enviar e‑mail ↗'}},
+            {emoji:'⏳',text:'Receba 1 voucher de benefício a cada 60 dias.'},
+            {emoji:'ℹ️',text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
           ],
-          upgrade: null
-        },
-        2: {
-          plan: '450 MB',
-          pill: '1 voucher / 60 dias',
-          premiumIncluded: false,
-          note: 'Válido para clientes ativos e adimplentes.',
-          facts: [
-            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
-            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
-            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202', label:'Enviar e‑mail ↗' } },
-            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
-            { emoji:'ℹ️', text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
+          upgrade:{label:'Atualizar para 450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'} },
+        3:{ plan:'650 MB', pill:'1 voucher / 60 dias', premiumIncluded:true, note:'Válido para clientes ativos e adimplentes.',
+          facts:[
+            {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
+            {emoji:'🎁',text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!'},
+            {emoji:'📩',text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%203',label:'Enviar e‑mail ↗'}},
+            {emoji:'⏳',text:'Receba 1 voucher de benefício a cada 60 dias.'},
+            {emoji:'🏆',text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
           ],
-          upgrade: {
-            label: 'Atualizar para 450 MB',
-            href: 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'
-          }
-        },
-        3: {
-          plan: '650 MB',
-          pill: '1 voucher / 60 dias',
-          premiumIncluded: true,
-          note: 'Válido para clientes ativos e adimplentes.',
-          facts: [
-            { emoji:'🌟', text:'É o nosso clube de benefícios com diversas empresas parceiras da região!' },
-            { emoji:'🎁', text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano, e quem escolhe é você!' },
-            { emoji:'📩', text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{ href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%203', label:'Enviar e‑mail ↗' } },
-            { emoji:'⏳', text:'Receba 1 voucher de benefício a cada 60 dias.' },
-            { emoji:'🏆', text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium' }
-          ],
-          upgrade: {
-            label: 'Atualizar para 650 MB',
-            href: 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'
-          }
-        }
+          upgrade:{label:'Atualizar para 650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'} }
       };
 
-      const ccSection = document.getElementById('s-conecta');
-      const segmented = document.getElementById('segmented');
-      const segWrap = document.getElementById('segWrap');
-      const segHint = document.getElementById('segHint');
-      const segL1 = document.getElementById('seg-l1');
-      const segL2 = document.getElementById('seg-l2');
-      const segL3 = document.getElementById('seg-l3');
+      const ccSection=document.getElementById('s-conecta');
+      const segmented=document.getElementById('segmented');
+      const segL1=document.getElementById('seg-l1');
+      const segL2=document.getElementById('seg-l2');
+      const segL3=document.getElementById('seg-l3');
 
-      const ccDyn = document.getElementById('cc-dyn');
-      const ccSwap = document.getElementById('cc-swap');
-      const ccPillMain = document.getElementById('cc-pill-main');
-      const ccPremiumPill = document.getElementById('cc-pill-premium');
-      const ccPremiumText = document.getElementById('cc-premium-text');
-      const ccNote = document.getElementById('cc-note');
-      const ccFacts = document.getElementById('cc-facts');
-      const ccPlanPill = document.getElementById('cc-plan-pill');
-      const ccPlanText = document.getElementById('cc-plan-text');
-      const viewing = document.getElementById('cc-viewing');
-      const emailBtn = document.getElementById('cc-email-link');
-      const upgradeBtn = document.getElementById('cc-upgrade');
-      const actions = document.getElementById('cc-actions');
+      const ccDyn=document.getElementById('cc-dyn');
+      const ccSwap=document.getElementById('cc-swap');
+      const ccPillMain=document.getElementById('cc-pill-main');
+      const ccPremiumPill=document.getElementById('cc-pill-premium');
+      const ccPremiumText=document.getElementById('cc-premium-text');
+      const ccNote=document.getElementById('cc-note');
+      const ccFacts=document.getElementById('cc-facts');
+      const ccPlanPill=document.getElementById('cc-plan-pill');
+      const ccPlanText=document.getElementById('cc-plan-text');
+      const viewing=document.getElementById('cc-viewing');
+      const emailBtn=document.getElementById('cc-email-link');
+      const upgradeBtn=document.getElementById('cc-upgrade');
+      const actions=document.getElementById('cc-actions');
 
-      let currentCompare = 1;
-      let lastCompareClickAt = 0;
+      let currentCompare=1, lastCompareClickAt=0, resetTimer=null;
 
       function renderFacts(facts){
-        ccFacts.innerHTML = '';
+        ccFacts.innerHTML='';
         facts.forEach(f=>{
-          const row = document.createElement('div');
-          row.className = 'fact';
-          if (f.anchorId) row.id = f.anchorId;
-          const ico = document.createElement('span');
-          ico.className = 'ico'; ico.textContent = f.emoji || '•';
-          const txt = document.createElement('div');
-          txt.className = 'txt';
-          txt.innerHTML = `<span>${f.text}</span>`;
+          const row=document.createElement('div'); row.className='fact'; if (f.anchorId) row.id=f.anchorId;
+          const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
+          const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
           if (f.link && f.link.href){
-            const a = document.createElement('a');
-            a.href = f.link.href; a.target = '_blank'; a.rel = 'noopener';
-            a.className = 'link-mini inline-link'; a.textContent = f.link.label || 'Abrir ↗';
-            a.style.marginLeft = '8px';
+            const a=document.createElement('a'); a.href=f.link.href; a.target='_blank'; a.rel='noopener';
+            a.className='link-mini inline-link'; a.textContent=f.link.label||'Abrir ↗'; a.style.marginLeft='8px';
             txt.appendChild(a);
           }
-          row.appendChild(ico); row.appendChild(txt);
-          ccFacts.appendChild(row);
+          row.appendChild(ico); row.appendChild(txt); ccFacts.appendChild(row);
         });
       }
 
       function animateSwap(updateFn){
-        const startH = ccSwap.offsetHeight;
+        const startH=ccSwap.offsetHeight;
         ccSwap.classList.add('fade-exit','fade-exit-active');
         setTimeout(()=>{
           ccSwap.classList.remove('fade-exit','fade-exit-active');
           updateFn();
           ccSwap.classList.add('fade-enter');
-          const targetH = ccSwap.scrollHeight;
-          ccDyn.style.height = startH + 'px';
-          void ccDyn.offsetHeight;
-          ccDyn.style.transition = 'height .18s ease';
-          ccDyn.style.height = targetH + 'px';
+          const targetH=ccSwap.scrollHeight;
+          ccDyn.style.height=startH+'px'; void ccDyn.offsetHeight;
+          ccDyn.style.transition='height .18s ease'; ccDyn.style.height=targetH+'px';
           setTimeout(()=>{
-            ccDyn.style.height = '';
-            ccDyn.style.transition = '';
+            ccDyn.style.height=''; ccDyn.style.transition='';
             ccSwap.classList.add('fade-enter-active');
             setTimeout(()=> ccSwap.classList.remove('fade-enter','fade-enter-active'), 180);
-          }, 10);
-        }, 90);
+          },10);
+        },90);
       }
 
       function setSegmented(level){
-        [segL1,segL2,segL3].forEach(btn=> btn.setAttribute('aria-pressed', String(+btn.dataset.level === level)));
+        [segL1,segL2,segL3].forEach(btn=> btn.setAttribute('aria-pressed', String(+btn.dataset.level===level)));
       }
 
-      // Ajuste automático do segmented: tenta caber sem scroll; se não, mostra dica e permite overflow
-      function fitSegmented(){
-        if (!segmented) return;
-        const max = segmented.parentElement.clientWidth - 4;
-        let fs = 14; let tries = 0;
-        segmented.style.setProperty('--seg-fs', fs + 'px');
-        function totalW(){ return segmented.scrollWidth; }
-        while (totalW() > max && fs > 11 && tries < 12){
-          fs -= 0.5; tries++; segmented.style.setProperty('--seg-fs', fs + 'px');
-        }
-        const overflow = totalW() > max;
-        segWrap.dataset.overflow = String(overflow);
-        segmented.style.overflowX = overflow ? 'auto' : 'hidden';
-        segmented.style.webkitOverflowScrolling = overflow ? 'touch' : '';
-      }
-
-      // Ajuste por botão das ações (evita quebra em zoom alto)
       function fitActionButtons(){
         document.querySelectorAll('#cc-actions .btn').forEach(btn=>{
           btn.style.setProperty('--btn-fs','15px');
-          let fs = 15, tries=0;
-          const max = btn.clientWidth - 14;
-          const measure = ()=> btn.scrollWidth;
-          while (measure() > max && fs > 13 && tries < 8){
-            fs -= 0.5; tries++; btn.style.setProperty('--btn-fs', fs + 'px');
+          let fs=15, tries=0; const max=btn.clientWidth - 14;
+          while (btn.scrollWidth > max && fs > 13 && tries < 8){
+            fs-=0.5; tries++; btn.style.setProperty('--btn-fs', fs+'px');
           }
         });
-      }
-
-      // Marquee dentro da pílula se o texto não couber
-      function applyPillFit(pillEl){
-        if (!pillEl) return;
-        // reset
-        const txt = pillEl.querySelector('.txt') || pillEl.querySelector('#cc-premium-text');
-        if (!txt) return;
-        // remover wrappers antigos
-        const oldInner = pillEl.querySelector('.marquee .inner');
-        if (oldInner){
-          const parent = pillEl.querySelector('.marquee');
-          if (parent){ parent.replaceWith(txt); }
-        }
-        // medir
-        const need = txt.scrollWidth > pillEl.clientWidth - 10;
-        if (need){
-          const wrap = document.createElement('span');
-          wrap.className = 'marquee';
-          const inner = document.createElement('span');
-          inner.className = 'inner';
-          inner.textContent = txt.textContent;
-          wrap.style.setProperty('--marq-dur', Math.min(12, Math.max(6, Math.round((txt.scrollWidth - pillEl.clientWidth)/10))) + 's');
-          const dist = -Math.min(0, pillEl.clientWidth - txt.scrollWidth - 28);
-          wrap.style.setProperty('--marq-dist', dist + 'px');
-          wrap.appendChild(inner);
-          txt.replaceWith(wrap);
-          // pausa em interação
-          wrap.addEventListener('pointerdown', ()=> inner.style.animationPlayState='paused');
-          wrap.addEventListener('pointerup', ()=> inner.style.animationPlayState='running');
-          wrap.addEventListener('mouseenter', ()=> inner.style.animationPlayState='paused');
-          wrap.addEventListener('mouseleave', ()=> inner.style.animationPlayState='running');
-        }
       }
 
       function updatePremiumPill(data){
         if (data.premiumIncluded){
           ccPremiumPill.classList.add('included');
-          ccPremiumText.textContent = 'Atrações premium incluídas';
+          ccPremiumText.textContent='Atrações premium incluídas';
           ccPremiumPill.setAttribute('aria-label','Atrações premium: incluídas');
         } else {
           ccPremiumPill.classList.remove('included');
-          ccPremiumText.textContent = 'Atrações premium não incluídas';
+          ccPremiumText.textContent='Atrações premium não incluídas';
           ccPremiumPill.setAttribute('aria-label','Atrações premium: não incluídas');
         }
-        applyPillFit(ccPremiumPill);
       }
 
       function applyCompare(level,{remember=true, smoothIntoView=false}={}){
-        const data = CC_CONTENT[level] || CC_CONTENT[1];
-        currentCompare = level;
-        setSegmented(level);
+        const data=CC_CONTENT[level]||CC_CONTENT[1];
+        currentCompare=level; setSegmented(level);
 
-        // rótulo
-        viewing.textContent = `Visualizando: Nível ${level}`;
-        viewing.classList.toggle('show', true);
+        viewing.textContent=`Visualizando: Nível ${level}`;
 
         animateSwap(()=>{
-          ccPillMain.querySelector('.txt').textContent = data.pill;
-          ccNote.textContent = data.note || '';
+          ccPillMain.querySelector('.txt').textContent=data.pill;
+          ccNote.textContent=data.note||'';
           updatePremiumPill(data);
-          renderFacts(data.facts || []);
-          // ajuste de pílula de voucher
-          applyPillFit(ccPillMain);
+          renderFacts(data.facts||[]);
         });
 
-        if (level === 2 || level === 3){
-          ccPlanText.textContent = data.plan;
-          ccPlanPill.classList.add('show');
-          if (data.upgrade){
-            upgradeBtn.style.display = 'inline-flex';
-            upgradeBtn.textContent = data.upgrade.label;
-            upgradeBtn.href = data.upgrade.href;
-          }
-          emailBtn.classList.remove('cta');
-          actions.classList.remove('is-level1');
+        if (level===2 || level===3){
+          ccPlanText.textContent=data.plan; ccPlanPill.classList.add('show');
+          if (data.upgrade){ upgradeBtn.style.display='inline-flex'; upgradeBtn.textContent=data.upgrade.label; upgradeBtn.href=data.upgrade.href; }
+          emailBtn.classList.remove('cta'); actions.classList.remove('is-level1');
         } else {
-          ccPlanPill.classList.remove('show');
-          upgradeBtn.style.display = 'none';
-          emailBtn.classList.add('cta');
-          actions.classList.add('is-level1');
+          ccPlanPill.classList.remove('show'); upgradeBtn.style.display='none';
+          emailBtn.classList.add('cta'); actions.classList.add('is-level1');
         }
 
-        try{
-          const subj = encodeURIComponent(`Conecta Clube - Nível ${level}`);
-          emailBtn.href = `mailto:ccs@ccstelecom.com.br?subject=${subj}`;
-        }catch{}
+        try{ const subj=encodeURIComponent(`Conecta Clube - Nível ${level}`); emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${subj}`; }catch{}
 
-        if (remember) localStorage.setItem(LEVELS_KEY, String(level));
+        if (remember) localStorage.setItem(LEVELS_KEY,String(level));
 
-        // reposiciona e ajusta botões após mudar conteúdo
-        setTimeout(()=> { fitActionButtons(); }, 0);
+        setTimeout(fitActionButtons,0);
 
         if (smoothIntoView){
-          const topY = ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
-          window.scrollTo({ top: topY, behavior: 'smooth' });
+          const topY=ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
+          window.scrollTo({top:topY,behavior:'smooth'});
         }
       }
 
       // Pílula Premium: abre "Saiba mais" e rola ao item de atrações
-      ccPremiumPill.addEventListener('click', ()=>{
-        const btn = document.querySelector('[aria-controls="more-conecta"].chip-more');
-        if (btn.getAttribute('aria-expanded') !== 'true') btn.click();
+      ccPremiumPill.addEventListener('click',()=>{
+        const btn=document.querySelector('[aria-controls="more-conecta"].chip-more');
+        if (btn.getAttribute('aria-expanded')!=='true') btn.click();
         setTimeout(()=>{
-          const anchor = document.getElementById('cc-premium');
+          const anchor=document.getElementById('cc-premium');
           if (anchor){
-            const topOffset = (topbar.offsetHeight || 64) + 16;
-            const y = window.scrollY + anchor.getBoundingClientRect().top - topOffset;
-            window.scrollTo({ top:y, behavior:'smooth' });
+            const topOffset=(topbar.offsetHeight||64)+16;
+            const y=window.scrollY + anchor.getBoundingClientRect().top - topOffset;
+            window.scrollTo({top:y,behavior:'smooth'});
           }
-        }, 60);
+        },60);
       });
 
-      // cliques do segmented
-      function onSegClick(level){
-        lastCompareClickAt = Date.now();
-        applyCompare(level, {remember:true, smoothIntoView:false});
-      }
-      segL1.addEventListener('click', ()=> onSegClick(1));
-      segL2.addEventListener('click', ()=> onSegClick(2));
-      segL3.addEventListener('click', ()=> onSegClick(3));
+      function onSegClick(level){ lastCompareClickAt=Date.now(); applyCompare(level,{remember:true}); }
+      segL1.addEventListener('click',()=>onSegClick(1));
+      segL2.addEventListener('click',()=>onSegClick(2));
+      segL3.addEventListener('click',()=>onSegClick(3));
 
-      // Auto-reset quando sai do contexto
-      const indiquesec = document.getElementById('s-indique');
-      let resetTimer = null;
-      function maybeAutoReset(){
-        const now = Date.now();
-        if (now - lastCompareClickAt < 1500) return;
-        if (currentCompare === 1) return;
-        if (resetTimer) clearTimeout(resetTimer);
-        resetTimer = setTimeout(()=>{ applyCompare(1, {remember:true}); }, 300);
-      }
-      if ('IntersectionObserver' in window){
-        const ioCC = new IntersectionObserver(entries=>{
-          const e = entries[0];
-          if (!e.isIntersecting || e.intersectionRatio < 0.1) maybeAutoReset();
-        }, {threshold:[0, 0.1, 0.25]});
+      // Auto-reset fora do contexto
+      const indiquesec=document.getElementById('s-indique');
+      function autoResetObs(){
+        if (!('IntersectionObserver' in window)) return;
+        const ioCC=new IntersectionObserver(entries=>{ const e=entries[0]; if (!e.isIntersecting || e.intersectionRatio<0.1) maybeAutoReset(); }, {threshold:[0,0.1,0.25]});
         ioCC.observe(ccSection);
-
-        const ioInd = new IntersectionObserver(entries=>{
-          const e = entries[0];
-          if (!e.isIntersecting) maybeAutoReset();
-        }, {threshold:[0.25]});
+        const ioInd=new IntersectionObserver(entries=>{ const e=entries[0]; if (!e.isIntersecting) maybeAutoReset(); }, {threshold:[0.25]});
         ioInd.observe(indiquesec);
+      }
+      function maybeAutoReset(){
+        const now=Date.now(); if (now-lastCompareClickAt<1500) return; if (currentCompare===1) return;
+        clearTimeout(resetTimer); resetTimer=setTimeout(()=> applyCompare(1,{remember:true}),300);
       }
 
       // Inicialização (persistência + URL)
       function getLevelFromURL(){
         try{
-          const u = new URL(window.location.href);
-          const n1 = u.searchParams.get('n');
-          if (n1 && [1,2,3].includes(+n1)) return +n1;
-          const hash = u.hash || '';
-          const qIndex = hash.indexOf('?');
-          if (qIndex !== -1){
-            const qs = new URLSearchParams(hash.slice(qIndex+1));
-            const n2 = qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2;
-          }
-        }catch{}
-        return null;
+          const u=new URL(window.location.href); const n1=u.searchParams.get('n'); if (n1 && [1,2,3].includes(+n1)) return +n1;
+          const hash=u.hash||''; const qIndex=hash.indexOf('?');
+          if (qIndex!==-1){ const qs=new URLSearchParams(hash.slice(qIndex+1)); const n2=qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2; }
+        }catch{} return null;
       }
       function initConecta(){
-        const urlN = getLevelFromURL();
-        const saved = +localStorage.getItem(LEVELS_KEY) || 1;
-        const start = urlN || saved || 1;
-        applyCompare([1,2,3].includes(start) ? start : 1, {remember:false});
-        fitSegmented();
-        fitActionButtons();
-        // ajustar pílulas na carga
-        applyPillFit(ccPillMain);
-        applyPillFit(ccPremiumPill);
+        const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
+        applyCompare([1,2,3].includes(start)?start:1,{remember:false});
+        fitActionButtons(); autoResetObs();
       }
 
       // Inicial geral
-      function recalcAll(){
-        setTopPad(); fitCapsule(); fitSegmented(); fitActionButtons();
-        // reavaliar pílulas após resize
-        applyPillFit(ccPillMain);
-        applyPillFit(ccPremiumPill);
-      }
-      recalcAll();
-      initConecta();
-
+      function recalcAll(){ setTopPad(); fitCapsule(); fitActionButtons(); }
+      recalcAll(); initConecta();
       addEventListener('resize', recalcAll, {passive:true});
       addEventListener('orientationchange', recalcAll);
       addEventListener('pageshow', recalcAll);
