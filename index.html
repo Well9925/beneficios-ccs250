@@ -228,7 +228,7 @@
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
 
-    /* Facts: restaura estilo padrão global (caixinha), e remove caixinha só no Conecta Clube */
+    /* Facts: padrão global (caixinha), e sem caixinha só no Conecta Clube */
     .facts{ display:grid; grid-template-columns:1fr; gap:10px; margin:0 }
     @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:8px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
@@ -295,7 +295,7 @@
       margin:4px 0 8px;
     }
 
-    /* Botões de comparação Nível 2/3 */
+    /* Botões de comparação: Ver meu nível antes de N2/N3 */
     #s-conecta .compare-tabs{
       display:flex; gap:8px; flex-wrap:wrap; align-items:center;
     }
@@ -312,8 +312,8 @@
     }
     /* Ver meu nível (destaque sutil na primeira aparição) */
     #s-conecta .btn-back{
-      display:inline-flex; align-items:center; gap:6px; margin-left:auto;
-      padding:6px 12px; border-radius:999px; border:1px solid var(--line);
+      display:none; align-items:center; gap:6px;
+      padding:8px 12px; border-radius:999px; border:1px solid var(--line);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
     }
     #s-conecta .btn-back .ico{ width:16px; height:16px }
@@ -327,24 +327,37 @@
     }
     #s-conecta .plan-pill.show{ display:inline-flex }
 
+    /* Pílulas (voucher e premium) lado a lado com rolagem horizontal suave */
+    #s-conecta .cc-pills{
+      display:flex; gap:10px; margin:10px 0;
+      flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    #s-conecta .cc-pills::-webkit-scrollbar{ display:none }
+    #s-conecta .cc-pills > *{ flex:0 0 auto }
+
     /* Pílula Premium */
     #s-conecta .pill-premium{
       display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--line); border-radius:999px; padding:8px 12px;
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
+      white-space:nowrap
     }
     #s-conecta .pill-premium .ico{ font-size:16px }
     #s-conecta .pill-premium.included{
       background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent
     }
 
-    /* Ações do Conecta Clube: grade lado a lado no mobile */
+    /* Ações do Conecta Clube: grade estável no mobile */
     #s-conecta .actions{
       display:grid; grid-template-columns:repeat(2, minmax(160px,1fr)); gap:10px; align-items:stretch
     }
-    @media (min-width:760px){
-      #s-conecta .actions{ grid-template-columns:repeat(3, minmax(160px,1fr)) }
-    }
+    /* Posições padrão (Nível 2/3): upgrade esquerda, e-mail direita, copiar linha de baixo inteira */
+    #s-conecta .actions .btn-upgrade{ grid-column:1 }
+    #s-conecta .actions .btn-email{ grid-column:2 }
+    #s-conecta .actions .btn-copy{ grid-column:1 / span 2 }
+    /* Nível 1: e-mail esquerda, copiar direita (sem upgrade) */
+    #s-conecta .actions.is-level1 .btn-email{ grid-column:1 }
+    #s-conecta .actions.is-level1 .btn-copy{ grid-column:2 }
 
     /* “Saiba mais” — sem caixinha nos emojis somente no Conecta Clube */
     #s-conecta .fact .ico{
@@ -447,14 +460,14 @@
           <p class="cc-subtitle">Compare seus benefícios por nível</p>
 
           <div class="compare-area">
-            <!-- Botões de comparação (Nível 2 e 3) + Ver meu nível -->
+            <!-- Botões de comparação (Ver meu nível antes de N2/N3) -->
             <div class="compare-tabs" role="group" aria-label="Comparar níveis">
-              <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
-              <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
-              <button type="button" id="btn-my" class="btn-back" aria-label="Voltar ao meu nível" style="display:none">
+              <button type="button" id="btn-my" class="btn-back" aria-label="Voltar ao meu nível">
                 <svg class="ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
                 Ver meu nível
               </button>
+              <button type="button" id="btn-l2" data-level="2" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 2</button>
+              <button type="button" id="btn-l3" data-level="3" aria-pressed="false"><span class="dot" aria-hidden="true"></span> Nível 3</button>
             </div>
             <div class="back-row">
               <span id="cc-viewing" class="cc-viewing" aria-live="polite"></span>
@@ -466,10 +479,10 @@
 
           <div class="cc-dyn" id="cc-dyn">
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
-              <div class="row cc-pills" id="cc-pills">
+              <div class="cc-pills" id="cc-pills">
                 <span class="pill hi" id="cc-pill-main">1 voucher • a cada 90 dias</span>
                 <span class="pill-premium" id="cc-pill-premium" role="status" aria-live="polite">
-                  <span class="ico">🏆</span><span id="cc-premium-text">Premium não incluídas</span>
+                  <span class="ico">🏆</span><span id="cc-premium-text">Atrações premium não incluídas</span>
                 </span>
               </div>
               <p class="note" id="cc-note">Válido para clientes ativos e adimplentes.</p>
@@ -490,10 +503,10 @@
               </div>
 
               <!-- Ações -->
-              <div class="actions" id="cc-actions">
-                <a class="btn cta2" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
-                <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
-                <button class="btn" id="copyEmail" type="button">
+              <div class="actions is-level1" id="cc-actions">
+                <a class="btn cta2 btn-upgrade" id="cc-upgrade" href="#" style="display:none">Atualizar plano</a>
+                <a class="btn cta btn-email" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
+                <button class="btn btn-copy" id="copyEmail" type="button">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
                   Copiar e‑mail
                 </button>
@@ -894,9 +907,8 @@
       if ('IntersectionObserver' in window){
         const io = new IntersectionObserver(entries => {
           const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-          if (vis) {
+        if (vis) {
             setActiveDock(vis.target.id);
-            // auto-reset ao mudar para outra seção
             if (vis.target.id !== 's-conecta') maybeAutoReset('dock-change');
           }
         }, { threshold:[0.25,0.5,0.75] });
@@ -982,6 +994,7 @@
       const viewing = document.getElementById('cc-viewing');
       const emailBtn = document.getElementById('cc-email-link');
       const upgradeBtn = document.getElementById('cc-upgrade');
+      const actions = document.getElementById('cc-actions');
 
       let currentCompare = 1;
       let lastCompareClickAt = 0;
@@ -1038,11 +1051,11 @@
       function updatePremiumPill(data){
         if (data.premiumIncluded){
           ccPremiumPill.classList.add('included');
-          ccPremiumText.textContent = 'Premium incluídas';
+          ccPremiumText.textContent = 'Atrações premium incluídas';
           ccPremiumPill.setAttribute('aria-label','Atrações premium: incluídas');
         } else {
           ccPremiumPill.classList.remove('included');
-          ccPremiumText.textContent = 'Premium não incluídas';
+          ccPremiumText.textContent = 'Atrações premium não incluídas';
           ccPremiumPill.setAttribute('aria-label','Atrações premium: não incluídas');
         }
       }
@@ -1052,7 +1065,7 @@
         currentCompare = level;
         setCompareButtons(level);
 
-        // Label de contexto + "Ver meu nível"
+        // "Ver meu nível" aparece antes de N2/N3 quando comparando
         if (level === 1){
           viewing.textContent = '';
           viewing.classList.remove('show');
@@ -1062,7 +1075,6 @@
           viewing.textContent = `Visualizando: Nível ${level}`;
           viewing.classList.add('show');
           btnMy.style.display = 'inline-flex';
-          // destaque sutil na primeira aparição
           btnMy.classList.add('hint');
           setTimeout(()=> btnMy.classList.remove('hint'), 1600);
         }
@@ -1074,7 +1086,7 @@
           renderFacts(data.facts || []);
         });
 
-        // Plano necessário + CTA
+        // Plano necessário + CTA + layout dos botões
         if (level === 2 || level === 3){
           ccPlanText.textContent = data.plan;
           ccPlanPill.classList.add('show');
@@ -1083,11 +1095,13 @@
             upgradeBtn.textContent = data.upgrade.label;
             upgradeBtn.href = data.upgrade.href;
           }
-          emailBtn.classList.remove('cta'); // fica secundário quando há upgrade
+          emailBtn.classList.remove('cta'); // secundário quando há upgrade
+          actions.classList.remove('is-level1'); // usa layout padrão (upgrade|email na 1ª linha)
         } else {
           ccPlanPill.classList.remove('show');
           upgradeBtn.style.display = 'none';
           emailBtn.classList.add('cta'); // em 1 volta a ser CTA
+          actions.classList.add('is-level1'); // e‑mail esquerda, copiar direita
         }
 
         // assunto do e‑mail
@@ -1106,7 +1120,6 @@
 
       // Pílula Premium: abre "Saiba mais" e rola ao item de atrações
       ccPremiumPill.addEventListener('click', ()=>{
-        const panel = document.getElementById('more-conecta');
         const btn = document.querySelector('[aria-controls="more-conecta"].chip-more');
         if (btn.getAttribute('aria-expanded') !== 'true') btn.click();
         setTimeout(()=>{
@@ -1131,28 +1144,24 @@
       // Auto-reset quando sai do contexto
       const indiquesec = document.getElementById('s-indique');
       let resetTimer = null;
-      function maybeAutoReset(reason){
+      function maybeAutoReset(){
         const now = Date.now();
-        if (now - lastCompareClickAt < 1500) return; // evita reset logo após clique
+        if (now - lastCompareClickAt < 1500) return;
         if (currentCompare === 1) return;
         if (resetTimer) clearTimeout(resetTimer);
-        resetTimer = setTimeout(()=>{
-          applyCompare(1, {remember:true});
-        }, 300); // histerese
+        resetTimer = setTimeout(()=>{ applyCompare(1, {remember:true}); }, 300);
       }
 
       if ('IntersectionObserver' in window){
-        // Quando Conecta Clube sai de vista (<10%)
         const ioCC = new IntersectionObserver(entries=>{
           const e = entries[0];
-          if (!e.isIntersecting || e.intersectionRatio < 0.1) maybeAutoReset('cc-out');
+          if (!e.isIntersecting || e.intersectionRatio < 0.1) maybeAutoReset();
         }, {threshold:[0, 0.1, 0.25]});
         ioCC.observe(ccSection);
 
-        // Seção Indique & Ganhe — ao passar dela, também reseta
         const ioInd = new IntersectionObserver(entries=>{
           const e = entries[0];
-          if (!e.isIntersecting) maybeAutoReset('indique-out');
+          if (!e.isIntersecting) maybeAutoReset();
         }, {threshold:[0.25]});
         ioInd.observe(indiquesec);
       }
