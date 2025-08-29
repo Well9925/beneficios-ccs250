@@ -264,7 +264,8 @@
       width:100%; min-height:44px; line-height:1; border:1px solid var(--line); border-radius:999px;
       padding:8px 12px; background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
       display:inline-flex; align-items:center; gap:8px; justify-content:center; white-space:nowrap;
-      transition:background .12s ease, border-color .12s ease
+      transition:background .12s ease, border-color .12s ease;
+      font-size: var(--seg-fs, 15px);
     }
     #s-conecta .segmented button[aria-pressed="true"]{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22) }
     #s-conecta .segmented .dot{ width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)) }
@@ -319,16 +320,27 @@
     #s-conecta .pill-voucher{
       display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25;
       background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900;
+      font-size: var(--pill-fs, 15px);
     }
     #s-conecta .pill-voucher .line-1{ font-weight:900 }
     #s-conecta .pill-voucher .line-2{ font-weight:800 }
     #s-conecta .pill-voucher.is-stacked{ flex-direction:column; align-items:flex-start; gap:6px }
     #s-conecta .pill-voucher .sep{ margin:0 6px }
+    /* Hide separator in normal layout when stacked */
+    #s-conecta .pill-voucher.is-stacked .sep{ display: none }
+    /* Show magical dot in stacked line-2 */
+    #s-conecta .pill-voucher.is-stacked .line-2::before{
+      content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+      background: linear-gradient(90deg, var(--levelA), var(--planB));
+      box-shadow: 0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45);
+      margin-right: 8px; vertical-align: middle;
+    }
 
     /* Premium */
     #s-conecta .pill-premium{
       display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25;
       border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-weight:900;
+      font-size: var(--pill-fs, 15px);
     }
     #s-conecta .pill-premium.included{ background:linear-gradient(90deg,#FFD36E,#FF9F3F); color:#0b0d12; border-color:transparent }
     #s-conecta .pill-premium .wrap{ display:flex; gap:8px; align-items:center; flex-wrap:nowrap }
@@ -957,6 +969,27 @@
         segL1.classList.toggle('is-current', level===1);
       }
 
+      function fitSegmentedStrict(){
+        // Reset font sizes first
+        [segL1, segL2, segL3].forEach(btn => btn.style.setProperty('--seg-fs', '15px'));
+        
+        // Check if all buttons fit properly
+        const container = segmented;
+        const buttons = [segL1, segL2, segL3];
+        let fs = 15;
+        let tries = 0;
+        const minFS = 12;
+        
+        // Function to check if any button overflows
+        const anyOverflow = () => buttons.some(btn => btn.scrollWidth > btn.clientWidth);
+        
+        while (anyOverflow() && fs > minFS && tries < 15) {
+          fs -= 0.5;
+          tries++;
+          buttons.forEach(btn => btn.style.setProperty('--seg-fs', fs + 'px'));
+        }
+      }
+
       function fitActionButtons(){
         document.querySelectorAll('#cc-actions .btn').forEach(btn=>{
           btn.style.setProperty('--btn-fs','15px');
@@ -1027,7 +1060,7 @@
 
         if (remember) localStorage.setItem(LEVELS_KEY,String(level));
 
-        setTimeout(()=>{ fitActionButtons(); }, 0);
+        setTimeout(()=>{ fitSegmentedStrict(); fitActionButtons(); }, 0);
 
         if (smoothIntoView){
           const topY=ccSection.getBoundingClientRect().top + window.scrollY - (topbar.offsetHeight||64) - 8;
@@ -1079,11 +1112,11 @@
       function initConecta(){
         const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
         applyCompare([1,2,3].includes(start)?start:1,{remember:false});
-        fitActionButtons(); fitAllBenefits();
+        fitSegmentedStrict(); fitActionButtons(); fitAllBenefits();
       }
 
       /* ====== Inicial geral ====== */
-      function recalcAll(){ setTopPad(); fitCapsule(); fitActionButtons(); fitAllBenefits(); }
+      function recalcAll(){ setTopPad(); fitCapsule(); fitSegmentedStrict(); fitActionButtons(); fitAllBenefits(); }
       recalcAll(); initConecta();
       addEventListener('resize', recalcAll, {passive:true});
       addEventListener('orientationchange', recalcAll);
