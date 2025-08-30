@@ -27,7 +27,6 @@
       --art-max-h-d: clamp(160px, 28vh, 300px);
       --art-max-h-m: clamp(140px, 24vh, 220px);
 
-      /* alturas medidas via JS para posicionar FAB e Dock */
       --topbar-h: 56px;
       --statusbar-h: 0px;
     }
@@ -40,8 +39,8 @@
       font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       background:var(--bg);
-      padding-top:0; /* ajustado via JS: topbar + statusbar quando visível */
-      padding-bottom:calc(160px + env(safe-area-inset-bottom)); /* espaço para Level Dock + FAB */
+      padding-top:0;
+      padding-bottom:calc(160px + env(safe-area-inset-bottom));
     }
 
     /* Anti-estouro global de texto */
@@ -71,16 +70,22 @@
     /* Topbar/cápsula */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
-    @keyframes softPulse { 0%{ box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 10px 26px rgba(0,0,0,.38),
-        0 0 10px rgba(0,217,255,.18),
-        0 0 16px rgba(123,92,255,.12) }
-      100%{ box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 10px 26px rgba(0,0,0,.38),
-        0 0 4px rgba(0,217,255,.10),
-        0 0 8px rgba(123,92,255,.08) } }
+    @keyframes softPulseStrong {
+      0%{
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.10),
+          0 10px 26px rgba(0,0,0,.38),
+          0 0 18px rgba(0,217,255,.28),
+          0 0 24px rgba(123,92,255,.22);
+      }
+      100%{
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.08),
+          0 10px 26px rgba(0,0,0,.36),
+          0 0 8px rgba(0,217,255,.12),
+          0 0 12px rgba(123,92,255,.10);
+      }
+    }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -100,7 +105,7 @@
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
       -webkit-appearance:none; appearance:none;
-      animation: softPulse 6s ease-in-out infinite alternate; /* halo sutil, como o ATUAL */
+      animation: softPulseStrong 5.2s ease-in-out infinite alternate; /* magia mais forte */
     }
     header .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -112,14 +117,13 @@
     header .capsule::after{
       content:""; position:absolute; inset:-25% -12%; border-radius:inherit;
       background:
-        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.22), transparent 60%),
-        radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.22), transparent 60%);
-      filter: blur(16px); mix-blend-mode:screen; pointer-events:none; z-index:0;
+        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.28), transparent 60%),
+        radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.28), transparent 60%);
+      filter: blur(18px); mix-blend-mode:screen; pointer-events:none; z-index:0;
     }
     .cap-viewport{
       position:relative; display:block; max-width:100%;
-      overflow:hidden; /* sem indicadores/scrollbars/setas */
-      white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none;
+      overflow:hidden; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none;
     }
     .track{ display:inline-block; will-change:transform }
     .track .txt{
@@ -127,7 +131,7 @@
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
                  linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
       background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:textShift 3.2s linear infinite;
-      text-shadow:0 0 10px rgba(123,92,255,.35), 0 0 16px rgba(0,255,198,.25);
+      text-shadow:0 0 12px rgba(123,92,255,.38), 0 0 20px rgba(0,255,198,.28);
     }
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
@@ -159,10 +163,9 @@
     .content{ padding:16px }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
-
     .subtitle{ margin:6px 0 10px; color:var(--muted) }
 
-    /* Pills e Ações — grids que mantêm 2 por linha no mobile */
+    /* Pills e Ações */
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
     .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; text-align:center }
     .pill-flag{
@@ -176,11 +179,11 @@
     .note{ color:#a8b6d9; font-size:14px }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
-    .actions.one .btn{ width:100% } /* quando só 1 botão no card, ocupa a linha */
+    .actions.one .btn{ width:100% }
     .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size: var(--btn-fs,15px); text-align:center }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
 
-    /* Mobile: garantir 2 por linha para pílulas e botões (quando houver >1) */
+    /* Mobile: 2 por linha quando houver >1 */
     @media (max-width: 640px){
       .row.pills{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
       .actions{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
@@ -214,7 +217,7 @@
     .side-dock img{ width:24px; height:24px; object-fit:contain }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Header do dock no mobile (botão fechar no topo) + FAB fixo abaixo da cápsula */
+    /* Header do dock no mobile (botão fechar no topo) + botão abrir abaixo da cápsula */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
@@ -231,47 +234,59 @@
       .dock-fab{
         position:fixed; right:12px; z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
         background:rgba(16,18,24,.78); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
-        /* abaixo da cápsula, ajustado por JS via --topbar-h e --statusbar-h */
         top:calc(var(--topbar-h) + var(--statusbar-h) + 8px);
         transform:none;
       }
-      /* ao abrir o dock, escondo o FAB para não sobrepor itens */
       .side-dock.is-open ~ .dock-fab{ display:none }
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) */
+    /* Level Dock (rodapé) + FAB na mesma linha */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{ display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px; background:rgba(16,18,24,.55); backdrop-filter:blur(10px) }
     .level-dock .btn-level{
-      position:relative; min-width:100px; padding:10px 14px; border-radius:999px; border:1px solid var(--line);
+      position:relative; min-width:96px; padding:10px 14px; border-radius:999px; border:1px solid var(--line);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer;
       transition: box-shadow .25s ease, transform .2s ease, background .25s ease;
     }
     .level-dock .btn-level[aria-pressed="true"]{
-      background:linear-gradient(90deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+      background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
       box-shadow:
-        0 0 0 2px rgba(255,255,255,.10) inset,
-        0 0 18px rgba(0,217,255,.30),
-        0 0 26px rgba(123,92,255,.25);
-      transform: scale(1.02);
-      outline:2px solid transparent; /* reserva */
+        0 0 0 2px rgba(255,255,255,.12) inset,
+        0 0 24px rgba(0,217,255,.36),
+        0 0 34px rgba(123,92,255,.30);
+      transform: scale(1.022);
+      outline:2px solid transparent;
     }
+    @keyframes selectPulse {
+      0% { box-shadow:
+        0 0 0 0 rgba(0,217,255,.55),
+        0 0 0 0 rgba(123,92,255,.45) }
+      100% { box-shadow:
+        0 0 0 14px rgba(0,217,255,0),
+        0 0 0 26px rgba(123,92,255,0) }
+    }
+    .btn-level.hit::after{
+      content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
+      animation: selectPulse .45s ease-out;
+    }
+
     /* “ATUAL” com pulso/halo colorido */
-    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.45) } 70%{ transform:scale(1); box-shadow:0 0 0 14px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
+    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.55) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
     .level-dock .label-actual{
       position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
       color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12);
-      box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 12px rgba(0,217,255,.45);
-      animation: ping 2.8s ease-out infinite;
+      box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 14px rgba(0,217,255,.55);
+      animation: ping 2.6s ease-out infinite;
     }
     .level-dock .btn-level[data-level="1"] .label-actual{ display:block }
     .level-dock .btn-level:not([data-level="1"]) .label-actual{ display:none }
 
-    /* FAB ao lado do Level Dock (posição por JS) */
+    /* FAB ao lado do Level Dock (posicionado via JS) */
     .fab{
       position:fixed; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.78); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45)
+      background:rgba(16,18,24,.84); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
+      pointer-events:auto;
     }
     .fab svg{ width:22px; height:22px }
 
@@ -296,8 +311,7 @@
       .stage-desktop{ display:block }
     }
     .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
-    .stage-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
-    .chip-toggle{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); color:#fff; font-weight:900; cursor:pointer }
+    .stage-head{ display:flex; justify-content:flex-end; align-items:center; margin-bottom:10px }
     .stage-frame{ position:relative; overflow:hidden; }
     .stage-track{
       display:flex; gap:22px; align-items:stretch;
@@ -305,7 +319,7 @@
       perspective: 1000px; padding:12px 4px;
     }
     .slide{
-      flex:0 0 clamp(720px, 68vw, 980px); /* largura do card ativo */
+      flex:0 0 clamp(720px, 68vw, 980px);
       transform-style:preserve-3d;
       transition: transform .4s cubic-bezier(.2,.7,.2,1), opacity .4s, filter .4s;
       filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
@@ -365,7 +379,7 @@
     </div>
   </header>
 
-  <!-- Status bar global (N2/N3): uma linha -->
+  <!-- Status bar (N2/N3) -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
     <div class="status-wrap">
       <span class="status-label" id="st-need">Necessário</span>
@@ -377,7 +391,6 @@
   <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo destaque)">
     <div class="stage-head">
       <div class="hint" style="color:#cfe0ff">Use as setas do teclado ou clique nos ícones ao lado</div>
-      <button class="chip-toggle" id="btnVerTudo" type="button" title="Ver tudo">Ver tudo</button>
     </div>
     <div class="stage-frame">
       <div class="stage-track" id="stageTrack"></div>
@@ -547,7 +560,7 @@
       </div>
     </section>
 
-    <!-- Indique & Ganhe (mantém 2+ botões) -->
+    <!-- Indique & Ganhe -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card">
         <div class="media"><div class="frame">
@@ -585,7 +598,7 @@
     <section class="section" id="s-portal" data-title="Portal do Assinante">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+          <img class="art-img" alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
@@ -639,7 +652,7 @@
           <a class="gcard" href="#s-skeelo"><div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg" loading="lazy" decoding="async"></div><div class="gtxt">Skeelo</div></a>
           <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async"></div><div class="gtxt">Suporte Premium</div></a>
           <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
-          <a class="gcard" href="#s-portal"><div class="gimg"><img alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal do Assinante</div></a>
+          <a class="gcard" href="#s-portal"><div class="gimg"><img alt="Portal do Assinante" src="img/APP.png" loading="lazy" decoding="async"></div><div class="gtxt">Portal do Assinante</div></a>
           <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal de Faturas</div></a>
           <a class="gcard" href="#s-vctech"><div class="gimg"><img alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async"></div><div class="gtxt">VCTECH</div></a>
         </div>
@@ -666,12 +679,12 @@
       <a href="#s-skeelo"  title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
       <a href="#s-suporte"  title="Suporte Premium"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
       <a href="#s-indique"  title="Indique & Ganhe"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt=""></a>
-      <a href="#s-portal"   title="Portal do Assinante"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
+      <a href="#s-portal"   title="Portal do Assinante"><img src="img/APP.png" alt=""></a>
       <a href="#s-faturas"  title="Portal de Faturas"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
-  <!-- Toggle do Side Dock (mobile): logo abaixo da cápsula, canto direito -->
+  <!-- Toggle do Side Dock (mobile): abaixo da cápsula, canto direito -->
   <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
@@ -686,7 +699,7 @@
   </nav>
 
   <!-- FAB (ao lado do Level Dock) -->
-  <button class="fab" id="fab" aria-label="Descer" title="Descer">
+  <button class="fab" id="fab" aria-label="Ir para o final" title="Ir para o final">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
 
@@ -852,11 +865,11 @@
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
 
+    /* Stage 3D */
     const stageDesktop = document.getElementById('stageDesktop');
     const stageTrack = document.getElementById('stageTrack');
     const btnPrev = document.getElementById('stagePrev');
     const btnNext = document.getElementById('stageNext');
-    const btnVerTudo = document.getElementById('btnVerTudo');
 
     const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -899,7 +912,7 @@
       fitCapsule();
     }
 
-    function remeasure(){ setBodyTopPad(); fitCapsule(); placeFab(); updateFabIcon(); positionDockToggle(); }
+    function remeasure(){ setBodyTopPad(); fitCapsule(); placeFab(); updateFabIcon(); }
 
     /* Render facts helper */
     function renderFacts(container, facts){
@@ -967,12 +980,18 @@
         statusBar.style.display='block';
       }
       setBodyTopPad();
-      positionDockToggle();
     }
 
     /* Level Dock */
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      // pulso mais forte ao selecionar
+      const btn = lvlBtns.find(b=> +b.dataset.level===level);
+      if (btn){
+        btn.classList.remove('hit'); void btn.offsetWidth; // reset animation
+        btn.classList.add('hit');
+        setTimeout(()=> btn.classList.remove('hit'), 500);
+      }
     }
 
     /* Observers para highlight e cápsula dinâmica no fluxo normal */
@@ -1004,16 +1023,20 @@
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB: descer/subir (fluxo normal) ou próximo/anterior (stage) */
+    /* FAB: descer/subir (fluxo) ou próximo/anterior (stage) */
     function inStage(){ return document.body.classList.contains('is-stage'); }
+    let stageIndex=0;
     function stageMaxIndex(){ return stageTrack.children.length - 1; }
-    function nearTop(){ return inStage() ? (stageIndex===0) : ((window.scrollY||document.documentElement.scrollTop||0) < 120); }
+    function nearTop(){
+      if (inStage()) return stageIndex===0;
+      return ((window.scrollY||document.documentElement.scrollTop||0) < 120);
+    }
     function nearBottom(){
       if (inStage()) return stageIndex>=stageMaxIndex();
       const el = document.scrollingElement || document.documentElement || document.body;
       return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 120);
     }
-    function updateFabIcon(){
+    function setFabState(){
       if (nearBottom()){
         fab.setAttribute('aria-label', inStage() ? 'Voltar' : 'Ir para o topo');
         fab.title = fab.getAttribute('aria-label');
@@ -1024,10 +1047,13 @@
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
       }
     }
+    function updateFabIcon(){ setFabState(); }
     fab.addEventListener('click',()=>{
       if (inStage()){
-        if (nearBottom()) setStageIndex(stageIndex-1); else setStageIndex(stageIndex+1);
-        updateFabIcon();
+        if (nearBottom()) stageIndex = Math.max(0, stageIndex-1);
+        else stageIndex = Math.min(stageMaxIndex(), stageIndex+1);
+        setStageIndex(stageIndex);
+        setFabState();
         return;
       }
       if (nearBottom()){
@@ -1037,15 +1063,12 @@
         const maxY = (el.scrollHeight||document.body.scrollHeight) - (window.innerHeight||document.documentElement.clientHeight);
         window.scrollTo({ top: maxY, behavior:'smooth' });
       }
+      setTimeout(setFabState, 350);
     });
 
-    /* Side Dock mobile: abrir/fechar sem cobrir ícones e abaixo da cápsula */
+    /* Side Dock mobile: abrir/fechar */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     let dockTimer=null;
-    function positionDockToggle(){
-      // posições guiadas por CSS vars --topbar-h e --statusbar-h
-      // já atualizadas por setBodyTopPad()
-    }
     function openDock(){
       sideDock.classList.add('is-open');
       dockToggle.setAttribute('aria-expanded','true');
@@ -1058,8 +1081,8 @@
     }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
-    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); }, {passive:true});
-    addEventListener('resize', ()=>{ if (!isMobile()) closeDock(); }, {passive:true});
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); setFabState(); }, {passive:true});
+    addEventListener('resize', ()=>{ if (!isMobile()) closeDock(); remeasure(); }, {passive:true});
 
     /* Saiba mais toggles */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
@@ -1094,35 +1117,38 @@
       });
     }
 
-    /* State */
-    function applyLevel(level,{remember=true}={}){
-      const L = [1,2,3].includes(+level) ? +level : 1;
-      setLevelDock(L);
-      setStatusBar(L);
-      updateAll(L);
-      emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
-      if (remember) localStorage.setItem(LEVELS_KEY,String(L));
-      if (document.body.classList.contains('is-stage')) setCapsuleSection(L, currentSectionTitle);
-      remeasure();
+    /* Stage 3D — clonagem com IDs únicos */
+    const sectionOrder = sections.map(s=> s.id);
+    function uniquifyIds(root, suffix){
+      const map = new Map();
+      root.querySelectorAll('[id]').forEach(el=>{
+        const oldId = el.id;
+        const newId = oldId + '-' + suffix;
+        el.id = newId;
+        map.set(oldId, newId);
+      });
+      // Ajusta aria-controls e href="#id"
+      root.querySelectorAll('[aria-controls]').forEach(el=>{
+        const old = el.getAttribute('aria-controls');
+        if (map.has(old)) el.setAttribute('aria-controls', map.get(old));
+      });
+      root.querySelectorAll('a[href^="#"]').forEach(a=>{
+        const old = a.getAttribute('href').slice(1);
+        if (map.has(old)) a.setAttribute('href', '#'+map.get(old));
+      });
     }
-    lvl1.addEventListener('click',()=>applyLevel(1));
-    lvl2.addEventListener('click',()=>applyLevel(2));
-    lvl3.addEventListener('click',()=>applyLevel(3));
-
-    /* Desktop: Stage 3D */
-    const sectionOrder = sections.map(s=> s.id); // mantém ordem
     function buildStage(){
       stageTrack.innerHTML='';
-      sections.forEach(s=>{
+      sections.forEach((s,idx)=>{
         const card = s.querySelector('.card');
         if (!card) return;
+        const clone = card.cloneNode(true);
+        uniquifyIds(clone, 's'+idx);
         const slide=document.createElement('div'); slide.className='slide';
-        slide.appendChild(card.cloneNode(true));
+        slide.appendChild(clone);
         stageTrack.appendChild(slide);
       });
     }
-    let stageIndex=0;
     function setStageIndex(i){
       if (!inStage()) return;
       const max = stageTrack.children.length-1;
@@ -1156,6 +1182,7 @@
       document.body.classList.add('is-stage');
       stageDesktop.style.display='block';
       setStageIndex(0);
+      // Dock navega entre slides
       dockLinks.forEach(a=>{
         a.dataset.href = a.getAttribute('href');
         a.addEventListener('click', onDockClickStage);
@@ -1180,7 +1207,6 @@
     }
     btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
     btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
-    btnVerTudo.addEventListener('click', ()=> disableStage());
     addEventListener('keydown', (e)=>{
       if (!inStage()) return;
       if (['ArrowLeft','ArrowRight'].includes(e.key)){
@@ -1189,6 +1215,27 @@
         if (e.key==='ArrowRight') setStageIndex(stageIndex+1);
       }
     });
+
+    /* Estado */
+    function applyLevel(level,{remember=true}={}){
+      const L = [1,2,3].includes(+level) ? +level : 1;
+      setLevelDock(L);
+      setStatusBar(L);
+      updateAll(L);
+      emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
+      if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      if (remember) localStorage.setItem(LEVELS_KEY,String(L));
+      // Se estiver no stage, reconstrói slides para refletir conteúdo atualizado
+      if (inStage()){
+        const keep = stageIndex;
+        buildStage();
+        setStageIndex(Math.min(keep, stageMaxIndex()));
+      }
+      remeasure();
+    }
+    lvl1.addEventListener('click',()=>applyLevel(1));
+    lvl2.addEventListener('click',()=>applyLevel(2));
+    lvl3.addEventListener('click',()=>applyLevel(3));
 
     /* Init */
     function getLevelFromURL(){
@@ -1202,13 +1249,12 @@
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       setCapsuleTop(start);
       applyLevel([1,2,3].includes(start)?start:1,{remember:false});
-      // Ativa stage automático em desktop (>=1024px), com fallback seguro
       const isDesktop = matchMedia('(min-width: 1024px)').matches;
       if (isDesktop) enableStage(); else disableStage();
-      // Reagir ao resize para trocar entre stage e fluxo normal
       addEventListener('resize', ()=>{
         const desk = matchMedia('(min-width: 1024px)').matches;
-        if (desk) enableStage(); else disableStage();
+        if (desk && !inStage()) enableStage();
+        if (!desk && inStage()) disableStage();
         remeasure();
       }, {passive:true});
       remeasure();
