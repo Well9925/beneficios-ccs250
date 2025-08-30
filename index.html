@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>CCS Telecom — Benefícios</title>
-  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portal do Assinante, Faturas & PIX, VCTECH, Resumo e FAQ.">
+  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte Premium, Indique & Ganhe, Portal do Assinante, Portal de Faturas, VCTECH, Resumo e FAQ.">
   <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
   <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -26,6 +26,10 @@
 
       --art-max-h-d: clamp(160px, 28vh, 300px);
       --art-max-h-m: clamp(140px, 24vh, 220px);
+
+      /* alturas medidas via JS para posicionar FAB e Dock */
+      --topbar-h: 56px;
+      --statusbar-h: 0px;
     }
 
     *{box-sizing:border-box}
@@ -67,6 +71,16 @@
     /* Topbar/cápsula */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
+    @keyframes softPulse { 0%{ box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 10px 26px rgba(0,0,0,.38),
+        0 0 10px rgba(0,217,255,.18),
+        0 0 16px rgba(123,92,255,.12) }
+      100%{ box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 10px 26px rgba(0,0,0,.38),
+        0 0 4px rgba(0,217,255,.10),
+        0 0 8px rgba(123,92,255,.08) } }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -86,6 +100,7 @@
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
       -webkit-appearance:none; appearance:none;
+      animation: softPulse 6s ease-in-out infinite alternate; /* halo sutil, como o ATUAL */
     }
     header .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -106,7 +121,6 @@
       overflow:hidden; /* sem indicadores/scrollbars/setas */
       white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none;
     }
-    .cap-viewport::-webkit-scrollbar{ width:0; height:0; display:none }
     .track{ display:inline-block; will-change:transform }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
@@ -120,14 +134,14 @@
 
     /* Status bar (uma linha) */
     .status-bar{
-      position:fixed; top:calc(56px + env(safe-area-inset-top)); left:0; right:0; z-index:69;
+      position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:none;
       padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
     .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap; font-size:13px; line-height:1; white-space:nowrap }
-    .status-label{ display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900 }
-    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap }
+    .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900; text-align:center }
+    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
     @media (max-width:380px){ .status-cta{ padding:8px 10px } }
 
     /* Seções/cards */
@@ -145,32 +159,32 @@
     .content{ padding:16px }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
+
     .subtitle{ margin:6px 0 10px; color:var(--muted) }
 
     /* Pills e Ações — grids que mantêm 2 por linha no mobile */
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
-    .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08) }
-    .pill.hi{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border-color:transparent }
+    .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; text-align:center }
     .pill-flag{
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
-      background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center;
+      background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center; display:inline-flex; align-items:center; justify-content:center;
     }
     .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
-    .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.85 }
+    .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.9 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
     .note{ color:#a8b6d9; font-size:14px }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
-    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size: var(--btn-fs,15px) }
+    .actions.one .btn{ width:100% } /* quando só 1 botão no card, ocupa a linha */
+    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size: var(--btn-fs,15px); text-align:center }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
-    .btn.block{ width:100% }
 
-    /* Mobile: garantir 2 por linha */
+    /* Mobile: garantir 2 por linha para pílulas e botões (quando houver >1) */
     @media (max-width: 640px){
       .row.pills{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
       .actions{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
-      .actions .btn.block{ grid-column: 1 / -1 } /* botões “largos” quebram para ocupar a linha toda */
+      .actions.one{ display:block }
     }
 
     /* Saiba mais */
@@ -200,11 +214,11 @@
     .side-dock img{ width:24px; height:24px; object-fit:contain }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Header interno do dock no mobile (botão fechar no topo) */
+    /* Header do dock no mobile (botão fechar no topo) + FAB fixo abaixo da cápsula */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
-      .side-dock.is-open{ display:block; right:12px }
+      .side-dock.is-open{ display:block; right:12px; top:calc(var(--topbar-h) + var(--statusbar-h) + 12px); transform:none }
       .side-dock.is-open .dock-items{ padding-top:48px; position:relative }
       .dock-header{
         display:flex; align-items:center; justify-content:flex-end;
@@ -212,9 +226,17 @@
       }
       .btn-dock-close{
         border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-weight:900;
-        background:rgba(0,0,0,.65); color:#fff; cursor:pointer;
+        background:rgba(0,0,0,.7); color:#fff; cursor:pointer;
       }
-      .dock-fab{ position:fixed; right:12px; top:50%; transform:translateY(-50%); z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line); background:rgba(16,18,24,.7); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45) }
+      .dock-fab{
+        position:fixed; right:12px; z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
+        background:rgba(16,18,24,.78); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
+        /* abaixo da cápsula, ajustado por JS via --topbar-h e --statusbar-h */
+        top:calc(var(--topbar-h) + var(--statusbar-h) + 8px);
+        transform:none;
+      }
+      /* ao abrir o dock, escondo o FAB para não sobrepor itens */
+      .side-dock.is-open ~ .dock-fab{ display:none }
       .dock-fab svg{ width:22px; height:22px }
     }
 
@@ -229,9 +251,11 @@
     .level-dock .btn-level[aria-pressed="true"]{
       background:linear-gradient(90deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
       box-shadow:
-        0 0 0 2px rgba(255,255,255,.08) inset,
-        0 0 18px rgba(0,217,255,.25),
-        0 0 26px rgba(123,92,255,.20);
+        0 0 0 2px rgba(255,255,255,.10) inset,
+        0 0 18px rgba(0,217,255,.30),
+        0 0 26px rgba(123,92,255,.25);
+      transform: scale(1.02);
+      outline:2px solid transparent; /* reserva */
     }
     /* “ATUAL” com pulso/halo colorido */
     @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.45) } 70%{ transform:scale(1); box-shadow:0 0 0 14px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
@@ -244,8 +268,11 @@
     .level-dock .btn-level[data-level="1"] .label-actual{ display:block }
     .level-dock .btn-level:not([data-level="1"]) .label-actual{ display:none }
 
-    /* FAB */
-    .fab{ position:fixed; left:16px; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line); background:rgba(16,18,24,.75); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45) }
+    /* FAB ao lado do Level Dock (posição por JS) */
+    .fab{
+      position:fixed; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
+      background:rgba(16,18,24,.78); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45)
+    }
     .fab svg{ width:22px; height:22px }
 
     /* Resumo grid */
@@ -265,7 +292,7 @@
 
     /* Desktop “stage 3D” — só em telas largas */
     @media (min-width: 1024px){
-      body.is-stage main{ display:none } /* escondo o fluxo normal */
+      body.is-stage main{ display:none } /* escondo o fluxo normal quando stage ativo */
       .stage-desktop{ display:block }
     }
     .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
@@ -398,7 +425,7 @@
           </div>
 
           <div class="actions" id="cc-actions">
-            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar benefícios</a>
+            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar vouchers</a>
             <button class="btn btn-copy" id="copyEmail" type="button" aria-label="Copiar e-mail do Conecta Clube">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
               Copiar e‑mail
@@ -440,7 +467,7 @@
             </div>
           </div>
 
-          <div class="actions">
+          <div class="actions one">
             <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
           </div>
         </div>
@@ -476,22 +503,22 @@
             </div>
           </div>
 
-          <div class="actions">
+          <div class="actions one">
             <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Suporte -->
-    <section class="section" id="s-suporte" data-title="Suporte ao Assinante">
+    <!-- Suporte Premium -->
+    <section class="section" id="s-suporte" data-title="Suporte Premium">
       <div class="card">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>Suporte ao Assinante</h2>
+            <h2>Suporte Premium</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-suporte">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -513,14 +540,14 @@
             </div>
           </div>
 
-          <div class="actions" id="sup-actions">
+          <div class="actions one" id="sup-actions">
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Solicitar suporte</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Demais seções (Indique, Portal, Faturas, VCTECH, Resumo, FAQ) permanecem iguais ao anterior -->
+    <!-- Indique & Ganhe (mantém 2+ botões) -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card">
         <div class="media"><div class="frame">
@@ -535,6 +562,7 @@
             </button>
           </div>
           <p class="subtitle">Ganhe até 100% na próxima fatura indicando amigos.</p>
+
           <div id="more-indique" class="more" role="region">
             <div class="more-inner">
               <div class="facts" id="indique-facts">
@@ -543,6 +571,7 @@
               </div>
             </div>
           </div>
+
           <div class="actions">
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar Plano 250</a>
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar Plano 450</a>
@@ -552,39 +581,55 @@
       </div>
     </section>
 
+    <!-- Portal do Assinante -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
-      <div class="card"><div class="media"><div class="frame">
-        <img class="art-img" alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
-      </div></div><div class="content">
-        <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
-        <p class="subtitle">Tenha o controle da sua assinatura onde você estiver!</p>
-        <div class="actions">
-          <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/">Acessar Portal</a>
-          <a class="btn" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Faturas e PIX</a>
+      <div class="card">
+        <div class="media"><div class="frame">
+          <img class="art-img" alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+        </div></div>
+        <div class="content">
+          <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
+          <p class="subtitle">Tenha o controle da sua assinatura onde você estiver!</p>
+          <div class="actions one">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/">Acessar Portal</a>
+          </div>
         </div>
-      </div></div>
+      </div>
     </section>
 
-    <section class="section" id="s-faturas" data-title="Faturas e PIX">
-      <div class="card"><div class="media"><div class="frame">
-        <img class="art-img" alt="Faturas e PIX" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
-      </div></div><div class="content">
-        <div class="title"><h2>Faturas e PIX</h2><span aria-hidden="true"></span></div>
-        <p class="subtitle">Acesso rápido, sem login.</p>
-        <div class="actions"><a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Abrir ccs.pix.7az.com.br</a></div>
-      </div></div>
+    <!-- Portal de Faturas -->
+    <section class="section" id="s-faturas" data-title="Portal de Faturas">
+      <div class="card">
+        <div class="media"><div class="frame">
+          <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+        </div></div>
+        <div class="content">
+          <div class="title"><h2>Portal de Faturas</h2><span aria-hidden="true"></span></div>
+          <p class="subtitle">Acesso rápido, sem login.</p>
+          <div class="actions one">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- VCTECH -->
     <section class="section" id="s-vctech" data-title="VCTECH">
-      <div class="card"><div class="media"><div class="frame">
-        <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
-      </div></div><div class="content">
-        <div class="title"><h2>VCTECH</h2><span aria-hidden="true"></span></div>
-        <p class="subtitle">Representante Comercial CCS Telecom.</p>
-        <div class="actions"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20VCTECH.">Falar com VCTECH</a></div>
-      </div></div>
+      <div class="card">
+        <div class="media"><div class="frame">
+          <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
+        </div></div>
+        <div class="content">
+          <div class="title"><h2>VCTECH</h2><span aria-hidden="true"></span></div>
+          <p class="subtitle">Representante Comercial CCS Telecom.</p>
+          <div class="actions one">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20VCTECH.">Falar com VCTECH</a>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- Resumo -->
     <section class="section" id="s-resumo" data-title="Resumo">
       <div class="summary">
         <h3 class="gtitle">Resumo dos Benefícios</h3>
@@ -595,12 +640,13 @@
           <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async"></div><div class="gtxt">Suporte Premium</div></a>
           <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
           <a class="gcard" href="#s-portal"><div class="gimg"><img alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal do Assinante</div></a>
-          <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Faturas e PIX" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Faturas e PIX</div></a>
+          <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal de Faturas</div></a>
           <a class="gcard" href="#s-vctech"><div class="gimg"><img alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async"></div><div class="gtxt">VCTECH</div></a>
         </div>
       </div>
     </section>
 
+    <!-- FAQ -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
@@ -618,29 +664,29 @@
       <a href="#s-conecta" title="Conecta Clube"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt=""></a>
       <a href="#s-ccsplay" title="CCS PLAY + CCS TV"><img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt=""></a>
       <a href="#s-skeelo"  title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
-      <a href="#s-suporte"  title="Suporte"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
+      <a href="#s-suporte"  title="Suporte Premium"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
       <a href="#s-indique"  title="Indique & Ganhe"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt=""></a>
       <a href="#s-portal"   title="Portal do Assinante"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
-      <a href="#s-faturas"  title="Faturas e PIX"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
+      <a href="#s-faturas"  title="Portal de Faturas"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
-  <!-- Toggle do Side Dock no mobile -->
+  <!-- Toggle do Side Dock (mobile): logo abaixo da cápsula, canto direito -->
   <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
   <!-- Level Dock (rodapé) -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
-    <div class="wrap">
+    <div class="wrap" id="levelDockWrap">
       <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true"><span class="label-actual">ATUAL</span>Nível 1</button>
       <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false">Nível 2</button>
       <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false">Nível 3</button>
     </div>
   </nav>
 
-  <!-- FAB -->
-  <button class="fab" id="fab" aria-label="Ir para o final" style="bottom:calc(88px + env(safe-area-inset-bottom))">
+  <!-- FAB (ao lado do Level Dock) -->
+  <button class="fab" id="fab" aria-label="Descer" title="Descer">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
 
@@ -779,6 +825,7 @@
     const lvlBtns=[lvl1,lvl2,lvl3];
 
     const fab = document.getElementById('fab');
+    const levelDockWrap = document.getElementById('levelDockWrap');
 
     /* Conecta (pílulas e facts) */
     const pillVoucher = document.getElementById('pill-cc-voucher');
@@ -813,15 +860,21 @@
 
     const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    /* Helpers de layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
+      document.documentElement.style.setProperty('--topbar-h', hTop + 'px');
+      document.documentElement.style.setProperty('--statusbar-h', hStatus + 'px');
       document.body.style.paddingTop = (hTop + hStatus + 8) + 'px';
     }
     function placeFab(){
-      const ldRect = document.querySelector('.level-dock .wrap')?.getBoundingClientRect();
+      const ldRect = levelDockWrap?.getBoundingClientRect();
+      const vw = window.innerWidth || document.documentElement.clientWidth;
       const bottom = (ldRect?.height||64) + 16;
+      const left = ldRect ? Math.min(vw - 60, Math.max(8, ldRect.right + 12)) : 16;
       fab.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
+      fab.style.left = left + 'px';
     }
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
@@ -845,6 +898,8 @@
       capRight.textContent = name || '';
       fitCapsule();
     }
+
+    function remeasure(){ setBodyTopPad(); fitCapsule(); placeFab(); updateFabIcon(); positionDockToggle(); }
 
     /* Render facts helper */
     function renderFacts(container, facts){
@@ -912,6 +967,7 @@
         statusBar.style.display='block';
       }
       setBodyTopPad();
+      positionDockToggle();
     }
 
     /* Level Dock */
@@ -948,30 +1004,48 @@
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB subir/descer */
-    function nearTop(){ return (window.scrollY||document.documentElement.scrollTop||0) < 120; }
+    /* FAB: descer/subir (fluxo normal) ou próximo/anterior (stage) */
+    function inStage(){ return document.body.classList.contains('is-stage'); }
+    function stageMaxIndex(){ return stageTrack.children.length - 1; }
+    function nearTop(){ return inStage() ? (stageIndex===0) : ((window.scrollY||document.documentElement.scrollTop||0) < 120); }
+    function nearBottom(){
+      if (inStage()) return stageIndex>=stageMaxIndex();
+      const el = document.scrollingElement || document.documentElement || document.body;
+      return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 120);
+    }
     function updateFabIcon(){
-      if (nearTop()){
-        fab.setAttribute('aria-label','Ir para o final');
-        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
-      } else {
-        fab.setAttribute('aria-label','Ir para o topo');
+      if (nearBottom()){
+        fab.setAttribute('aria-label', inStage() ? 'Voltar' : 'Ir para o topo');
+        fab.title = fab.getAttribute('aria-label');
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+      } else {
+        fab.setAttribute('aria-label', inStage() ? 'Próximo' : 'Ir para o final');
+        fab.title = fab.getAttribute('aria-label');
+        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
       }
     }
     fab.addEventListener('click',()=>{
-      if (nearTop()){
+      if (inStage()){
+        if (nearBottom()) setStageIndex(stageIndex-1); else setStageIndex(stageIndex+1);
+        updateFabIcon();
+        return;
+      }
+      if (nearBottom()){
+        window.scrollTo({ top: 0, behavior:'smooth' });
+      } else {
         const el = document.scrollingElement || document.documentElement || document.body;
         const maxY = (el.scrollHeight||document.body.scrollHeight) - (window.innerHeight||document.documentElement.clientHeight);
         window.scrollTo({ top: maxY, behavior:'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior:'smooth' });
       }
     });
 
-    /* Side Dock mobile: abrir/fechar sem cobrir ícones */
+    /* Side Dock mobile: abrir/fechar sem cobrir ícones e abaixo da cápsula */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     let dockTimer=null;
+    function positionDockToggle(){
+      // posições guiadas por CSS vars --topbar-h e --statusbar-h
+      // já atualizadas por setBodyTopPad()
+    }
     function openDock(){
       sideDock.classList.add('is-open');
       dockToggle.setAttribute('aria-expanded','true');
@@ -1030,6 +1104,7 @@
       if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
       if (document.body.classList.contains('is-stage')) setCapsuleSection(L, currentSectionTitle);
+      remeasure();
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
@@ -1040,13 +1115,16 @@
     function buildStage(){
       stageTrack.innerHTML='';
       sections.forEach(s=>{
+        const card = s.querySelector('.card');
+        if (!card) return;
         const slide=document.createElement('div'); slide.className='slide';
-        const clone = s.querySelector('.card').cloneNode(true);
-        slide.appendChild(clone); stageTrack.appendChild(slide);
+        slide.appendChild(card.cloneNode(true));
+        stageTrack.appendChild(slide);
       });
     }
     let stageIndex=0;
-    function setStageIndex(i,{animate=true}={}){
+    function setStageIndex(i){
+      if (!inStage()) return;
       const max = stageTrack.children.length-1;
       stageIndex = Math.max(0, Math.min(i, max));
       const slides=[...stageTrack.children];
@@ -1070,25 +1148,28 @@
       setActiveDock(sectionOrder[stageIndex]);
       btnPrev.disabled = (stageIndex===0);
       btnNext.disabled = (stageIndex===max);
+      updateFabIcon();
     }
     function enableStage(){
-      if (document.body.classList.contains('is-stage')) return;
+      buildStage();
+      if (stageTrack.children.length===0){ disableStage(); return; }
       document.body.classList.add('is-stage');
-      buildStage(); setStageIndex(stageIndex,{animate:false});
-      // clique no dock troca de slide em vez de rolar
+      stageDesktop.style.display='block';
+      setStageIndex(0);
       dockLinks.forEach(a=>{
         a.dataset.href = a.getAttribute('href');
         a.addEventListener('click', onDockClickStage);
       });
+      updateFabIcon();
     }
     function disableStage(){
-      if (!document.body.classList.contains('is-stage')) return;
       document.body.classList.remove('is-stage');
-      // restaura dock
+      stageDesktop.style.display='none';
       dockLinks.forEach(a=>{
         a.removeEventListener('click', onDockClickStage);
         if (a.dataset.href) a.setAttribute('href', a.dataset.href);
       });
+      updateFabIcon();
     }
     function onDockClickStage(ev){
       ev.preventDefault();
@@ -1101,16 +1182,13 @@
     btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
     btnVerTudo.addEventListener('click', ()=> disableStage());
     addEventListener('keydown', (e)=>{
-      if (!document.body.classList.contains('is-stage')) return;
+      if (!inStage()) return;
       if (['ArrowLeft','ArrowRight'].includes(e.key)){
         e.preventDefault();
         if (e.key==='ArrowLeft') setStageIndex(stageIndex-1);
         if (e.key==='ArrowRight') setStageIndex(stageIndex+1);
       }
     });
-
-    /* Helpers */
-    function remeasure(){ setBodyTopPad(); placeFab(); updateFabIcon(); fitCapsule(); }
 
     /* Init */
     function getLevelFromURL(){
@@ -1124,25 +1202,24 @@
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       setCapsuleTop(start);
       applyLevel([1,2,3].includes(start)?start:1,{remember:false});
-      remeasure();
-      setTimeout(remeasure, 80);
-
-      // Ativa stage automático em desktop (>=1024px)
+      // Ativa stage automático em desktop (>=1024px), com fallback seguro
       const isDesktop = matchMedia('(min-width: 1024px)').matches;
-      if (isDesktop) enableStage();
-
+      if (isDesktop) enableStage(); else disableStage();
       // Reagir ao resize para trocar entre stage e fluxo normal
       addEventListener('resize', ()=>{
         const desk = matchMedia('(min-width: 1024px)').matches;
         if (desk) enableStage(); else disableStage();
+        remeasure();
       }, {passive:true});
+      remeasure();
+      setTimeout(remeasure, 80);
     }
-    init();
-
-    addEventListener('resize', remeasure, {passive:true});
-    addEventListener('orientationchange', remeasure);
     addEventListener('pageshow', remeasure);
+    addEventListener('orientationchange', remeasure);
+    addEventListener('resize', remeasure, {passive:true});
     addEventListener('scroll', ()=>{ updateFabIcon(); }, {passive:true});
+
+    init();
   })();
   </script>
 </body>
