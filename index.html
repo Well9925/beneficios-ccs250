@@ -83,6 +83,7 @@
       backdrop-filter: blur(10px);
       font-weight:900; line-height:1; font-size: clamp(12.5px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
+      -webkit-appearance:none; appearance:none;
     }
     /* Borda com gradiente animado + brilho suave (sem “setinha”) */
     header .capsule::before{
@@ -99,11 +100,17 @@
         radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.22), transparent 60%);
       filter: blur(16px); mix-blend-mode:screen; pointer-events:none; z-index:0;
     }
-    /* Remove qualquer “glint/seta” interna */
+    /* Remove qualquer “glint/seta” interna e oculta scroll/indicadores */
     .capsule .glint{ display:none !important }
-
-    .cap-viewport{ position:relative; z-index:2; display:block; max-width:100%; overflow-x:hidden; white-space:nowrap }
-    .track{ display:inline-block }
+    .cap-viewport{
+      position:relative; display:block; max-width:100%;
+      overflow:clip; /* evita indicadores/scrollbars */
+      white-space:nowrap;
+      -ms-overflow-style:none; scrollbar-width:none;
+      pointer-events:none; /* evita scroll horizontal por gesto */
+    }
+    .cap-viewport::-webkit-scrollbar{ width:0; height:0; display:none }
+    .track{ display:inline-block; will-change:transform }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
@@ -114,17 +121,28 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Status bar global (aparece só em N2/N3) */
+    /* Status bar global (aparece só em N2/N3) — linha única */
     .status-bar{
       position:fixed; top:calc(56px + env(safe-area-inset-top)); left:0; right:0; z-index:65;
       display:none; /* toggle via JS */
-      padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
+      padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
-    .status-wrap{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap }
-    .status-pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900 }
-    .status-pill.hi{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
-    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:10px 14px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap }
+    .status-wrap{
+      display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap;
+      font-size:13px; line-height:1; white-space:nowrap;
+    }
+    .status-label{
+      display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900;
+    }
+    .status-cta{
+      border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900;
+      background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap;
+    }
+    @media (max-width:380px){
+      .status-cta{ padding:8px 10px }
+    }
 
     /* Seções/cards */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
@@ -185,6 +203,14 @@
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
+
+    /* Mobile: Side Dock só quando aberto, para não cobrir conteúdo */
+    @media (max-width: 880px){
+      .side-dock{ display:none }
+      .side-dock.is-open{ display:block; right:12px }
+      .dock-fab{ position:fixed; right:12px; top:50%; transform:translateY(-50%); z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line); background:rgba(16,18,24,.7); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45) }
+      .dock-fab svg{ width:22px; height:22px }
+    }
 
     /* Level Dock (rodapé) */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
@@ -264,11 +290,10 @@
     </div>
   </header>
 
-  <!-- Status bar global (mostra só em N2/N3) -->
+  <!-- Status bar global (N2/N3): uma linha -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
     <div class="status-wrap">
-      <span class="status-pill" id="st-level">Visualizando: Nível 2</span>
-      <span class="status-pill hi" id="st-plan">Plano necessário: 450 MB</span>
+      <span class="status-label" id="st-need">Necessário</span>
       <a class="status-cta" id="st-cta" href="#" target="_blank" rel="noopener">Atualizar para 450 MB</a>
     </div>
   </div>
@@ -582,7 +607,7 @@
   </main>
 
   <!-- Side Dock (direita) -->
-  <nav class="side-dock" aria-label="Atalhos">
+  <nav class="side-dock" aria-label="Atalhos" id="sideDock">
     <div class="dock-items">
       <a href="#s-conecta" title="Conecta Clube"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt=""></a>
       <a href="#s-ccsplay" title="CCS PLAY + CCS TV"><img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt=""></a>
@@ -594,6 +619,10 @@
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
+  <!-- Toggle do Side Dock no mobile -->
+  <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
 
   <!-- Level Dock (rodapé) -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
@@ -720,8 +749,6 @@
     /* Seletores */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
-    const stLevel = document.getElementById('st-level');
-    const stPlan = document.getElementById('st-plan');
     const stCta = document.getElementById('st-cta');
 
     const wrap = document.querySelector('.topbar .wrap');
@@ -733,7 +760,8 @@
     const logoL = document.querySelector('.logo-ccs');
     const logoR = document.querySelector('.logo-vctech');
 
-    const sideDock = document.querySelector('.side-dock');
+    const sideDock = document.getElementById('sideDock');
+    const dockToggle = document.getElementById('dockToggle');
     const dockLinks=[...document.querySelectorAll('.side-dock a')];
     const sections=[...document.querySelectorAll('main .section')];
 
@@ -792,15 +820,13 @@
       const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
       capsule.style.maxWidth = available + 'px';
       capTrack.style.transform = '';
-      capViewport.dataset.scrollable = 'false';
-      capsule.style.fontSize = '';
       const padX = parseFloat(getComputedStyle(capsule).paddingLeft)+parseFloat(getComputedStyle(capsule).paddingRight);
       const target = Math.max(80, available - padX - 4);
       let fs = parseFloat(getComputedStyle(capsule).fontSize)||14, tried=0, minFS = 11.5;
       while (capTrack.scrollWidth > target && fs > minFS && tried < 20){ fs-=0.5; capsule.style.fontSize=fs+'px'; tried++; }
       if (!prefersReduced && capTrack.scrollWidth > target){
-        capViewport.dataset.scrollable = 'true';
-        capTrack.animate([{transform:'translateX(0)'},{transform:`translateX(${-Math.min(160, capTrack.scrollWidth - target)}px)`}], { duration: 7000, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
+        const delta = Math.min(160, capTrack.scrollWidth - target);
+        capTrack.animate([{transform:'translateX(0)'},{transform:`translateX(${-delta}px)`}], { duration: 7000, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
       }
     }
     function setCapsuleTop(level){
@@ -886,14 +912,12 @@
       updateSup(level);
     }
 
-    /* Status bar global */
+    /* Status bar global (linha única) */
     function setStatusBar(level){
       if (level===1){
         statusBar.style.display='none';
       } else {
         const up = UPGRADE[level];
-        stLevel.textContent = `Visualizando: Nível ${level}`;
-        stPlan.textContent = `Plano necessário: ${up.plan}`;
         stCta.textContent = up.label;
         stCta.href = up.href;
         statusBar.style.display='block';
@@ -954,6 +978,27 @@
         window.scrollTo({ top: 0, behavior:'smooth' });
       }
     });
+
+    /* Mobile: toggle do Side Dock (evita cobrir conteúdo) */
+    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
+    let dockTimer=null;
+    function openDock(){
+      sideDock.classList.add('is-open');
+      dockToggle.setAttribute('aria-expanded','true');
+      if (dockTimer) clearTimeout(dockTimer);
+      dockTimer = setTimeout(()=> closeDock(), 3000);
+    }
+    function closeDock(){
+      sideDock.classList.remove('is-open');
+      dockToggle.setAttribute('aria-expanded','false');
+    }
+    dockToggle.addEventListener('click', ()=>{
+      if (!isMobile()) return; // só age no mobile
+      if (sideDock.classList.contains('is-open')) closeDock(); else openDock();
+    });
+    // fecha ao rolar
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); }, {passive:true});
+    addEventListener('resize', ()=>{ if (!isMobile()) closeDock(); }, {passive:true});
 
     /* Saiba mais toggles */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
