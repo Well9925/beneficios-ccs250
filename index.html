@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>CCS Telecom — Benefícios</title>
-  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portal do Assinante, Portal de Faturas, VCTECH, Resumo e FAQ.">
+  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte ao Assinante, Indique & Ganhe, Portal do Assinante, Faturas & PIX, VCTECH, Resumo e FAQ.">
   <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
   <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -50,7 +50,7 @@
       padding-bottom:calc(140px + env(safe-area-inset-bottom));
     }
 
-    /* FX */
+    /* FX de fundo */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -74,7 +74,7 @@
     @keyframes glowPulse { 0%,100%{ opacity:.5 } 50%{ opacity:.95 } }
     @keyframes sweep { 0%{ transform:translateX(-120%)} 100%{ transform:translateX(120%)} }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
-    @keyframes softPulse { 0%,100%{ opacity:.25; } 50%{ opacity:.55; } }
+    @keyframes softPulse { 0%,100%{ opacity:.25 } 50%{ opacity:.55 } }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -114,9 +114,7 @@
       background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.88) 50%, transparent 100%);
       filter: blur(12px); pointer-events:none; transform:translateX(-120%); animation:sweep 2.8s ease-in-out infinite; z-index:1; opacity:.9;
     }
-    .cap-viewport{ position:relative; z-index:2; display:block; max-width:100%; overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none; -webkit-overflow-scrolling:touch }
-    .cap-viewport::-webkit-scrollbar{ display:none }
-    .track{ display:none; will-change:transform }
+    .cap-viewport{ position:relative; z-index:2; display:block; max-width:100%; overflow-x:hidden; white-space:nowrap; }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
@@ -126,11 +124,7 @@
     }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    .topbar:not(.is-condensed) .track.t-full{ display:inline-block }
-    .topbar.is-condensed .track.t-short{ display:inline-block }
-    .topbar.is-condensed .capsule{ padding:6px 12px; font-size: clamp(12px, 1.9vw, 14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 6px 16px rgba(0,0,0,.28) }
-
-    @media (max-width:420px){ .logo-ccs,.logo-vctech{ width:44px; height:44px } .topbar .wrap{ gap:6px } }
+    .track{ display:inline-block }
 
     /* Seções/cards */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
@@ -161,7 +155,7 @@
     .btn.cta2{ background:linear-gradient(90deg,var(--planA),var(--planB)); border-color:transparent; color:#0b0d12 }
     .btn.block{ width:100% }
 
-    /* Saiba mais (chip) */
+    /* Saiba mais */
     .chip-more{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer; animation:chipPulse 1.8s ease-in-out infinite }
     .chip-more .ico{ width:16px; height:16px }
     @keyframes chipPulse{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.10)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
@@ -178,6 +172,9 @@
     .fact .txt{ color:#dfe7ff }
     .fact .txt strong{ color:#fff }
 
+    a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
+    a.inline-link:hover{ color:#ffffff; text-decoration:underline }
+
     /* Quick Dock */
     .quick-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:80 }
     .quick-dock .dock-items{ display:flex; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
@@ -186,13 +183,8 @@
     .quick-dock a.is-active{ outline:2px solid var(--focus) }
 
     /* FAB */
-    .fab{ position:fixed; right:16px; bottom:88px; z-index:85; width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:rgba(16,18,24,.65); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.35) }
+    .fab{ position:fixed; right:16px; bottom:calc(88px + env(safe-area-inset-bottom)); z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line); background:rgba(16,18,24,.75); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45) }
     .fab svg{ width:22px; height:22px }
-
-    /* FAQ */
-    details.faq{ margin:8px 0; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.08) }
-    details.faq > summary{ cursor:pointer; padding:10px 12px; font-weight:900 }
-    details.faq > div{ padding:8px 12px 12px }
 
     /* Foco */
     a:focus-visible,button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:10px }
@@ -210,10 +202,8 @@
 
     /* Rótulo ATUAL fora da pílula Nível 1 */
     .label-actual{
-      position:absolute; z-index:2;
-      top:4px; left:12px;
-      font-size:11px; font-weight:900;
-      padding:3px 8px; border-radius:999px;
+      position:absolute; z-index:2; top:4px; left:12px;
+      font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
       color:#0b0d12; background:rgba(255,255,255,.85);
       border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 8px rgba(0,0,0,.25)
     }
@@ -227,20 +217,19 @@
     /* 3 botões lado a lado SEMPRE */
     #s-conecta .segmented{ display:grid; gap:8px; grid-template-columns:repeat(3, minmax(0,1fr)) }
 
-    /* Botões de nível */
+    /* Botões de nível + magia */
     #s-conecta .seg-btn{
       position:relative; width:100%; min-height:50px;
       border:1px solid var(--line); border-radius:999px;
       padding: var(--seg-py) var(--seg-px);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap;
-      transition:background .12s ease, border-color .12s ease; font-size:var(--seg-fs);
-      overflow:hidden;
+      transition:background .12s ease, border-color .12s ease; font-size:var(--seg-fs); overflow:hidden;
     }
     #s-conecta .seg-btn[aria-pressed="true"]{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.22) }
     #s-conecta .seg-btn .dot{ width:10px;height:10px;border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)) }
 
-    /* “Magia” do Nível 1 (is-current) — 25% mais suave */
+    /* Nível 1 com magia (25% mais suave) */
     #s-conecta .seg-btn.is-current{ background:rgba(255,255,255,.10); border-color:transparent }
     #s-conecta .seg-btn.is-current::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:999px;
@@ -258,7 +247,7 @@
       filter: blur(12px); mix-blend-mode:screen; animation:softPulse 2.8s ease-in-out infinite; pointer-events:none;
     }
 
-    /* Pulso suave no botão selecionado (qualquer nível) */
+    /* Pulso no botão selecionado (2/3) */
     #s-conecta .seg-btn[aria-pressed="true"]:not(.is-current)::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:999px;
       background:linear-gradient(90deg, var(--levelA), var(--planB));
@@ -270,39 +259,34 @@
       background: radial-gradient(140% 100% at 50% 50%, rgba(0,255,198,.18), transparent 60%);
       filter: blur(10px); mix-blend-mode:screen; animation:softPulse 2.8s ease-in-out infinite; pointer-events:none;
     }
-
     @media (prefers-reduced-motion:reduce){
       #s-conecta .seg-btn.is-current::before,
       #s-conecta .seg-btn.is-current::after,
       #s-conecta .seg-btn[aria-pressed="true"]::before,
-      #s-conecta .seg-btn[aria-pressed="true"]::after,
-      header[data-style="aurora"] .capsule::before,
-      header[data-glow="magic"] .capsule::after,
-      header[data-glow="magic"] .capsule .glint { animation:none }
+      #s-conecta .seg-btn[aria-pressed="true"]::after { animation:none }
     }
 
     .cc-viewing{ margin-top:8px; color:#cfe0ff; font-weight:800 }
-    .plan-pill{ display:none; align-items:center; gap:8px; margin:6px 0 0; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900 }
-    .plan-pill.show{ display:inline-flex }
 
-    /* Pílulas de benefícios (lado a lado) */
+    /* Linha de upgrade compacta (sem redundância) */
+    .upgrade-row{ display:none; gap:10px; margin:8px 0 0; align-items:center; flex-wrap:wrap }
+    .upgrade-row.show{ display:flex }
+    .need-badge{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.06); font-weight:900; font-size:12.5px; color:#eaf3ff }
+    .need-note{ width:100%; font-size:12.5px; color:#cfe0ff }
+    .btn-upgrade{ --btn-fs:15px }
+
+    /* Pílulas de benefícios */
     .cc-pills{ display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:10px 0 }
     .cc-pills > *{ min-width:0; max-width:100% }
-
     .dot-magic{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg, var(--levelA), var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); display:inline-block; vertical-align:middle; flex:0 0 auto }
 
     .pill-voucher{
       display:flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px;
-      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0b0b; border:0; font-weight:900; min-height:var(--pill-min-h);
+      background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d0b; border:0; font-weight:900; min-height:var(--pill-min-h);
       font-size:var(--pill-fs); max-width:100%; overflow:hidden;
     }
-    .pill-voucher .text{
-      display:inline; min-width:0; max-width:100%;
-      white-space:nowrap; /* começo: 1 linha */
-    }
-    .pill-voucher.allow-wrap .text{
-      white-space:normal; overflow-wrap:anywhere; word-break:normal; text-wrap:balance;
-    }
+    .pill-voucher .text{ display:inline; min-width:0; max-width:100%; white-space:nowrap }
+    .pill-voucher.allow-wrap .text{ white-space:normal; overflow-wrap:anywhere; word-break:normal; text-wrap:balance }
 
     .pill-premium{
       display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:999px; line-height:1.25; font-size:var(--pill-fs); min-height:var(--pill-min-h);
@@ -351,14 +335,11 @@
     <div class="wrap">
       <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
-        <div class="capsule" role="group" aria-label="Nível e plano">
+        <div class="capsule" role="group" aria-label="Nível e seção atual">
           <span class="glint" aria-hidden="true"></span>
-          <div class="cap-viewport" id="capViewport" data-scrollable="false">
-            <div class="track t-full" id="trackFull">
-              <span class="txt"><span class="label-left">Benefícios Nível 1</span><span class="dot-mid" aria-hidden="true"></span><span class="label-right">Plano 250 MB</span></span>
-            </div>
-            <div class="track t-short" id="trackShort" aria-hidden="true">
-              <span class="txt"><span class="label-left">Nível 1</span><span class="dot-mid" aria-hidden="true"></span><span class="label-right">250 MB</span></span>
+          <div class="cap-viewport" id="capViewport">
+            <div class="track" id="capTrack">
+              <span class="txt"><span id="capLeft">Nível 1</span><span class="dot-mid" aria-hidden="true"></span><span id="capRight">Conecta Clube</span></span>
             </div>
           </div>
         </div>
@@ -394,29 +375,31 @@
 
             <div class="segmented" id="segmented" role="group" aria-label="Selecionar nível para visualizar">
               <button type="button" id="seg-l1" data-level="1" class="seg-btn is-current" aria-pressed="true">
-                <span class="dot" aria-hidden="true"></span>
-                <span>Nível 1</span>
+                <span class="dot" aria-hidden="true"></span><span>Nível 1</span>
               </button>
               <button type="button" id="seg-l2" data-level="2" class="seg-btn" aria-pressed="false">
-                <span class="dot" aria-hidden="true"></span>
-                <span>Nível 2</span>
+                <span class="dot" aria-hidden="true"></span><span>Nível 2</span>
               </button>
               <button type="button" id="seg-l3" data-level="3" class="seg-btn" aria-pressed="false">
-                <span class="dot" aria-hidden="true"></span>
-                <span>Nível 3</span>
+                <span class="dot" aria-hidden="true"></span><span>Nível 3</span>
               </button>
             </div>
 
             <div id="cc-viewing" class="cc-viewing" aria-live="polite">Visualizando: Nível 1</div>
 
-            <div class="plan-pill" id="cc-plan-pill">Plano necessário: <strong id="cc-plan-text" style="margin-left:6px">—</strong></div>
+            <!-- Linha de upgrade (apenas N2/N3) -->
+            <div id="upgradeRow" class="upgrade-row" aria-live="polite">
+              <span class="need-badge" id="needBadge">Necessário</span>
+              <a class="btn cta2 btn-upgrade" id="cc-upgrade" href="#" target="_blank" rel="noopener">Atualizar</a>
+              <div class="need-note" id="needNote">Necessário para o Nível 2</div>
+            </div>
           </div>
 
           <div class="cc-dyn" id="cc-dyn">
             <div class="cc-swap" id="cc-swap" role="region" aria-live="polite">
 
               <div class="cc-pills" id="cc-pills">
-                <!-- Voucher: dot no início, com quebra controlada -->
+                <!-- Voucher -->
                 <span class="pill-voucher" id="cc-pill-main" aria-label="Vouchers por período">
                   <span class="dot-magic" aria-hidden="true"></span>
                   <span id="cc-voucher-text" class="text">1 voucher a cada 90 dias</span>
@@ -438,8 +421,7 @@
               </div>
 
               <div class="actions is-level1" id="cc-actions">
-                <a class="btn cta2 btn-upgrade" id="cc-upgrade" href="#" style="display:none">Atualizar</a>
-                <a class="btn cta btn-email" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano">Enviar e‑mail agora</a>
+                <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar benefícios</a>
                 <button class="btn btn-copy" id="copyEmail" type="button" aria-label="Copiar e-mail do Conecta Clube">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
                   Copiar e‑mail
@@ -603,6 +585,39 @@
       </div>
     </section>
 
+    <!-- Portal do Assinante -->
+    <section class="section" id="s-portal" data-title="Portal do Assinante">
+      <div class="card">
+        <div class="media"><div class="frame">
+          <img class="art-img" alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+        </div></div>
+        <div class="content">
+          <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
+          <p class="subtitle">Acesse seus dados, serviços e contratos.</p>
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/">Acessar Portal</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Faturas e PIX</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Faturas e PIX -->
+    <section class="section" id="s-faturas" data-title="Faturas e PIX">
+      <div class="card">
+        <div class="media"><div class="frame">
+          <img class="art-img" alt="Faturas e PIX" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+        </div></div>
+        <div class="content">
+          <div class="title"><h2>Faturas e PIX</h2><span aria-hidden="true"></span></div>
+          <p class="subtitle">Pague online com CPF (sem senha).</p>
+          <div class="actions">
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Abrir ccs.pix.7az.com.br</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- VCTECH -->
     <section class="section" id="s-vctech" data-title="VCTECH">
       <div class="card">
@@ -619,7 +634,7 @@
       </div>
     </section>
 
-    <!-- Resumo -->
+    <!-- Resumo (duas colunas) -->
     <section class="section" id="s-resumo" data-title="Resumo dos Benefícios">
       <div class="summary">
         <h3 class="gtitle">Resumo dos Benefícios</h3>
@@ -629,8 +644,9 @@
           <a class="gcard" href="#s-skeelo"><div class="gimg"><img alt="Skeelo" src="https://skeelo.com/img/logos/skeelo/icon.svg" loading="lazy" decoding="async"></div><div class="gtxt">Skeelo</div></a>
           <a class="gcard" href="#s-suporte"><div class="gimg"><img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async"></div><div class="gtxt">Suporte Premium</div></a>
           <a class="gcard" href="#s-indique"><div class="gimg"><img alt="Indique &amp; Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async"></div><div class="gtxt">Indique &amp; Ganhe</div></a>
+          <a class="gcard" href="#s-portal"><div class="gimg"><img alt="Portal do Assinante" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal do Assinante</div></a>
+          <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Faturas e PIX" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Faturas e PIX</div></a>
           <a class="gcard" href="#s-vctech"><div class="gimg"><img alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async"></div><div class="gtxt">VCTECH</div></a>
-          <a class="gcard" href="#s-faturas"><div class="gimg"><img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" loading="lazy" decoding="async"></div><div class="gtxt">Portal de Faturas</div></a>
         </div>
       </div>
     </section>
@@ -666,13 +682,14 @@
       <a href="#s-skeelo"  title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
       <a href="#s-suporte"  title="Suporte"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png" alt=""></a>
       <a href="#s-indique"  title="Indique & Ganhe"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" alt=""></a>
-      <a href="#s-faturas"   title="Portal de Faturas"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
+      <a href="#s-portal"   title="Portal do Assinante"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
+      <a href="#s-faturas"  title="Faturas e PIX"><img src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128" alt=""></a>
     </div>
   </nav>
 
   <!-- FAB -->
-  <button class="fab" id="fab" aria-label="Ir para o topo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <button class="fab" id="fab" aria-label="Ir para o final">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
 
   <footer class="footer">
@@ -687,48 +704,54 @@
 
   <script>
   (function(){
-    /* ===== Topbar com sentinela ===== */
+    /* ===== Topbar com sentinela + cápsula dinâmica ===== */
     const topbar = document.getElementById('topbar');
     const topSentinel = document.getElementById('top-sentinel');
     const wrap = document.querySelector('.topbar .wrap');
     const capsule = document.querySelector('.capsule');
-    const viewport = document.getElementById('capViewport');
-    const trackFull = document.getElementById('trackFull');
-    const trackShort = document.getElementById('trackShort');
+    const capViewport = document.getElementById('capViewport');
+    const capTrack = document.getElementById('capTrack');
+    const capLeft = document.getElementById('capLeft');
+    const capRight = document.getElementById('capRight');
     const logoL = document.querySelector('.logo-ccs');
     const logoR = document.querySelector('.logo-vctech');
     const fab = document.getElementById('fab');
     const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function setTopPad(){ document.body.style.paddingTop = (topbar.offsetHeight || 64) + 'px'; }
-    function stopMarquee(track){ const anim = track?._marqueeAnim; if (anim){ anim.cancel(); track._marqueeAnim = null; track.style.transform=''; } }
-    function startMarquee(track){
-      if (!track || prefersReduced) return;
-      const vw = viewport.clientWidth, sw = track.scrollWidth, distance = Math.max(0, sw - vw);
-      if (distance < 4){ stopMarquee(track); viewport.dataset.scrollable = 'false'; return; }
-      viewport.dataset.scrollable = 'true';
-      const dur = Math.max(3000, Math.min(14000, Math.round(distance * 30)));
-      const anim = track.animate([{transform:'translateX(0)'},{transform:`translateX(${-distance}px)`}], { duration: dur, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
-      track._marqueeAnim = anim;
-    }
+
+    /* Ajuste de fonte/marquee leve para cápsula */
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
       const lW = logoL?.getBoundingClientRect().width||0, rW = logoR?.getBoundingClientRect().width||0;
       const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
       capsule.style.maxWidth = available + 'px';
-      const condensed = topbar.classList.contains('is-condensed');
-      const active = condensed ? trackShort : trackFull;
-      const inactive = condensed ? trackFull : trackShort;
-      active.style.display='inline-block'; inactive.style.display='none';
-      capsule.style.fontSize='';
+      capTrack.style.transform = '';
+      capViewport.dataset.scrollable = 'false';
+      // auto-fit simples
+      capsule.style.fontSize = '';
       const padX = parseFloat(getComputedStyle(capsule).paddingLeft)+parseFloat(getComputedStyle(capsule).paddingRight);
       const target = Math.max(80, available - padX - 4);
-      let fs = parseFloat(getComputedStyle(capsule).fontSize)||14, tried=0, minFS = condensed?11:12;
-      while (active.scrollWidth > target && fs > minFS && tried < 20){ fs-=0.6; capsule.style.fontSize=fs+'px'; tried++; }
-      stopMarquee(active);
-      if (active.scrollWidth > target) startMarquee(active); else { viewport.dataset.scrollable='false'; active.style.transform=''; }
+      let fs = parseFloat(getComputedStyle(capsule).fontSize)||14, tried=0, minFS = 11.5;
+      while (capTrack.scrollWidth > target && fs > minFS && tried < 20){ fs-=0.5; capsule.style.fontSize=fs+'px'; tried++; }
+      // marquee se ainda passar
+      if (!prefersReduced && capTrack.scrollWidth > target){
+        capViewport.dataset.scrollable = 'true';
+        capTrack.animate([{transform:'translateX(0)'},{transform:`translateX(${-Math.min(160, capTrack.scrollWidth - target)}px)`}], { duration: 7000, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
+      }
     }
 
+    function setCapsuleSection(name){
+      if (!name) return;
+      capRight.textContent = name;
+      fitCapsule();
+    }
+    function setCapsuleLevel(n){
+      capLeft.textContent = `Nível ${n}`;
+      fitCapsule();
+    }
+
+    /* Condensa topbar ao rolar */
     let lastY = window.scrollY||0; let condensed=false; const CLOSE_AT=60, OPEN_AT=24, DELTA=6; let t=null;
     function applyCondensed(on){ if (on===condensed) return; condensed=on; topbar.classList.toggle('is-condensed',condensed); fitCapsule(); }
     function onScroll(){
@@ -741,27 +764,46 @@
       },120);
       updateFabIcon();
     }
-    function updateFabIcon(){
-      const nearTop = window.scrollY<100;
-      fab.setAttribute('aria-label', nearTop?'Ir para o final':'Ir para o topo');
-      fab.innerHTML = nearTop
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-    }
-    fab.addEventListener('click',()=>{
-      const nearTop = window.scrollY<100;
-      if (nearTop){
-        const fin = document.getElementById('s-final')||document.querySelector('footer');
-        const y = fin.getBoundingClientRect().top + window.scrollY - 16;
-        window.scrollTo({top:y,behavior:'smooth'});
-      } else { window.scrollTo({top:0,behavior:'smooth'}); }
-    });
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{ const e=entries[0]; applyCondensed(!e.isIntersecting); }, {threshold:[0,0.01,1]});
       ioTop.observe(topSentinel);
     }
 
-    /* Toggle Saiba Mais (todas as seções) */
+    /* Seção ativa para cápsula e dock */
+    const dockLinks=[...document.querySelectorAll('.quick-dock a')];
+    const sections=[...document.querySelectorAll('main .section')];
+    const setActiveDock=id=> dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id));
+    if ('IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>{
+        const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+        if (vis){
+          setActiveDock(vis.target.id);
+          const title = vis.target.getAttribute('data-title') || vis.target.querySelector('h2,h3')?.textContent || '';
+          setCapsuleSection(title);
+        }
+      },{threshold:[0.25,0.5,0.75]});
+      sections.forEach(s=>io.observe(s));
+    }
+
+    /* FAB confiável: topo <-> final */
+    function updateFabIcon(){
+      const nearTop = window.scrollY < 100;
+      fab.setAttribute('aria-label', nearTop?'Ir para o final':'Ir para o topo');
+      fab.innerHTML = nearTop
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>'  /* seta para baixo */
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'; /* seta para cima */
+    }
+    fab.addEventListener('click',()=>{
+      const nearTop = window.scrollY < 100;
+      if (nearTop){
+        const maxY = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) - window.innerHeight;
+        window.scrollTo({ top: maxY, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    /* Toggle Saiba Mais */
     document.querySelectorAll('.more').forEach(p=>{ p.hidden=true; p.style.height='0px'; });
     document.addEventListener('click', ev=>{
       const btn = ev.target.closest('.chip-more'); if (!btn) return;
@@ -785,33 +827,6 @@
       }
     });
 
-    /* Quick Dock ativo + auto-reset ao sair do Conecta */
-    const dockLinks=[...document.querySelectorAll('.quick-dock a')];
-    const sections=[...document.querySelectorAll('main .section')];
-    const setActiveDock=id=> dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id));
-    function maybeAutoReset(){
-      const now=Date.now(); if (now-lastCompareClickAt<1500) return;
-      const saved=parseInt(localStorage.getItem('ccs-cc-compare-level')||'1',10);
-      if (saved!==1){ applyCompare(1); }
-    }
-    if ('IntersectionObserver' in window){
-      const io=new IntersectionObserver(entries=>{
-        const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-        if (vis){ setActiveDock(vis.target.id); if (vis.target.id!=='s-conecta') maybeAutoReset(); }
-      },{threshold:[0.25,0.5,0.75]});
-      sections.forEach(s=>io.observe(s));
-    }
-
-    /* Copiar e‑mail */
-    const copyBtn = document.getElementById('copyEmail');
-    if (copyBtn){
-      copyBtn.addEventListener('click', async ()=>{
-        try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
-        copyBtn.innerHTML='✅ E‑mail copiado';
-        setTimeout(()=> copyBtn.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
-      });
-    }
-
     /* ===== Conecta Clube ===== */
     const LEVELS_KEY='ccs-cc-compare-level';
     const CC_CONTENT={
@@ -819,7 +834,7 @@
         facts:[
           {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
           {emoji:'🎁',text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano; quem escolhe é você!'},
-          {emoji:'📩',text:'Quer saber qual benefício está disponível no seu plano? Envie um e‑mail para ccs@ccstelecom.com.br!', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Vouchers%20do%20meu%20plano',label:'Enviar e‑mail ↗'}},
+          {emoji:'📩',text:'Para saber os benefícios disponíveis no seu plano, envie um e‑mail.', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios',label:'Solicitar benefícios ↗'}},
           {emoji:'⏳',text:'Receba 1 voucher a cada 90 dias.'},
           {emoji:'ℹ️',text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
         ], upgrade:null },
@@ -827,11 +842,11 @@
         facts:[
           {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
           {emoji:'🎁',text:'Você pode ganhar vouchers exclusivos de acordo com o seu plano; quem escolhe é você!'},
-          {emoji:'📩',text:'Tire dúvidas do Nível 2 por e‑mail.', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202',label:'Enviar e‑mail ↗'}},
+          {emoji:'📩',text:'Dúvidas do Nível 2? Fale com a gente.', link:{href:'mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20N%C3%ADvel%202',label:'Enviar e‑mail ↗'}},
           {emoji:'⏳',text:'Receba 1 voucher a cada 60 dias.'},
           {emoji:'ℹ️',text:'Não inclui atrações Nível 3 como: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
         ],
-        upgrade:{label:'Atualizar para 450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'} },
+        upgrade:{label:'Atualizar para 450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).', needNote:'Necessário para o Nível 2'} },
       3:{ plan:'650 MB', days:60, premiumIncluded:true, note:'Válido para clientes ativos e adimplentes.',
         facts:[
           {emoji:'🌟',text:'É o nosso clube de benefícios com diversas empresas parceiras da região!'},
@@ -840,7 +855,7 @@
           {emoji:'⏳',text:'Receba 1 voucher a cada 60 dias.'},
           {emoji:'🏆',text:'INCLUI atrações premium: Unipraias, Barco Pirata, Roda Gigante ou Aquário.', anchorId:'cc-premium'}
         ],
-        upgrade:{label:'Atualizar para 650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'} }
+        upgrade:{label:'Atualizar para 650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).', needNote:'Necessário para o Nível 3'} }
     };
 
     const segmented=document.getElementById('segmented');
@@ -849,7 +864,6 @@
     const segL3=document.getElementById('seg-l3');
     const labelActual=document.getElementById('label-actual');
 
-    const ccSection=document.getElementById('s-conecta');
     const ccDyn=document.getElementById('cc-dyn');
     const ccSwap=document.getElementById('cc-swap');
 
@@ -858,11 +872,13 @@
     const ccPremiumText=document.getElementById('cc-premium-text');
     const ccNote=document.getElementById('cc-note');
     const ccFacts=document.getElementById('cc-facts');
-    const ccPlanPill=document.getElementById('cc-plan-pill');
-    const ccPlanText=document.getElementById('cc-plan-text');
+
+    const upgradeRow=document.getElementById('upgradeRow');
+    const needNote=document.getElementById('needNote');
+    const upgradeBtn=document.getElementById('cc-upgrade');
+
     const viewing=document.getElementById('cc-viewing');
     const emailBtn=document.getElementById('cc-email-link');
-    const upgradeBtn=document.getElementById('cc-upgrade');
     const actions=document.getElementById('cc-actions');
 
     let lastCompareClickAt=0;
@@ -906,46 +922,38 @@
         btn.classList.toggle('is-current', pressed && level===1);
       });
       positionActualLabel();
+      setCapsuleLevel(level);
     }
 
-    /* Ajuste dos 3 botões: SEMPRE lado a lado */
+    /* 3 botões sempre cabendo */
     function fitSegmentedStrict(){
       segmented.style.setProperty('--seg-fs','14px');
       segmented.style.setProperty('--seg-px','12px');
       segmented.style.setProperty('--seg-py','8px');
-
       const buttons=[...segmented.querySelectorAll('.seg-btn')];
       let fs=14, px=12, py=8, tries=0;
-
       function allFit(){ return buttons.every(b=> b.scrollWidth <= b.clientWidth + 1); }
       while (!allFit() && tries<28){
         if (fs>12){ fs-=0.5; segmented.style.setProperty('--seg-fs',fs+'px'); }
         else if (px>8){ px-=1; segmented.style.setProperty('--seg-px',px+'px'); }
         else if (py>6){ py-=1; segmented.style.setProperty('--seg-py',py+'px'); }
-        else break;
-        tries++;
+        else break; tries++;
       }
       positionActualLabel();
     }
 
-    /* Rótulo “ATUAL” fora da pílula do Nível 1 */
     function positionActualLabel(){
-      const btn=segL1;
-      if (!btn || !labelActual) return;
-      const cont=segmented.getBoundingClientRect();
-      const b=btn.getBoundingClientRect();
+      const btn=segL1; if (!btn || !labelActual) return;
+      const cont=segmented.getBoundingClientRect(); const b=btn.getBoundingClientRect();
       const left = Math.max(8, Math.round(b.left - cont.left + 10));
       const topWanted = Math.round(b.top - cont.top - labelActual.offsetHeight - 6);
       const top = Math.max(4, topWanted);
-      labelActual.style.left = left+'px';
-      labelActual.style.top = top+'px';
-      labelActual.style.visibility='visible';
+      labelActual.style.left = left+'px'; labelActual.style.top = top+'px'; labelActual.style.visibility='visible';
     }
 
-    /* Voucher: auto-fit e quebra limpa */
+    /* Voucher: auto-fit + quebra limpa */
     function fitVoucherPill(){
-      const pill = document.getElementById('cc-pill-main');
-      const text = ccVoucherText;
+      const pill = document.getElementById('cc-pill-main'); const text = ccVoucherText;
       if (!pill || !text) return;
       pill.classList.remove('allow-wrap');
       pill.style.setProperty('--pill-fs','15px');
@@ -955,11 +963,11 @@
       }
       if (pill.scrollWidth > pill.clientWidth + 1){
         pill.classList.add('allow-wrap');
-        pill.style.setProperty('--pill-fs','15px'); // volta confortável e deixa quebrar
+        pill.style.setProperty('--pill-fs','15px');
       }
     }
 
-    function updateVoucher(level, days){
+    function updateVoucher(days){
       ccVoucherText.textContent = `1 voucher a cada ${days} dias`;
       fitVoucherPill();
     }
@@ -982,38 +990,32 @@
       setSegmented(level);
 
       animateSwap(()=>{
-        updateVoucher(level, data.days);
+        updateVoucher(data.days);
         ccNote.textContent = data.note || '';
         viewing.textContent=`Visualizando: Nível ${level}`;
         updatePremium(data.premiumIncluded);
         renderFacts(data.facts || []);
       });
 
-      /* Plano necessário e Upgrade */
-      if (level===1){
-        ccPlanPill.classList.remove('show');
-        upgradeBtn.style.display='none';
+      // Upgrade inline
+      if (level===1 || !data.upgrade){
+        upgradeRow.classList.remove('show');
         emailBtn.classList.add('cta');
         actions.classList.add('is-level1');
       } else {
-        ccPlanText.textContent=data.plan;
-        ccPlanPill.classList.add('show');
-        if (data.upgrade){
-          upgradeBtn.style.display='inline-flex';
-          upgradeBtn.textContent=data.upgrade.label;
-          upgradeBtn.href=data.upgrade.href;
-        }else{
-          upgradeBtn.style.display='none';
-        }
+        upgradeRow.classList.add('show');
+        upgradeBtn.textContent = data.upgrade.label;
+        upgradeBtn.href = data.upgrade.href;
+        needNote.textContent = data.upgrade.needNote || '';
         emailBtn.classList.remove('cta');
         actions.classList.remove('is-level1');
       }
 
-      try{ emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Nível '+level)}`; }catch{}
+      try{ emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+level+')')}`; }catch{}
       if (remember) localStorage.setItem(LEVELS_KEY,String(level));
     }
 
-    /* Premium -> abre Saiba Mais na âncora */
+    // Pílula Premium -> abre detalhe
     ccPremiumPill.addEventListener('click',()=>{
       const btn=document.querySelector('[aria-controls="more-conecta"].chip-more');
       if (btn && btn.getAttribute('aria-expanded')!=='true') btn.click();
@@ -1027,12 +1029,22 @@
       },60);
     });
 
-    /* Cliques */
+    // Cliques dos níveis
     segL1.addEventListener('click',()=>applyCompare(1));
     segL2.addEventListener('click',()=>applyCompare(2));
     segL3.addEventListener('click',()=>applyCompare(3));
 
-    /* Auto-reset quando sai da seção */
+    /* Copiar e‑mail */
+    const copyBtn = document.getElementById('copyEmail');
+    if (copyBtn){
+      copyBtn.addEventListener('click', async ()=>{
+        try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
+        copyBtn.innerHTML='✅ E‑mail copiado';
+        setTimeout(()=> copyBtn.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> Copiar e‑mail', 1400);
+      });
+    }
+
+    /* Auto-reset do nível ao sair da seção Conecta */
     function maybeAutoReset(){
       const now=Date.now(); if (now-lastCompareClickAt<1500) return;
       const saved=parseInt(localStorage.getItem(LEVELS_KEY)||'1',10);
@@ -1045,7 +1057,7 @@
       ioCC.observe(document.getElementById('s-conecta'));
     }
 
-    /* Iniciais e utilidades */
+    /* Utilidades e init */
     function fitActionButtons(){
       document.querySelectorAll('#cc-actions .btn').forEach(btn=>{
         btn.style.setProperty('--btn-fs','15px');
@@ -1064,13 +1076,13 @@
       }catch{} return null;
     }
 
-    function recalcAll(){ setTopPad(); fitCapsule(); fitActionButtons(); fitSegmentedStrict(); positionActualLabel(); fitVoucherPill(); }
+    function recalcAll(){ setTopPad(); fitCapsule(); fitActionButtons(); fitSegmentedStrict(); positionActualLabel(); fitVoucherPill(); updateFabIcon(); }
 
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       applyCompare([1,2,3].includes(start)?start:1,{remember:false});
       recalcAll();
-      setTimeout(fitVoucherPill, 80);
+      setTimeout(()=>{ fitVoucherPill(); fitCapsule(); }, 80);
     }
 
     init();
