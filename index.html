@@ -29,6 +29,8 @@
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
+
+      --dock-offset: 80px; /* recuo para seta direita no desktop (ajustado via JS) */
     }
 
     *{box-sizing:border-box}
@@ -39,8 +41,8 @@
       font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       background:var(--bg);
-      padding-top:0;
-      padding-bottom:calc(160px + env(safe-area-inset-bottom));
+      padding-top:0; /* ajustado via JS */
+      padding-bottom:calc(160px + env(safe-area-inset-bottom)); /* mobile: espaço para level dock + FAB */
     }
 
     /* Anti-estouro global de texto */
@@ -71,20 +73,8 @@
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
     @keyframes softPulseStrong {
-      0%{
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.10),
-          0 10px 26px rgba(0,0,0,.38),
-          0 0 18px rgba(0,217,255,.28),
-          0 0 24px rgba(123,92,255,.22);
-      }
-      100%{
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.08),
-          0 10px 26px rgba(0,0,0,.36),
-          0 0 8px rgba(0,217,255,.12),
-          0 0 12px rgba(123,92,255,.10);
-      }
+      0%{ box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 10px 26px rgba(0,0,0,.38), 0 0 18px rgba(0,217,255,.30), 0 0 26px rgba(123,92,255,.24) }
+      100%{ box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.36), 0 0 8px rgba(0,217,255,.12), 0 0 12px rgba(123,92,255,.10) }
     }
 
     .topbar{
@@ -105,7 +95,7 @@
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
       -webkit-appearance:none; appearance:none;
-      animation: softPulseStrong 5.2s ease-in-out infinite alternate; /* magia mais forte */
+      animation: softPulseStrong 5.2s ease-in-out infinite alternate;
     }
     header .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -117,14 +107,11 @@
     header .capsule::after{
       content:""; position:absolute; inset:-25% -12%; border-radius:inherit;
       background:
-        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.28), transparent 60%),
+        radial-gradient(40% 120% at 10% 50%, rgba(123,92,255,.30), transparent 60%),
         radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.28), transparent 60%);
       filter: blur(18px); mix-blend-mode:screen; pointer-events:none; z-index:0;
     }
-    .cap-viewport{
-      position:relative; display:block; max-width:100%;
-      overflow:hidden; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none;
-    }
+    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none }
     .track{ display:inline-block; will-change:transform }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
@@ -139,8 +126,7 @@
     /* Status bar (uma linha) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
-      display:none;
-      padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
+      display:none; padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
     .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap; font-size:13px; line-height:1; white-space:nowrap }
@@ -148,7 +134,7 @@
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
     @media (max-width:380px){ .status-cta{ padding:8px 10px } }
 
-    /* Seções/cards */
+    /* Seções/cards (fluxo normal mobile) */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
@@ -165,7 +151,6 @@
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
     .subtitle{ margin:6px 0 10px; color:var(--muted) }
 
-    /* Pills e Ações */
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
     .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; text-align:center }
     .pill-flag{
@@ -241,38 +226,44 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) + FAB na mesma linha */
+    /* Level Dock (rodapé) + FAB na mesma linha (mobile) */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
-    .level-dock .wrap{ display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px; background:rgba(16,18,24,.55); backdrop-filter:blur(10px) }
+    .level-dock .wrap{
+      display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
+      background:rgba(16,18,24,.55); backdrop-filter:blur(10px)
+    }
     .level-dock .btn-level{
-      position:relative; min-width:96px; padding:10px 14px; border-radius:999px; border:1px solid var(--line);
+      position:relative; min-width:92px; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer;
       transition: box-shadow .25s ease, transform .2s ease, background .25s ease;
     }
+    /* contorno gradiente nos níveis (estilo cápsula) */
+    .level-dock .btn-level::before{
+      content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
+      background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
+      background-size:300% 300%; animation:ringShift 14s ease-in-out infinite alternate;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+      opacity:.55;
+    }
     .level-dock .btn-level[aria-pressed="true"]{
-      background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.10));
+      background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12));
       box-shadow:
         0 0 0 2px rgba(255,255,255,.12) inset,
-        0 0 24px rgba(0,217,255,.36),
+        0 0 24px rgba(0,217,255,.40),
         0 0 34px rgba(123,92,255,.30);
       transform: scale(1.022);
-      outline:2px solid transparent;
     }
     @keyframes selectPulse {
-      0% { box-shadow:
-        0 0 0 0 rgba(0,217,255,.55),
-        0 0 0 0 rgba(123,92,255,.45) }
-      100% { box-shadow:
-        0 0 0 14px rgba(0,217,255,0),
-        0 0 0 26px rgba(123,92,255,0) }
+      0% { box-shadow: 0 0 0 0 rgba(0,217,255,.60), 0 0 0 0 rgba(123,92,255,.50) }
+      100% { box-shadow: 0 0 0 16px rgba(0,217,255,0), 0 0 0 28px rgba(123,92,255,0) }
     }
     .btn-level.hit::after{
       content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
-      animation: selectPulse .45s ease-out;
+      animation: selectPulse .5s ease-out;
     }
-
-    /* “ATUAL” com pulso/halo colorido */
-    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.55) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
+    /* “ATUAL” com pulso/halo */
+    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
     .level-dock .label-actual{
       position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
       color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12);
@@ -282,15 +273,16 @@
     .level-dock .btn-level[data-level="1"] .label-actual{ display:block }
     .level-dock .btn-level:not([data-level="1"]) .label-actual{ display:none }
 
-    /* FAB ao lado do Level Dock (posicionado via JS) */
+    /* FAB (mobile) ao lado do Level Dock — posicionado via JS */
     .fab{
       position:fixed; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
       background:rgba(16,18,24,.84); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
       pointer-events:auto;
     }
     .fab svg{ width:22px; height:22px }
+    @media (min-width:1024px){ .fab{ display:none } } /* desktop: sem FAB */
 
-    /* Resumo grid */
+    /* Resumo grid (usado no mobile/fluxo normal) */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -305,38 +297,45 @@
     .footer .wrap{ display:grid; gap:14px; justify-items:center }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
 
-    /* Desktop “stage 3D” — só em telas largas */
-    @media (min-width: 1024px){
-      body.is-stage main{ display:none } /* escondo o fluxo normal quando stage ativo */
+    /* Desktop: carrossel horizontal “lado a lado” (sem 3D) */
+    @media (min-width:1024px){
+      body.is-stage main{ display:none }
       .stage-desktop{ display:block }
+      body.is-stage{ overflow-y:hidden } /* sem rolagem vertical no desktop */
     }
     .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
-    .stage-head{ display:flex; justify-content:flex-end; align-items:center; margin-bottom:10px }
-    .stage-frame{ position:relative; overflow:hidden; }
+    .stage-frame{
+      position:relative; overflow:hidden;
+      height: calc(100vh - var(--topbar-h) - var(--statusbar-h) - 24px - 88px); /* viewport menos top e level dock */
+      min-height: 420px;
+    }
     .stage-track{
-      display:flex; gap:22px; align-items:stretch;
-      transform:translateX(var(--x,0)); transition:transform .4s cubic-bezier(.2,.7,.2,1);
-      perspective: 1000px; padding:12px 4px;
+      display:flex; gap:24px; align-items:stretch; height:100%;
+      transform:translateX(var(--x,0)); transition:transform .38s cubic-bezier(.2,.7,.2,1);
+      padding:8px 0;
     }
     .slide{
-      flex:0 0 clamp(720px, 68vw, 980px);
-      transform-style:preserve-3d;
-      transition: transform .4s cubic-bezier(.2,.7,.2,1), opacity .4s, filter .4s;
-      filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+      flex:0 0 clamp(720px, 70vw, 980px);
+      height:100%;
     }
-    .slide .card{ height:100% }
-    .slide.is-prev{ transform: perspective(1000px) rotateY(12deg) translateX(-6px) scale(.96); opacity:.6; }
-    .slide.is-next{ transform: perspective(1000px) rotateY(-12deg) translateX(6px) scale(.96); opacity:.6; }
-    .slide.is-active{ transform: perspective(1000px) rotateY(0deg) scale(1); opacity:1; }
+    .slide .card{
+      height:100%; display:flex; flex-direction:column;
+    }
+    .slide .media{ flex:0 0 auto }
+    .slide .content{
+      flex:1 1 auto; overflow:auto; /* se o conteúdo passar, scroll dentro do card */
+      scrollbar-width: thin;
+    }
 
-    .stage-nav{ position:absolute; inset:0; pointer-events:none }
     .stage-nav .btn-nav{
-      position:absolute; top:50%; transform:translateY(-50%); pointer-events:auto;
-      width:44px; height:44px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.7); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:56px; height:56px; border-radius:50%; border:1px solid var(--line);
+      background:rgba(16,18,24,.80); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:82;
+      box-shadow:0 10px 30px rgba(0,0,0,.45);
     }
-    .stage-nav .btn-prev{ left:0 }
-    .stage-nav .btn-next{ right:0 }
+    .stage-nav .btn-prev{ left:16px }
+    .stage-nav .btn-next{ right:calc(16px + var(--dock-offset)) } /* recuo para não bater no Side Dock */
+    .stage-nav svg{ width:26px; height:26px }
   </style>
 </head>
 <body>
@@ -387,19 +386,16 @@
     </div>
   </div>
 
-  <!-- Desktop: Stage 3D -->
-  <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo destaque)">
-    <div class="stage-head">
-      <div class="hint" style="color:#cfe0ff">Use as setas do teclado ou clique nos ícones ao lado</div>
-    </div>
+  <!-- Desktop: Carrossel horizontal -->
+  <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo carrossel)">
     <div class="stage-frame">
       <div class="stage-track" id="stageTrack"></div>
       <div class="stage-nav" aria-hidden="false">
         <button class="btn-nav btn-prev" id="stagePrev" aria-label="Anterior">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <button class="btn-nav btn-next" id="stageNext" aria-label="Próximo">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
       </div>
     </div>
@@ -407,6 +403,7 @@
 
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
 
+  <!-- Fluxo normal (mobile) -->
   <main id="content">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
@@ -698,7 +695,7 @@
     </div>
   </nav>
 
-  <!-- FAB (ao lado do Level Dock) -->
+  <!-- FAB (ao lado do Level Dock no mobile) -->
   <button class="fab" id="fab" aria-label="Ir para o final" title="Ir para o final">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
@@ -718,7 +715,7 @@
     const LEVELS_KEY='ccs-cc-compare-level';
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
 
-    /* Conteúdos por nível */
+    /* Dados por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -748,28 +745,25 @@
       3:{ label:'Atualizar para 650 MB', plan:'650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'}
     };
     const PLAY = {
-      1:{
-        subtitle:'Streaming completo e canais de TV',
+      1:{ subtitle:'Streaming completo e canais de TV',
         facts:[
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
           {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
         ]},
-      2:{
-        subtitle:'60 canais + 50 canais de música',
+      2:{ subtitle:'60 canais + 50 canais de música',
         facts:[
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo, etc.).'},
+          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
           {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
         ]},
-      3:{
-        subtitle:'60 canais + 50 canais de música + +1.000 horas de filmes e séries',
+      3:{ subtitle:'60 canais + 50 canais de música + +1.000 horas de filmes e séries',
         facts:[
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo, etc.).'},
+          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
           {emoji:'🎞️',text:'+1.000 horas de filmes e séries.'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
@@ -783,10 +777,8 @@
           {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
           {emoji:'💡',text:'Leia e ouça quando e onde quiser.'}
         ]},
-      2:{}, 3:{}
-    };
-    SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1]));
-    SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
+      2:{}, 3:{} };
+    SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1])); SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
     const SUPORTE = {
       1:{ subtitle:'Atendimento com prioridade e prazo garantido',
         facts:[
@@ -809,7 +801,7 @@
         ], sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores topo/status */
+    /* Seletores base */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const stCta = document.getElementById('st-cta');
@@ -822,16 +814,13 @@
     const logoL = document.querySelector('.logo-ccs');
     const logoR = document.querySelector('.logo-vctech');
 
-    /* Side Dock */
     const sideDock = document.getElementById('sideDock');
     const dockToggle = document.getElementById('dockToggle');
     const dockClose = document.getElementById('dockClose');
     const dockLinks=[...document.querySelectorAll('.side-dock a')];
 
-    /* Seções originais */
     const sections=[...document.querySelectorAll('main .section')];
 
-    /* Nível */
     const lvl1=document.getElementById('lvl-1');
     const lvl2=document.getElementById('lvl-2');
     const lvl3=document.getElementById('lvl-3');
@@ -840,23 +829,14 @@
     const fab = document.getElementById('fab');
     const levelDockWrap = document.getElementById('levelDockWrap');
 
-    /* Conecta (pílulas e facts) */
-    const pillVoucher = document.getElementById('pill-cc-voucher');
-    const pillPremium = document.getElementById('pill-cc-premium');
-    const ccFacts = document.getElementById('cc-facts');
-    const emailBtn=document.getElementById('cc-email-link');
-
-    /* PLAY */
     const playSubtitle=document.getElementById('play-subtitle');
     const playFacts=document.getElementById('play-facts');
     const pillPlay50=document.getElementById('pill-play-50mus');
     const pillPlay1000=document.getElementById('pill-play-1000');
 
-    /* SKEELO */
     const skeeloSubtitle=document.getElementById('skeelo-subtitle');
     const skeeloFacts=document.getElementById('skeelo-facts');
 
-    /* SUPORTE */
     const supSubtitle=document.getElementById('sup-subtitle');
     const supFacts=document.getElementById('sup-facts');
     const pillSupSla=document.getElementById('pill-sup-sla');
@@ -865,29 +845,27 @@
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
 
-    /* Stage 3D */
+    const pillVoucher = document.getElementById('pill-cc-voucher');
+    const pillPremium = document.getElementById('pill-cc-premium');
+    const ccFacts = document.getElementById('cc-facts');
+    const emailBtn=document.getElementById('cc-email-link');
+
+    /* Carrossel desktop */
     const stageDesktop = document.getElementById('stageDesktop');
     const stageTrack = document.getElementById('stageTrack');
     const btnPrev = document.getElementById('stagePrev');
     const btnNext = document.getElementById('stageNext');
 
+    let topAtSight = true, currentSectionTitle='Conecta Clube';
     const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* Helpers de layout */
+    /* Layout helpers */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
       document.documentElement.style.setProperty('--topbar-h', hTop + 'px');
       document.documentElement.style.setProperty('--statusbar-h', hStatus + 'px');
       document.body.style.paddingTop = (hTop + hStatus + 8) + 'px';
-    }
-    function placeFab(){
-      const ldRect = levelDockWrap?.getBoundingClientRect();
-      const vw = window.innerWidth || document.documentElement.clientWidth;
-      const bottom = (ldRect?.height||64) + 16;
-      const left = ldRect ? Math.min(vw - 60, Math.max(8, ldRect.right + 12)) : 16;
-      fab.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
-      fab.style.left = left + 'px';
     }
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
@@ -905,16 +883,13 @@
       capRight.textContent = `Plano ${PLANS[level]}`;
       fitCapsule();
     }
-    let topAtSight = true, currentSectionTitle='Conecta Clube';
     function setCapsuleSection(level, name){
       capLeft.textContent = `Nível ${level}`;
       capRight.textContent = name || '';
       fitCapsule();
     }
 
-    function remeasure(){ setBodyTopPad(); fitCapsule(); placeFab(); updateFabIcon(); }
-
-    /* Render facts helper */
+    /* Render facts */
     function renderFacts(container, facts){
       container.innerHTML='';
       (facts||[]).forEach(f=>{
@@ -965,18 +940,14 @@
       setInc(pillSupImp, sp.imp, 'Isenção visita improdutiva');
       setInc(pillSupMud, sp.mud, 'Isenção mudança de endereço');
     }
-    function updateAll(level){
-      updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level);
-    }
+    function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
-    /* Status bar (linha única) */
+    /* Status bar */
     function setStatusBar(level){
-      if (level===1){
-        statusBar.style.display='none';
-      } else {
+      if (level===1){ statusBar.style.display='none'; }
+      else {
         const up = UPGRADE[level];
-        stCta.textContent = up.label;
-        stCta.href = up.href;
+        stCta.textContent = up.label; stCta.href = up.href;
         statusBar.style.display='block';
       }
       setBodyTopPad();
@@ -985,21 +956,15 @@
     /* Level Dock */
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      // pulso mais forte ao selecionar
       const btn = lvlBtns.find(b=> +b.dataset.level===level);
-      if (btn){
-        btn.classList.remove('hit'); void btn.offsetWidth; // reset animation
-        btn.classList.add('hit');
-        setTimeout(()=> btn.classList.remove('hit'), 500);
-      }
+      if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Observers para highlight e cápsula dinâmica no fluxo normal */
+    /* Observers (mobile) */
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
-        const e=entries[0];
-        topAtSight = e.isIntersecting;
+        const e=entries[0]; topAtSight = e.isIntersecting;
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
       }, {threshold:[0,0.01,1]});
@@ -1023,47 +988,41 @@
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB: descer/subir (fluxo) ou próximo/anterior (stage) */
-    function inStage(){ return document.body.classList.contains('is-stage'); }
-    let stageIndex=0;
-    function stageMaxIndex(){ return stageTrack.children.length - 1; }
-    function nearTop(){
-      if (inStage()) return stageIndex===0;
-      return ((window.scrollY||document.documentElement.scrollTop||0) < 120);
-    }
-    function nearBottom(){
-      if (inStage()) return stageIndex>=stageMaxIndex();
+    /* FAB (mobile): subir/descer com confiabilidade */
+    function isStage(){ return document.body.classList.contains('is-stage'); } // desktop
+    function nearBottomMobile(){
       const el = document.scrollingElement || document.documentElement || document.body;
-      return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 120);
+      return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 4);
     }
-    function setFabState(){
-      if (nearBottom()){
-        fab.setAttribute('aria-label', inStage() ? 'Voltar' : 'Ir para o topo');
-        fab.title = fab.getAttribute('aria-label');
+    function updateFabIcon(){
+      if (isStage()) return; // desktop: sem FAB
+      if (nearBottomMobile()){
+        fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
       } else {
-        fab.setAttribute('aria-label', inStage() ? 'Próximo' : 'Ir para o final');
-        fab.title = fab.getAttribute('aria-label');
+        fab.setAttribute('aria-label','Ir para o final'); fab.title='Ir para o final';
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
       }
     }
-    function updateFabIcon(){ setFabState(); }
-    fab.addEventListener('click',()=>{
-      if (inStage()){
-        if (nearBottom()) stageIndex = Math.max(0, stageIndex-1);
-        else stageIndex = Math.min(stageMaxIndex(), stageIndex+1);
-        setStageIndex(stageIndex);
-        setFabState();
-        return;
-      }
-      if (nearBottom()){
+    function placeFab(){
+      if (isStage()) return; // desktop não usa FAB
+      const ldRect = levelDockWrap?.getBoundingClientRect();
+      const vw = window.innerWidth || document.documentElement.clientWidth;
+      const bottom = (ldRect?.height||64) + 16;
+      const left = ldRect ? Math.min(vw - 60, Math.max(8, ldRect.right + 12)) : 16;
+      fab.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
+      fab.style.left = left + 'px';
+    }
+    fab.addEventListener('click', ()=>{
+      if (isStage()) return; // segurança
+      if (nearBottomMobile()){
         window.scrollTo({ top: 0, behavior:'smooth' });
       } else {
         const el = document.scrollingElement || document.documentElement || document.body;
         const maxY = (el.scrollHeight||document.body.scrollHeight) - (window.innerHeight||document.documentElement.clientHeight);
         window.scrollTo({ top: maxY, behavior:'smooth' });
       }
-      setTimeout(setFabState, 350);
+      setTimeout(updateFabIcon, 350);
     });
 
     /* Side Dock mobile: abrir/fechar */
@@ -1081,10 +1040,9 @@
     }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
-    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); setFabState(); }, {passive:true});
-    addEventListener('resize', ()=>{ if (!isMobile()) closeDock(); remeasure(); }, {passive:true});
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updateFabIcon(); }, {passive:true});
 
-    /* Saiba mais toggles */
+    /* Saiba mais (mobile) */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
     document.addEventListener('click', ev=>{
       const btn = ev.target.closest('.chip-more'); if (!btn) return;
@@ -1117,56 +1075,35 @@
       });
     }
 
-    /* Stage 3D — clonagem com IDs únicos */
+    /* Carrossel desktop (sem 3D) */
     const sectionOrder = sections.map(s=> s.id);
-    function uniquifyIds(root, suffix){
-      const map = new Map();
-      root.querySelectorAll('[id]').forEach(el=>{
-        const oldId = el.id;
-        const newId = oldId + '-' + suffix;
-        el.id = newId;
-        map.set(oldId, newId);
-      });
-      // Ajusta aria-controls e href="#id"
-      root.querySelectorAll('[aria-controls]').forEach(el=>{
-        const old = el.getAttribute('aria-controls');
-        if (map.has(old)) el.setAttribute('aria-controls', map.get(old));
-      });
-      root.querySelectorAll('a[href^="#"]').forEach(a=>{
-        const old = a.getAttribute('href').slice(1);
-        if (map.has(old)) a.setAttribute('href', '#'+map.get(old));
-      });
-    }
+    let stageIndex=0;
     function buildStage(){
       stageTrack.innerHTML='';
-      sections.forEach((s,idx)=>{
+      sections.forEach(s=>{
         const card = s.querySelector('.card');
         if (!card) return;
-        const clone = card.cloneNode(true);
-        uniquifyIds(clone, 's'+idx);
         const slide=document.createElement('div'); slide.className='slide';
-        slide.appendChild(clone);
+        slide.appendChild(card.cloneNode(true)); // conteúdo estático dentro do slide
         stageTrack.appendChild(slide);
       });
     }
+    function setDockOffset(){
+      const w = sideDock?.getBoundingClientRect()?.width || 0;
+      const gap = w ? (w + 24) : 80;
+      document.documentElement.style.setProperty('--dock-offset', gap+'px');
+    }
     function setStageIndex(i){
-      if (!inStage()) return;
       const max = stageTrack.children.length-1;
       stageIndex = Math.max(0, Math.min(i, max));
-      const slides=[...stageTrack.children];
-      slides.forEach((sl,idx)=>{
-        sl.classList.remove('is-prev','is-active','is-next');
-        if (idx===stageIndex) sl.classList.add('is-active');
-        else if (idx===stageIndex-1) sl.classList.add('is-prev');
-        else if (idx===stageIndex+1) sl.classList.add('is-next');
-      });
       const active = stageTrack.children[stageIndex];
       if (active){
         const slideW = active.getBoundingClientRect().width;
         const wrapW = stageTrack.getBoundingClientRect().width;
-        const gaps = 22 * stageIndex;
+        const gaps = 24 * stageIndex;
         const x = -(slideW*stageIndex + gaps - (wrapW - slideW)/2);
         stageTrack.style.setProperty('--x', x+'px');
+
         currentSectionTitle = sections[stageIndex]?.getAttribute('data-title')||currentSectionTitle;
         const L = +localStorage.getItem(LEVELS_KEY)||1;
         setCapsuleSection(L, currentSectionTitle);
@@ -1174,29 +1111,25 @@
       setActiveDock(sectionOrder[stageIndex]);
       btnPrev.disabled = (stageIndex===0);
       btnNext.disabled = (stageIndex===max);
-      updateFabIcon();
     }
     function enableStage(){
-      buildStage();
-      if (stageTrack.children.length===0){ disableStage(); return; }
       document.body.classList.add('is-stage');
-      stageDesktop.style.display='block';
-      setStageIndex(0);
-      // Dock navega entre slides
+      buildStage(); setDockOffset(); setStageIndex(0);
+      // Dock navega por slides
       dockLinks.forEach(a=>{
         a.dataset.href = a.getAttribute('href');
         a.addEventListener('click', onDockClickStage);
       });
-      updateFabIcon();
+      // Teclado
+      addEventListener('keydown', onKeyNav);
     }
     function disableStage(){
       document.body.classList.remove('is-stage');
-      stageDesktop.style.display='none';
       dockLinks.forEach(a=>{
         a.removeEventListener('click', onDockClickStage);
         if (a.dataset.href) a.setAttribute('href', a.dataset.href);
       });
-      updateFabIcon();
+      removeEventListener('keydown', onKeyNav);
     }
     function onDockClickStage(ev){
       ev.preventDefault();
@@ -1205,16 +1138,12 @@
       const idx = sectionOrder.indexOf(id);
       if (idx>=0) setStageIndex(idx);
     }
+    function onKeyNav(e){
+      if (e.key==='ArrowLeft'){ e.preventDefault(); setStageIndex(stageIndex-1); }
+      if (e.key==='ArrowRight'){ e.preventDefault(); setStageIndex(stageIndex+1); }
+    }
     btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
     btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
-    addEventListener('keydown', (e)=>{
-      if (!inStage()) return;
-      if (['ArrowLeft','ArrowRight'].includes(e.key)){
-        e.preventDefault();
-        if (e.key==='ArrowLeft') setStageIndex(stageIndex-1);
-        if (e.key==='ArrowRight') setStageIndex(stageIndex+1);
-      }
-    });
 
     /* Estado */
     function applyLevel(level,{remember=true}={}){
@@ -1225,13 +1154,6 @@
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
       if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
-      // Se estiver no stage, reconstrói slides para refletir conteúdo atualizado
-      if (inStage()){
-        const keep = stageIndex;
-        buildStage();
-        setStageIndex(Math.min(keep, stageMaxIndex()));
-      }
-      remeasure();
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
@@ -1245,26 +1167,31 @@
         if (qIndex!==-1){ const qs=new URLSearchParams(hash.slice(qIndex+1)); const n2=qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2; }
       }catch{} return null;
     }
+    function remeasure(){
+      setBodyTopPad(); fitCapsule(); if (!isStage()) { placeFab(); updateFabIcon(); }
+      if (isStage()) setDockOffset();
+    }
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       setCapsuleTop(start);
       applyLevel([1,2,3].includes(start)?start:1,{remember:false});
-      const isDesktop = matchMedia('(min-width: 1024px)').matches;
-      if (isDesktop) enableStage(); else disableStage();
+      const desk = matchMedia('(min-width:1024px)').matches;
+      if (desk) enableStage(); else disableStage();
+
       addEventListener('resize', ()=>{
-        const desk = matchMedia('(min-width: 1024px)').matches;
-        if (desk && !inStage()) enableStage();
-        if (!desk && inStage()) disableStage();
+        const isDesk = matchMedia('(min-width:1024px)').matches;
+        if (isDesk && !isStage()) enableStage();
+        if (!isDesk && isStage()) disableStage();
         remeasure();
       }, {passive:true});
+
+      addEventListener('pageshow', remeasure);
+      addEventListener('orientationchange', remeasure);
+      addEventListener('scroll', ()=>{ if (!isStage()) updateFabIcon(); }, {passive:true});
+
       remeasure();
       setTimeout(remeasure, 80);
     }
-    addEventListener('pageshow', remeasure);
-    addEventListener('orientationchange', remeasure);
-    addEventListener('resize', remeasure, {passive:true});
-    addEventListener('scroll', ()=>{ updateFabIcon(); }, {passive:true});
-
     init();
   })();
   </script>
