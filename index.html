@@ -29,8 +29,6 @@
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
-
-      --dock-offset: 80px; /* recuo para seta direita no desktop (ajustado via JS) */
     }
 
     *{box-sizing:border-box}
@@ -41,16 +39,18 @@
       font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       background:var(--bg);
-      padding-top:0; /* ajustado via JS */
-      padding-bottom:calc(160px + env(safe-area-inset-bottom)); /* mobile: espaço para level dock + FAB */
+      padding-top:0;
+      padding-bottom:calc(160px + env(safe-area-inset-bottom)); /* espaço p/ Level Dock + FAB no mobile */
     }
 
-    /* Anti-estouro global de texto */
-    .capsule .txt, .status-wrap, .status-label, .status-cta, .pill-flag, .pill, .btn, .title h2, .subtitle, .gtxt, .note {
+    /* Anti-estouro global (padrão) */
+    .capsule .txt, .status-wrap, .status-label, .status-cta, .pill-flag, .pill, .title h2, .subtitle, .gtxt, .note {
       overflow-wrap:anywhere; word-break:break-word; hyphens:auto; text-wrap:balance;
     }
+    /* Botões: nunca hifenizar nem quebrar no meio de palavra */
+    .btn{ overflow-wrap:normal; word-break:normal; hyphens:none; white-space:normal }
 
-    /* FX de fundo */
+    /* FX de fundo (idem versões anteriores) */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -69,7 +69,7 @@
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
     @media (prefers-reduced-motion:reduce){ .pulse,.fx.fx-shimmer{ animation:none } }
 
-    /* Topbar/cápsula */
+    /* Topbar com cápsula (um pouco mais de “magia”) */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
     @keyframes softPulseStrong {
@@ -94,7 +94,6 @@
       backdrop-filter: blur(10px);
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
-      -webkit-appearance:none; appearance:none;
       animation: softPulseStrong 5.2s ease-in-out infinite alternate;
     }
     header .capsule::before{
@@ -111,8 +110,7 @@
         radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.28), transparent 60%);
       filter: blur(18px); mix-blend-mode:screen; pointer-events:none; z-index:0;
     }
-    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none }
-    .track{ display:inline-block; will-change:transform }
+    .cap-viewport{ position:relative; max-width:100%; overflow:hidden; white-space:nowrap; scrollbar-width:none; pointer-events:none }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
@@ -120,21 +118,19 @@
       background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:textShift 3.2s linear infinite;
       text-shadow:0 0 12px rgba(123,92,255,.38), 0 0 20px rgba(0,255,198,.28);
     }
-    @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Status bar (uma linha) */
+    /* Status bar (N2/N3) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:none; padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
-    .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap; font-size:13px; line-height:1; white-space:nowrap }
-    .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900; text-align:center }
-    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
-    @media (max-width:380px){ .status-cta{ padding:8px 10px } }
+    .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; white-space:nowrap }
+    .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900 }
+    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none }
 
-    /* Seções/cards (fluxo normal mobile) */
+    /* Cards e conteúdo */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
@@ -152,7 +148,6 @@
     .subtitle{ margin:6px 0 10px; color:var(--muted) }
 
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
-    .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; text-align:center }
     .pill-flag{
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center; display:inline-flex; align-items:center; justify-content:center;
@@ -165,44 +160,30 @@
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
     .actions.one .btn{ width:100% }
-    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size: var(--btn-fs,15px); text-align:center }
+    .btn{
+      border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111;
+      text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:0; cursor:pointer; font-size: var(--btn-fs,15px); text-align:center;
+      min-height:46px;
+    }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
+    /* Duas linhas no rótulo do botão */
+    .btn .line{ display:block; line-height:1.15 }
+    .btn .line + .line{ margin-top:2px }
 
-    /* Mobile: 2 por linha quando houver >1 */
+    /* Grids mobile */
     @media (max-width: 640px){
       .row.pills{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
       .actions{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
       .actions.one{ display:block }
     }
 
-    /* Saiba mais */
-    .chip-more{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer; animation:chipPulse 1.8s ease-in-out infinite }
-    .chip-more .ico{ width:16px; height:16px }
-    @keyframes chipPulse{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.10)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
-    .more[hidden]{ display:none }
-    .more{ overflow:hidden; height:0; opacity:0; transition: height .28s ease, opacity .28s ease }
-    .more.is-open{ opacity:1 }
-    .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
-
-    /* Facts */
-    .facts{ display:grid; grid-template-columns:1fr; gap:10px; margin:0 }
-    @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
-    .fact{ display:flex; gap:10px; align-items:flex-start; padding:8px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
-    .fact .ico{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.10); border:1px solid var(--line); font-size:14px }
-    .fact .txt{ color:#dfe7ff }
-    .fact .txt strong{ color:#fff }
-
-    a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
-    a.inline-link:hover{ color:#ffffff; text-decoration:underline }
-
-    /* Side Dock (direita) */
+    /* Side Dock (direita) mobile/desktop como antes */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Header do dock no mobile (botão fechar no topo) + botão abrir abaixo da cápsula */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
@@ -226,7 +207,7 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) + FAB na mesma linha (mobile) */
+    /* Level Dock + FAB ao lado (mobile) */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{
       display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
@@ -237,7 +218,7 @@
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer;
       transition: box-shadow .25s ease, transform .2s ease, background .25s ease;
     }
-    /* contorno gradiente nos níveis (estilo cápsula) */
+    /* Contorno gradiente nos níveis */
     .level-dock .btn-level::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -262,7 +243,6 @@
       content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
       animation: selectPulse .5s ease-out;
     }
-    /* “ATUAL” com pulso/halo */
     @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
     .level-dock .label-actual{
       position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
@@ -270,72 +250,24 @@
       box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 14px rgba(0,217,255,.55);
       animation: ping 2.6s ease-out infinite;
     }
-    .level-dock .btn-level[data-level="1"] .label-actual{ display:block }
-    .level-dock .btn-level:not([data-level="1"]) .label-actual{ display:none }
 
-    /* FAB (mobile) ao lado do Level Dock — posicionado via JS */
+    /* FAB ao lado do Level Dock (mobile) */
     .fab{
       position:fixed; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
       background:rgba(16,18,24,.84); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
       pointer-events:auto;
     }
     .fab svg{ width:22px; height:22px }
-    @media (min-width:1024px){ .fab{ display:none } } /* desktop: sem FAB */
+    @media (min-width:1024px){ .fab{ display:none } } /* desktop não usa FAB */
 
-    /* Resumo grid (usado no mobile/fluxo normal) */
+    /* Resumo grid */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
     .gcard{ display:grid; grid-template-rows:auto 1fr; gap:8px; padding:10px; border:1px solid var(--line); border-radius:12px; text-decoration:none; color:#fff; background:rgba(255,255,255,.06) }
-    .gcard:hover{ background:rgba(255,255,255,.10) }
     .gimg{ display:flex; justify-content:center; align-items:center; padding:8px; border-radius:10px; background:rgba(0,0,0,.25); border:1px solid var(--line) }
     .gimg img{ width:64px; height:64px; object-fit:contain }
     .gtxt{ font-weight:900; text-align:center }
-
-    /* Footer */
-    .footer{ padding:24px var(--side-pad); color:#cfe0ff; text-align:center }
-    .footer .wrap{ display:grid; gap:14px; justify-items:center }
-    .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
-
-    /* Desktop: carrossel horizontal “lado a lado” (sem 3D) */
-    @media (min-width:1024px){
-      body.is-stage main{ display:none }
-      .stage-desktop{ display:block }
-      body.is-stage{ overflow-y:hidden } /* sem rolagem vertical no desktop */
-    }
-    .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
-    .stage-frame{
-      position:relative; overflow:hidden;
-      height: calc(100vh - var(--topbar-h) - var(--statusbar-h) - 24px - 88px); /* viewport menos top e level dock */
-      min-height: 420px;
-    }
-    .stage-track{
-      display:flex; gap:24px; align-items:stretch; height:100%;
-      transform:translateX(var(--x,0)); transition:transform .38s cubic-bezier(.2,.7,.2,1);
-      padding:8px 0;
-    }
-    .slide{
-      flex:0 0 clamp(720px, 70vw, 980px);
-      height:100%;
-    }
-    .slide .card{
-      height:100%; display:flex; flex-direction:column;
-    }
-    .slide .media{ flex:0 0 auto }
-    .slide .content{
-      flex:1 1 auto; overflow:auto; /* se o conteúdo passar, scroll dentro do card */
-      scrollbar-width: thin;
-    }
-
-    .stage-nav .btn-nav{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:56px; height:56px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.80); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:82;
-      box-shadow:0 10px 30px rgba(0,0,0,.45);
-    }
-    .stage-nav .btn-prev{ left:16px }
-    .stage-nav .btn-next{ right:calc(16px + var(--dock-offset)) } /* recuo para não bater no Side Dock */
-    .stage-nav svg{ width:26px; height:26px }
   </style>
 </head>
 <body>
@@ -386,24 +318,8 @@
     </div>
   </div>
 
-  <!-- Desktop: Carrossel horizontal -->
-  <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo carrossel)">
-    <div class="stage-frame">
-      <div class="stage-track" id="stageTrack"></div>
-      <div class="stage-nav" aria-hidden="false">
-        <button class="btn-nav btn-prev" id="stagePrev" aria-label="Anterior">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="btn-nav btn-next" id="stageNext" aria-label="Próximo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
 
-  <!-- Fluxo normal (mobile) -->
   <main id="content">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
@@ -421,12 +337,12 @@
             </button>
           </div>
 
-          <div class="row pills" id="cc-pills" style="margin-top:6px">
+          <div class="row pills" style="margin-top:6px">
             <span class="pill-flag included" id="pill-cc-voucher">1 voucher a cada 90 dias</span>
             <span class="pill-flag" id="pill-cc-premium">Atração premium não inclusa</span>
           </div>
 
-          <p class="note" id="cc-note">Válido para clientes ativos e adimplentes.</p>
+          <p class="note">Válido para clientes ativos e adimplentes.</p>
 
           <div id="more-conecta" class="more" role="region">
             <div class="more-inner">
@@ -435,10 +351,14 @@
           </div>
 
           <div class="actions" id="cc-actions">
-            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar vouchers</a>
+            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">
+              <span class="line">Solicitar</span>
+              <span class="line">Voucher</span>
+            </a>
             <button class="btn btn-copy" id="copyEmail" type="button" aria-label="Copiar e-mail do Conecta Clube">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-              Copiar e‑mail
+              <span class="line">Copiar</span>
+              <span class="line">e‑mail</span>
             </button>
           </div>
         </div>
@@ -449,9 +369,9 @@
     <section class="section" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
       <div class="card">
         <div class="media"><div class="frame">
-          <div class="two-icons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--line);max-width:820px;width:100%">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--line);max-width:820px;width:100%">
             <img alt="CCS Play" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
-            <img alt="CCS TV" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS TV"   style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
           </div>
         </div></div>
         <div class="content">
@@ -655,16 +575,6 @@
         </div>
       </div>
     </section>
-
-    <!-- FAQ -->
-    <section class="section" id="s-faq" data-title="FAQ">
-      <div class="card"><div class="content">
-        <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
-        <details class="faq"><summary>Quando meus benefícios são ativados?</summary><div>Em até 72 horas úteis após a instalação (validações internas).</div></details>
-        <details class="faq"><summary>Como acesso o CCS PLAY?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div></details>
-        <details class="faq"><summary>Onde pago minhas faturas e faço PIX?</summary><div>Acesse <a class="inline-link" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> (CPF, sem senha).</div></details>
-      </div></div>
-    </section>
   </main>
 
   <!-- Side Dock (direita) -->
@@ -681,7 +591,7 @@
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
-  <!-- Toggle do Side Dock (mobile): abaixo da cápsula, canto direito -->
+  <!-- Toggle do Side Dock (mobile) -->
   <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
@@ -715,7 +625,7 @@
     const LEVELS_KEY='ccs-cc-compare-level';
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
 
-    /* Dados por nível */
+    /* Conteúdos (resumo) */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -744,64 +654,8 @@
       2:{ label:'Atualizar para 450 MB', plan:'450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'},
       3:{ label:'Atualizar para 650 MB', plan:'650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'}
     };
-    const PLAY = {
-      1:{ subtitle:'Streaming completo e canais de TV',
-        facts:[
-          {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
-          {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
-        ]},
-      2:{ subtitle:'60 canais + 50 canais de música',
-        facts:[
-          {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
-          {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
-          {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
-        ]},
-      3:{ subtitle:'60 canais + 50 canais de música + +1.000 horas de filmes e séries',
-        facts:[
-          {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
-          {emoji:'🎞️',text:'+1.000 horas de filmes e séries.'},
-          {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
-          {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
-        ]}
-    };
-    const SKEELO = {
-      1:{ subtitle:'Sua biblioteca de leitura e áudio',
-        facts:[
-          {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
-          {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
-          {emoji:'💡',text:'Leia e ouça quando e onde quiser.'}
-        ]},
-      2:{}, 3:{} };
-    SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1])); SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
-    const SUPORTE = {
-      1:{ subtitle:'Atendimento com prioridade e prazo garantido',
-        facts:[
-          {emoji:'⏱️',text:'SLA de atendimento: até 36h úteis.'},
-          {emoji:'🛠️',text:'1 visita técnica gratuita por ano.'}
-        ], sla:'SLA 36h úteis', abs:false, imp:false, mud:false },
-      2:{ subtitle:'Atendimento com prioridade e prazo garantido',
-        facts:[
-          {emoji:'⏱️',text:'SLA de atendimento: até 24h úteis.'},
-          {emoji:'🛠️',text:'1 visita técnica gratuita anual.'},
-          {emoji:'✅',text:'1 isenção de taxa por ausência.'}
-        ], sla:'SLA 24h úteis', abs:true, imp:false, mud:false },
-      3:{ subtitle:'Atendimento com prioridade e prazo garantido',
-        facts:[
-          {emoji:'⏱️',text:'SLA de atendimento: até 18h úteis.'},
-          {emoji:'🛠️',text:'1 visita técnica gratuita anual.'},
-          {emoji:'✅',text:'Isenção de taxa por ausência.'},
-          {emoji:'✅',text:'Isenção de visita técnica improdutiva.'},
-          {emoji:'✅',text:'Isenção de mudança de endereço de instalação.'}
-        ], sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
-    };
 
-    /* Seletores base */
+    /* Seletores topo/status */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const stCta = document.getElementById('st-cta');
@@ -814,52 +668,32 @@
     const logoL = document.querySelector('.logo-ccs');
     const logoR = document.querySelector('.logo-vctech');
 
+    /* Side Dock */
     const sideDock = document.getElementById('sideDock');
     const dockToggle = document.getElementById('dockToggle');
     const dockClose = document.getElementById('dockClose');
     const dockLinks=[...document.querySelectorAll('.side-dock a')];
 
+    /* Seções */
     const sections=[...document.querySelectorAll('main .section')];
 
+    /* Nível */
     const lvl1=document.getElementById('lvl-1');
     const lvl2=document.getElementById('lvl-2');
     const lvl3=document.getElementById('lvl-3');
     const lvlBtns=[lvl1,lvl2,lvl3];
 
+    /* FAB e Level Dock wrap */
     const fab = document.getElementById('fab');
     const levelDockWrap = document.getElementById('levelDockWrap');
 
-    const playSubtitle=document.getElementById('play-subtitle');
-    const playFacts=document.getElementById('play-facts');
-    const pillPlay50=document.getElementById('pill-play-50mus');
-    const pillPlay1000=document.getElementById('pill-play-1000');
-
-    const skeeloSubtitle=document.getElementById('skeelo-subtitle');
-    const skeeloFacts=document.getElementById('skeelo-facts');
-
-    const supSubtitle=document.getElementById('sup-subtitle');
-    const supFacts=document.getElementById('sup-facts');
-    const pillSupSla=document.getElementById('pill-sup-sla');
-    const pillSupVisita=document.getElementById('pill-sup-visita');
-    const pillSupAbs=document.getElementById('pill-sup-abs');
-    const pillSupImp=document.getElementById('pill-sup-imp');
-    const pillSupMud=document.getElementById('pill-sup-mud');
-
+    /* Pílulas e facts Conecta */
     const pillVoucher = document.getElementById('pill-cc-voucher');
     const pillPremium = document.getElementById('pill-cc-premium');
     const ccFacts = document.getElementById('cc-facts');
     const emailBtn=document.getElementById('cc-email-link');
 
-    /* Carrossel desktop */
-    const stageDesktop = document.getElementById('stageDesktop');
-    const stageTrack = document.getElementById('stageTrack');
-    const btnPrev = document.getElementById('stagePrev');
-    const btnNext = document.getElementById('stageNext');
-
-    let topAtSight = true, currentSectionTitle='Conecta Clube';
-    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    /* Layout helpers */
+    /* Helpers de layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
@@ -883,90 +717,19 @@
       capRight.textContent = `Plano ${PLANS[level]}`;
       fitCapsule();
     }
-    function setCapsuleSection(level, name){
-      capLeft.textContent = `Nível ${level}`;
-      capRight.textContent = name || '';
-      fitCapsule();
-    }
 
-    /* Render facts */
-    function renderFacts(container, facts){
-      container.innerHTML='';
-      (facts||[]).forEach(f=>{
-        const row=document.createElement('div'); row.className='fact';
-        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
-        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
-        if (f.link && f.link.href){
-          const a=document.createElement('a'); a.href=f.link.href; a.target='_blank'; a.rel='noopener'; a.className='inline-link'; a.textContent=f.link.label||'Abrir ↗'; a.style.marginLeft='8px';
-          txt.appendChild(a);
-        }
-        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
-      });
-    }
-
-    /* Atualizações por nível */
-    function updateConecta(level){
-      const c = CONNECTA[level];
-      pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
-      pillPremium.textContent = c.premium ? 'Atração premium inclusa' : 'Atração premium não inclusa';
-      pillPremium.classList.toggle('included', !!c.premium);
-      pillPremium.classList.toggle('excluded', !c.premium);
-      renderFacts(ccFacts, c.facts);
-    }
-    function updatePlay(level){
-      const p = PLAY[level];
-      playSubtitle.textContent = p.subtitle;
-      renderFacts(playFacts, p.facts);
-      pillPlay50.textContent = (level>=2) ? '50 canais de música' : '50 canais de música não incluso';
-      pillPlay50.classList.toggle('included', level>=2);
-      pillPlay50.classList.toggle('excluded', !(level>=2));
-      pillPlay1000.textContent = (level===3) ? '+1.000 horas de filmes e séries' : '+1.000 horas de filmes e séries não incluso';
-      pillPlay1000.classList.toggle('included', level===3);
-      pillPlay1000.classList.toggle('excluded', level!==3);
-    }
-    function updateSkeelo(level){
-      const s = SKEELO[level];
-      skeeloSubtitle.textContent = s.subtitle;
-      renderFacts(skeeloFacts, s.facts);
-    }
-    function updateSup(level){
-      const sp = SUPORTE[level];
-      supSubtitle.textContent = sp.subtitle;
-      renderFacts(supFacts, sp.facts);
-      pillSupSla.textContent = sp.sla;
-      pillSupVisita.classList.add('included');
-      function setInc(el, ok, base){ el.textContent = ok ? base.replace(' não inclusa','') : base.endsWith('não inclusa')? base : base+' não inclusa'; el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
-      setInc(pillSupAbs, sp.abs, 'Isenção por ausência');
-      setInc(pillSupImp, sp.imp, 'Isenção visita improdutiva');
-      setInc(pillSupMud, sp.mud, 'Isenção mudança de endereço');
-    }
-    function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
-
-    /* Status bar */
-    function setStatusBar(level){
-      if (level===1){ statusBar.style.display='none'; }
-      else {
-        const up = UPGRADE[level];
-        stCta.textContent = up.label; stCta.href = up.href;
-        statusBar.style.display='block';
-      }
-      setBodyTopPad();
-    }
-
-    /* Level Dock */
-    function setLevelDock(level){
-      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      const btn = lvlBtns.find(b=> +b.dataset.level===level);
-      if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
-    }
-
-    /* Observers (mobile) */
+    let topAtSight = true, currentSectionTitle='Conecta Clube';
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
-        const e=entries[0]; topAtSight = e.isIntersecting;
+        const e=entries[0];
+        topAtSight = e.isIntersecting;
         const level = +localStorage.getItem(LEVELS_KEY)||1;
-        if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        if (topAtSight) setCapsuleTop(level); else {
+          capLeft.textContent = `Nível ${level}`;
+          capRight.textContent = currentSectionTitle || '';
+          fitCapsule();
+        }
       }, {threshold:[0,0.01,1]});
       ioTop.observe(topSentinel);
 
@@ -982,30 +745,79 @@
         currentSectionTitle = vis.title || currentSectionTitle;
         setActiveDock(vis.id);
         const level = +localStorage.getItem(LEVELS_KEY)||1;
-        if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        if (topAtSight) setCapsuleTop(level); else {
+          capLeft.textContent = `Nível ${level}`;
+          capRight.textContent = currentSectionTitle || '';
+          fitCapsule();
+        }
       },{threshold:[0,0.25,0.5,0.75]});
       sections.forEach(s=>io.observe(s));
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB (mobile): subir/descer com confiabilidade */
-    function isStage(){ return document.body.classList.contains('is-stage'); } // desktop
-    function nearBottomMobile(){
-      const el = document.scrollingElement || document.documentElement || document.body;
-      return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 4);
+    /* Render facts helper */
+    function renderFacts(container, facts){
+      container.innerHTML='';
+      (facts||[]).forEach(f=>{
+        const row=document.createElement('div'); row.className='fact';
+        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
+        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
+        if (f.link && f.link.href){
+          const a=document.createElement('a'); a.href=f.link.href; a.target='_blank'; a.rel='noopener'; a.className='inline-link'; a.textContent=f.link.label||'Abrir ↗'; a.style.marginLeft='8px';
+          txt.appendChild(a);
+        }
+        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
+      });
     }
-    function updateFabIcon(){
-      if (isStage()) return; // desktop: sem FAB
-      if (nearBottomMobile()){
-        fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
-        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+
+    /* Atualizações por nível (pílulas/facts) */
+    function updateConecta(level){
+      const c = CONNECTA[level];
+      pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
+      pillPremium.textContent = c.premium ? 'Atração premium inclusa' : 'Atração premium não inclusa';
+      pillPremium.classList.toggle('included', !!c.premium);
+      pillPremium.classList.toggle('excluded', !c.premium);
+      renderFacts(ccFacts, c.facts);
+    }
+
+    /* Demais seções mantêm textos atuais (não alterados por nível aqui) */
+
+    /* Status bar (N2/N3) */
+    function setStatusBar(level){
+      if (level===1){
+        statusBar.style.display='none';
       } else {
-        fab.setAttribute('aria-label','Ir para o final'); fab.title='Ir para o final';
-        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
+        const up = {2:'Atualizar para 450 MB',3:'Atualizar para 650 MB'}[level];
+        stCta.textContent = up || 'Atualizar plano';
+        stCta.href = level===2
+          ? 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20para%20450%20MB.'
+          : 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20para%20650%20MB.';
+        statusBar.style.display='block';
       }
+      setBodyTopPad();
     }
+
+    /* Level Dock */
+    function setLevelDock(level){
+      [lvl1,lvl2,lvl3].forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      const btn = [lvl1,lvl2,lvl3].find(b=> +b.dataset.level===level);
+      if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
+    }
+
+    /* FAB — subir/descer (MOBILE) */
+    function isDesktop(){ return matchMedia('(min-width:1024px)').matches; }
+    function getScroll(){
+      const doc = document.documentElement, body = document.body;
+      const y = window.pageYOffset !== undefined ? window.pageYOffset : (doc.scrollTop || body.scrollTop || 0);
+      const vh = window.innerHeight || doc.clientHeight;
+      const sh = Math.max(doc.scrollHeight, body.scrollHeight, doc.offsetHeight, body.offsetHeight, doc.clientHeight, body.clientHeight);
+      return { y, vh, sh };
+    }
+    function isNearTop(){ const s=getScroll(); return s.y <= 2; }
+    function isNearBottom(){ const s=getScroll(); return s.y + s.vh >= s.sh - 2; }
+
     function placeFab(){
-      if (isStage()) return; // desktop não usa FAB
+      if (isDesktop()){ return; } // desktop não usa FAB
       const ldRect = levelDockWrap?.getBoundingClientRect();
       const vw = window.innerWidth || document.documentElement.clientWidth;
       const bottom = (ldRect?.height||64) + 16;
@@ -1013,16 +825,25 @@
       fab.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
       fab.style.left = left + 'px';
     }
+    function updateFabIcon(){
+      if (isDesktop()){ return; }
+      if (isNearBottom()){
+        fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
+        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+      } else {
+        fab.setAttribute('aria-label','Ir para o final'); fab.title='Ir para o final';
+        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
+      }
+    }
     fab.addEventListener('click', ()=>{
-      if (isStage()) return; // segurança
-      if (nearBottomMobile()){
+      if (isDesktop()) return;
+      if (isNearBottom()){
         window.scrollTo({ top: 0, behavior:'smooth' });
       } else {
-        const el = document.scrollingElement || document.documentElement || document.body;
-        const maxY = (el.scrollHeight||document.body.scrollHeight) - (window.innerHeight||document.documentElement.clientHeight);
-        window.scrollTo({ top: maxY, behavior:'smooth' });
+        const s = getScroll();
+        window.scrollTo({ top: s.sh - s.vh, behavior:'smooth' });
       }
-      setTimeout(updateFabIcon, 350);
+      setTimeout(updateFabIcon, 400);
     });
 
     /* Side Dock mobile: abrir/fechar */
@@ -1040,9 +861,8 @@
     }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
-    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updateFabIcon(); }, {passive:true});
 
-    /* Saiba mais (mobile) */
+    /* Saiba mais (expansível) */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
     document.addEventListener('click', ev=>{
       const btn = ev.target.closest('.chip-more'); if (!btn) return;
@@ -1064,100 +884,25 @@
       }
     });
 
-    /* Copy email */
-    const copyBtn = document.getElementById('copyEmail');
-    if (copyBtn){
-      copyBtn.addEventListener('click', async ()=>{
-        try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
-        const old=copyBtn.innerHTML;
-        copyBtn.innerHTML='✅ E‑mail copiado';
-        setTimeout(()=> copyBtn.innerHTML=old, 1400);
-      });
-    }
-
-    /* Carrossel desktop (sem 3D) */
-    const sectionOrder = sections.map(s=> s.id);
-    let stageIndex=0;
-    function buildStage(){
-      stageTrack.innerHTML='';
-      sections.forEach(s=>{
-        const card = s.querySelector('.card');
-        if (!card) return;
-        const slide=document.createElement('div'); slide.className='slide';
-        slide.appendChild(card.cloneNode(true)); // conteúdo estático dentro do slide
-        stageTrack.appendChild(slide);
-      });
-    }
-    function setDockOffset(){
-      const w = sideDock?.getBoundingClientRect()?.width || 0;
-      const gap = w ? (w + 24) : 80;
-      document.documentElement.style.setProperty('--dock-offset', gap+'px');
-    }
-    function setStageIndex(i){
-      const max = stageTrack.children.length-1;
-      stageIndex = Math.max(0, Math.min(i, max));
-      const active = stageTrack.children[stageIndex];
-      if (active){
-        const slideW = active.getBoundingClientRect().width;
-        const wrapW = stageTrack.getBoundingClientRect().width;
-        const gaps = 24 * stageIndex;
-        const x = -(slideW*stageIndex + gaps - (wrapW - slideW)/2);
-        stageTrack.style.setProperty('--x', x+'px');
-
-        currentSectionTitle = sections[stageIndex]?.getAttribute('data-title')||currentSectionTitle;
-        const L = +localStorage.getItem(LEVELS_KEY)||1;
-        setCapsuleSection(L, currentSectionTitle);
-      }
-      setActiveDock(sectionOrder[stageIndex]);
-      btnPrev.disabled = (stageIndex===0);
-      btnNext.disabled = (stageIndex===max);
-    }
-    function enableStage(){
-      document.body.classList.add('is-stage');
-      buildStage(); setDockOffset(); setStageIndex(0);
-      // Dock navega por slides
-      dockLinks.forEach(a=>{
-        a.dataset.href = a.getAttribute('href');
-        a.addEventListener('click', onDockClickStage);
-      });
-      // Teclado
-      addEventListener('keydown', onKeyNav);
-    }
-    function disableStage(){
-      document.body.classList.remove('is-stage');
-      dockLinks.forEach(a=>{
-        a.removeEventListener('click', onDockClickStage);
-        if (a.dataset.href) a.setAttribute('href', a.dataset.href);
-      });
-      removeEventListener('keydown', onKeyNav);
-    }
-    function onDockClickStage(ev){
-      ev.preventDefault();
-      const href = ev.currentTarget.getAttribute('href')||'';
-      const id = href.startsWith('#') ? href.slice(1) : href;
-      const idx = sectionOrder.indexOf(id);
-      if (idx>=0) setStageIndex(idx);
-    }
-    function onKeyNav(e){
-      if (e.key==='ArrowLeft'){ e.preventDefault(); setStageIndex(stageIndex-1); }
-      if (e.key==='ArrowRight'){ e.preventDefault(); setStageIndex(stageIndex+1); }
-    }
-    btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
-    btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
-
-    /* Estado */
+    /* Status e Nível */
     function applyLevel(level,{remember=true}={}){
       const L = [1,2,3].includes(+level) ? +level : 1;
       setLevelDock(L);
       setStatusBar(L);
-      updateAll(L);
+      updateConecta(L);
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      if (topAtSight) setCapsuleTop(L); else { capLeft.textContent=`Nível ${L}`; capRight.textContent=currentSectionTitle||''; fitCapsule(); }
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
+
+    /* Dock active por rolagem */
+    function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
+
+    /* Reflow util */
+    function remeasure(){ setBodyTopPad(); fitCapsule(); placeFab(); updateFabIcon(); }
 
     /* Init */
     function getLevelFromURL(){
@@ -1167,32 +912,29 @@
         if (qIndex!==-1){ const qs=new URLSearchParams(hash.slice(qIndex+1)); const n2=qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2; }
       }catch{} return null;
     }
-    function remeasure(){
-      setBodyTopPad(); fitCapsule(); if (!isStage()) { placeFab(); updateFabIcon(); }
-      if (isStage()) setDockOffset();
-    }
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       setCapsuleTop(start);
       applyLevel([1,2,3].includes(start)?start:1,{remember:false});
-      const desk = matchMedia('(min-width:1024px)').matches;
-      if (desk) enableStage(); else disableStage();
-
-      addEventListener('resize', ()=>{
-        const isDesk = matchMedia('(min-width:1024px)').matches;
-        if (isDesk && !isStage()) enableStage();
-        if (!isDesk && isStage()) disableStage();
-        remeasure();
-      }, {passive:true});
-
-      addEventListener('pageshow', remeasure);
-      addEventListener('orientationchange', remeasure);
-      addEventListener('scroll', ()=>{ if (!isStage()) updateFabIcon(); }, {passive:true});
-
       remeasure();
-      setTimeout(remeasure, 80);
+
+      addEventListener('resize', remeasure, {passive:true});
+      addEventListener('orientationchange', remeasure);
+      addEventListener('pageshow', remeasure);
+      addEventListener('scroll', ()=>{ updateFabIcon(); if (isMobile()) closeDock(); }, {passive:true});
     }
     init();
+
+    /* Copy e-mail */
+    const copyBtn = document.getElementById('copyEmail');
+    if (copyBtn){
+      copyBtn.addEventListener('click', async ()=>{
+        try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
+        const old=copyBtn.innerHTML;
+        copyBtn.innerHTML='<span class="line">✅ E‑mail</span><span class="line">copiado</span>';
+        setTimeout(()=> copyBtn.innerHTML='<span class="line">Copiar</span><span class="line">e‑mail</span>', 1400);
+      });
+    }
   })();
   </script>
 </body>
