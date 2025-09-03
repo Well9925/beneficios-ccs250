@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>CCS Telecom — Benefícios</title>
-  <meta name="description" content="Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte Premium, Indique & Ganhe, Portal do Assinante, Portal de Faturas, VCTECH, Resumo e FAQ.">
+  <meta name="description" content="Compare os benefícios dos níveis 250, 450 e 650 MB. Conecta Clube, CCS PLAY + CCS TV, Skeelo, Suporte Premium, Indique & Ganhe, Portal do Assinante, Portal de Faturas, VCTECH, Resumo e FAQ.">
   <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
   <link rel="preconnect" href="https://play-lh.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -23,14 +23,12 @@
       --planA:#00d9ff;  --planB:#00ffc6;
 
       --side-pad: clamp(14px, 4.5vw, 36px);
-
       --art-max-h-d: clamp(160px, 28vh, 300px);
       --art-max-h-m: clamp(140px, 24vh, 220px);
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
-
-      --dock-offset: 80px; /* recuo para seta direita no desktop (ajustado via JS) */
+      --dock-offset: 80px;
     }
 
     *{box-sizing:border-box}
@@ -41,16 +39,11 @@
       font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       background:var(--bg);
-      padding-top:0; /* ajustado via JS */
-      padding-bottom:calc(160px + env(safe-area-inset-bottom)); /* mobile: espaço para level dock + FAB */
+      padding-top:0;
+      padding-bottom:calc(160px + env(safe-area-inset-bottom));
     }
 
-    /* Anti-estouro global de texto */
-    .capsule .txt, .status-wrap, .status-label, .status-cta, .pill-flag, .pill, .btn, .title h2, .subtitle, .gtxt, .note {
-      overflow-wrap:anywhere; word-break:break-word; hyphens:auto; text-wrap:balance;
-    }
-
-    /* FX de fundo */
+    /* Efeitos de fundo */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -69,7 +62,7 @@
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
     @media (prefers-reduced-motion:reduce){ .pulse,.fx.fx-shimmer{ animation:none } }
 
-    /* Topbar/cápsula */
+    /* Topbar e cápsula */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     @keyframes textShift { 0%{ background-position:0% 50% } 100%{ background-position:200% 50% } }
     @keyframes softPulseStrong {
@@ -93,9 +86,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.38);
       backdrop-filter: blur(10px);
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
-      max-width:80vw; overflow:hidden; contain:paint;
-      -webkit-appearance:none; appearance:none;
-      animation: softPulseStrong 5.2s ease-in-out infinite alternate;
+      max-width:80vw; overflow:hidden; contain:paint; animation: softPulseStrong 5.2s ease-in-out infinite alternate;
     }
     header .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -123,7 +114,7 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Status bar (uma linha) */
+    /* Status (N2/N3) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:none; padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
@@ -132,9 +123,8 @@
     .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap; font-size:13px; line-height:1; white-space:nowrap }
     .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900; text-align:center }
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
-    @media (max-width:380px){ .status-cta{ padding:8px 10px } }
 
-    /* Seções/cards (fluxo normal mobile) */
+    /* Cards (fluxo mobile) */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
@@ -152,7 +142,6 @@
     .subtitle{ margin:6px 0 10px; color:var(--muted) }
 
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
-    .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-weight:900; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; text-align:center }
     .pill-flag{
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center; display:inline-flex; align-items:center; justify-content:center;
@@ -161,19 +150,11 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.9 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    .note{ color:#a8b6d9; font-size:14px }
-
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
     .actions.one .btn{ width:100% }
-    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size: var(--btn-fs,15px); text-align:center }
+    .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:15px; text-align:center }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
-
-    /* Mobile: 2 por linha quando houver >1 */
-    @media (max-width: 640px){
-      .row.pills{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
-      .actions{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px }
-      .actions.one{ display:block }
-    }
+    .btn[title]{ position:relative }
 
     /* Saiba mais */
     .chip-more{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer; animation:chipPulse 1.8s ease-in-out infinite }
@@ -195,14 +176,14 @@
     a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
     a.inline-link:hover{ color:#ffffff; text-decoration:underline }
 
-    /* Side Dock (direita) */
+    /* Side Dock (desktop e mobile aberto) */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Header do dock no mobile (botão fechar no topo) + botão abrir abaixo da cápsula */
+    /* Dock mobile toggle */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
@@ -226,14 +207,14 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) + FAB na mesma linha (mobile) */
+    /* Level Dock (rodapé) + FAB na mesma linha no mobile */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{
       display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
       background:rgba(16,18,24,.55); backdrop-filter:blur(10px)
     }
     .level-dock .btn-level{
-      position:relative; min-width:92px; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.10);
+      position:relative; min-width:88px; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer;
       transition: box-shadow .25s ease, transform .2s ease, background .25s ease;
     }
@@ -262,16 +243,15 @@
       content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
       animation: selectPulse .5s ease-out;
     }
-    /* “ATUAL” com pulso/halo */
-    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
-    .level-dock .label-actual{
-      position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
+    /* “ATUAL” acompanha o nível selecionado */
+    .label-actual{ display:none }
+    .btn-level[aria-pressed="true"] .label-actual{
+      display:inline-block; position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
       color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12);
       box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 14px rgba(0,217,255,.55);
       animation: ping 2.6s ease-out infinite;
     }
-    .level-dock .btn-level[data-level="1"] .label-actual{ display:block }
-    .level-dock .btn-level:not([data-level="1"]) .label-actual{ display:none }
+    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
 
     /* FAB (mobile) ao lado do Level Dock — posicionado via JS */
     .fab{
@@ -282,7 +262,7 @@
     .fab svg{ width:22px; height:22px }
     @media (min-width:1024px){ .fab{ display:none } } /* desktop: sem FAB */
 
-    /* Resumo grid (usado no mobile/fluxo normal) */
+    /* Resumo grid (mobile) */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -306,7 +286,7 @@
     .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
     .stage-frame{
       position:relative; overflow:hidden;
-      height: calc(100vh - var(--topbar-h) - var(--statusbar-h) - 24px - 88px); /* viewport menos top e level dock */
+      height: calc(100vh - var(--topbar-h) - var(--statusbar-h) - 24px - 88px);
       min-height: 420px;
     }
     .stage-track{
@@ -314,18 +294,10 @@
       transform:translateX(var(--x,0)); transition:transform .38s cubic-bezier(.2,.7,.2,1);
       padding:8px 0;
     }
-    .slide{
-      flex:0 0 clamp(720px, 70vw, 980px);
-      height:100%;
-    }
-    .slide .card{
-      height:100%; display:flex; flex-direction:column;
-    }
+    .slide{ flex:0 0 clamp(720px, 70vw, 980px); height:100% }
+    .slide .card{ height:100%; display:flex; flex-direction:column }
     .slide .media{ flex:0 0 auto }
-    .slide .content{
-      flex:1 1 auto; overflow:auto; /* se o conteúdo passar, scroll dentro do card */
-      scrollbar-width: thin;
-    }
+    .slide .content{ flex:1 1 auto; overflow:auto; scrollbar-width: thin }
 
     .stage-nav .btn-nav{
       position:absolute; top:50%; transform:translateY(-50%);
@@ -336,6 +308,67 @@
     .stage-nav .btn-prev{ left:16px }
     .stage-nav .btn-next{ right:calc(16px + var(--dock-offset)) } /* recuo para não bater no Side Dock */
     .stage-nav svg{ width:26px; height:26px }
+
+    /* Splash (boas-vindas) */
+    .splash{
+      position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(95,92,255,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 90%, rgba(0,234,255,.12), transparent 60%),
+        rgba(9,12,18,.88);
+      backdrop-filter: blur(8px);
+    }
+    .splash.is-open{ display:flex }
+    .splash .box{
+      width:min(760px, 92vw); border-radius:20px; padding:20px; border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+    }
+    .splash .head{
+      display:flex; align-items:center; gap:12px; justify-content:center; margin-bottom:6px
+    }
+    .splash .cap{
+      position:relative; display:inline-flex; align-items:center; padding:10px 16px; border-radius:999px;
+      background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.38);
+    }
+    .splash .cap::before{
+      content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
+      background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
+      background-size:300% 300%; animation:ringShift 12s ease-in-out infinite alternate;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+    }
+    .splash h1{ margin:8px 0 6px; text-align:center; font-size: clamp(22px, 3.2vw, 32px) }
+    .splash p{ margin:0; text-align:center; color:#dfe7ff }
+    .splash .actions{ display:flex; justify-content:center; margin-top:14px }
+    .splash .btn{ font-size:16px }
+
+    /* Onboarding (tutorial) */
+    .onb{
+      position:fixed; inset:0; z-index:115; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.60);
+      backdrop-filter: blur(2px);
+    }
+    .onb.is-open{ display:flex }
+    .onb .highlight{
+      position:absolute; border-radius:14px; border:2px solid rgba(0,217,255,.85);
+      box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30);
+      pointer-events:none; transition: all .25s ease;
+    }
+    .onb .card{
+      position:absolute; max-width:min(420px, 92vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--line); border-radius:14px; padding:14px;
+      box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff
+    }
+    .onb .card h3{ margin:0 0 8px; font-size:18px }
+    .onb .card p{ margin:0 0 12px; color:#e9f2ff }
+    .onb .row{ display:flex; gap:10px; justify-content:flex-end; margin:0 }
+    .onb .btn{ background:#fff }
+
+    /* Util */
+    .hide{ display:none !important }
   </style>
 </head>
 <body>
@@ -378,7 +411,7 @@
     </div>
   </header>
 
-  <!-- Status bar (N2/N3) -->
+  <!-- Status bar -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
     <div class="status-wrap">
       <span class="status-label" id="st-need">Necessário</span>
@@ -389,12 +422,12 @@
   <!-- Desktop: Carrossel horizontal -->
   <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo carrossel)">
     <div class="stage-frame">
-      <div class="stage-track" id="stageTrack"></div>
+      <div class="stage-track" id="stageTrack" aria-live="polite"></div>
       <div class="stage-nav" aria-hidden="false">
-        <button class="btn-nav btn-prev" id="stagePrev" aria-label="Anterior">
+        <button class="btn-nav btn-prev" id="stagePrev" aria-label="Anterior" title="Anterior (←)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <button class="btn-nav btn-next" id="stageNext" aria-label="Próximo">
+        <button class="btn-nav btn-next" id="stageNext" aria-label="Próximo" title="Próximo (→)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
       </div>
@@ -411,11 +444,10 @@
         <div class="media"><div class="frame">
           <img class="art-img" alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async" fetchpriority="high">
         </div></div>
-
         <div class="content">
           <div class="title">
             <h2>Conecta Clube</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta">
+            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
             </button>
@@ -435,8 +467,8 @@
           </div>
 
           <div class="actions" id="cc-actions">
-            <a class="btn cta" id="cc-email-link" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar voucher</a>
-            <button class="btn btn-copy" id="copyEmail" type="button" aria-label="Copiar e-mail do Conecta Clube">
+            <a class="btn cta" id="cc-email-link" title="Abrir e-mail para solicitar vouchers" href="mailto:ccs@ccstelecom.com.br?subject=Conecta%20Clube%20-%20Solicitar%20benef%C3%ADcios">Solicitar vouchers</a>
+            <button class="btn btn-copy" id="copyEmail" type="button" aria-label="Copiar e-mail do Conecta Clube" title="Copiar e-mail">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
               Copiar e‑mail
             </button>
@@ -457,7 +489,7 @@
         <div class="content">
           <div class="title">
             <h2>CCS PLAY + CCS TV</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-ccsplay">
+            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-ccsplay" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
             </button>
@@ -478,7 +510,7 @@
           </div>
 
           <div class="actions one">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay">Acessar CCS PLAY</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/ccsplay" title="Abrir o app CCS PLAY">Acessar CCS PLAY</a>
           </div>
         </div>
       </div>
@@ -493,7 +525,7 @@
         <div class="content">
           <div class="title">
             <h2>Skeelo</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-skeelo">
+            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-skeelo" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
             </button>
@@ -514,7 +546,7 @@
           </div>
 
           <div class="actions one">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht">Acessar Skeelo</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://onelink.to/hseuht" title="Abrir o app Skeelo">Acessar Skeelo</a>
           </div>
         </div>
       </div>
@@ -529,7 +561,7 @@
         <div class="content">
           <div class="title">
             <h2>Suporte Premium</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-suporte">
+            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-suporte" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
             </button>
@@ -551,7 +583,7 @@
           </div>
 
           <div class="actions one" id="sup-actions">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Solicitar suporte</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." title="Falar com suporte">Solicitar suporte</a>
           </div>
         </div>
       </div>
@@ -566,7 +598,7 @@
         <div class="content">
           <div class="title">
             <h2>Indique &amp; Ganhe</h2>
-            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-indique">
+            <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-indique" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
             </button>
@@ -583,9 +615,9 @@
           </div>
 
           <div class="actions">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250.">Indicar Plano 250</a>
-            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450.">Indicar Plano 450</a>
-            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650.">Indicar Plano 650</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250." title="Indicar para 250 MB">Indicar Plano 250</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450." title="Indicar para 450 MB">Indicar Plano 450</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650." title="Indicar para 650 MB">Indicar Plano 650</a>
           </div>
         </div>
       </div>
@@ -601,7 +633,7 @@
           <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Tenha o controle da sua assinatura onde você estiver!</p>
           <div class="actions one">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/">Acessar Portal</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/" title="Abrir Portal do Assinante">Acessar Portal</a>
           </div>
         </div>
       </div>
@@ -617,7 +649,7 @@
           <div class="title"><h2>Portal de Faturas</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Acesso rápido, sem login.</p>
           <div class="actions one">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/" title="Abrir Portal de Faturas (PIX)">Acessar Portal de Faturas</a>
           </div>
         </div>
       </div>
@@ -633,7 +665,7 @@
           <div class="title"><h2>VCTECH</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Representante Comercial CCS Telecom.</p>
           <div class="actions one">
-            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20VCTECH.">Falar com VCTECH</a>
+            <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20VCTECH." title="Falar com VCTECH">Falar com VCTECH</a>
           </div>
         </div>
       </div>
@@ -681,17 +713,17 @@
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
-  <!-- Toggle do Side Dock (mobile): abaixo da cápsula, canto direito -->
-  <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções">
+  <!-- Toggle do Side Dock (mobile) -->
+  <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções" title="Abrir menu de seções">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
   <!-- Level Dock (rodapé) -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
     <div class="wrap" id="levelDockWrap">
-      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true"><span class="label-actual">ATUAL</span>Nível 1</button>
-      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false">Nível 2</button>
-      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false">Nível 3</button>
+      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span>Nível 1</button>
+      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false" title="Ver benefícios do Nível 2"><span class="label-actual">ATUAL</span>Nível 2</button>
+      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false" title="Ver benefícios do Nível 3"><span class="label-actual">ATUAL</span>Nível 3</button>
     </div>
   </nav>
 
@@ -704,18 +736,47 @@
     <div class="wrap">
       <p>© 2025 V C TECH Representante Comercial - CCS TELECOM — Todos os direitos reservados</p>
       <div class="actions">
-        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
-        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS." title="Falar com Suporte">Falar com Suporte</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10" title="Avaliar no Google">Avaliar no Google</a>
       </div>
     </div>
   </footer>
 
+  <!-- Splash (boas-vindas) -->
+  <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
+    <div class="box">
+      <div class="head">
+        <div class="cap">Comparador de Benefícios</div>
+      </div>
+      <h1 id="splashTitle">Bem-vindo ao Portal de Benefícios CCS</h1>
+      <p id="splashDesc">Compare os níveis, descubra vantagens exclusivas e escolha a melhor experiência para você.</p>
+      <div class="actions">
+        <button class="btn cta" id="btnStart" type="button">Explorar benefícios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding (tutorial de 2 passos) -->
+  <div class="onb" id="onboarding" role="dialog" aria-modal="true" aria-live="polite">
+    <div class="highlight" id="onbHighlight" aria-hidden="true"></div>
+    <div class="card" id="onbCard" role="document">
+      <h3 id="onbTitle">Compare os planos</h3>
+      <p id="onbText">Clique nos níveis abaixo para ver os benefícios de cada plano.</p>
+      <div class="row">
+        <button class="btn" type="button" id="onbNext">Próximo</button>
+        <button class="btn cta" type="button" id="onbDone">Começar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
+    const WELCOME_KEY='ccs-welcome-shown';
+    const ONB_KEY='ccs-onboarded';
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
 
-    /* Dados por nível */
+    /* Conteúdos por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -801,7 +862,7 @@
         ], sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores base */
+    /* Seletores principais */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const stCta = document.getElementById('st-cta');
@@ -856,10 +917,22 @@
     const btnPrev = document.getElementById('stagePrev');
     const btnNext = document.getElementById('stageNext');
 
-    let topAtSight = true, currentSectionTitle='Conecta Clube';
-    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Splash e Onboarding */
+    const splash = document.getElementById('splash');
+    const btnStart = document.getElementById('btnStart');
+    const onboarding = document.getElementById('onboarding');
+    const onbHighlight = document.getElementById('onbHighlight');
+    const onbCard = document.getElementById('onbCard');
+    const onbNext = document.getElementById('onbNext');
+    const onbDone = document.getElementById('onbDone');
+    const onbTitle = document.getElementById('onbTitle');
+    const onbText = document.getElementById('onbText');
 
-    /* Layout helpers */
+    /* Estado geral */
+    let topAtSight = true, currentSectionTitle='Conecta Clube';
+    let stageIndex=0;
+
+    /* Helpers de layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
@@ -935,7 +1008,7 @@
       renderFacts(supFacts, sp.facts);
       pillSupSla.textContent = sp.sla;
       pillSupVisita.classList.add('included');
-      function setInc(el, ok, base){ el.textContent = ok ? base.replace(' não inclusa','') : base.endsWith('não inclusa')? base : base+' não inclusa'; el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
+      function setInc(el, ok, base){ el.textContent = ok ? base : base.replace(/( não inclusa)?$/,' não inclusa'); el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
       setInc(pillSupAbs, sp.abs, 'Isenção por ausência');
       setInc(pillSupImp, sp.imp, 'Isenção visita improdutiva');
       setInc(pillSupMud, sp.mud, 'Isenção mudança de endereço');
@@ -953,14 +1026,15 @@
       setBodyTopPad();
     }
 
-    /* Level Dock */
+    /* Level Dock + pílula ATUAL acompanha seleção */
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      // pulso visual
       const btn = lvlBtns.find(b=> +b.dataset.level===level);
       if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Observers (mobile) */
+    /* Observers (mobile) para cápsula e side-dock highlight */
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
@@ -970,6 +1044,7 @@
       }, {threshold:[0,0.01,1]});
       ioTop.observe(topSentinel);
 
+      const sections = [...document.querySelectorAll('main .section')];
       const io=new IntersectionObserver(()=>{
         const vis = sections.map(s=>{
           const r=s.getBoundingClientRect();
@@ -984,18 +1059,18 @@
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
       },{threshold:[0,0.25,0.5,0.75]});
-      sections.forEach(s=>io.observe(s));
+      document.querySelectorAll('main .section').forEach(s=>io.observe(s));
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB (mobile): subir/descer com confiabilidade */
+    /* FAB (mobile): subir/descer */
     function isStage(){ return document.body.classList.contains('is-stage'); } // desktop
     function nearBottomMobile(){
       const el = document.scrollingElement || document.documentElement || document.body;
       return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 4);
     }
     function updateFabIcon(){
-      if (isStage()) return; // desktop: sem FAB
+      if (isStage()) return;
       if (nearBottomMobile()){
         fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
@@ -1005,7 +1080,7 @@
       }
     }
     function placeFab(){
-      if (isStage()) return; // desktop não usa FAB
+      if (isStage()) return;
       const ldRect = levelDockWrap?.getBoundingClientRect();
       const vw = window.innerWidth || document.documentElement.clientWidth;
       const bottom = (ldRect?.height||64) + 16;
@@ -1014,7 +1089,7 @@
       fab.style.left = left + 'px';
     }
     fab.addEventListener('click', ()=>{
-      if (isStage()) return; // segurança
+      if (isStage()) return;
       if (nearBottomMobile()){
         window.scrollTo({ top: 0, behavior:'smooth' });
       } else {
@@ -1064,7 +1139,7 @@
       }
     });
 
-    /* Copy email */
+    /* Copiar e-mail */
     const copyBtn = document.getElementById('copyEmail');
     if (copyBtn){
       copyBtn.addEventListener('click', async ()=>{
@@ -1076,15 +1151,12 @@
     }
 
     /* Carrossel desktop (sem 3D) */
-    const sectionOrder = sections.map(s=> s.id);
-    let stageIndex=0;
+    const sectionOrder = [...document.querySelectorAll('main .section')].map(s=> s.id);
     function buildStage(){
       stageTrack.innerHTML='';
-      sections.forEach(s=>{
-        const card = s.querySelector('.card');
-        if (!card) return;
+      document.querySelectorAll('main .section .card').forEach(card=>{
         const slide=document.createElement('div'); slide.className='slide';
-        slide.appendChild(card.cloneNode(true)); // conteúdo estático dentro do slide
+        slide.appendChild(card.cloneNode(true));
         stageTrack.appendChild(slide);
       });
     }
@@ -1104,23 +1176,22 @@
         const x = -(slideW*stageIndex + gaps - (wrapW - slideW)/2);
         stageTrack.style.setProperty('--x', x+'px');
 
-        currentSectionTitle = sections[stageIndex]?.getAttribute('data-title')||currentSectionTitle;
+        currentSectionTitle = sectionOrder[stageIndex]?.replace(/^s-/, '').replace(/-/g,' ') || currentSectionTitle;
         const L = +localStorage.getItem(LEVELS_KEY)||1;
-        setCapsuleSection(L, currentSectionTitle);
+        setCapsuleSection(L, currentSectionTitle[0]?.toUpperCase()+currentSectionTitle.slice(1));
       }
-      setActiveDock(sectionOrder[stageIndex]);
+      const targetId = sectionOrder[stageIndex];
+      setActiveDock(targetId);
       btnPrev.disabled = (stageIndex===0);
       btnNext.disabled = (stageIndex===max);
     }
     function enableStage(){
       document.body.classList.add('is-stage');
       buildStage(); setDockOffset(); setStageIndex(0);
-      // Dock navega por slides
       dockLinks.forEach(a=>{
         a.dataset.href = a.getAttribute('href');
         a.addEventListener('click', onDockClickStage);
       });
-      // Teclado
       addEventListener('keydown', onKeyNav);
     }
     function disableStage(){
@@ -1145,21 +1216,96 @@
     btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
     btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
 
-    /* Estado */
+    /* Status & nível */
     function applyLevel(level,{remember=true}={}){
       const L = [1,2,3].includes(+level) ? +level : 1;
       setLevelDock(L);
       setStatusBar(L);
       updateAll(L);
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      const title = document.body.classList.contains('is-stage') ? currentSectionTitle : currentSectionTitle;
+      if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, title);
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
 
-    /* Init */
+    /* Splash e Onboarding */
+    function showSplash(){
+      splash.classList.add('is-open');
+      document.body.style.overflow='hidden';
+    }
+    function hideSplash(){
+      splash.classList.remove('is-open');
+      document.body.style.overflow='';
+    }
+    function showOnboarding(){
+      if (!levelDockWrap || !sideDock) return;
+      onboarding.classList.add('is-open');
+      document.body.style.overflow='hidden';
+      let step=1;
+      function placeFor(targetEl){
+        const r = targetEl.getBoundingClientRect();
+        onbHighlight.style.left = (r.left-6)+'px';
+        onbHighlight.style.top  = (r.top-6)+'px';
+        onbHighlight.style.width = (r.width+12)+'px';
+        onbHighlight.style.height= (r.height+12)+'px';
+        // posiciona o card preferindo acima do alvo
+        const card = onbCard;
+        const preferTop = r.top - (card.offsetHeight+12);
+        const top = (preferTop>60? preferTop : (r.bottom+12));
+        let left = r.left;
+        if (left + card.offsetWidth > (window.innerWidth-16)) left = window.innerWidth - card.offsetWidth - 16;
+        if (left < 16) left = 16;
+        card.style.top = Math.max(60, top) + 'px';
+        card.style.left = left + 'px';
+      }
+      function setStep(s){
+        step = s;
+        if (step===1){
+          onbTitle.textContent='Compare os planos';
+          onbText.textContent='Clique nos níveis abaixo para ver os benefícios de cada plano.';
+          placeFor(levelDockWrap);
+          onbNext.classList.remove('hide');
+          onbDone.textContent='Começar';
+        } else if (step===2){
+          onbTitle.textContent='Navegue mais rápido';
+          onbText.textContent='Use o menu lateral para acessar rapidamente cada seção.';
+          placeFor(sideDock);
+          onbNext.classList.add('hide');
+          onbDone.textContent='Começar';
+        }
+      }
+      setStep(1);
+      const onResize = ()=>{ placeFor(step===1?levelDockWrap:sideDock); };
+      window.addEventListener('resize', onResize, {passive:true});
+      onbNext.onclick = ()=> setStep(2);
+      onbDone.onclick = ()=>{
+        onboarding.classList.remove('is-open');
+        document.body.style.overflow='';
+        localStorage.setItem(ONB_KEY,'1');
+        window.removeEventListener('resize', onResize);
+      };
+    }
+
+    function maybeOnboard(){
+      const welcomed = localStorage.getItem(WELCOME_KEY)==='1';
+      const onboarded = localStorage.getItem(ONB_KEY)==='1';
+      if (!welcomed){
+        showSplash();
+      } else if (!onboarded){
+        showOnboarding();
+      }
+    }
+    btnStart?.addEventListener('click', ()=>{
+      hideSplash();
+      localStorage.setItem(WELCOME_KEY,'1');
+      // abre o tutorial na sequência
+      setTimeout(showOnboarding, 200);
+    });
+
+    /* Init geral */
     function getLevelFromURL(){
       try{
         const u=new URL(window.location.href); const n1=u.searchParams.get('n'); if (n1 && [1,2,3].includes(+n1)) return +n1;
@@ -1168,13 +1314,15 @@
       }catch{} return null;
     }
     function remeasure(){
-      setBodyTopPad(); fitCapsule(); if (!isStage()) { placeFab(); updateFabIcon(); }
+      setBodyTopPad(); fitCapsule();
+      if (!isStage()) { placeFab(); updateFabIcon(); }
       if (isStage()) setDockOffset();
     }
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
       setCapsuleTop(start);
       applyLevel([1,2,3].includes(start)?start:1,{remember:false});
+
       const desk = matchMedia('(min-width:1024px)').matches;
       if (desk) enableStage(); else disableStage();
 
@@ -1191,6 +1339,9 @@
 
       remeasure();
       setTimeout(remeasure, 80);
+
+      // Splash/Onboarding somente primeira visita
+      maybeOnboard();
     }
     init();
   })();
