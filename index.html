@@ -28,7 +28,6 @@
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
-      --dock-offset: 80px;
     }
 
     *{box-sizing:border-box}
@@ -114,16 +113,15 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Barra comercial dinâmica (N2/N3) */
+    /* Barra comercial fixa (sempre) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
-      display:none; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
+      display:block; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
-    .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap }
-    .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900; text-align:center }
-    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
-    .status-cta.secondary{ background:rgba(255,255,255,.10); color:#fff }
+    .status-wrap{ display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap }
+    .status-cta{ border:1px solid var(--line); border-radius:12px; padding:9px 14px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
+    .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
     /* Seções e cards — anti-mistura entre seções */
     .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center; position:relative; z-index:1; isolation:isolate; contain:layout paint; }
@@ -157,18 +155,14 @@
     .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:15px; text-align:center }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
     .btn.ghost{ background:rgba(255,255,255,.10); color:#fff }
-    .btn[title]{ position:relative }
 
-    /* Saiba mais */
-    .chip-more{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer; animation:chipPulse 1.8s ease-in-out infinite }
+    .chip-more{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer }
     .chip-more .ico{ width:16px; height:16px }
-    @keyframes chipPulse{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} 60%{ box-shadow:0 0 0 8px rgba(0,217,255,.10)} 100%{ box-shadow:0 0 0 0 rgba(0,217,255,0)} }
     .more[hidden]{ display:none }
     .more{ overflow:hidden; height:0; opacity:0; transition: height .28s ease, opacity .28s ease }
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
 
-    /* Facts */
     .facts{ display:grid; grid-template-columns:1fr; gap:10px; margin:0 }
     @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:8px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
@@ -176,17 +170,17 @@
     .fact .txt{ color:#dfe7ff }
     .fact .txt strong{ color:#fff }
 
-    a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
-    a.inline-link:hover{ color:#ffffff; text-decoration:underline }
+    a.inline-link, .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
+    a.inline-link:hover, .status-link:hover{ color:#ffffff; text-decoration:underline }
 
-    /* Side Dock */
+    /* Side Dock (desktop e mobile aberto) */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain; display:block }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Dock mobile */
+    /* Dock mobile toggle */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
@@ -204,7 +198,7 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock + FAB */
+    /* Level Dock (rodapé) */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{
       display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
@@ -238,15 +232,15 @@
       animation: ping 2.6s ease-out infinite;
     }
 
+    /* Botão "Voltar ao topo" (apenas mobile/scroll longo) */
     .fab{
       position:fixed; z-index:100; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.90); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
-      pointer-events:auto;
+      background:rgba(16,18,24,.90); color:#fff; display:none; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
+      left:16px; bottom:calc(90px + env(safe-area-inset-bottom));
     }
     .fab svg{ width:22px; height:22px }
-    @media (min-width:1024px){ .fab{ display:none } }
 
-    /* Resumo grid */
+    /* Resumo */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -256,37 +250,10 @@
     .gimg img{ width:64px; height:64px; object-fit:contain; display:block }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Desktop: carrossel */
-    @media (min-width:1024px){
-      body.is-stage main{ display:none }
-      .stage-desktop{ display:block }
-      body.is-stage{ overflow-y:hidden }
-    }
-    .stage-desktop{ display:none; padding:18px var(--side-pad) 24px }
-    .stage-frame{
-      position:relative; overflow:hidden;
-      height: calc(100vh - var(--topbar-h) - var(--statusbar-h) - 24px - 88px);
-      min-height: 420px;
-    }
-    .stage-track{
-      display:flex; gap:24px; align-items:stretch; height:100%;
-      transform:translateX(var(--x,0)); transition:transform .38s cubic-bezier(.2,.7,.2,1);
-      padding:8px 0;
-    }
-    .slide{ flex:0 0 clamp(720px, 70vw, 980px); height:100% }
-    .slide .card{ height:100%; display:flex; flex-direction:column }
-    .slide .media{ flex:0 0 auto }
-    .slide .content{ flex:1 1 auto; overflow:auto; scrollbar-width: thin }
-
-    .stage-nav .btn-nav{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:56px; height:56px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.80); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:82;
-      box-shadow:0 10px 30px rgba(0,0,0,.45);
-    }
-    .stage-nav .btn-prev{ left:16px }
-    .stage-nav .btn-next{ right:calc(16px + var(--dock-offset)) }
-    .stage-nav svg{ width:26px; height:26px }
+    /* Footer */
+    .footer{ padding:24px var(--side-pad); color:#cfe0ff; text-align:center }
+    .footer .wrap{ display:grid; gap:14px; justify-items:center }
+    .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
 
     /* Splash (boas-vindas) */
     .splash{
@@ -385,30 +352,15 @@
     </div>
   </header>
 
-  <!-- Barra comercial dinâmica -->
+  <!-- Barra comercial (sempre) -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
     <div class="status-wrap" id="statusWrap"></div>
   </div>
 
-  <!-- Desktop: Carrossel -->
-  <section class="stage-desktop" id="stageDesktop" aria-label="Benefícios (modo carrossel)">
-    <div class="stage-frame">
-      <div class="stage-track" id="stageTrack" aria-live="polite"></div>
-      <div class="stage-nav" aria-hidden="false">
-        <button class="btn-nav btn-prev" id="stagePrev" aria-label="Anterior" title="Anterior (←)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="btn-nav btn-next" id="stageNext" aria-label="Próximo" title="Próximo (→)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
 
-  <!-- Fluxo normal -->
-  <main id="content">
+  <!-- Conteúdo -->
+  <main id="content" aria-live="polite">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
       <div class="card">
@@ -698,9 +650,9 @@
     </div>
   </nav>
 
-  <!-- FAB subir/descer -->
-  <button class="fab" id="fab" aria-label="Ir para o final" title="Ir para o final">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  <!-- Botão "Voltar ao topo" -->
+  <button class="fab" id="fab" aria-label="Voltar ao topo" title="Voltar ao topo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
   <footer class="footer">
@@ -714,7 +666,7 @@
     </div>
   </footer>
 
-  <!-- Splash (boas-vindas) -->
+  <!-- Splash (boas-vindas sempre) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
       <div class="head"><div class="cap">Comparador de Benefícios</div></div>
@@ -748,10 +700,15 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
-    const ONB_KEY='ccs-onboarded';
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
-    const CONTACT_WHATS = 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20de%20internet%20CCS.';
+    const CONTACT_WHATS = 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20CCS.';
+    const SIGN_WHATS = {
+      1:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%201%20(Plano%20250%20MB)%20da%20CCS.',
+      2:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%202%20(Plano%20450%20MB)%20da%20CCS.',
+      3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
+    };
 
+    /* Conteúdos por nível (resumo) */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -775,10 +732,6 @@
           {emoji:'⏳',text:'Receba 1 voucher a cada 60 dias.'},
           {emoji:'🏆',text:'Inclui atrações premium (ex.: Unipraias, Barco Pirata, Roda Gigante, Aquário).'}
         ]}
-    };
-    const UPGRADE = {
-      2:{ label:'Assinar Nível 2 agora', plan:'450 MB', href:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%202%20(Plano%20450%20MB)%20da%20CCS.'},
-      3:{ label:'Assinar Nível 3 agora', plan:'650 MB', href:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'}
     };
     const PLAY = {
       1:{ subtitle:'Streaming completo e canais de TV',
@@ -807,11 +760,9 @@
         ]}
     };
     const SKEELO = { 1:{ subtitle:'Sua biblioteca de leitura e áudio',
-        facts:[
-          {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
-          {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
-          {emoji:'💡',text:'Leia e ouça quando e onde quiser.'}
-        ]}, 2:{}, 3:{} };
+        facts:[ {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
+                {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
+                {emoji:'💡',text:'Leia e ouça quando e onde quiser.'} ]}, 2:{}, 3:{} };
     SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1])); SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
     const SUPORTE = {
       1:{ subtitle:'Atendimento com prioridade e prazo garantido',
@@ -873,13 +824,6 @@
     const ccFacts = document.getElementById('cc-facts');
     const emailBtn=document.getElementById('cc-email-link');
 
-    /* Carrossel desktop */
-    const stageDesktop = document.getElementById('stageDesktop');
-    const stageTrack = document.getElementById('stageTrack');
-    const btnPrev = document.getElementById('stagePrev');
-    const btnNext = document.getElementById('stageNext');
-
-    /* Splash e Onboarding */
     const splash = document.getElementById('splash');
     const btnStart = document.getElementById('btnStart');
     const btnSkipTutorial = document.getElementById('btnSkipTutorial');
@@ -901,12 +845,11 @@
 
     /* Estado */
     let topAtSight = true, currentSectionTitle='Conecta Clube';
-    let stageIndex=0;
 
-    /* Helpers */
+    /* Helpers layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
-      const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
+      const hStatus = statusBar.offsetHeight||0;
       document.documentElement.style.setProperty('--topbar-h', hTop + 'px');
       document.documentElement.style.setProperty('--statusbar-h', hStatus + 'px');
       document.body.style.paddingTop = (hTop + hStatus + 8) + 'px';
@@ -933,6 +876,7 @@
       fitCapsule();
     }
 
+    /* Render facts */
     function renderFacts(container, facts){
       container.innerHTML='';
       (facts||[]).forEach(f=>{
@@ -947,6 +891,7 @@
       });
     }
 
+    /* Atualizações por nível */
     function updateConecta(level){
       const c = CONNECTA[level];
       pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
@@ -975,38 +920,32 @@
       const sp = SUPORTE[level];
       supSubtitle.textContent = sp.subtitle;
       renderFacts(supFacts, sp.facts);
-      pillSupSla.textContent = sp.sla;
-      pillSupVisita.classList.add('included');
+      document.getElementById('pill-sup-sla').textContent = sp.sla;
       function setInc(el, ok, base){ el.textContent = ok ? base : base.replace(/( não inclusa)?$/,' não inclusa'); el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
-      setInc(pillSupAbs, sp.abs, 'Isenção por ausência');
-      setInc(pillSupImp, sp.imp, 'Isenção visita improdutiva');
-      setInc(pillSupMud, sp.mud, 'Isenção mudança de endereço');
+      setInc(document.getElementById('pill-sup-abs'), sp.abs, 'Isenção por ausência');
+      setInc(document.getElementById('pill-sup-imp'), sp.imp, 'Isenção visita improdutiva');
+      setInc(document.getElementById('pill-sup-mud'), sp.mud, 'Isenção mudança de endereço');
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
-    /* Barra comercial */
+    /* Barra comercial (sempre) */
     function setStatusBar(level){
-      if (level===1){ statusBar.style.display='none'; statusWrap.innerHTML=''; }
-      else {
-        const up = UPGRADE[level];
-        statusWrap.innerHTML = `
-          <span class="status-label">Comparativo</span>
-          <a class="status-cta" href="${up.href}" target="_blank" rel="noopener">${up.label}</a>
-          <a class="status-cta secondary" href="${CONTACT_WHATS}" target="_blank" rel="noopener">Falar com especialista</a>
-        `;
-        statusBar.style.display='block';
-      }
+      const href = SIGN_WHATS[level] || CONTACT_WHATS;
+      statusWrap.innerHTML = `
+        <a class="status-cta" href="${href}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a>
+        <a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>
+      `;
       setBodyTopPad();
     }
 
     /* Level Dock */
     function setLevelDock(level){
-      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      const btn = lvlBtns.find(b=> +b.dataset.level===level);
+      [lvl1,lvl2,lvl3].forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      const btn = [lvl1,lvl2,lvl3].find(b=> +b.dataset.level===level);
       if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Observers (capsule + dock highlight) */
+    /* Dock highlight para navegação */
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
@@ -1021,71 +960,36 @@
         const vis = sectionsAll.map(s=>{
           const r=s.getBoundingClientRect();
           const vh=window.innerHeight||document.documentElement.clientHeight;
-          const topCut=(topbar.offsetHeight||64) + (statusBar.style.display==='none'?0:(statusBar.offsetHeight||0)) + 8;
+          const topCut=(topbar.offsetHeight||64) + (statusBar.offsetHeight||0) + 8;
           const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, topCut));
           return { id:s.id, title:s.getAttribute('data-title')||'', area:visible };
         }).sort((a,b)=>b.area-a.area)[0];
         if (!vis) return;
         currentSectionTitle = vis.title || currentSectionTitle;
-        setActiveDock(vis.id);
+        dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
       },{threshold:[0,0.25,0.5,0.75]});
       document.querySelectorAll('main .section').forEach(s=>io.observe(s));
     }
-    function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB subir/descer (robusto) */
-    function isStage(){ return document.body.classList.contains('is-stage'); }
+    /* FAB — só voltar ao topo */
     function root(){ return document.scrollingElement || document.documentElement || document.body; }
-    function atBottom(){ const r=root(); return (r.scrollTop + r.clientHeight) >= (r.scrollHeight - 1); }
-    function updFab(){
-      if (isStage()) return;
-      if (atBottom()){
-        fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
-        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-      } else {
-        fab.setAttribute('aria-label','Ir para o final'); fab.title='Ir para o final';
-        fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
-      }
-    }
-    function placeFab(){
-      if (isStage()) return;
-      const ldRect = levelDockWrap?.getBoundingClientRect();
-      const vw = window.innerWidth || document.documentElement.clientWidth;
-      const bottom = (ldRect?.height||64) + 16;
-      const left = ldRect ? Math.min(vw - 60, Math.max(8, ldRect.right + 12)) : 16;
-      fab.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
-      fab.style.left = left + 'px';
-    }
-    fab.addEventListener('click', ()=>{
-      if (isStage()) return;
+    function toggleFab(){
       const r=root();
-      if (atBottom()){
-        window.scrollTo({ top: 0, behavior:'smooth' });
-      } else {
-        const maxY = Math.max(0, r.scrollHeight - r.clientHeight);
-        window.scrollTo({ top: maxY, behavior:'smooth' });
-      }
-      setTimeout(updFab, 350);
-    });
+      const show = r.scrollTop > 300;
+      fab.style.display = show ? 'inline-flex' : 'none';
+    }
+    fab.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior:'smooth' }));
+    addEventListener('scroll', toggleFab, {passive:true});
 
     /* Side Dock mobile */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
-    let dockTimer=null;
-    function openDock(){
-      sideDock.classList.add('is-open');
-      dockToggle.setAttribute('aria-expanded','true');
-      if (dockTimer) clearTimeout(dockTimer);
-      dockTimer = setTimeout(()=> closeDock(), 4000);
-    }
-    function closeDock(){
-      sideDock.classList.remove('is-open');
-      dockToggle.setAttribute('aria-expanded','false');
-    }
+    function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
+    function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
-    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updFab(); }, {passive:true});
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); }, {passive:true});
 
     /* Saiba mais */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
@@ -1097,13 +1001,13 @@
       if (expanded){
         const h = panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
         panel.style.height='0px'; panel.classList.remove('is-open');
-        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); remeasure(); };
+        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setBodyTopPad(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','false'); if (txt) txt.textContent='Saiba mais';
       } else {
         panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
         requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
-        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); remeasure(); };
+        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setBodyTopPad(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','true'); if (txt) txt.textContent='Ver menos';
       }
@@ -1120,80 +1024,6 @@
       });
     }
 
-    /* Carrossel desktop (ativa só se houver slides) */
-    const sectionOrder = [...document.querySelectorAll('main .section')].map(s=> s.id);
-    function buildStage(){
-      stageTrack.innerHTML='';
-      document.querySelectorAll('main .section .card').forEach(card=>{
-        const slide=document.createElement('div'); slide.className='slide';
-        slide.appendChild(card.cloneNode(true));
-        stageTrack.appendChild(slide);
-      });
-      return stageTrack.children.length;
-    }
-    function setDockOffset(){
-      const w = sideDock?.getBoundingClientRect()?.width || 0;
-      const gap = w ? (w + 24) : 80;
-      document.documentElement.style.setProperty('--dock-offset', gap+'px');
-    }
-    function setStageIndex(i){
-      const max = stageTrack.children.length-1;
-      stageIndex = Math.max(0, Math.min(i, max));
-      const active = stageTrack.children[stageIndex];
-      if (active){
-        const slideW = active.getBoundingClientRect().width;
-        const wrapW = stageTrack.getBoundingClientRect().width;
-        const gaps = 24 * stageIndex;
-        const x = -(slideW*stageIndex + gaps - (wrapW - slideW)/2);
-        stageTrack.style.setProperty('--x', x+'px');
-
-        currentSectionTitle = sectionOrder[stageIndex]?.replace(/^s-/, '').replace(/-/g,' ') || currentSectionTitle;
-        const L = +localStorage.getItem(LEVELS_KEY)||1;
-        setCapsuleSection(L, currentSectionTitle[0]?.toUpperCase()+currentSectionTitle.slice(1));
-      }
-      const targetId = sectionOrder[stageIndex];
-      setActiveDock(targetId);
-      btnPrev.disabled = (stageIndex===0);
-      btnNext.disabled = (stageIndex===max);
-    }
-    function enableStage(){
-      const count = buildStage();
-      if (count<=0){ // fallback automático
-        document.body.classList.remove('is-stage');
-        stageTrack.innerHTML='';
-        return;
-      }
-      document.body.classList.add('is-stage');
-      setDockOffset(); setStageIndex(0);
-      dockLinks.forEach(a=>{
-        a.dataset.href = a.getAttribute('href');
-        a.addEventListener('click', onDockClickStage);
-      });
-      addEventListener('keydown', onKeyNav);
-    }
-    function disableStage(){
-      document.body.classList.remove('is-stage');
-      stageTrack.innerHTML='';
-      dockLinks.forEach(a=>{
-        a.removeEventListener('click', onDockClickStage);
-        if (a.dataset.href) a.setAttribute('href', a.dataset.href);
-      });
-      removeEventListener('keydown', onKeyNav);
-    }
-    function onDockClickStage(ev){
-      ev.preventDefault();
-      const href = ev.currentTarget.getAttribute('href')||'';
-      const id = href.startsWith('#') ? href.slice(1) : href;
-      const idx = sectionOrder.indexOf(id);
-      if (idx>=0) setStageIndex(idx);
-    }
-    function onKeyNav(e){
-      if (e.key==='ArrowLeft'){ e.preventDefault(); setStageIndex(stageIndex-1); }
-      if (e.key==='ArrowRight'){ e.preventDefault(); setStageIndex(stageIndex+1); }
-    }
-    btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
-    btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
-
     /* Nível */
     function applyLevel(level,{remember=true}={}){
       const L = [1,2,3].includes(+level) ? +level : 1;
@@ -1209,18 +1039,18 @@
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
 
-    /* Onboarding (spotlight) */
-    let onbOpen=false, onbStep=1, onbOpenedDock=false;
+    /* Boas‑vindas e Tutorial (2 passos, último sem “Próximo”) */
     function showSplash(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
     function hideSplash(){ splash.classList.remove('is-open'); document.body.style.overflow=''; }
 
+    let onbOpen=false, onbStep=1, onbOpenedDock=false;
     function getViewport(){ return { w: window.innerWidth || document.documentElement.clientWidth, h: window.innerHeight || document.documentElement.clientHeight }; }
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function scrollIfNeeded(target){
       if (!target) return;
       const r = target.getBoundingClientRect();
       const padding = 12;
-      const topCut = (topbar.offsetHeight||64) + (statusBar.style.display==='none'?0:(statusBar.offsetHeight||0)) + 8;
+      const topCut = (topbar.offsetHeight||64) + (statusBar.offsetHeight||0) + 8;
       if (r.top < topCut+padding || r.bottom > (window.innerHeight - 120)){
         target.scrollIntoView({ behavior:'smooth', block:'center', inline:'nearest' });
       }
@@ -1228,28 +1058,15 @@
     function placeCardNear(x,y,w,h){
       const vw=getViewport().w, vh=getViewport().h;
       const card=onbCard; const pad=12; const ch=card.offsetHeight; const cw=card.offsetWidth;
-      // Tenta acima
       let top = y - (ch + pad);
-      let left = x;
-      let useBottomSheet = false;
+      let left = x; let bottomSheet=false;
 
-      if (top < 60){
-        // Tenta abaixo
-        top = y + h + pad;
-        if (top + ch + 16 > vh){
-          // Se ainda não cabe, vira "bottom sheet" (mobile)
-          useBottomSheet = true;
-        }
-      }
-
-      if (useBottomSheet){
-        card.style.top = 'auto';
-        card.style.bottom = 'max(16px, env(safe-area-inset-bottom))';
-        card.style.left = '50%';
-        card.style.transform = 'translateX(-50%)';
-      } else {
-        card.style.bottom = 'auto';
-        card.style.transform = 'none';
+      if (top < 60){ top = y + h + pad; if (top + ch + 16 > vh){ bottomSheet=true; } }
+      if (bottomSheet){
+        card.style.top='auto'; card.style.bottom='max(16px, env(safe-area-inset-bottom))';
+        card.style.left='50%'; card.style.transform='translateX(-50%)';
+      }else{
+        card.style.bottom='auto'; card.style.transform='none';
         left = clamp(left, 16, vw - cw - 16);
         card.style.top = Math.max(60, top) + 'px';
         card.style.left = left + 'px';
@@ -1259,7 +1076,6 @@
       if (!targetEl) return;
       const r = targetEl.getBoundingClientRect();
       const vw = getViewport().w, vh = getViewport().h;
-
       const x = clamp(r.left - pad, 0, Math.max(0, vw - 1));
       const y = clamp(r.top  - pad, 0, Math.max(0, vh - 1));
       const w = clamp(r.width + pad*2, 0, vw);
@@ -1277,40 +1093,35 @@
 
       placeCardNear(x,y,w,h);
     }
-
     function showOnboarding(step=1){
       onbStep = step; onbOpen = true;
-      onboarding.classList.add('is-open');
-      document.body.style.overflow='hidden';
+      onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
+
       function setTexts(){
         if (onbStep===1){
           onbTitle.textContent='Compare os planos';
           onbText.textContent='Clique nos níveis abaixo para ver os benefícios de cada plano.';
+          onbNext.classList.remove('hide');
         } else {
           onbTitle.textContent='Navegue mais rápido';
           onbText.textContent='Use o menu lateral para acessar rapidamente cada seção.';
+          onbNext.classList.add('hide'); // último passo: sem "Próximo"
         }
       }
       function targetForStep(){
         if (onbStep===1) return levelDockWrap;
-        const isDesk = matchMedia('(min-width:1024px)').matches;
-        if (isDesk){
-          return sideDock.querySelector('.dock-items') || sideDock;
-        } else {
-          if (!sideDock.classList.contains('is-open')){
-            openDock(); onbOpenedDock=true;
-          }
-          return sideDock.querySelector('.dock-items') || sideDock;
+        // passo 2
+        if (matchMedia('(max-width: 880px)').matches){
+          if (!sideDock.classList.contains('is-open')){ sideDock.classList.add('is-open'); onbOpenedDock=true; }
         }
+        return sideDock.querySelector('.dock-items') || sideDock;
       }
       function placeNow(){
-        const tgt = targetForStep();
-        if (!tgt) return;
+        const tgt = targetForStep(); if (!tgt) return;
         scrollIfNeeded(tgt);
         requestAnimationFrame(()=> { requestAnimationFrame(()=> placeSpotlight(tgt)); });
       }
-      setTexts();
-      placeNow();
+      setTexts(); placeNow();
 
       const onResize = ()=> { if (onbOpen) placeNow(); };
       const onScroll = ()=> { if (onbOpen) placeNow(); };
@@ -1318,32 +1129,31 @@
       window.addEventListener('orientationchange', onResize, {passive:true});
       window.addEventListener('scroll', onScroll, {passive:true});
 
-      function endOnboarding(setSeen=true){
+      function endOnboarding(){
         onbOpen=false;
         onboarding.classList.remove('is-open');
         document.body.style.overflow='';
-        if (setSeen) localStorage.setItem(ONB_KEY,'1');
         [onbTop,onbLeft,onbRight,onbBottom].forEach(b=>{ b.style.width='0'; b.style.height='0'; });
-        if (onbOpenedDock){ closeDock(); onbOpenedDock=false; }
+        if (onbOpenedDock){ sideDock.classList.remove('is-open'); onbOpenedDock=false; }
         window.removeEventListener('resize', onResize);
         window.removeEventListener('orientationchange', onResize);
         window.removeEventListener('scroll', onScroll);
       }
 
       onbNext.onclick = ()=> { onbStep=2; setTexts(); requestAnimationFrame(()=> { requestAnimationFrame(()=> { placeSpotlight(targetForStep()); }); }); };
-      onbDone.onclick = ()=> endOnboarding(true);
-      onbSkip.onclick = ()=> endOnboarding(true);
+      onbDone.onclick = endOnboarding;
+      onbSkip.onclick = endOnboarding;
 
       addEventListener('keydown', function esc(e){ if (!onbOpen) { removeEventListener('keydown', esc); return; }
-        if (e.key==='Escape'){ endOnboarding(true); removeEventListener('keydown', esc); }
+        if (e.key==='Escape'){ endOnboarding(); removeEventListener('keydown', esc); }
       });
     }
 
-    /* Boas-vindas sempre a cada reload */
-    function maybeOnboard(){ showSplash(); }
-    btnStart?.addEventListener('click', ()=>{ hideSplash(); setTimeout(()=> showOnboarding(1), 200); });
-    btnSkipTutorial?.addEventListener('click', ()=>{ hideSplash(); localStorage.setItem(ONB_KEY,'1'); });
-    btnReplayTutorial?.addEventListener('click', ()=>{ showOnboarding(1); });
+    /* Boas‑vindas sempre a cada reload */
+    function showSplashNow(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
+    btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 200); });
+    btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
+    btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
 
     /* Init */
     function getLevelFromURL(){
@@ -1353,34 +1163,37 @@
         if (qIndex!==-1){ const qs=new URLSearchParams(hash.slice(qIndex+1)); const n2=qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2; }
       }catch{} return null;
     }
-    function remeasure(){
-      setBodyTopPad(); fitCapsule();
-      if (!isStage()) { placeFab(); updFab(); }
-      if (isStage()) setDockOffset();
-    }
     function init(){
       const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
+
+      // estado inicial
       setCapsuleTop(start);
-      applyLevel([1,2,3].includes(start)?start:1,{remember:false});
+      setStatusBar(start);
+      updateAll(start);
+      setLevelDock(start);
 
-      const desk = matchMedia('(min-width:1024px)').matches;
-      if (desk) enableStage(); else disableStage();
+      // eventos base
+      [lvl1,lvl2,lvl3].forEach((b)=> b.addEventListener('click', ()=>{ const L=+b.dataset.level; localStorage.setItem(LEVELS_KEY, String(L)); setStatusBar(L); updateAll(L); if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle); setLevelDock(L); }));
 
-      addEventListener('resize', ()=>{
-        const isDesk = matchMedia('(min-width:1024px)').matches;
-        if (isDesk && !isStage()) enableStage();
-        if (!isDesk && isStage()) disableStage();
-        remeasure();
-      }, {passive:true});
+      // observar seção para cápsula
+      const topSentinel = document.getElementById('top-sentinel');
+      if ('IntersectionObserver' in window){
+        const ioTop = new IntersectionObserver(entries=>{
+          const e=entries[0]; topAtSight = e.isIntersecting;
+          const level = +localStorage.getItem(LEVELS_KEY)||start||1;
+          if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        }, {threshold:[0,0.01,1]});
+        ioTop.observe(topSentinel);
+      }
 
-      addEventListener('pageshow', remeasure);
-      addEventListener('orientationchange', remeasure);
-      addEventListener('scroll', ()=>{ if (!isStage()) updFab(); }, {passive:true});
+      setBodyTopPad(); toggleFab();
 
-      remeasure();
-      setTimeout(remeasure, 80);
+      addEventListener('resize', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
+      addEventListener('orientationchange', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
 
-      maybeOnboard();
+      // abrir boas-vindas
+      showSplashNow();
     }
     init();
   })();
