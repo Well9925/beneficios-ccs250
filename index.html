@@ -113,7 +113,7 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45) }
 
-    /* Barra comercial fixa (todos os níveis) */
+    /* Barra comercial (todos os níveis) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:block; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
@@ -130,7 +130,7 @@
       position:relative; z-index:1;
       isolation:isolate; contain:layout paint;
     }
-    .section + .section{ margin-top: 4px } /* espaço técnico entre seções */
+    .section + .section{ margin-top: 4px }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
@@ -158,10 +158,42 @@
     .pill-flag{
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center; display:inline-flex; align-items:center; justify-content:center;
+      position:relative; will-change:transform, box-shadow, opacity;
     }
     .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.9 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
+
+    /* Destaques de mudança */
+    .pill-flag.changed{ animation: pillPop 700ms cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes pillPop{
+      0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 0 0 rgba(123,92,255,0) }
+      40%{ transform:scale(1.06); box-shadow:0 0 0 6px rgba(0,217,255,.18), 0 0 18px rgba(123,92,255,.35) }
+      100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 0 0 rgba(123,92,255,0) }
+    }
+    .pill-flag.included-new::after{
+      content:""; position:absolute; inset:-6px; pointer-events:none;
+      background:
+        radial-gradient(2px 2px at 18% 38%, #fff, transparent 55%),
+        radial-gradient(2px 2px at 72% 22%, #fff, transparent 55%),
+        radial-gradient(2px 2px at 82% 68%, #fff, transparent 55%),
+        radial-gradient(2px 2px at 28% 78%, #fff, transparent 55%),
+        radial-gradient(2px 2px at 48% 52%, #fff, transparent 55%);
+      animation: spark 600ms ease-out forwards;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,.6));
+    }
+    @keyframes spark{
+      0%{ opacity:1; transform:scale(.8) rotate(0deg) }
+      100%{ opacity:0; transform:scale(1.3) rotate(25deg) }
+    }
+    .pill-flag.num-flip{ transform-origin:50% 50%; animation: flipY 420ms ease both }
+    @keyframes flipY{
+      0%{ transform: rotateX(90deg); opacity:0 }
+      100%{ transform: rotateX(0deg); opacity:1 }
+    }
+    @media (prefers-reduced-motion:reduce){
+      .pill-flag.changed, .pill-flag.included-new::after, .pill-flag.num-flip{ animation:none }
+    }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; clear:both }
     .actions.one .btn{ width:100% }
@@ -186,7 +218,7 @@
     a.inline-link, .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
     a.inline-link:hover, .status-link:hover{ color:#ffffff; text-decoration:underline }
 
-    /* Side Dock (desktop e mobile aberto) */
+    /* Side Dock */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
@@ -301,7 +333,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; margin-top:14px }
     .splash .btn{ font-size:16px }
 
-    /* Onboarding (spotlight + card sempre visível) — 3 passos */
+    /* Onboarding (spotlight) — 3 passos */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto }
@@ -559,7 +591,7 @@
       </div>
     </section>
 
-    <!-- Portal do Assinante (seção separada, não mistura) -->
+    <!-- Portal do Assinante (seção separada e blindada) -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
       <div class="card">
         <div class="media"><div class="frame">
@@ -624,7 +656,7 @@
       </div>
     </section>
 
-    <!-- FAQ com 14 perguntas -->
+    <!-- FAQ (14 perguntas) -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
@@ -692,7 +724,7 @@
     </div>
   </footer>
 
-  <!-- Splash (boas-vindas sempre) -->
+  <!-- Splash (boas-vindas) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
       <div class="head"><div class="cap">Comparador de Benefícios</div></div>
@@ -714,7 +746,7 @@
     <div class="highlight" id="onbHighlight" aria-hidden="true"></div>
     <div class="card" id="onbCard" role="document">
       <h3 id="onbTitle">Compare os planos</h3>
-      <p id="onbText">Clique nos níveis abaixo para ver os benefícios de cada plano.</p>
+      <p id="onbText">Use os botões de nível para ver os benefícios de cada plano.</p>
       <div class="row">
         <button class="btn ghost" type="button" id="onbSkip" title="Não mostrar novamente">Pular tutorial</button>
         <button class="btn" type="button" id="onbNext">Próximo</button>
@@ -734,7 +766,7 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Conteúdos por nível (resumo) */
+    /* Dados por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -765,7 +797,7 @@
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
         ]},
       2:{ subtitle:'60 canais + 50 canais de música',
         facts:[
@@ -773,7 +805,7 @@
           {emoji:'🎵',text:'50 canais de música (vários estilos).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
         ]},
       3:{ subtitle:'60 canais + 50 canais de música + +1.000 horas de filmes e séries',
         facts:[
@@ -782,15 +814,13 @@
           {emoji:'🎞️',text:'+1.000 horas de filmes e séries.'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
         ]}
     };
     const SKEELO = { 1:{ subtitle:'Sua biblioteca de leitura e áudio',
-        facts:[
-          {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
-          {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
-          {emoji:'💡',text:'Leia e ouça quando e onde quiser.'}
-        ]}, 2:{}, 3:{} };
+        facts:[ {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
+                {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
+                {emoji:'💡',text:'Leia e ouça quando e onde quiser.'} ]}, 2:{}, 3:{} };
     SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1])); SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
     const SUPORTE = {
       1:{ subtitle:'Atendimento com prioridade e prazo garantido',
@@ -805,7 +835,7 @@
         sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores base */
+    /* Seletores */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const statusWrap = document.getElementById('statusWrap');
@@ -815,6 +845,8 @@
     const capTrack = document.getElementById('capTrack');
     const capLeft = document.getElementById('capLeft');
     const capRight = document.getElementById('capRight');
+    const logoL = document.querySelector('.logo-ccs');
+    const logoR = document.querySelector('.logo-vctech');
 
     const sideDock = document.getElementById('sideDock');
     const dockToggle = document.getElementById('dockToggle');
@@ -839,6 +871,11 @@
 
     const supSubtitle=document.getElementById('sup-subtitle');
     const supFacts=document.getElementById('sup-facts');
+    const pillSupSla=document.getElementById('pill-sup-sla');
+    const pillSupVisita=document.getElementById('pill-sup-visita');
+    const pillSupAbs=document.getElementById('pill-sup-abs');
+    const pillSupImp=document.getElementById('pill-sup-imp');
+    const pillSupMud=document.getElementById('pill-sup-mud');
 
     const pillVoucher = document.getElementById('pill-cc-voucher');
     const pillPremium = document.getElementById('pill-cc-premium');
@@ -864,9 +901,10 @@
 
     const btnReplayTutorial = document.getElementById('btnReplayTutorial');
 
-    /* Estado e helpers */
+    /* Estado */
     let topAtSight = true, currentSectionTitle='Conecta Clube';
 
+    /* Helpers layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.offsetHeight||0;
@@ -876,8 +914,7 @@
     }
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
-      const lW = document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
-      const rW = document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
+      const lW = logoL?.getBoundingClientRect().width||0, rW = logoR?.getBoundingClientRect().width||0;
       const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
       capsule.style.maxWidth = available + 'px';
       capTrack.style.transform = '';
@@ -897,7 +934,53 @@
       fitCapsule();
     }
 
-    /* Render facts */
+    /* ===== SEPARAÇÃO FAILSAFE (Indique & Ganhe vs Portal) ===== */
+    function ensureSectionsSeparated(){
+      const main = document.querySelector('main');
+      const ind = document.getElementById('s-indique');
+      const por = document.getElementById('s-portal');
+      if (!main || !ind || !por) return;
+
+      // Se portal estiver dentro de "indique", move para depois
+      if (ind.contains(por)){
+        main.insertBefore(por, document.getElementById('s-faturas') || ind.nextSibling);
+      }
+      // Se estiver em ordem errada (portal antes de indique), reposiciona
+      const order = [...main.children].map(n=>n.id);
+      if (order.indexOf('s-portal') < order.indexOf('s-indique')){
+        main.insertBefore(document.getElementById('s-indique'), document.getElementById('s-portal'));
+      }
+    }
+
+    /* ===== Pills: snapshot, update e destaques ===== */
+    function snapshotPills(){
+      const map={};
+      document.querySelectorAll('.pill-flag[id]').forEach(el=>{
+        map[el.id]={ text:el.textContent.trim(), included:el.classList.contains('included') };
+      });
+      return map;
+    }
+    function hasNumberDiff(a,b){ const na=(a.match(/\d+/g)||[]).join(','); const nb=(b.match(/\d+/g)||[]).join(','); return na!==nb; }
+    function highlightChanges(prev){
+      const now = snapshotPills();
+      Object.keys(now).forEach(id=>{
+        const el = document.getElementById(id); if (!el) return;
+        const p = prev[id]; const n = now[id];
+        if (!p) return;
+        const changed = (p.text!==n.text) || (p.included!==n.included);
+        if (changed){
+          el.classList.add('changed');
+          // se virou incluído: sparkles
+          if (!p.included && n.included){ el.classList.add('included-new'); }
+          // flip numérico se número mudou
+          if (hasNumberDiff(p.text, n.text)){ el.classList.add('num-flip'); }
+          // limpar classes após animação
+          setTimeout(()=>{ el.classList.remove('changed','included-new','num-flip'); }, 900);
+        }
+      });
+    }
+
+    /* Render Facts helper */
     function renderFacts(container, facts){
       container.innerHTML='';
       (facts||[]).forEach(f=>{
@@ -912,6 +995,7 @@
       });
     }
 
+    /* Atualizações por nível */
     function updateConecta(level){
       const c = CONNECTA[level];
       pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
@@ -924,14 +1008,12 @@
       const p = PLAY[level];
       playSubtitle.textContent = p.subtitle;
       renderFacts(playFacts, p.facts);
-      const mus = document.getElementById('pill-play-50mus');
-      const v1000 = document.getElementById('pill-play-1000');
-      mus.textContent = (level>=2) ? '50 canais de música' : '50 canais de música não incluso';
-      mus.classList.toggle('included', level>=2);
-      mus.classList.toggle('excluded', !(level>=2));
-      v1000.textContent = (level===3) ? '+1.000 horas de filmes e séries' : '+1.000 horas de filmes e séries não incluso';
-      v1000.classList.toggle('included', level===3);
-      v1000.classList.toggle('excluded', level!==3);
+      pillPlay50.textContent = (level>=2) ? '50 canais de música' : '50 canais de música não incluso';
+      pillPlay50.classList.toggle('included', level>=2);
+      pillPlay50.classList.toggle('excluded', !(level>=2));
+      pillPlay1000.textContent = (level===3) ? '+1.000 horas de filmes e séries' : '+1.000 horas de filmes e séries não incluso';
+      pillPlay1000.classList.toggle('included', level===3);
+      pillPlay1000.classList.toggle('excluded', level!==3);
     }
     function updateSkeelo(level){
       const s = SKEELO[level];
@@ -942,20 +1024,19 @@
       const sp = SUPORTE[level];
       supSubtitle.textContent = sp.subtitle;
       renderFacts(supFacts, sp.facts);
-      const pillSla=document.getElementById('pill-sup-sla');
-      pillSla.textContent = sp.sla;
-      function setInc(id, ok, base){ const el=document.getElementById(id); el.textContent = ok ? base : base+' não inclusa'; el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
-      setInc('pill-sup-abs', sp.abs, 'Isenção por ausência');
-      setInc('pill-sup-imp', sp.imp, 'Isenção visita improdutiva');
-      setInc('pill-sup-mud', sp.mud, 'Isenção mudança de endereço');
+      pillSupSla.textContent = sp.sla;
+      pillSupVisita.classList.add('included');
+      function setInc(el, ok, base){ el.textContent = ok ? base : base+' não inclusa'; el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
+      setInc(pillSupAbs, sp.abs, 'Isenção por ausência');
+      setInc(pillSupImp, sp.imp, 'Isenção visita improdutiva');
+      setInc(pillSupMud, sp.mud, 'Isenção mudança de endereço');
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
     /* Barra comercial (sempre) */
     function setStatusBar(level){
-      const href = SIGN_WHATS[level] || CONTACT_WHATS;
       statusWrap.innerHTML = `
-        <a class="status-cta" href="${href}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a>
+        <a class="status-cta" href="${(SIGN_WHATS[level])}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a>
         <a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>
       `;
       setBodyTopPad();
@@ -989,7 +1070,7 @@
         }).sort((a,b)=>b.area-a.area)[0];
         if (!vis) return;
         currentSectionTitle = vis.title || currentSectionTitle;
-        document.querySelectorAll('.side-dock a').forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
+        dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
       },{threshold:[0,0.25,0.5,0.75]});
@@ -998,10 +1079,7 @@
 
     /* FAB — só voltar ao topo */
     function root(){ return document.scrollingElement || document.documentElement || document.body; }
-    function toggleFab(){
-      const r=root(); const show = r.scrollTop > 300;
-      fab.style.display = show ? 'inline-flex' : 'none';
-    }
+    function toggleFab(){ const r=root(); fab.style.display = (r.scrollTop > 300) ? 'inline-flex' : 'none'; }
     fab.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior:'smooth' }));
     addEventListener('scroll', toggleFab, {passive:true});
 
@@ -1046,9 +1124,10 @@
       });
     }
 
-    /* Nível */
+    /* Nível com destaques de mudança */
     function applyLevel(level,{remember=true}={}){
       const L = [1,2,3].includes(+level) ? +level : 1;
+      const prev = snapshotPills();
       setLevelDock(L);
       setStatusBar(L);
       updateAll(L);
@@ -1056,6 +1135,8 @@
       const title = currentSectionTitle;
       if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, title);
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
+      // Aplicar destaques
+      requestAnimationFrame(()=> highlightChanges(prev));
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
@@ -1098,6 +1179,7 @@
       if (!targetEl) return;
       const r = targetEl.getBoundingClientRect();
       const vw = getViewport().w, vh = getViewport().h;
+
       const x = clamp(r.left - pad, 0, Math.max(0, vw - 1));
       const y = clamp(r.top  - pad, 0, Math.max(0, vh - 1));
       const w = clamp(r.width + pad*2, 0, vw);
@@ -1188,6 +1270,7 @@
     function init(){
       const saved=+localStorage.getItem(LEVELS_KEY)||1;
 
+      ensureSectionsSeparated();
       setCapsuleTop(saved);
       setStatusBar(saved);
       updateAll(saved);
@@ -1195,28 +1278,29 @@
 
       setBodyTopPad(); toggleFab();
 
-      // observers para cápsula
-      const topSentinel = document.getElementById('top-sentinel');
+      // observar seção para cápsula
       if ('IntersectionObserver' in window){
         const ioTop = new IntersectionObserver(entries=>{
           const e=entries[0]; topAtSight = e.isIntersecting;
           const level = +localStorage.getItem(LEVELS_KEY)||saved||1;
           if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
         }, {threshold:[0,0.01,1]});
-        ioTop.observe(topSentinel);
+        ioTop.observe(document.getElementById('top-sentinel'));
       }
 
       // eventos de nível
       lvlBtns.forEach((b)=> b.addEventListener('click', ()=>{
         const L=+b.dataset.level;
-        localStorage.setItem(LEVELS_KEY, String(L));
-        setStatusBar(L); updateAll(L); setLevelDock(L);
-        if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+        applyLevel(L);
       }));
 
       addEventListener('resize', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
       addEventListener('orientationchange', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
+
+      // fallback: observar mutações e manter seções separadas
+      const mo = new MutationObserver(()=> ensureSectionsSeparated());
+      mo.observe(document.querySelector('main'), {childList:true, subtree:true});
 
       // abrir boas-vindas
       showSplashNow();
