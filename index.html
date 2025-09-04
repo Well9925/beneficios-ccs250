@@ -23,8 +23,8 @@
       --planA:#00d9ff;  --planB:#00ffc6;
 
       --side-pad: clamp(14px, 4.5vw, 36px);
-      --art-max-h-d: clamp(160px, 28vh, 300px);
-      --art-max-h-m: clamp(140px, 24vh, 220px);
+      --art-max-h-d: clamp(160px, 28vh, 340px);
+      --art-max-h-m: clamp(140px, 28vh, 260px);
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
@@ -101,7 +101,7 @@
         radial-gradient(50% 120% at 90% 50%, rgba(0,255,198,.28), transparent 60%);
       filter: blur(18px); mix-blend-mode:screen; pointer-events:none; z-index:0;
     }
-    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; -ms-overflow-style:none; scrollbar-width:none; pointer-events:none }
+    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; pointer-events:none }
     .track{ display:inline-block; will-change:transform }
     .track .txt{
       display:inline-flex; align-items:center; gap:10px;
@@ -111,9 +111,9 @@
       text-shadow:0 0 12px rgba(123,92,255,.38), 0 0 20px rgba(0,255,198,.28);
     }
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
-    .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
+    .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45) }
 
-    /* Barra comercial fixa (sempre) */
+    /* Barra comercial fixa (todos os níveis) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:block; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
@@ -124,22 +124,35 @@
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
     /* Seções e cards — anti-mistura entre seções */
-    .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center; position:relative; z-index:1; isolation:isolate; contain:layout paint; }
-    .section::after{ content:""; display:block; clear:both }
+    .section{
+      padding:18px var(--side-pad) 28px;
+      display:flex; justify-content:center;
+      position:relative; z-index:1;
+      isolation:isolate; contain:layout paint;
+    }
+    .section + .section{ margin-top: 4px } /* espaço técnico entre seções */
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden; position:relative; z-index:1; contain:content;
+      backdrop-filter:blur(10px);
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+      overflow:hidden; position:relative; z-index:1;
+      contain:content; clear:both; display:block;
     }
-    .media{ display:flex; justify-content:center; align-items:center; padding:8px 0 }
+    .media{ display:block; padding:8px 0 }
     .frame{ width:100%; display:flex; justify-content:center; align-items:center }
-    .art-img{ max-height:var(--art-max-h-d); max-width:min(100%,880px); width:auto; height:auto; object-fit:contain; display:block }
-    @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% } }
+    .art-img{
+      width:100%; max-width:880px; height:auto; display:block; object-fit:contain;
+      max-height:var(--art-max-h-d);
+    }
+    @media (max-width:880px){
+      .art-img{ max-height:var(--art-max-h-m) }
+    }
 
-    .content{ padding:16px }
+    .content{ padding:16px; display:block }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
-    .subtitle{ margin:6px 0 10px; color:var(--muted) }
+    .subtitle{ margin:6px 0 10px; color:#cfe0ff }
 
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
     .pill-flag{
@@ -150,7 +163,7 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.9 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px }
+    .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; clear:both }
     .actions.one .btn{ width:100% }
     .btn{ border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900; background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:15px; text-align:center }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
@@ -232,7 +245,7 @@
       animation: ping 2.6s ease-out infinite;
     }
 
-    /* Botão "Voltar ao topo" (apenas mobile/scroll longo) */
+    /* Botão "Voltar ao topo" */
     .fab{
       position:fixed; z-index:100; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
       background:rgba(16,18,24,.90); color:#fff; display:none; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
@@ -288,7 +301,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; margin-top:14px }
     .splash .btn{ font-size:16px }
 
-    /* Onboarding (spotlight + card sempre visível) */
+    /* Onboarding (spotlight + card sempre visível) — 3 passos */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto }
@@ -405,8 +418,8 @@
       <div class="card">
         <div class="media"><div class="frame">
           <div class="two-icons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--line);max-width:820px;width:100%">
-            <img alt="CCS Play" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
-            <img alt="CCS TV" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS Play" style="width:100%;height:auto;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS TV" style="width:100%;height:auto;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
           </div>
         </div></div>
         <div class="content">
@@ -546,7 +559,7 @@
       </div>
     </section>
 
-    <!-- Portal do Assinante -->
+    <!-- Portal do Assinante (seção separada, não mistura) -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
       <div class="card">
         <div class="media"><div class="frame">
@@ -611,13 +624,26 @@
       </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- FAQ com 14 perguntas -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
-        <details class="faq"><summary>Quando meus benefícios são ativados?</summary><div>Em até 72 horas úteis após a instalação (validações internas).</div></details>
-        <details class="faq"><summary>Como acesso o CCS PLAY?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a>. Login com e‑mail e CPF.</div></details>
-        <details class="faq"><summary>Onde pago minhas faturas e faço PIX?</summary><div>Acesse <a class="inline-link" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">ccs.pix.7az.com.br</a> (CPF, sem senha).</div></details>
+
+        <details class="faq"><summary>Quando meus benefícios são ativados após a instalação?</summary><div>Em até 72 horas úteis, após validações internas do cadastro e da instalação.</div></details>
+        <details class="faq"><summary>Como acesso o CCS PLAY e o CCS TV?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> e faça login com seu e‑mail cadastrado e CPF (somente números) como senha inicial.</div></details>
+        <details class="faq"><summary>A Rede Globo está incluída nos canais?</summary><div>Não. A Rede Globo não está incluída em nenhum nível.</div></details>
+        <details class="faq"><summary>No Nível 2, o que muda no CCS PLAY?</summary><div>Além dos 60 canais, você ganha +50 canais de música.</div></details>
+        <details class="faq"><summary>No Nível 3, o que muda no CCS PLAY?</summary><div>Além dos 60 canais e +50 canais de música, você ganha +1.000 horas de filmes e séries.</div></details>
+        <details class="faq"><summary>O que é o Conecta Clube e como funcionam os vouchers?</summary><div>É o nosso clube de benefícios com parceiros da região. Você recebe 1 voucher a cada 90 dias (Nível 1) ou 60 dias (Nível 2 e 3). No Nível 3 há atrações premium.</div></details>
+        <details class="faq"><summary>Como indico um amigo e ganho desconto?</summary><div>Use os botões da seção “Indique &amp; Ganhe” e fale no WhatsApp. O desconto entra após a instalação do indicado.</div></details>
+        <details class="faq"><summary>Como falo com o suporte técnico?</summary><div>Clique em “Solicitar suporte” na seção Suporte Premium ou acesse <a class="inline-link" href="https://wa.me/554732634700" target="_blank" rel="noopener">nosso WhatsApp</a>.</div></details>
+        <details class="faq"><summary>Qual o prazo de atendimento (SLA) por nível?</summary><div>Nível 1: até 36h úteis • Nível 2: até 24h úteis • Nível 3: até 18h úteis.</div></details>
+        <details class="faq"><summary>Tenho isenção de taxa em caso de ausência ou visita improdutiva?</summary><div>Nível 1: não • Nível 2: 1 isenção por ausência • Nível 3: isenções por ausência, visita improdutiva e mudança de endereço.</div></details>
+        <details class="faq"><summary>Como acesso minhas faturas/PIX sem login?</summary><div>Entre em <a class="inline-link" href="https://ccs.pix.7az.com.br/" target="_blank" rel="noopener">ccs.pix.7az.com.br</a> e informe seu CPF.</div></details>
+        <details class="faq"><summary>Como acesso o Portal do Assinante?</summary><div>Acesse <a class="inline-link" href="https://ccs.7az.com.br/" target="_blank" rel="noopener">ccs.7az.com.br</a> para gerenciar sua assinatura.</div></details>
+        <details class="faq"><summary>Como assino ou faço upgrade de nível?</summary><div>Use o botão “Assinar Nível X agora” na barra superior ou fale com um especialista via link ao lado.</div></details>
+        <details class="faq"><summary>Posso rever o tutorial?</summary><div>Sim. Clique em “Ver tutorial novamente” no rodapé.</div></details>
+
       </div></div>
     </section>
   </main>
@@ -679,7 +705,7 @@
     </div>
   </div>
 
-  <!-- Onboarding (spotlight) -->
+  <!-- Onboarding (spotlight) — 3 passos -->
   <div class="onb" id="onboarding" role="dialog" aria-modal="true" aria-live="polite">
     <div class="blk" id="onbTop" aria-hidden="true"></div>
     <div class="blk" id="onbLeft" aria-hidden="true"></div>
@@ -739,30 +765,32 @@
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
         ]},
       2:{ subtitle:'60 canais + 50 canais de música',
         facts:[
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
+          {emoji:'🎵',text:'50 canais de música (vários estilos).'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
         ]},
       3:{ subtitle:'60 canais + 50 canais de música + +1.000 horas de filmes e séries',
         facts:[
           {emoji:'🎬',text:'60 canais (variados e regionais).'},
-          {emoji:'🎵',text:'50 canais de música (Chillout, MPB, Rock, Reggaeton, Sertanejo...).'},
+          {emoji:'🎵',text:'50 canais de música (vários estilos).'},
           {emoji:'🎞️',text:'+1.000 horas de filmes e séries.'},
           {emoji:'ℹ️',text:'Rede Globo não está incluída.'},
           {emoji:'⬇️',text:'Baixe o app CCS PLAY', link:{href:'https://onelink.to/ccsplay',label:'onelink.to/ccsplay ↗'}},
-          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF (somente números).'}
+          {emoji:'🔑',text:'Acesso: e‑mail cadastrado; senha = CPF.'}
         ]}
     };
     const SKEELO = { 1:{ subtitle:'Sua biblioteca de leitura e áudio',
-        facts:[ {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
-                {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
-                {emoji:'💡',text:'Leia e ouça quando e onde quiser.'} ]}, 2:{}, 3:{} };
+        facts:[
+          {emoji:'📚',text:'E‑books liberados todo mês; audiobooks; minibooks; comics.'},
+          {emoji:'⬇️',text:'Baixe o app Skeelo', link:{href:'https://onelink.to/hseuht',label:'onelink.to/hseuht ↗'}},
+          {emoji:'💡',text:'Leia e ouça quando e onde quiser.'}
+        ]}, 2:{}, 3:{} };
     SKEELO[2]=JSON.parse(JSON.stringify(SKEELO[1])); SKEELO[3]=JSON.parse(JSON.stringify(SKEELO[1]));
     const SUPORTE = {
       1:{ subtitle:'Atendimento com prioridade e prazo garantido',
@@ -777,7 +805,7 @@
         sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores */
+    /* Seletores base */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const statusWrap = document.getElementById('statusWrap');
@@ -787,8 +815,6 @@
     const capTrack = document.getElementById('capTrack');
     const capLeft = document.getElementById('capLeft');
     const capRight = document.getElementById('capRight');
-    const logoL = document.querySelector('.logo-ccs');
-    const logoR = document.querySelector('.logo-vctech');
 
     const sideDock = document.getElementById('sideDock');
     const dockToggle = document.getElementById('dockToggle');
@@ -813,11 +839,6 @@
 
     const supSubtitle=document.getElementById('sup-subtitle');
     const supFacts=document.getElementById('sup-facts');
-    const pillSupSla=document.getElementById('pill-sup-sla');
-    const pillSupVisita=document.getElementById('pill-sup-visita');
-    const pillSupAbs=document.getElementById('pill-sup-abs');
-    const pillSupImp=document.getElementById('pill-sup-imp');
-    const pillSupMud=document.getElementById('pill-sup-mud');
 
     const pillVoucher = document.getElementById('pill-cc-voucher');
     const pillPremium = document.getElementById('pill-cc-premium');
@@ -843,10 +864,9 @@
 
     const btnReplayTutorial = document.getElementById('btnReplayTutorial');
 
-    /* Estado */
+    /* Estado e helpers */
     let topAtSight = true, currentSectionTitle='Conecta Clube';
 
-    /* Helpers layout */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.offsetHeight||0;
@@ -856,7 +876,8 @@
     }
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
-      const lW = logoL?.getBoundingClientRect().width||0, rW = logoR?.getBoundingClientRect().width||0;
+      const lW = document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
+      const rW = document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
       const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
       capsule.style.maxWidth = available + 'px';
       capTrack.style.transform = '';
@@ -891,7 +912,6 @@
       });
     }
 
-    /* Atualizações por nível */
     function updateConecta(level){
       const c = CONNECTA[level];
       pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
@@ -904,12 +924,14 @@
       const p = PLAY[level];
       playSubtitle.textContent = p.subtitle;
       renderFacts(playFacts, p.facts);
-      pillPlay50.textContent = (level>=2) ? '50 canais de música' : '50 canais de música não incluso';
-      pillPlay50.classList.toggle('included', level>=2);
-      pillPlay50.classList.toggle('excluded', !(level>=2));
-      pillPlay1000.textContent = (level===3) ? '+1.000 horas de filmes e séries' : '+1.000 horas de filmes e séries não incluso';
-      pillPlay1000.classList.toggle('included', level===3);
-      pillPlay1000.classList.toggle('excluded', level!==3);
+      const mus = document.getElementById('pill-play-50mus');
+      const v1000 = document.getElementById('pill-play-1000');
+      mus.textContent = (level>=2) ? '50 canais de música' : '50 canais de música não incluso';
+      mus.classList.toggle('included', level>=2);
+      mus.classList.toggle('excluded', !(level>=2));
+      v1000.textContent = (level===3) ? '+1.000 horas de filmes e séries' : '+1.000 horas de filmes e séries não incluso';
+      v1000.classList.toggle('included', level===3);
+      v1000.classList.toggle('excluded', level!==3);
     }
     function updateSkeelo(level){
       const s = SKEELO[level];
@@ -920,11 +942,12 @@
       const sp = SUPORTE[level];
       supSubtitle.textContent = sp.subtitle;
       renderFacts(supFacts, sp.facts);
-      document.getElementById('pill-sup-sla').textContent = sp.sla;
-      function setInc(el, ok, base){ el.textContent = ok ? base : base.replace(/( não inclusa)?$/,' não inclusa'); el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
-      setInc(document.getElementById('pill-sup-abs'), sp.abs, 'Isenção por ausência');
-      setInc(document.getElementById('pill-sup-imp'), sp.imp, 'Isenção visita improdutiva');
-      setInc(document.getElementById('pill-sup-mud'), sp.mud, 'Isenção mudança de endereço');
+      const pillSla=document.getElementById('pill-sup-sla');
+      pillSla.textContent = sp.sla;
+      function setInc(id, ok, base){ const el=document.getElementById(id); el.textContent = ok ? base : base+' não inclusa'; el.classList.toggle('included', !!ok); el.classList.toggle('excluded', !ok); }
+      setInc('pill-sup-abs', sp.abs, 'Isenção por ausência');
+      setInc('pill-sup-imp', sp.imp, 'Isenção visita improdutiva');
+      setInc('pill-sup-mud', sp.mud, 'Isenção mudança de endereço');
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
@@ -940,12 +963,12 @@
 
     /* Level Dock */
     function setLevelDock(level){
-      [lvl1,lvl2,lvl3].forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      const btn = [lvl1,lvl2,lvl3].find(b=> +b.dataset.level===level);
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      const btn = lvlBtns.find(b=> +b.dataset.level===level);
       if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Dock highlight para navegação */
+    /* Dock highlight + cápsula dinâmica */
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
@@ -966,7 +989,7 @@
         }).sort((a,b)=>b.area-a.area)[0];
         if (!vis) return;
         currentSectionTitle = vis.title || currentSectionTitle;
-        dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
+        document.querySelectorAll('.side-dock a').forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
       },{threshold:[0,0.25,0.5,0.75]});
@@ -976,8 +999,7 @@
     /* FAB — só voltar ao topo */
     function root(){ return document.scrollingElement || document.documentElement || document.body; }
     function toggleFab(){
-      const r=root();
-      const show = r.scrollTop > 300;
+      const r=root(); const show = r.scrollTop > 300;
       fab.style.display = show ? 'inline-flex' : 'none';
     }
     fab.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior:'smooth' }));
@@ -1039,7 +1061,7 @@
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
 
-    /* Boas‑vindas e Tutorial (2 passos, último sem “Próximo”) */
+    /* Boas‑vindas e Tutorial (3 passos, último sem “Próximo”) */
     function showSplash(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
     function hideSplash(){ splash.classList.remove('is-open'); document.body.style.overflow=''; }
 
@@ -1093,6 +1115,7 @@
 
       placeCardNear(x,y,w,h);
     }
+
     function showOnboarding(step=1){
       onbStep = step; onbOpen = true;
       onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
@@ -1100,21 +1123,27 @@
       function setTexts(){
         if (onbStep===1){
           onbTitle.textContent='Compare os planos';
-          onbText.textContent='Clique nos níveis abaixo para ver os benefícios de cada plano.';
+          onbText.textContent='Use os botões de nível para ver os benefícios de cada plano.';
+          onbNext.classList.remove('hide');
+        } else if (onbStep===2){
+          onbTitle.textContent='Navegue mais rápido';
+          onbText.textContent='Use o menu lateral para ir direto à seção desejada.';
           onbNext.classList.remove('hide');
         } else {
-          onbTitle.textContent='Navegue mais rápido';
-          onbText.textContent='Use o menu lateral para acessar rapidamente cada seção.';
-          onbNext.classList.add('hide'); // último passo: sem "Próximo"
+          onbTitle.textContent='Entenda o cabeçalho';
+          onbText.textContent='Aqui você sempre vê o nível e o plano selecionados.';
+          onbNext.classList.add('hide'); // último passo: sem “Próximo”
         }
       }
       function targetForStep(){
         if (onbStep===1) return levelDockWrap;
-        // passo 2
-        if (matchMedia('(max-width: 880px)').matches){
-          if (!sideDock.classList.contains('is-open')){ sideDock.classList.add('is-open'); onbOpenedDock=true; }
+        if (onbStep===2){
+          if (matchMedia('(max-width: 880px)').matches){
+            if (!sideDock.classList.contains('is-open')){ sideDock.classList.add('is-open'); onbOpenedDock=true; }
+          }
+          return sideDock.querySelector('.dock-items') || sideDock;
         }
-        return sideDock.querySelector('.dock-items') || sideDock;
+        return document.querySelector('.capsule'); // passo 3
       }
       function placeNow(){
         const tgt = targetForStep(); if (!tgt) return;
@@ -1140,7 +1169,7 @@
         window.removeEventListener('scroll', onScroll);
       }
 
-      onbNext.onclick = ()=> { onbStep=2; setTexts(); requestAnimationFrame(()=> { requestAnimationFrame(()=> { placeSpotlight(targetForStep()); }); }); };
+      onbNext.onclick = ()=> { onbStep = Math.min(3, onbStep+1); setTexts(); requestAnimationFrame(()=> { requestAnimationFrame(()=> { placeSpotlight(targetForStep()); }); }); };
       onbDone.onclick = endOnboarding;
       onbSkip.onclick = endOnboarding;
 
@@ -1149,44 +1178,41 @@
       });
     }
 
-    /* Boas‑vindas sempre a cada reload */
+    /* Boas‑vindas a cada reload */
     function showSplashNow(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
     btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 200); });
     btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
     btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
 
     /* Init */
-    function getLevelFromURL(){
-      try{
-        const u=new URL(window.location.href); const n1=u.searchParams.get('n'); if (n1 && [1,2,3].includes(+n1)) return +n1;
-        const hash=u.hash||''; const qIndex=hash.indexOf('?');
-        if (qIndex!==-1){ const qs=new URLSearchParams(hash.slice(qIndex+1)); const n2=qs.get('n'); if (n2 && [1,2,3].includes(+n2)) return +n2; }
-      }catch{} return null;
-    }
     function init(){
-      const urlN=getLevelFromURL(); const saved=+localStorage.getItem(LEVELS_KEY)||1; const start=urlN||saved||1;
+      const saved=+localStorage.getItem(LEVELS_KEY)||1;
 
-      // estado inicial
-      setCapsuleTop(start);
-      setStatusBar(start);
-      updateAll(start);
-      setLevelDock(start);
+      setCapsuleTop(saved);
+      setStatusBar(saved);
+      updateAll(saved);
+      setLevelDock(saved);
 
-      // eventos base
-      [lvl1,lvl2,lvl3].forEach((b)=> b.addEventListener('click', ()=>{ const L=+b.dataset.level; localStorage.setItem(LEVELS_KEY, String(L)); setStatusBar(L); updateAll(L); if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle); setLevelDock(L); }));
+      setBodyTopPad(); toggleFab();
 
-      // observar seção para cápsula
+      // observers para cápsula
       const topSentinel = document.getElementById('top-sentinel');
       if ('IntersectionObserver' in window){
         const ioTop = new IntersectionObserver(entries=>{
           const e=entries[0]; topAtSight = e.isIntersecting;
-          const level = +localStorage.getItem(LEVELS_KEY)||start||1;
+          const level = +localStorage.getItem(LEVELS_KEY)||saved||1;
           if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
         }, {threshold:[0,0.01,1]});
         ioTop.observe(topSentinel);
       }
 
-      setBodyTopPad(); toggleFab();
+      // eventos de nível
+      lvlBtns.forEach((b)=> b.addEventListener('click', ()=>{
+        const L=+b.dataset.level;
+        localStorage.setItem(LEVELS_KEY, String(L));
+        setStatusBar(L); updateAll(L); setLevelDock(L);
+        if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      }));
 
       addEventListener('resize', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
