@@ -28,6 +28,7 @@
 
       --topbar-h: 56px;
       --statusbar-h: 0px;
+      --levelbar-h: 72px;
     }
 
     *{box-sizing:border-box}
@@ -39,7 +40,7 @@
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       background:var(--bg);
       padding-top:0;
-      padding-bottom:calc(160px + env(safe-area-inset-bottom));
+      padding-bottom:calc(var(--levelbar-h) + 24px + env(safe-area-inset-bottom));
     }
 
     /* FX */
@@ -72,7 +73,7 @@
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
       background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
     .topbar .wrap{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px; padding:8px var(--side-pad) }
     .logo-ccs,.logo-vctech{ width: clamp(44px, 6.6vw, 72px); height: clamp(44px, 6.6vw, 72px); object-fit:contain; display:block }
@@ -83,7 +84,7 @@
       padding:10px 16px; border-radius:999px;
       background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.38);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint; animation: softPulseStrong 5.2s ease-in-out infinite alternate;
     }
@@ -110,14 +111,13 @@
       background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:textShift 3.2s linear infinite;
       text-shadow:0 0 12px rgba(123,92,255,.38), 0 0 20px rgba(0,255,198,.28);
     }
-    @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45) }
 
     /* Barra comercial (todos os níveis) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:block; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
     .status-wrap{ display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap }
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:9px 14px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
@@ -129,12 +129,14 @@
       display:flex; justify-content:center;
       position:relative; z-index:1;
       isolation:isolate; contain:layout paint;
+      display:flow-root; /* barra vazamentos de floats/margens */
     }
-    .section + .section{ margin-top: 4px }
+    .section + .section{ margin-top: 6px }
+    .section-sep{ height:1px; margin:0; border:0; display:block; clear:both; contain:layout; }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter: blur(10px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
       overflow:hidden; position:relative; z-index:1;
       contain:content; clear:both; display:block;
@@ -151,7 +153,21 @@
 
     .content{ padding:16px; display:block }
     .title{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px }
-    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
+    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative }
+    /* Destaque do título da seção atual */
+    .section.is-current .title h2{
+      background:linear-gradient(90deg,#fff 0%,#eaf3ff 30%,#fff 60%) padding-box;
+      background-clip:text; -webkit-background-clip:text; color:transparent;
+      text-shadow:0 0 18px rgba(123,92,255,.30), 0 0 24px rgba(0,217,255,.28);
+    }
+    .section.is-current .title h2::after{
+      content:""; position:absolute; left:0; right:60%; bottom:-6px; height:3px; border-radius:3px;
+      background:linear-gradient(90deg,var(--levelA),var(--planB));
+      box-shadow:0 0 12px rgba(0,217,255,.5), 0 0 18px rgba(123,92,255,.4);
+      animation:underlineSweep 1.4s ease-out;
+    }
+    @keyframes underlineSweep{ from{ right:98% } to{ right:60% } }
+
     .subtitle{ margin:6px 0 10px; color:#cfe0ff }
 
     .row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 }
@@ -159,18 +175,27 @@
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; white-space:normal; text-align:center; display:inline-flex; align-items:center; justify-content:center;
       position:relative; will-change:transform, box-shadow, opacity;
+      overflow:hidden;
     }
     .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
-    .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.9 }
+    .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.95 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
     /* Destaques de mudança */
-    .pill-flag.changed{ animation: pillPop 700ms cubic-bezier(.2,.7,.2,1) both; }
+    .pill-flag.changed{ animation: pillPop 720ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{
       0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 0 0 rgba(123,92,255,0) }
-      40%{ transform:scale(1.06); box-shadow:0 0 0 6px rgba(0,217,255,.18), 0 0 18px rgba(123,92,255,.35) }
+      35%{ transform:scale(1.06); box-shadow:0 0 0 6px rgba(0,217,255,.18), 0 0 18px rgba(123,92,255,.35) }
       100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 0 0 rgba(123,92,255,0) }
     }
+    /* Sweep de luz */
+    .pill-flag.changed::before{
+      content:""; position:absolute; inset:0 -30%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.65) 12%, transparent 26%);
+      transform:translateX(-120%); animation: sweep 480ms ease-out forwards 120ms;
+      mix-blend-mode:screen; pointer-events:none;
+    }
+    @keyframes sweep{ to{ transform:translateX(120%) } }
+    /* Sparkles refinados quando vira incluído */
     .pill-flag.included-new::after{
       content:""; position:absolute; inset:-6px; pointer-events:none;
       background:
@@ -182,17 +207,13 @@
       animation: spark 600ms ease-out forwards;
       filter: drop-shadow(0 0 6px rgba(255,255,255,.6));
     }
-    @keyframes spark{
-      0%{ opacity:1; transform:scale(.8) rotate(0deg) }
-      100%{ opacity:0; transform:scale(1.3) rotate(25deg) }
-    }
+    @keyframes spark{ 0%{ opacity:1; transform:scale(.8) rotate(0deg) } 100%{ opacity:0; transform:scale(1.2) rotate(20deg) } }
+    /* Flip numérico */
     .pill-flag.num-flip{ transform-origin:50% 50%; animation: flipY 420ms ease both }
-    @keyframes flipY{
-      0%{ transform: rotateX(90deg); opacity:0 }
-      100%{ transform: rotateX(0deg); opacity:1 }
-    }
+    @keyframes flipY{ 0%{ transform: rotateX(90deg); opacity:0 } 100%{ transform: rotateX(0deg); opacity:1 } }
     @media (prefers-reduced-motion:reduce){
       .pill-flag.changed, .pill-flag.included-new::after, .pill-flag.num-flip{ animation:none }
+      .pill-flag.changed::before{ display:none }
     }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; clear:both }
@@ -220,7 +241,7 @@
 
     /* Side Dock */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
-    .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
+    .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain; display:block }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
@@ -243,45 +264,62 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) */
-    .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
+    /* Level Bar — full width (desktop + mobile) */
+    .level-dock{
+      position:fixed; left:0; right:0; bottom:0; z-index:85;
+      padding:8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
+      background:rgba(16,18,24,.55); border-top:1px solid var(--line);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      height:var(--levelbar-h);
+    }
     .level-dock .wrap{
-      display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
-      background:rgba(16,18,24,.55); backdrop-filter:blur(10px)
+      height:100%;
+      display:flex; gap:10px; align-items:center; justify-content:center;
+      max-width:1200px; margin:0 auto;
     }
     .level-dock .btn-level{
-      position:relative; min-width:88px; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.10);
+      position:relative; flex:1 1 0; min-width:0; padding:12px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer;
       transition: box-shadow .25s ease, transform .2s ease, background .25s ease;
+      overflow:hidden;
     }
-    .level-dock .btn-level::before{
-      content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
+    /* Borda animada no ativo */
+    .level-dock .btn-level[aria-pressed="true"]::before{
+      content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
-      background-size:300% 300%; animation:ringShift 14s ease-in-out infinite alternate;
+      background-size:300% 300%; animation:ringShift 10s ease-in-out infinite alternate;
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-      opacity:.55;
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.8;
     }
     .level-dock .btn-level[aria-pressed="true"]{
       background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12));
       box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 24px rgba(0,217,255,.40), 0 0 34px rgba(123,92,255,.30);
-      transform: scale(1.022);
+      transform: translateY(-1px);
     }
-    @keyframes selectPulse { 0% { box-shadow: 0 0 0 0 rgba(0,217,255,.60), 0 0 0 0 rgba(123,92,255,.50) } 100% { box-shadow: 0 0 0 16px rgba(0,217,255,0), 0 0 0 28px rgba(123,92,255,0) } }
-    .btn-level.hit::after{ content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none; animation: selectPulse .5s ease-out; }
-    .label-actual{ display:none }
-    .btn-level[aria-pressed="true"] .label-actual{
-      display:inline-block; position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
-      color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12);
-      box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 14px rgba(0,217,255,.55);
-      animation: ping 2.6s ease-out infinite;
+    /* “ATUAL” com brilho nítido + shine */
+    .label-actual{
+      display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
+      color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB));
+      border:1px solid rgba(0,0,0,.12);
+      box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 16px rgba(0,217,255,.7), 0 0 22px rgba(123,92,255,.6);
+      overflow:hidden;
     }
+    .label-actual::after{
+      content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.7) 18%, transparent 34%); transform:translateX(-120%);
+      animation: labelShine 1.4s ease-in-out infinite;
+      mix-blend-mode:screen; pointer-events:none;
+    }
+    @keyframes labelShine{ to{ transform:translateX(120%) } }
+    .level-dock .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Botão "Voltar ao topo" */
+    .btn-level.hit::after{ content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none; animation: selectPulse .5s ease-out; }
+    @keyframes selectPulse { 0% { box-shadow: 0 0 0 0 rgba(0,217,255,.60), 0 0 0 0 rgba(123,92,255,.50) } 100% { box-shadow: 0 0 0 16px rgba(0,217,255,0), 0 0 0 28px rgba(123,92,255,0) } }
+
+    /* Botão "Voltar ao topo" (posicionado acima da barra) */
     .fab{
       position:fixed; z-index:100; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
       background:rgba(16,18,24,.90); color:#fff; display:none; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
-      left:16px; bottom:calc(90px + env(safe-area-inset-bottom));
+      left:16px; bottom:calc(var(--levelbar-h) + 18px + env(safe-area-inset-bottom));
     }
     .fab svg{ width:22px; height:22px }
 
@@ -307,7 +345,7 @@
         radial-gradient(900px 600px at 10% 10%, rgba(95,92,255,.14), transparent 60%),
         radial-gradient(900px 600px at 90% 90%, rgba(0,234,255,.12), transparent 60%),
         rgba(9,12,18,.88);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
     .splash.is-open{ display:flex }
     .splash .box{
@@ -333,10 +371,13 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; margin-top:14px }
     .splash .btn{ font-size:16px }
 
-    /* Onboarding (spotlight) — 3 passos */
+    /* Onboarding (spotlight) — 3 passos com BLUR real no fundo */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
-    .onb .blk{ position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto }
+    .onb .blk{
+      position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
     .onb .highlight{
       position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85);
       box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30);
@@ -582,7 +623,7 @@
             </div>
           </div>
 
-          <div class="actions">
+          <div class="actions" id="indique-actions">
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20250." title="Indicar para 250 MB">Indicar Plano 250</a>
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20450." title="Indicar para 450 MB">Indicar Plano 450</a>
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Quero%20indicar%20um%20amigo%20para%20o%20Plano%20650." title="Indicar Plano 650</a>
@@ -590,6 +631,9 @@
         </div>
       </div>
     </section>
+
+    <!-- Separador lógico blindado -->
+    <i class="section-sep" id="sep-indique-portal" aria-hidden="true"></i>
 
     <!-- Portal do Assinante (seção separada e blindada) -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
@@ -600,7 +644,7 @@
         <div class="content">
           <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Tenha o controle da sua assinatura onde você estiver!</p>
-          <div class="actions one">
+          <div class="actions one" id="portal-actions">
             <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/" title="Abrir Portal do Assinante">Acessar Portal</a>
           </div>
         </div>
@@ -656,11 +700,10 @@
       </div>
     </section>
 
-    <!-- FAQ (14 perguntas) -->
+    <!-- FAQ -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
-
         <details class="faq"><summary>Quando meus benefícios são ativados após a instalação?</summary><div>Em até 72 horas úteis, após validações internas do cadastro e da instalação.</div></details>
         <details class="faq"><summary>Como acesso o CCS PLAY e o CCS TV?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> e faça login com seu e‑mail cadastrado e CPF (somente números) como senha inicial.</div></details>
         <details class="faq"><summary>A Rede Globo está incluída nos canais?</summary><div>Não. A Rede Globo não está incluída em nenhum nível.</div></details>
@@ -675,7 +718,6 @@
         <details class="faq"><summary>Como acesso o Portal do Assinante?</summary><div>Acesse <a class="inline-link" href="https://ccs.7az.com.br/" target="_blank" rel="noopener">ccs.7az.com.br</a> para gerenciar sua assinatura.</div></details>
         <details class="faq"><summary>Como assino ou faço upgrade de nível?</summary><div>Use o botão “Assinar Nível X agora” na barra superior ou fale com um especialista via link ao lado.</div></details>
         <details class="faq"><summary>Posso rever o tutorial?</summary><div>Sim. Clique em “Ver tutorial novamente” no rodapé.</div></details>
-
       </div></div>
     </section>
   </main>
@@ -699,7 +741,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
-  <!-- Level Dock -->
+  <!-- Level Bar (full width) -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
     <div class="wrap" id="levelDockWrap">
       <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span>Nível 1</button>
@@ -766,7 +808,7 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Dados por nível */
+    /* Conteúdos por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -835,7 +877,7 @@
         sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores */
+    /* Seletores base */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
     const statusWrap = document.getElementById('statusWrap');
@@ -845,8 +887,6 @@
     const capTrack = document.getElementById('capTrack');
     const capLeft = document.getElementById('capLeft');
     const capRight = document.getElementById('capRight');
-    const logoL = document.querySelector('.logo-ccs');
-    const logoR = document.querySelector('.logo-vctech');
 
     const sideDock = document.getElementById('sideDock');
     const dockToggle = document.getElementById('dockToggle');
@@ -884,6 +924,8 @@
 
     const splash = document.getElementById('splash');
     const btnStart = document.getElementById('btnStart');
+    aconst = 1;
+
     const btnSkipTutorial = document.getElementById('btnSkipTutorial');
 
     const onboarding = document.getElementById('onboarding');
@@ -910,11 +952,11 @@
       const hStatus = statusBar.offsetHeight||0;
       document.documentElement.style.setProperty('--topbar-h', hTop + 'px');
       document.documentElement.style.setProperty('--statusbar-h', hStatus + 'px');
-      document.body.style.paddingTop = (hTop + hStatus + 8) + 'px';
     }
     function fitCapsule(){
       const wrapW = wrap.clientWidth, gap = parseFloat(getComputedStyle(wrap).columnGap)||10;
-      const lW = logoL?.getBoundingClientRect().width||0, rW = logoR?.getBoundingClientRect().width||0;
+      const lW = document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
+      const rW = document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
       const available = Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
       capsule.style.maxWidth = available + 'px';
       capTrack.style.transform = '';
@@ -939,16 +981,37 @@
       const main = document.querySelector('main');
       const ind = document.getElementById('s-indique');
       const por = document.getElementById('s-portal');
+      const sep = document.getElementById('sep-indique-portal');
+
       if (!main || !ind || !por) return;
 
-      // Se portal estiver dentro de "indique", move para depois
-      if (ind.contains(por)){
-        main.insertBefore(por, document.getElementById('s-faturas') || ind.nextSibling);
+      // Sempre: separador entre as duas seções
+      if (sep && sep.previousElementSibling !== ind) {
+        main.insertBefore(sep, por);
       }
-      // Se estiver em ordem errada (portal antes de indique), reposiciona
-      const order = [...main.children].map(n=>n.id);
+
+      // Se portal estiver dentro de "indique", move para depois do separador
+      if (ind.contains(por)){
+        main.insertBefore(por, document.getElementById('s-faturas') || sep.nextSibling);
+      }
+
+      // Remove botões/elementos do Portal que porventura caíram dentro de Indique
+      [...ind.querySelectorAll('a[href*="ccs.7az.com.br"], a[href*="ccs.pix.7az.com.br"]')].forEach(el=>{
+        el.remove();
+      });
+
+      // Garante que o botão do Portal está dentro de #s-portal
+      const portalBtn = por.querySelector('#portal-actions a[href*="ccs.7az.com.br"]');
+      if (!portalBtn){
+        const found = document.querySelector('a[href*="ccs.7az.com.br"]');
+        if (found){ document.getElementById('portal-actions')?.appendChild(found); }
+      }
+
+      // Corrige ordem se necessário
+      const order = [...main.children].map(n=>n.id||n.className);
       if (order.indexOf('s-portal') < order.indexOf('s-indique')){
-        main.insertBefore(document.getElementById('s-indique'), document.getElementById('s-portal'));
+        main.insertBefore(ind, por);
+        main.insertBefore(sep, por);
       }
     }
 
@@ -970,12 +1033,9 @@
         const changed = (p.text!==n.text) || (p.included!==n.included);
         if (changed){
           el.classList.add('changed');
-          // se virou incluído: sparkles
           if (!p.included && n.included){ el.classList.add('included-new'); }
-          // flip numérico se número mudou
           if (hasNumberDiff(p.text, n.text)){ el.classList.add('num-flip'); }
-          // limpar classes após animação
-          setTimeout(()=>{ el.classList.remove('changed','included-new','num-flip'); }, 900);
+          setTimeout(()=>{ el.classList.remove('changed','included-new','num-flip'); }, 1000);
         }
       });
     }
@@ -1049,8 +1109,9 @@
       if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Dock highlight + cápsula dinâmica */
+    /* Dock highlight + cápsula dinâmica + título atual */
     const topSentinel = document.getElementById('top-sentinel');
+    let lastCurrent = null;
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
         const e=entries[0]; topAtSight = e.isIntersecting;
@@ -1066,13 +1127,16 @@
           const vh=window.innerHeight||document.documentElement.clientHeight;
           const topCut=(topbar.offsetHeight||64) + (statusBar.offsetHeight||0) + 8;
           const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, topCut));
-          return { id:s.id, title:s.getAttribute('data-title')||'', area:visible };
+          return { el:s, id:s.id, title:s.getAttribute('data-title')||'', area:visible };
         }).sort((a,b)=>b.area-a.area)[0];
         if (!vis) return;
         currentSectionTitle = vis.title || currentSectionTitle;
         dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+vis.id));
         const level = +localStorage.getItem(LEVELS_KEY)||1;
         if (topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+
+        if (lastCurrent && lastCurrent!==vis.el) lastCurrent.classList.remove('is-current');
+        vis.el.classList.add('is-current'); lastCurrent = vis.el;
       },{threshold:[0,0.25,0.5,0.75]});
       document.querySelectorAll('main .section').forEach(s=>io.observe(s));
     }
@@ -1135,14 +1199,14 @@
       const title = currentSectionTitle;
       if (topAtSight) setCapsuleTop(L); else setCapsuleSection(L, title);
       if (remember) localStorage.setItem(LEVELS_KEY,String(L));
-      // Aplicar destaques
+      // Destaques
       requestAnimationFrame(()=> highlightChanges(prev));
     }
     lvl1.addEventListener('click',()=>applyLevel(1));
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
 
-    /* Boas‑vindas e Tutorial (3 passos, último sem “Próximo”) */
+    /* Boas‑vindas e Tutorial (3 passos) */
     function showSplash(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
     function hideSplash(){ splash.classList.remove('is-open'); document.body.style.overflow=''; }
 
@@ -1278,7 +1342,7 @@
 
       setBodyTopPad(); toggleFab();
 
-      // observar seção para cápsula
+      // Observador para cápsula/título e side-dock
       if ('IntersectionObserver' in window){
         const ioTop = new IntersectionObserver(entries=>{
           const e=entries[0]; topAtSight = e.isIntersecting;
@@ -1288,21 +1352,18 @@
         ioTop.observe(document.getElementById('top-sentinel'));
       }
 
-      // eventos de nível
-      lvlBtns.forEach((b)=> b.addEventListener('click', ()=>{
-        const L=+b.dataset.level;
-        applyLevel(L);
-      }));
+      // Eventos de nível
+      lvlBtns.forEach((b)=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
       addEventListener('resize', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
       addEventListener('orientationchange', ()=>{ setBodyTopPad(); fitCapsule(); toggleFab(); });
 
-      // fallback: observar mutações e manter seções separadas
+      // Failsafe contínuo: mantém seções separadas mesmo se HTML vier quebrado
       const mo = new MutationObserver(()=> ensureSectionsSeparated());
       mo.observe(document.querySelector('main'), {childList:true, subtree:true});
 
-      // abrir boas-vindas
+      // Abrir boas-vindas
       showSplashNow();
     }
     init();
