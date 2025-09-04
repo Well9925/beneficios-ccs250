@@ -114,7 +114,7 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Status comercial (N2/N3) */
+    /* Barra comercial dinâmica (N2/N3) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
       display:none; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
@@ -125,12 +125,13 @@
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
     .status-cta.secondary{ background:rgba(255,255,255,.10); color:#fff }
 
-    /* Cards (fluxo mobile) */
-    .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center; position:relative; isolation:isolate; z-index:1 }
+    /* Seções e cards — anti-mistura entre seções */
+    .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center; position:relative; z-index:1; isolation:isolate; contain:layout paint; }
+    .section::after{ content:""; display:block; clear:both }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden; position:relative; z-index:1
+      backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden; position:relative; z-index:1; contain:content;
     }
     .media{ display:flex; justify-content:center; align-items:center; padding:8px 0 }
     .frame{ width:100%; display:flex; justify-content:center; align-items:center }
@@ -203,7 +204,7 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) + FAB */
+    /* Level Dock + FAB */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{
       display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
@@ -236,7 +237,6 @@
       box-shadow:0 2px 8px rgba(0,0,0,.25), 0 0 14px rgba(0,217,255,.55);
       animation: ping 2.6s ease-out infinite;
     }
-    @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
 
     .fab{
       position:fixed; z-index:100; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
@@ -321,7 +321,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; margin-top:14px }
     .splash .btn{ font-size:16px }
 
-    /* Onboarding (spotlight) */
+    /* Onboarding (spotlight + card sempre visível) */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto }
@@ -752,7 +752,6 @@
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
     const CONTACT_WHATS = 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20de%20internet%20CCS.';
 
-    /* Dados por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -1036,13 +1035,13 @@
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB subir/descer */
+    /* FAB subir/descer (robusto) */
     function isStage(){ return document.body.classList.contains('is-stage'); }
-    function getDoc(){ const d=document; const b=d.body; const e=d.documentElement; return { el: e, body: b, height: Math.max(b.scrollHeight,e.scrollHeight,b.offsetHeight,e.offsetHeight,b.clientHeight,e.clientHeight), top: (window.pageYOffset || e.scrollTop || b.scrollTop || 0), vh: (window.innerHeight||e.clientHeight) }; }
-    function nearBottomMobile(){ const d=getDoc(); return (d.top + d.vh) >= (d.height - 4); }
-    function updateFabIcon(){
+    function root(){ return document.scrollingElement || document.documentElement || document.body; }
+    function atBottom(){ const r=root(); return (r.scrollTop + r.clientHeight) >= (r.scrollHeight - 1); }
+    function updFab(){
       if (isStage()) return;
-      if (nearBottomMobile()){
+      if (atBottom()){
         fab.setAttribute('aria-label','Ir para o topo'); fab.title='Ir para o topo';
         fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
       } else {
@@ -1061,14 +1060,14 @@
     }
     fab.addEventListener('click', ()=>{
       if (isStage()) return;
-      const d=getDoc();
-      if (nearBottomMobile()){
+      const r=root();
+      if (atBottom()){
         window.scrollTo({ top: 0, behavior:'smooth' });
       } else {
-        const maxY = d.height - d.vh;
+        const maxY = Math.max(0, r.scrollHeight - r.clientHeight);
         window.scrollTo({ top: maxY, behavior:'smooth' });
       }
-      setTimeout(updateFabIcon, 350);
+      setTimeout(updFab, 350);
     });
 
     /* Side Dock mobile */
@@ -1086,7 +1085,7 @@
     }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
-    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updateFabIcon(); }, {passive:true});
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updFab(); }, {passive:true});
 
     /* Saiba mais */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
@@ -1121,7 +1120,7 @@
       });
     }
 
-    /* Carrossel desktop */
+    /* Carrossel desktop (ativa só se houver slides) */
     const sectionOrder = [...document.querySelectorAll('main .section')].map(s=> s.id);
     function buildStage(){
       stageTrack.innerHTML='';
@@ -1159,7 +1158,11 @@
     }
     function enableStage(){
       const count = buildStage();
-      if (count===0){ disableStage(); return; }
+      if (count<=0){ // fallback automático
+        document.body.classList.remove('is-stage');
+        stageTrack.innerHTML='';
+        return;
+      }
       document.body.classList.add('is-stage');
       setDockOffset(); setStageIndex(0);
       dockLinks.forEach(a=>{
@@ -1208,14 +1211,8 @@
 
     /* Onboarding (spotlight) */
     let onbOpen=false, onbStep=1, onbOpenedDock=false;
-    function showSplash(){
-      splash.classList.add('is-open');
-      document.body.style.overflow='hidden';
-    }
-    function hideSplash(){
-      splash.classList.remove('is-open');
-      document.body.style.overflow='';
-    }
+    function showSplash(){ splash.classList.add('is-open'); document.body.style.overflow='hidden'; }
+    function hideSplash(){ splash.classList.remove('is-open'); document.body.style.overflow=''; }
 
     function getViewport(){ return { w: window.innerWidth || document.documentElement.clientWidth, h: window.innerHeight || document.documentElement.clientHeight }; }
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
@@ -1224,8 +1221,38 @@
       const r = target.getBoundingClientRect();
       const padding = 12;
       const topCut = (topbar.offsetHeight||64) + (statusBar.style.display==='none'?0:(statusBar.offsetHeight||0)) + 8;
-      if (r.top < topCut+padding || r.bottom > (window.innerHeight - 80)){
+      if (r.top < topCut+padding || r.bottom > (window.innerHeight - 120)){
         target.scrollIntoView({ behavior:'smooth', block:'center', inline:'nearest' });
+      }
+    }
+    function placeCardNear(x,y,w,h){
+      const vw=getViewport().w, vh=getViewport().h;
+      const card=onbCard; const pad=12; const ch=card.offsetHeight; const cw=card.offsetWidth;
+      // Tenta acima
+      let top = y - (ch + pad);
+      let left = x;
+      let useBottomSheet = false;
+
+      if (top < 60){
+        // Tenta abaixo
+        top = y + h + pad;
+        if (top + ch + 16 > vh){
+          // Se ainda não cabe, vira "bottom sheet" (mobile)
+          useBottomSheet = true;
+        }
+      }
+
+      if (useBottomSheet){
+        card.style.top = 'auto';
+        card.style.bottom = 'max(16px, env(safe-area-inset-bottom))';
+        card.style.left = '50%';
+        card.style.transform = 'translateX(-50%)';
+      } else {
+        card.style.bottom = 'auto';
+        card.style.transform = 'none';
+        left = clamp(left, 16, vw - cw - 16);
+        card.style.top = Math.max(60, top) + 'px';
+        card.style.left = left + 'px';
       }
     }
     function placeSpotlight(targetEl, pad=6){
@@ -1248,14 +1275,7 @@
       onbRight.style.left= (x+w)+'px'; onbRight.style.top= y+'px'; onbRight.style.width= Math.max(0, vw - (x+w))+'px'; onbRight.style.height = h+'px';
       onbBottom.style.left='0px'; onbBottom.style.top= (y+h)+'px'; onbBottom.style.width= vw+'px'; onbBottom.style.height = Math.max(0, vh - (y+h))+'px';
 
-      const card = onbCard;
-      const preferTop = y - (card.offsetHeight+12);
-      const top = (preferTop>60? preferTop : (y+h+12));
-      let left = x;
-      if (left + card.offsetWidth > (vw-16)) left = vw - card.offsetWidth - 16;
-      if (left < 16) left = 16;
-      card.style.top = Math.max(60, top) + 'px';
-      card.style.left = left + 'px';
+      placeCardNear(x,y,w,h);
     }
 
     function showOnboarding(step=1){
@@ -1319,21 +1339,11 @@
       });
     }
 
-    /* Sempre mostrar Boas-vindas a cada reload */
-    function maybeOnboard(){
-      showSplash(); // sempre
-    }
-    btnStart?.addEventListener('click', ()=>{
-      hideSplash();
-      setTimeout(()=> showOnboarding(1), 200); // abre tutorial ao clicar em "Explorar benefícios"
-    });
-    btnSkipTutorial?.addEventListener('click', ()=>{
-      hideSplash(); // entra sem tutorial
-      localStorage.setItem(ONB_KEY,'1');
-    });
-    btnReplayTutorial?.addEventListener('click', ()=>{
-      showOnboarding(1);
-    });
+    /* Boas-vindas sempre a cada reload */
+    function maybeOnboard(){ showSplash(); }
+    btnStart?.addEventListener('click', ()=>{ hideSplash(); setTimeout(()=> showOnboarding(1), 200); });
+    btnSkipTutorial?.addEventListener('click', ()=>{ hideSplash(); localStorage.setItem(ONB_KEY,'1'); });
+    btnReplayTutorial?.addEventListener('click', ()=>{ showOnboarding(1); });
 
     /* Init */
     function getLevelFromURL(){
@@ -1345,7 +1355,7 @@
     }
     function remeasure(){
       setBodyTopPad(); fitCapsule();
-      if (!isStage()) { placeFab(); updateFabIcon(); }
+      if (!isStage()) { placeFab(); updFab(); }
       if (isStage()) setDockOffset();
     }
     function init(){
@@ -1365,12 +1375,11 @@
 
       addEventListener('pageshow', remeasure);
       addEventListener('orientationchange', remeasure);
-      addEventListener('scroll', ()=>{ if (!isStage()) updateFabIcon(); }, {passive:true});
+      addEventListener('scroll', ()=>{ if (!isStage()) updFab(); }, {passive:true});
 
       remeasure();
       setTimeout(remeasure, 80);
 
-      // Boas-vindas sempre
       maybeOnboard();
     }
     init();
