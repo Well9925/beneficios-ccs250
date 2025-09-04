@@ -43,7 +43,7 @@
       padding-bottom:calc(160px + env(safe-area-inset-bottom));
     }
 
-    /* Efeitos de fundo */
+    /* FX */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -114,26 +114,27 @@
     @media (prefers-reduced-motion:reduce){ .track .txt{ animation:none } }
     .dot-mid{ width:12px; height:12px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.65), 0 0 18px rgba(123,92,255,.45); flex:0 0 auto }
 
-    /* Status (N2/N3) */
+    /* Status comercial (N2/N3) */
     .status-bar{
       position:fixed; top:calc(var(--topbar-h) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
-      display:none; padding:6px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
+      display:none; padding:8px var(--side-pad); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px);
     }
-    .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap; font-size:13px; line-height:1; white-space:nowrap }
+    .status-wrap{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap }
     .status-label{ display:inline-flex; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.08); font-weight:900; text-align:center }
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:8px 12px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
+    .status-cta.secondary{ background:rgba(255,255,255,.10); color:#fff }
 
     /* Cards (fluxo mobile) */
-    .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center }
+    .section{ padding:18px var(--side-pad) 24px; display:flex; justify-content:center; position:relative; isolation:isolate; z-index:1 }
     .card{
       width:min(1080px,100%); border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden
+      backdrop-filter:blur(10px); box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden; position:relative; z-index:1
     }
     .media{ display:flex; justify-content:center; align-items:center; padding:8px 0 }
     .frame{ width:100%; display:flex; justify-content:center; align-items:center }
-    .art-img{ max-height:var(--art-max-h-d); max-width:min(100%,880px); width:auto; height:auto; object-fit:contain }
+    .art-img{ max-height:var(--art-max-h-d); max-width:min(100%,880px); width:auto; height:auto; object-fit:contain; display:block }
     @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m); max-width:100%; width:100% } }
 
     .content{ padding:16px }
@@ -177,27 +178,21 @@
     a.inline-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
     a.inline-link:hover{ color:#ffffff; text-decoration:underline }
 
-    /* Side Dock (desktop e mobile aberto) */
+    /* Side Dock */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
-    .side-dock img{ width:24px; height:24px; object-fit:contain }
+    .side-dock img{ width:24px; height:24px; object-fit:contain; display:block }
     .side-dock a.is-active{ outline:2px solid var(--focus) }
 
-    /* Dock mobile toggle */
+    /* Dock mobile */
     .dock-header{ display:none }
     @media (max-width: 880px){
       .side-dock{ display:none }
       .side-dock.is-open{ display:block; right:12px; top:calc(var(--topbar-h) + var(--statusbar-h) + 12px); transform:none }
       .side-dock.is-open .dock-items{ padding-top:48px; position:relative }
-      .dock-header{
-        display:flex; align-items:center; justify-content:flex-end;
-        position:absolute; top:8px; left:8px; right:8px;
-      }
-      .btn-dock-close{
-        border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-weight:900;
-        background:rgba(0,0,0,.7); color:#fff; cursor:pointer;
-      }
+      .dock-header{ display:flex; align-items:center; justify-content:flex-end; position:absolute; top:8px; left:8px; right:8px; }
+      .btn-dock-close{ border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-weight:900; background:rgba(0,0,0,.7); color:#fff; cursor:pointer; }
       .dock-fab{
         position:fixed; right:12px; z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
         background:rgba(16,18,24,.78); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
@@ -208,7 +203,7 @@
       .dock-fab svg{ width:22px; height:22px }
     }
 
-    /* Level Dock (rodapé) + FAB na mesma linha no mobile */
+    /* Level Dock (rodapé) + FAB */
     .level-dock{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:85 }
     .level-dock .wrap{
       display:flex; gap:8px; padding:10px; border:1px solid var(--line); border-radius:16px;
@@ -229,20 +224,11 @@
     }
     .level-dock .btn-level[aria-pressed="true"]{
       background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12));
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,.12) inset,
-        0 0 24px rgba(0,217,255,.40),
-        0 0 34px rgba(123,92,255,.30);
+      box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 24px rgba(0,217,255,.40), 0 0 34px rgba(123,92,255,.30);
       transform: scale(1.022);
     }
-    @keyframes selectPulse {
-      0% { box-shadow: 0 0 0 0 rgba(0,217,255,.60), 0 0 0 0 rgba(123,92,255,.50) }
-      100% { box-shadow: 0 0 0 16px rgba(0,217,255,0), 0 0 0 28px rgba(123,92,255,0) }
-    }
-    .btn-level.hit::after{
-      content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none;
-      animation: selectPulse .5s ease-out;
-    }
+    @keyframes selectPulse { 0% { box-shadow: 0 0 0 0 rgba(0,217,255,.60), 0 0 0 0 rgba(123,92,255,.50) } 100% { box-shadow: 0 0 0 16px rgba(0,217,255,0), 0 0 0 28px rgba(123,92,255,0) } }
+    .btn-level.hit::after{ content:""; position:absolute; inset:-4px; border-radius:inherit; pointer-events:none; animation: selectPulse .5s ease-out; }
     .label-actual{ display:none }
     .btn-level[aria-pressed="true"] .label-actual{
       display:inline-block; position:absolute; top:-14px; left:12px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px;
@@ -252,31 +238,25 @@
     }
     @keyframes ping{ 0%{ transform:scale(1); box-shadow:0 0 0 0 rgba(0,217,255,.60) } 70%{ transform:scale(1); box-shadow:0 0 0 16px rgba(0,217,255,0) } 100%{ transform:scale(1) } }
 
-    /* FAB (mobile) ao lado do Level Dock — posicionado via JS */
     .fab{
-      position:fixed; z-index:90; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
-      background:rgba(16,18,24,.84); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
+      position:fixed; z-index:100; width:48px; height:48px; border-radius:50%; border:1px solid var(--line);
+      background:rgba(16,18,24,.90); color:#fff; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
       pointer-events:auto;
     }
     .fab svg{ width:22px; height:22px }
     @media (min-width:1024px){ .fab{ display:none } }
 
-    /* Resumo grid (mobile) */
+    /* Resumo grid */
     .summary{ width:min(1080px,100%); border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
     .gcard{ display:grid; grid-template-rows:auto 1fr; gap:8px; padding:10px; border:1px solid var(--line); border-radius:12px; text-decoration:none; color:#fff; background:rgba(255,255,255,.06) }
     .gcard:hover{ background:rgba(255,255,255,.10) }
     .gimg{ display:flex; justify-content:center; align-items:center; padding:8px; border-radius:10px; background:rgba(0,0,0,.25); border:1px solid var(--line) }
-    .gimg img{ width:64px; height:64px; object-fit:contain }
+    .gimg img{ width:64px; height:64px; object-fit:contain; display:block }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Footer */
-    .footer{ padding:24px var(--side-pad); color:#cfe0ff; text-align:center }
-    .footer .wrap{ display:grid; gap:14px; justify-items:center }
-    .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
-
-    /* Desktop: carrossel horizontal */
+    /* Desktop: carrossel */
     @media (min-width:1024px){
       body.is-stage main{ display:none }
       .stage-desktop{ display:block }
@@ -341,16 +321,10 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; margin-top:14px }
     .splash .btn{ font-size:16px }
 
-    /* Onboarding (tutorial com spotlight real) */
-    .onb{
-      position:fixed; inset:0; z-index:115; display:none;
-      pointer-events:none; /* deixa cliques passarem no "buraco" */
-    }
+    /* Onboarding (spotlight) */
+    .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
-    /* quatro blocos que escurecem ao redor do alvo */
-    .onb .blk{
-      position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto;
-    }
+    .onb .blk{ position:fixed; background:rgba(0,0,0,.60); z-index:0; pointer-events:auto }
     .onb .highlight{
       position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85);
       box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30);
@@ -368,7 +342,6 @@
     .onb .btn{ background:#fff }
     .onb .btn.ghost{ background:rgba(255,255,255,.10); color:#fff }
 
-    /* Util */
     .hide{ display:none !important }
   </style>
 </head>
@@ -412,12 +385,9 @@
     </div>
   </header>
 
-  <!-- Status bar -->
+  <!-- Barra comercial dinâmica -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
-    <div class="status-wrap">
-      <span class="status-label" id="st-need">Necessário</span>
-      <a class="status-cta" id="st-cta" href="#" target="_blank" rel="noopener">Atualizar para 450 MB</a>
-    </div>
+    <div class="status-wrap" id="statusWrap"></div>
   </div>
 
   <!-- Desktop: Carrossel -->
@@ -483,8 +453,8 @@
       <div class="card">
         <div class="media"><div class="frame">
           <div class="two-icons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--line);max-width:820px;width:100%">
-            <img alt="CCS Play" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
-            <img alt="CCS TV" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS Play" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS TV" style="width:100%;height:100%;object-fit:contain;background:#0f1420;border-radius:10px;border:1px solid var(--line);display:block" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
           </div>
         </div></div>
         <div class="content">
@@ -700,7 +670,7 @@
     </section>
   </main>
 
-  <!-- Side Dock (direita) -->
+  <!-- Side Dock -->
   <nav class="side-dock" aria-label="Atalhos" id="sideDock">
     <div class="dock-items">
       <div class="dock-header"><button class="btn-dock-close" id="dockClose" type="button">Fechar</button></div>
@@ -719,7 +689,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 
-  <!-- Level Dock (rodapé) -->
+  <!-- Level Dock -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
     <div class="wrap" id="levelDockWrap">
       <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span>Nível 1</button>
@@ -728,7 +698,7 @@
     </div>
   </nav>
 
-  <!-- FAB (ao lado do Level Dock no mobile) -->
+  <!-- FAB subir/descer -->
   <button class="fab" id="fab" aria-label="Ir para o final" title="Ir para o final">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
@@ -747,9 +717,7 @@
   <!-- Splash (boas-vindas) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
-      <div class="head">
-        <div class="cap">Comparador de Benefícios</div>
-      </div>
+      <div class="head"><div class="cap">Comparador de Benefícios</div></div>
       <h1 id="splashTitle">Bem-vindo ao Portal de Benefícios CCS</h1>
       <p id="splashDesc">Compare os níveis, descubra vantagens exclusivas e escolha a melhor experiência para você.</p>
       <div class="actions">
@@ -761,14 +729,11 @@
 
   <!-- Onboarding (spotlight) -->
   <div class="onb" id="onboarding" role="dialog" aria-modal="true" aria-live="polite">
-    <!-- quatro blocos ao redor do alvo -->
     <div class="blk" id="onbTop" aria-hidden="true"></div>
     <div class="blk" id="onbLeft" aria-hidden="true"></div>
     <div class="blk" id="onbRight" aria-hidden="true"></div>
     <div class="blk" id="onbBottom" aria-hidden="true"></div>
-
     <div class="highlight" id="onbHighlight" aria-hidden="true"></div>
-
     <div class="card" id="onbCard" role="document">
       <h3 id="onbTitle">Compare os planos</h3>
       <p id="onbText">Clique nos níveis abaixo para ver os benefícios de cada plano.</p>
@@ -783,11 +748,11 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
-    const WELCOME_KEY='ccs-welcome-shown';
     const ONB_KEY='ccs-onboarded';
     const PLANS = {1:'250 MB', 2:'450 MB', 3:'650 MB'};
+    const CONTACT_WHATS = 'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20de%20internet%20CCS.';
 
-    /* Conteúdos por nível */
+    /* Dados por nível */
     const CONNECTA = {
       1:{ days:90, premium:false,
         facts:[
@@ -813,8 +778,8 @@
         ]}
     };
     const UPGRADE = {
-      2:{ label:'Atualizar para 450 MB', plan:'450 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%202%20(Plano%20450%20MB).'},
-      3:{ label:'Atualizar para 650 MB', plan:'650 MB', href:'https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20atualizar%20meu%20Conecta%20Clube%20para%20o%20N%C3%ADvel%203%20(Plano%20650%20MB).'}
+      2:{ label:'Assinar Nível 2 agora', plan:'450 MB', href:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%202%20(Plano%20450%20MB)%20da%20CCS.'},
+      3:{ label:'Assinar Nível 3 agora', plan:'650 MB', href:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'}
     };
     const PLAY = {
       1:{ subtitle:'Streaming completo e canais de TV',
@@ -862,10 +827,10 @@
         sla:'SLA 18h úteis', abs:true, imp:true, mud:true }
     };
 
-    /* Seletores principais */
+    /* Seletores */
     const topbar = document.getElementById('topbar');
     const statusBar = document.getElementById('statusBar');
-    const stCta = document.getElementById('st-cta');
+    const statusWrap = document.getElementById('statusWrap');
 
     const wrap = document.querySelector('.topbar .wrap');
     const capsule = document.querySelector('.capsule');
@@ -879,8 +844,6 @@
     const dockToggle = document.getElementById('dockToggle');
     const dockClose = document.getElementById('dockClose');
     const dockLinks=[...document.querySelectorAll('.side-dock a')];
-
-    const sections=[...document.querySelectorAll('main .section')];
 
     const lvl1=document.getElementById('lvl-1');
     const lvl2=document.getElementById('lvl-2');
@@ -937,11 +900,11 @@
 
     const btnReplayTutorial = document.getElementById('btnReplayTutorial');
 
-    /* Estado geral */
+    /* Estado */
     let topAtSight = true, currentSectionTitle='Conecta Clube';
     let stageIndex=0;
 
-    /* Helpers de layout */
+    /* Helpers */
     function setBodyTopPad(){
       const hTop = topbar.offsetHeight || 64;
       const hStatus = statusBar.style.display==='none' ? 0 : (statusBar.offsetHeight||0);
@@ -971,7 +934,6 @@
       fitCapsule();
     }
 
-    /* Render facts */
     function renderFacts(container, facts){
       container.innerHTML='';
       (facts||[]).forEach(f=>{
@@ -986,7 +948,6 @@
       });
     }
 
-    /* Atualizações por nível */
     function updateConecta(level){
       const c = CONNECTA[level];
       pillVoucher.textContent = `1 voucher a cada ${c.days} dias`;
@@ -1024,25 +985,29 @@
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
-    /* Status bar */
+    /* Barra comercial */
     function setStatusBar(level){
-      if (level===1){ statusBar.style.display='none'; }
+      if (level===1){ statusBar.style.display='none'; statusWrap.innerHTML=''; }
       else {
         const up = UPGRADE[level];
-        stCta.textContent = up.label; stCta.href = up.href;
+        statusWrap.innerHTML = `
+          <span class="status-label">Comparativo</span>
+          <a class="status-cta" href="${up.href}" target="_blank" rel="noopener">${up.label}</a>
+          <a class="status-cta secondary" href="${CONTACT_WHATS}" target="_blank" rel="noopener">Falar com especialista</a>
+        `;
         statusBar.style.display='block';
       }
       setBodyTopPad();
     }
 
-    /* Level Dock + pílula ATUAL */
+    /* Level Dock */
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
       const btn = lvlBtns.find(b=> +b.dataset.level===level);
       if (btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 520); }
     }
 
-    /* Observers (mobile) para cápsula e side-dock highlight */
+    /* Observers (capsule + dock highlight) */
     const topSentinel = document.getElementById('top-sentinel');
     if ('IntersectionObserver' in window){
       const ioTop = new IntersectionObserver(entries=>{
@@ -1071,12 +1036,10 @@
     }
     function setActiveDock(id){ dockLinks.forEach(a=> a.classList.toggle('is-active', a.getAttribute('href')==='#'+id)); }
 
-    /* FAB (mobile): subir/descer */
-    function isStage(){ return document.body.classList.contains('is-stage'); } // desktop
-    function nearBottomMobile(){
-      const el = document.scrollingElement || document.documentElement || document.body;
-      return (window.scrollY + (window.innerHeight||document.documentElement.clientHeight)) >= (el.scrollHeight - 4);
-    }
+    /* FAB subir/descer */
+    function isStage(){ return document.body.classList.contains('is-stage'); }
+    function getDoc(){ const d=document; const b=d.body; const e=d.documentElement; return { el: e, body: b, height: Math.max(b.scrollHeight,e.scrollHeight,b.offsetHeight,e.offsetHeight,b.clientHeight,e.clientHeight), top: (window.pageYOffset || e.scrollTop || b.scrollTop || 0), vh: (window.innerHeight||e.clientHeight) }; }
+    function nearBottomMobile(){ const d=getDoc(); return (d.top + d.vh) >= (d.height - 4); }
     function updateFabIcon(){
       if (isStage()) return;
       if (nearBottomMobile()){
@@ -1098,17 +1061,17 @@
     }
     fab.addEventListener('click', ()=>{
       if (isStage()) return;
+      const d=getDoc();
       if (nearBottomMobile()){
         window.scrollTo({ top: 0, behavior:'smooth' });
       } else {
-        const el = document.scrollingElement || document.documentElement || document.body;
-        const maxY = (el.scrollHeight||document.body.scrollHeight) - (window.innerHeight||document.documentElement.clientHeight);
+        const maxY = d.height - d.vh;
         window.scrollTo({ top: maxY, behavior:'smooth' });
       }
       setTimeout(updateFabIcon, 350);
     });
 
-    /* Side Dock mobile: abrir/fechar */
+    /* Side Dock mobile */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     let dockTimer=null;
     function openDock(){
@@ -1125,7 +1088,7 @@
     dockClose?.addEventListener('click', closeDock);
     addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); updateFabIcon(); }, {passive:true});
 
-    /* Saiba mais (mobile) */
+    /* Saiba mais */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')) { p.hidden=true; p.style.height='0px'; } });
     document.addEventListener('click', ev=>{
       const btn = ev.target.closest('.chip-more'); if (!btn) return;
@@ -1167,6 +1130,7 @@
         slide.appendChild(card.cloneNode(true));
         stageTrack.appendChild(slide);
       });
+      return stageTrack.children.length;
     }
     function setDockOffset(){
       const w = sideDock?.getBoundingClientRect()?.width || 0;
@@ -1194,8 +1158,10 @@
       btnNext.disabled = (stageIndex===max);
     }
     function enableStage(){
+      const count = buildStage();
+      if (count===0){ disableStage(); return; }
       document.body.classList.add('is-stage');
-      buildStage(); setDockOffset(); setStageIndex(0);
+      setDockOffset(); setStageIndex(0);
       dockLinks.forEach(a=>{
         a.dataset.href = a.getAttribute('href');
         a.addEventListener('click', onDockClickStage);
@@ -1204,6 +1170,7 @@
     }
     function disableStage(){
       document.body.classList.remove('is-stage');
+      stageTrack.innerHTML='';
       dockLinks.forEach(a=>{
         a.removeEventListener('click', onDockClickStage);
         if (a.dataset.href) a.setAttribute('href', a.dataset.href);
@@ -1224,7 +1191,7 @@
     btnPrev.addEventListener('click', ()=> setStageIndex(stageIndex-1));
     btnNext.addEventListener('click', ()=> setStageIndex(stageIndex+1));
 
-    /* Status & nível */
+    /* Nível */
     function applyLevel(level,{remember=true}={}){
       const L = [1,2,3].includes(+level) ? +level : 1;
       setLevelDock(L);
@@ -1239,7 +1206,7 @@
     lvl2.addEventListener('click',()=>applyLevel(2));
     lvl3.addEventListener('click',()=>applyLevel(3));
 
-    /* Spotlight/Onboarding */
+    /* Onboarding (spotlight) */
     let onbOpen=false, onbStep=1, onbOpenedDock=false;
     function showSplash(){
       splash.classList.add('is-open');
@@ -1276,13 +1243,11 @@
       onbHighlight.style.width  = w + 'px';
       onbHighlight.style.height = h + 'px';
 
-      // Blocos ao redor (top, left, right, bottom)
       onbTop.style.left='0px'; onbTop.style.top='0px'; onbTop.style.width= vw+'px'; onbTop.style.height = y+'px';
       onbLeft.style.left='0px'; onbLeft.style.top= y+'px'; onbLeft.style.width= x+'px'; onbLeft.style.height = h+'px';
       onbRight.style.left= (x+w)+'px'; onbRight.style.top= y+'px'; onbRight.style.width= Math.max(0, vw - (x+w))+'px'; onbRight.style.height = h+'px';
       onbBottom.style.left='0px'; onbBottom.style.top= (y+h)+'px'; onbBottom.style.width= vw+'px'; onbBottom.style.height = Math.max(0, vh - (y+h))+'px';
 
-      // Card: tenta acima; senão, abaixo; mantém dentro da viewport
       const card = onbCard;
       const preferTop = y - (card.offsetHeight+12);
       const top = (preferTop>60? preferTop : (y+h+12));
@@ -1297,7 +1262,6 @@
       onbStep = step; onbOpen = true;
       onboarding.classList.add('is-open');
       document.body.style.overflow='hidden';
-      // Conteúdo por passo
       function setTexts(){
         if (onbStep===1){
           onbTitle.textContent='Compare os planos';
@@ -1309,13 +1273,10 @@
       }
       function targetForStep(){
         if (onbStep===1) return levelDockWrap;
-        // passo 2: side dock
         const isDesk = matchMedia('(min-width:1024px)').matches;
         if (isDesk){
-          const el = sideDock.querySelector('.dock-items') || sideDock;
-          return el;
+          return sideDock.querySelector('.dock-items') || sideDock;
         } else {
-          // mobile: garantir que menu esteja aberto
           if (!sideDock.classList.contains('is-open')){
             openDock(); onbOpenedDock=true;
           }
@@ -1326,10 +1287,7 @@
         const tgt = targetForStep();
         if (!tgt) return;
         scrollIfNeeded(tgt);
-        // esperar layout se abrimos o menu
-        requestAnimationFrame(()=> {
-          requestAnimationFrame(()=> placeSpotlight(tgt));
-        });
+        requestAnimationFrame(()=> { requestAnimationFrame(()=> placeSpotlight(tgt)); });
       }
       setTexts();
       placeNow();
@@ -1345,7 +1303,6 @@
         onboarding.classList.remove('is-open');
         document.body.style.overflow='';
         if (setSeen) localStorage.setItem(ONB_KEY,'1');
-        // limpar blocos
         [onbTop,onbLeft,onbRight,onbBottom].forEach(b=>{ b.style.width='0'; b.style.height='0'; });
         if (onbOpenedDock){ closeDock(); onbOpenedDock=false; }
         window.removeEventListener('resize', onResize);
@@ -1353,43 +1310,32 @@
         window.removeEventListener('scroll', onScroll);
       }
 
-      onbNext.onclick = ()=> { onbStep=2; setTexts(); // re-posicionar para o novo alvo
-        requestAnimationFrame(()=> { requestAnimationFrame(()=> { placeSpotlight(targetForStep()); }); });
-      };
+      onbNext.onclick = ()=> { onbStep=2; setTexts(); requestAnimationFrame(()=> { requestAnimationFrame(()=> { placeSpotlight(targetForStep()); }); }); };
       onbDone.onclick = ()=> endOnboarding(true);
       onbSkip.onclick = ()=> endOnboarding(true);
 
-      // fecha ao apertar ESC
       addEventListener('keydown', function esc(e){ if (!onbOpen) { removeEventListener('keydown', esc); return; }
         if (e.key==='Escape'){ endOnboarding(true); removeEventListener('keydown', esc); }
       });
     }
 
+    /* Sempre mostrar Boas-vindas a cada reload */
     function maybeOnboard(){
-      const welcomed = localStorage.getItem(WELCOME_KEY)==='1';
-      const onboarded = localStorage.getItem(ONB_KEY)==='1';
-      if (!welcomed){
-        showSplash();
-      } else if (!onboarded){
-        showOnboarding(1);
-      }
+      showSplash(); // sempre
     }
     btnStart?.addEventListener('click', ()=>{
       hideSplash();
-      localStorage.setItem(WELCOME_KEY,'1');
-      setTimeout(()=> showOnboarding(1), 200);
+      setTimeout(()=> showOnboarding(1), 200); // abre tutorial ao clicar em "Explorar benefícios"
     });
     btnSkipTutorial?.addEventListener('click', ()=>{
-      hideSplash();
-      localStorage.setItem(WELCOME_KEY,'1');
+      hideSplash(); // entra sem tutorial
       localStorage.setItem(ONB_KEY,'1');
     });
     btnReplayTutorial?.addEventListener('click', ()=>{
-      // reabrir tutorial
       showOnboarding(1);
     });
 
-    /* Init geral */
+    /* Init */
     function getLevelFromURL(){
       try{
         const u=new URL(window.location.href); const n1=u.searchParams.get('n'); if (n1 && [1,2,3].includes(+n1)) return +n1;
@@ -1424,7 +1370,7 @@
       remeasure();
       setTimeout(remeasure, 80);
 
-      // Splash/Onboarding somente primeira visita
+      // Boas-vindas sempre
       maybeOnboard();
     }
     init();
