@@ -28,9 +28,9 @@
       --art-max-h-d: clamp(180px, 28vh, 320px);
       --art-max-h-m: clamp(160px, 28vh, 240px);
 
-      --h-topbar: 60px;   /* definidos via JS */
-      --h-status: 48px;   /* definidos via JS */
-      --h-levelbar: 72px; /* fixo */
+      --h-topbar: 60px;
+      --h-status: 44px;
+      --h-levelbar: 72px;
     }
 
     *{box-sizing:border-box}
@@ -44,7 +44,7 @@
       padding-bottom:calc(var(--h-levelbar) + 28px + env(safe-area-inset-bottom));
     }
 
-    /* FX de fundo */
+    /* FX */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -56,7 +56,7 @@
     .fx.fx-vignette{ z-index:-2; background:radial-gradient(120% 110% at 50% 50%, transparent 60%, rgba(0,0,0,.26) 100%) }
     @keyframes shimmer{ from{background-position:0% 0%} to{background-position:100% 100%} }
 
-    /* Topbar e cápsula */
+    /* Topbar */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -83,61 +83,68 @@
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
     }
-
-    /* Barra comercial (todos os níveis) */
-    .status-bar{
-      position:fixed; top:calc(var(--h-topbar) + env(safe-area-inset-top)); left:0; right:0; z-index:69;
-      display:block; background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; pointer-events:none }
+    .track{ display:inline-block; will-change:transform }
+    .captext{
+      display:inline-flex; align-items:center; gap:10px;
+      background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
+                 linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
+      background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:capShift 3.2s linear infinite;
+      text-shadow:0 0 12px rgba(123,92,255,.28), 0 0 18px rgba(0,255,198,.20);
     }
+    @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
+    .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.55), 0 0 16px rgba(123,92,255,.35) }
+
+    /* Status bar */
+    .status-bar{ position:fixed; left:0; right:0; z-index:69; top:calc(var(--h-topbar) + env(safe-area-inset-top)); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px) }
     .status-wrap{ display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap; max-width:var(--content-w); margin:0 auto; padding:8px var(--side-pad) }
     .status-cta{ border:1px solid var(--line); border-radius:12px; padding:10px 16px; font-weight:900; background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none; white-space:nowrap; text-align:center }
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
-    /* Conteúdo centralizado e espaçamentos */
+    /* Main layout */
     main{ padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0 }
     .section{ padding:20px 0 28px }
     .card{
-      max-width:var(--content-w);
-      margin:0 auto;
+      max-width:var(--content-w); margin:0 auto;
       border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       backdrop-filter:blur(10px); -webkit-backdrop-filter: blur(10px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
-      overflow:hidden; position:relative;
-      contain:content; display:block;
+      overflow:hidden; contain:content;
     }
     .media{ padding:10px 14px 0 }
     .frame{ width:100%; display:flex; justify-content:center; align-items:center }
-    .art-img{
-      width:100%; max-width:880px; height:auto; display:block; object-fit:contain;
-      max-height:var(--art-max-h-d);
-    }
+    .art-img{ width:100%; max-width:880px; height:auto; display:block; object-fit:contain; max-height:var(--art-max-h-d) }
     @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m) } }
 
     .content{ padding:16px 16px 18px }
     .title{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900 }
+    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative }
+    /* Sub-linha animada quando a seção está em foco */
+    .section.is-current .title h2::after{
+      content:""; position:absolute; left:0; right:65%; bottom:-6px; height:3px; border-radius:3px;
+      background:linear-gradient(90deg,#23d3ff,#6b5cff);
+      box-shadow:0 0 12px rgba(0,217,255,.5), 0 0 18px rgba(123,92,255,.4);
+      animation:underlineSweep 700ms ease-out;
+    }
+    @keyframes underlineSweep{ from{ right:98% } to{ right:65% } }
+
     .subtitle{ margin:10px 0 14px; color:#cfe0ff }
 
-    /* Pílulas — 2 por linha no mobile, fluido no desktop */
-    .row{ margin:12px 0 6px }
+    /* Pílulas: 2/linha no mobile */
     .pills-grid{ display:flex; flex-wrap:wrap; gap:10px }
-    @media (max-width:700px){
-      .pills-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
-    }
+    @media (max-width:700px){ .pills-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px } }
     .pill-flag{
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; text-align:center; display:inline-flex; align-items:center; justify-content:center;
       position:relative; overflow:hidden;
-      width:auto;
     }
     @media (max-width:700px){ .pill-flag{ width:100% } }
     .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques suaves */
+    /* Destaques suaves das mudanças */
     .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
@@ -152,7 +159,7 @@
     }
     @keyframes spark{ 0%{ opacity:1; transform:scale(.85) } 100%{ opacity:0; transform:scale(1.12) } }
 
-    /* Ações — enchem o card no mobile, simétricas */
+    /* Ações — mobile ocupa o card */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
     .btn{
       border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900;
@@ -167,7 +174,7 @@
       .btn{ width:100% }
     }
 
-    /* Saiba mais (reestilizado, sem bug) */
+    /* Saiba mais */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer
@@ -182,13 +189,29 @@
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
     .fact .ico{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.10); border:1px solid var(--line); font-size:14px }
 
-    /* Side Dock */
+    /* Side Dock + mobile toggle */
     .side-dock{ position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:80 }
     .side-dock .dock-items{ display:flex; flex-direction:column; gap:8px; padding:8px; border:1px solid var(--line); border-radius:14px; background:rgba(16,18,24,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px) }
     .side-dock a{ width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.08) }
     .side-dock img{ width:24px; height:24px; object-fit:contain; display:block }
+    .dock-fab{
+      position:fixed; right:12px; z-index:81; width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
+      background:rgba(16,18,24,.78); color:#fff; display:none; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.45);
+      top:calc(var(--h-topbar) + var(--h-status) + 8px);
+    }
+    .dock-fab svg{ width:22px; height:22px }
+    .dock-header{ display:none }
+    @media (max-width:880px){
+      .side-dock{ display:none }
+      .side-dock.is-open{ display:block; right:12px; top:calc(var(--h-topbar) + var(--h-status) + 12px); transform:none }
+      .side-dock.is-open .dock-items{ padding-top:48px; position:relative }
+      .dock-header{ display:flex; align-items:center; justify-content:flex-end; position:absolute; top:8px; left:8px; right:8px; }
+      .btn-dock-close{ border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-weight:900; background:rgba(0,0,0,.7); color:#fff; cursor:pointer; }
+      .dock-fab{ display:inline-flex }
+      .side-dock.is-open ~ .dock-fab{ display:none }
+    }
 
-    /* Level Bar — full width; selo ATUAL sem corte */
+    /* Level Bar */
     .level-dock{
       position:fixed; left:0; right:0; bottom:0; z-index:85;
       padding:8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
@@ -201,6 +224,7 @@
       position:relative; flex:1 1 0; min-width:0; padding:12px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer; overflow:visible;
     }
+    /* Borda animada no ativo */
     .btn-level[aria-pressed="true"]::before{
       content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -209,8 +233,18 @@
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.8;
     }
     .btn-level[aria-pressed="true"]{ background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12)); box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 18px rgba(0,217,255,.30), 0 0 26px rgba(123,92,255,.22); transform: translateY(-1px) }
-    .label-actual{ display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px rgba(0,217,255,.55), 0 0 18px rgba(123,92,255,.45) }
+    /* Selo ATUAL com halo pulsante */
+    .label-actual{
+      display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px rgba(0,217,255,.55), 0 0 18px rgba(123,92,255,.45);
+      animation: halo 2.6s ease-out infinite;
+    }
+    @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
+
+    /* Alternância “Nível X” ↔ “Plano Y” */
+    .flip{ position:relative; display:inline-block; width:var(--flip-w, auto) }
+    .flip .flip-a, .flip .flip-b{ position:absolute; left:0; top:0; right:0; opacity:0; transition:opacity 280ms ease }
+    .flip .flip-a.on, .flip .flip-b.on{ opacity:1; position:relative }
 
     /* FAB */
     .fab{
@@ -220,15 +254,29 @@
     }
     .fab svg{ width:22px; height:22px }
 
-    /* Resumo simplificado */
+    /* Resumo: 2 por linha no mobile (e também mantemos 2 no desktop para consistência) */
     .summary{ max-width:var(--content-w); margin:0 auto; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
-    @media (max-width:700px){ .summary .grid{ grid-template-columns:1fr } }
     .gcard{ display:grid; gap:8px; align-content:start; padding:12px; border:1px solid var(--line); border-radius:12px; text-decoration:none; color:#fff; background:rgba(255,255,255,.06) }
     .gcard:hover{ background:rgba(255,255,255,.10) }
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
+
+    /* Indique & Ganhe — visual comercial */
+    #s-indique .card{ background:
+      radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.10), transparent 60%),
+      radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.08), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 24px 60px rgba(0,0,0,.45);
+    }
+    #s-indique .title h2{ display:inline-block; padding:6px 10px; border-radius:10px; background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.06)) }
+    #indique-actions .btn{ position:relative; overflow:hidden }
+    #indique-actions .btn::after{
+      content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%); transform:translateX(-120%); transition:transform .6s ease; mix-blend-mode:screen
+    }
+    #indique-actions .btn:hover::after{ transform:translateX(120%) }
 
     /* FAQ em cards */
     .faq-grid{ display:grid; gap:10px; grid-template-columns:1fr; }
@@ -237,7 +285,7 @@
     .faq-card[open]{ background:rgba(255,255,255,.10) }
     .faq-card summary::-webkit-details-marker{ display:none }
 
-    /* Splash (centralizado) */
+    /* Splash */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -264,7 +312,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding (3 passos, blur real) */
+    /* Onboarding */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -286,12 +334,16 @@
     <div class="wrap">
       <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
-        <div class="capsule" aria-label="Contexto atual">
-          <span>Visão de Benefícios</span>
-          <span style="opacity:.7">•</span>
-          <span>Nível <b id="capLevel">1</b></span>
-          <span style="opacity:.7">•</span>
-          <span>Plano <b id="capPlan">250 MB</b></span>
+        <div class="capsule" role="group" aria-label="Nível e contexto">
+          <div class="cap-viewport" id="capViewport">
+            <div class="track" id="capTrack">
+              <span class="captext">
+                <span id="capLeft">Benefícios Nível 1</span>
+                <span class="dot-mid" aria-hidden="true"></span>
+                <span id="capRight">Plano 250 MB</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
@@ -303,6 +355,9 @@
     <div class="status-wrap" id="statusWrap"></div>
   </div>
 
+  <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
+
+  <!-- Conteúdo -->
   <main id="content" aria-live="polite">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
@@ -321,7 +376,7 @@
 
           <p class="subtitle">Válido para clientes ativos e adimplentes.</p>
 
-          <div class="row pills-grid" id="cc-pills">
+          <div class="pills-grid" id="cc-pills">
             <span class="pill-flag included" id="pill-cc-voucher">1 voucher a cada 90 dias</span>
             <span class="pill-flag" id="pill-cc-premium">Atração premium não inclusa</span>
           </div>
@@ -356,7 +411,7 @@
 
           <p class="subtitle" id="play-subtitle">Streaming completo e canais de TV.</p>
 
-          <div class="row pills-grid" id="play-pills">
+          <div class="pills-grid" id="play-pills">
             <span id="pill-play-60" class="pill-flag included">60 canais</span>
             <span id="pill-play-50mus" class="pill-flag excluded">50 canais de música não incluso</span>
             <span id="pill-play-1000" class="pill-flag excluded">+1.000 horas de filmes e séries não incluso</span>
@@ -378,7 +433,7 @@
     <section class="section" id="s-skeelo" data-title="Skeelo">
       <div class="card">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async" style="max-width:880px">
+          <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -391,7 +446,7 @@
 
           <p class="subtitle" id="skeelo-subtitle">Sua biblioteca de leitura e áudio.</p>
 
-          <div class="row pills-grid" id="skeelo-pills">
+          <div class="pills-grid" id="skeelo-pills">
             <span class="pill-flag included">Incluso em todos os níveis</span>
             <span class="pill-flag included">E‑books</span>
             <span class="pill-flag included">Audiobooks</span>
@@ -426,7 +481,7 @@
 
           <p class="subtitle" id="sup-subtitle">Atendimento com prioridade e prazo garantido.</p>
 
-          <div class="row pills-grid" id="sup-pills">
+          <div class="pills-grid" id="sup-pills">
             <span id="pill-sup-sla" class="pill-flag included">SLA 36h úteis</span>
             <span id="pill-sup-visita" class="pill-flag included">Visita técnica 1/ano</span>
             <span id="pill-sup-abs" class="pill-flag excluded">Isenção por ausência não inclusa</span>
@@ -445,7 +500,7 @@
       </div>
     </section>
 
-    <!-- Indique & Ganhe -->
+    <!-- Indique & Ganhe (bloco comercial) -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card">
         <div class="media"><div class="frame">
@@ -545,7 +600,7 @@
       </div>
     </section>
 
-    <!-- FAQ em cards -->
+    <!-- FAQ -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2></div>
@@ -572,6 +627,7 @@
   <!-- Side Dock -->
   <nav class="side-dock" aria-label="Atalhos" id="sideDock">
     <div class="dock-items">
+      <div class="dock-header"><button class="btn-dock-close" id="dockClose" type="button">Fechar</button></div>
       <a href="#s-conecta" title="Conecta Clube"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png" alt=""></a>
       <a href="#s-ccsplay" title="CCS PLAY + CCS TV"><img src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96" alt=""></a>
       <a href="#s-skeelo"  title="Skeelo"><img src="https://skeelo.com/img/logos/skeelo/icon.svg" alt=""></a>
@@ -582,13 +638,16 @@
       <a href="#s-vctech"   title="VCTECH"><img src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" alt=""></a>
     </div>
   </nav>
+  <button class="dock-fab" id="dockToggle" aria-expanded="false" aria-controls="sideDock" aria-label="Abrir menu de seções" title="Abrir menu de seções">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
 
   <!-- Level Bar -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
     <div class="wrap" id="levelDockWrap">
-      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span>Nível 1</button>
-      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false" title="Ver benefícios do Nível 2"><span class="label-actual">ATUAL</span>Nível 2</button>
-      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false" title="Ver benefícios do Nível 3"><span class="label-actual">ATUAL</span>Nível 3</button>
+      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span><span class="flip" data-plan="250 MB"><span class="flip-a on">Nível 1</span><span class="flip-b">250 MB</span></span></button>
+      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false" title="Ver benefícios do Nível 2"><span class="label-actual">ATUAL</span><span class="flip" data-plan="450 MB"><span class="flip-a on">Nível 2</span><span class="flip-b">450 MB</span></span></button>
+      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false" title="Ver benefícios do Nível 3"><span class="label-actual">ATUAL</span><span class="flip" data-plan="650 MB"><span class="flip-a on">Nível 3</span><span class="flip-b">650 MB</span></span></button>
     </div>
   </nav>
 
@@ -600,17 +659,19 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="wrap" style="max-width:var(--content-w); margin:0 auto; text-align:center">
-      <p>© 2025 V C TECH Representante Comercial - CCS TELECOM — Todos os direitos reservados</p>
-      <div class="actions one" style="justify-content:center">
+      <div class="actions" style="justify-content:center">
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
+        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
         <button class="btn ghost" id="btnReplayTutorial" type="button">Ver tutorial novamente</button>
       </div>
+      <p style="margin:12px 0 0; color:#cfe0ff">© 2025 V C TECH Representante Comercial - CCS TELECOM — Todos os direitos reservados</p>
     </div>
   </footer>
 
   <!-- Splash (boas-vindas) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
-      <div class="cap" id="splashCap">Visão de Benefícios</div>
+      <div class="cap">Comparador de Benefícios</div>
       <h1 id="splashTitle">Bem-vindo ao Portal de Benefícios CCS</h1>
       <p id="splashDesc">Compare os níveis, descubra vantagens exclusivas e escolha a melhor experiência para você.</p>
       <div class="actions">
@@ -649,31 +710,24 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Conteúdos */
-    const CONNECTA={
-      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
-    };
-    const PLAY={
-      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
-      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
-      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
-    };
-    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
-    const SUPORTE={
-      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
-      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
-      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
-    };
+    /* Seletor cápsula dinâmica */
+    const capLeft=document.getElementById('capLeft');
+    const capRight=document.getElementById('capRight');
+    const wrapTop=document.querySelector('.topbar .wrap');
+    const capsule=document.querySelector('.capsule');
+    const capTrack=document.getElementById('capTrack');
 
-    /* Seletores */
-    const capLevel=document.getElementById('capLevel');
-    const capPlan=document.getElementById('capPlan');
+    const topbar=document.getElementById('topbar');
+    const statusBar=document.getElementById('statusBar');
     const statusWrap=document.getElementById('statusWrap');
-    const topbar=document.getElementById('topbar'); const statusBar=document.getElementById('statusBar');
+
+    const sideDock=document.getElementById('sideDock');
+    const dockToggle=document.getElementById('dockToggle');
+    const dockClose=document.getElementById('dockClose');
 
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
+
+    const fab=document.getElementById('fab');
 
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
@@ -695,36 +749,54 @@
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
 
-    const fab=document.getElementById('fab');
+    /* Estado */
+    let topAtSight=true, currentSectionTitle='Conecta Clube';
 
-    const splash=document.getElementById('splash');
-    const btnStart=document.getElementById('btnStart');
-    const btnSkipTutorial=document.getElementById('btnSkipTutorial');
-
-    const onboarding=document.getElementById('onboarding');
-    const onbTop=document.getElementById('onbTop');
-    const onbLeft=document.getElementById('onbLeft');
-    const onbRight=document.getElementById('onbRight');
-    const onbBottom=document.getElementById('onbBottom');
-    const onbHighlight=document.getElementById('onbHighlight');
-    const onbCard=document.getElementById('onbCard');
-    const onbNext=document.getElementById('onbNext');
-    const onbDone=document.getElementById('onbDone');
-    const onbSkip=document.getElementById('onbSkip');
-    const onbTitle=document.getElementById('onbTitle');
-    const onbText=document.getElementById('onbText');
-
-    const btnReplayTutorial=document.getElementById('btnReplayTutorial');
-
-    /* Util */
+    /* Helpers de layout */
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
       const hStatus=statusBar.offsetHeight||44;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
     }
+    function fitCapsule(){
+      const wrapW=wrapTop.clientWidth, gap=parseFloat(getComputedStyle(wrapTop).columnGap)||10;
+      const lW=document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
+      const rW=document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
+      const available=Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
+      capsule.style.maxWidth = available + 'px';
+      capTrack.style.transform='';
+    }
+    function setCapsuleTop(level){
+      capLeft.textContent=`Benefícios Nível ${level}`;
+      capRight.textContent=`Plano ${PLANS[level]}`;
+      fitCapsule();
+    }
+    function setCapsuleSection(level, name){
+      capLeft.textContent=`Nível ${level}`;
+      capRight.textContent=name||'';
+      fitCapsule();
+    }
     function root(){ return document.scrollingElement||document.documentElement; }
-    function toggleFab(){ fab.style.display = (root().scrollTop>300)?'inline-flex':'none'; }
+    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+
+    /* Conteúdos por nível (resumo enxuto) */
+    const CONNECTA={
+      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
+    };
+    const PLAY={
+      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
+      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
+      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
+    };
+    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
+    const SUPORTE={
+      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
+      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
+      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
+    };
 
     function renderFacts(container,facts){
       container.innerHTML='';
@@ -736,7 +808,6 @@
       });
     }
 
-    /* Snapshot/destaques */
     function snapshotPills(){
       const map={}; document.querySelectorAll('.pill-flag[id]').forEach(el=> map[el.id]={ text:el.textContent.trim(), inc:el.classList.contains('included') }); return map;
     }
@@ -750,7 +821,6 @@
       });
     }
 
-    /* Atualização por nível */
     function updateConecta(level){
       const c=CONNECTA[level];
       pillVoucher.textContent=`1 voucher a cada ${c.days} dias`;
@@ -785,17 +855,55 @@
       if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
     }
 
-    function applyLevel(level,{remember=true}={}){
-      const L=[1,2,3].includes(+level)?+level:1;
-      const prev=snapshotPills();
-      setLevelDock(L); setStatusBar(L); updateAll(L);
-      capLevel.textContent=String(L); capPlan.textContent=PLANS[L];
-      emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      if(remember) localStorage.setItem(LEVELS_KEY,String(L));
-      requestAnimationFrame(()=> highlightChanges(prev));
+    /* Alternância “Nível X” ↔ Plano Y nos botões */
+    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let flipTimer=null, flipOn=true, flipPaused=false;
+    function computeFlipWidths(){
+      lvlBtns.forEach(btn=>{
+        const flip=btn.querySelector('.flip'); if(!flip) return;
+        const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
+        // medida offscreen
+        a.classList.add('on'); b.classList.add('on');
+        const w=Math.max(a.scrollWidth, b.scrollWidth);
+        flip.style.setProperty('--flip-w', w+'px');
+        // volta estado inicial (mostrar A)
+        b.classList.remove('on'); if(!flipOn) a.classList.remove('on');
+      });
     }
+    function setFlipState(showB){
+      lvlBtns.forEach(btn=>{
+        const flip=btn.querySelector('.flip'); if(!flip) return;
+        const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
+        if(showB){ a.classList.remove('on'); b.classList.add('on'); }
+        else { b.classList.remove('on'); a.classList.add('on'); }
+      });
+    }
+    function startFlip(){
+      if(prefersReduce) return; // não alterna
+      clearInterval(flipTimer);
+      flipOn=false; setFlipState(false);
+      flipTimer=setInterval(()=>{ if(!flipPaused){ flipOn=!flipOn; setFlipState(flipOn); } }, 3500);
+    }
+    function pauseFlip(){ flipPaused=true; }
+    function resumeFlip(){ flipPaused=false; }
 
-    lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
+    lvlBtns.forEach(btn=>{
+      btn.addEventListener('mouseenter', pauseFlip);
+      btn.addEventListener('mouseleave', resumeFlip);
+      btn.addEventListener('focusin', pauseFlip);
+      btn.addEventListener('focusout', resumeFlip);
+      // aria-label estável
+      const lvl=btn.dataset.level; const plan=PLANS[lvl];
+      btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
+    });
+
+    /* Dock mobile toggle */
+    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
+    function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
+    function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
+    dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
+    dockClose?.addEventListener('click', closeDock);
+    addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); toggleFab(); }, {passive:true});
 
     /* Saiba mais acordeão */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')){ p.hidden=true; p.style.height='0px'; } });
@@ -825,11 +933,71 @@
       const btn=document.getElementById('copyEmail'); const old=btn.textContent; btn.textContent='✅ Copiado'; setTimeout(()=> btn.textContent=old, 1200);
     });
 
-    /* FAB */
-    fab.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior:'smooth' }));
-    addEventListener('scroll', toggleFab, {passive:true});
+    /* Intersection Observers — cápsula dinâmica e título “is-current” */
+    (function(){
+      const sentinel=document.getElementById('top-sentinel');
+      if(!('IntersectionObserver' in window)) return;
+      const ioTop=new IntersectionObserver(entries=>{
+        topAtSight=entries[0].isIntersecting;
+        const level=+localStorage.getItem(LEVELS_KEY)||1;
+        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+      },{threshold:[0,0.01,1]});
+      ioTop.observe(sentinel);
 
-    /* Tutorial 3 passos (Nível 1 selecionado) */
+      const sections=[...document.querySelectorAll('main .section')];
+      let lastCur=null;
+      const io=new IntersectionObserver(()=>{
+        const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
+        const vh=window.innerHeight||document.documentElement.clientHeight;
+        const vis=sections.map(s=>{
+          const r=s.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, hTop));
+          return {el:s, area:visible, title:s.getAttribute('data-title')||''};
+        }).sort((a,b)=>b.area-a.area)[0];
+        if(!vis) return;
+        currentSectionTitle=vis.title||currentSectionTitle;
+        if(lastCur && lastCur!==vis.el) lastCur.classList.remove('is-current');
+        vis.el.classList.add('is-current'); lastCur=vis.el;
+        const level=+localStorage.getItem(LEVELS_KEY)||1;
+        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+      },{threshold:[0,0.25,0.5,0.75]});
+      sections.forEach(s=> io.observe(s));
+    })();
+
+    /* Aplicar nível */
+    function setStatus(level){ setStatusBar(level); }
+    function setLevelDockState(level){ setLevelDock(level); }
+
+    function applyLevel(level,{remember=true}={}){
+      const L=[1,2,3].includes(+level)?+level:1;
+      const prev=snapshotPills();
+      setLevelDockState(L);
+      setStatus(L);
+      updateAll(L);
+      emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
+      if(topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      if(remember) localStorage.setItem(LEVELS_KEY,String(L));
+      requestAnimationFrame(()=> highlightChanges(prev));
+    }
+    lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
+
+    /* Splash e Tutorial (sempre inicia no Nível 1 e não troca sozinho) */
+    const splash=document.getElementById('splash');
+    const btnStart=document.getElementById('btnStart');
+    const btnSkipTutorial=document.getElementById('btnSkipTutorial');
+    const onboarding=document.getElementById('onboarding');
+    const onbTop=document.getElementById('onbTop');
+    const onbLeft=document.getElementById('onbLeft');
+    const onbRight=document.getElementById('onbRight');
+    const onbBottom=document.getElementById('onbBottom');
+    const onbHighlight=document.getElementById('onbHighlight');
+    const onbCard=document.getElementById('onbCard');
+    const onbNext=document.getElementById('onbNext');
+    const onbDone=document.getElementById('onbDone');
+    const onbSkip=document.getElementById('onbSkip');
+    const onbTitle=document.getElementById('onbTitle');
+    const onbText=document.getElementById('onbText');
+
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function getViewport(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
     function placeSpotlight(targetEl, pad=6){
@@ -864,26 +1032,21 @@
       addEventListener('resize', ()=> onbOpen&&placeNow(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&placeNow(), {passive:true});
     }
-
-    /* Splash */
+    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
     btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 150); });
     btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
-    btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
 
     /* Init */
     function init(){
       setHeights();
-
-      // força iniciar com Nível 1
-      localStorage.setItem(LEVELS_KEY,'1');
-      applyLevel(1,{remember:true});
-
-      // abrir splash sempre
+      const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
+      setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
+      computeFlipWidths(); startFlip();
       splash.classList.add('is-open'); document.body.style.overflow='hidden';
-
-      addEventListener('resize', setHeights, {passive:true});
-      addEventListener('pageshow', setHeights);
-      addEventListener('orientationchange', setHeights);
+      addEventListener('resize', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
+      addEventListener('orientationchange', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
+      addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
   })();
