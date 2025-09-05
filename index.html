@@ -58,6 +58,8 @@
 
     /* Topbar */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
+    @keyframes pulseHalo { 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.4),0 0 0 0 rgba(123,92,255,.35) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
+
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
       background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
@@ -75,6 +77,7 @@
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       font-weight:900; line-height:1; font-size: clamp(12px, 2.2vw, 16px);
       max-width:80vw; overflow:hidden; contain:paint;
+      animation:pulseHalo 3.8s ease-out infinite;
     }
     .capsule::before{
       content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
@@ -140,7 +143,6 @@
       filter: drop-shadow(0 0 10px rgba(0,217,255,.35)) drop-shadow(0 0 12px rgba(123,92,255,.25));
       pointer-events:none; transition: opacity .18s ease;
     }
-    /* sweep discreto ao entrar em foco */
     .section.is-current .title h2::before{
       content:""; position:absolute; left:0; right:65%; bottom:-6px; height:3px; border-radius:3px;
       background:linear-gradient(90deg,#23d3ff,#6b5cff);
@@ -193,7 +195,7 @@
       .btn{ width:100% }
     }
 
-    /* Saiba mais (sempre à direita graças ao grid no .title) */
+    /* "Saiba mais" */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer
@@ -259,7 +261,7 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ “Plano Y” – centralizada e com largura estável */
+    /* Alternância “Nível X” ↔ “Plano Y” */
     .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
     .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
@@ -272,7 +274,7 @@
     }
     .fab svg{ width:22px; height:22px }
 
-    /* Resumo (2 por linha) */
+    /* Resumo */
     .summary{ max-width:var(--content-w); margin:0 auto; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -281,28 +283,29 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Indique & Ganhe — destaque comercial + magia nas CTAs */
+    /* Indique & Ganhe — destaque e CTAs (250/450 lado a lado, 650 full) */
     #s-indique .card{ background:
-      radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.10), transparent 60%),
-      radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.08), transparent 60%),
-      linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.16);
+      radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
+      radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.10), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 24px 60px rgba(0,0,0,.45);
     }
-    /* Evita efeito duplicado nesse título específico */
-    #s-indique .title h2::after{ content:none }
+    #s-indique .title h2::after{ content:none } /* evita overlay duplicado no título */
+    #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
     #indique-actions .btn{
       position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
       box-shadow:0 10px 30px rgba(255,173,56,.25);
       animation:pulseGlow 2.8s ease-in-out infinite;
     }
+    #indique-actions .btn:nth-child(3){ grid-column:1 / -1 } /* 650 MB full width */
     #indique-actions .btn::after{
       content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%); transform:translateX(-120%); transition:transform .6s ease; mix-blend-mode:screen
     }
     #indique-actions .btn:hover::after{ transform:translateX(120%) }
     @keyframes pulseGlow{
-      0%,100%{ box-shadow:0 10px 30px rgba(255,173,56,.25), 0 0 0 0 rgba(0,217,255,.0) }
-      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 22px rgba(0,217,255,.15) }
+      0%,100%{ box-shadow:0 10px 30px rgba(255,173,56,.25), 0 0 0 0 rgba(0,217,255,0) }
+      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px rgba(0,217,255,.18) }
     }
 
     /* FAQ em cards */
@@ -317,7 +320,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash com "magia" */
+    /* Splash com “magia” melhorada (sem linha dura) */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -331,28 +334,31 @@
     .splash .box{
       width:min(760px, 92vw); border-radius:20px; padding:24px; border:1px solid var(--line);
       background:
-        radial-gradient(120% 120% at -10% -10%, rgba(0,217,255,.12), transparent 60%),
-        radial-gradient(120% 120% at 110% 110%, rgba(123,92,255,.10), transparent 60%),
+        radial-gradient(140% 140% at -20% -20%, rgba(0,217,255,.12), transparent 60%),
+        radial-gradient(140% 140% at 120% 120%, rgba(123,92,255,.10), transparent 60%),
         linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
       box-shadow:0 20px 60px rgba(0,0,0,.55);
       position:relative; overflow:hidden;
     }
     .splash .box::after{
-      content:""; position:absolute; inset:-30% -10%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%);
-      animation:splashShine 3.2s ease-in-out infinite; mix-blend-mode:screen
+      content:""; position:absolute; inset:-40% -20%;
+      background: conic-gradient(from 0deg, transparent 0 70%, rgba(255,255,255,.26) 80%, transparent 90%);
+      filter: blur(14px); opacity:.6; animation:splashSweep 4s linear infinite;
+      pointer-events:none; mix-blend-mode:screen;
     }
-    @keyframes splashShine{ 0%{transform:translateX(-60%)} 100%{transform:translateX(60%)} }
+    @keyframes splashSweep{ to{ transform:rotate(360deg) } }
     .splash .cap{
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 14px; border-radius:999px; margin:0 auto 8px;
       background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900;
+      box-shadow:0 0 0 0 rgba(0,217,255,.0), 0 0 0 0 rgba(123,92,255,.0); animation:pulseHalo 4.2s ease-out infinite;
     }
-    .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px) }
+    .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px rgba(0,217,255,.18) }
     .splash p{ margin:0 0 14px; color:#dfe7ff }
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding (bottom sheet seguro no mobile; não cobre a Level Bar/ATUAL) */
+    /* Onboarding (robust: não estoura, não cobre ATUAL, auditor de limites) */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -890,7 +896,6 @@
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
     function setStatusBar(level){
-      // Optei por manter os dois (Assinar + Especialista), tornando o primário mais “mágico”.
       statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
       setHeights();
     }
@@ -901,7 +906,7 @@
       if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
     }
 
-    /* Alternância “Nível X” ↔ Plano Y (2.6s; nunca fica sem texto) */
+    /* Alternância “Nível X” ↔ Plano Y (2.6s, centralizada, à prova de sumiço) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -911,7 +916,7 @@
         a.classList.add('on'); b.classList.add('on');
         const w=Math.max(a.scrollWidth, b.scrollWidth);
         flip.style.setProperty('--flip-w', w+'px');
-        b.classList.remove('on'); a.classList.add('on'); // inicia visível com “Nível X”
+        b.classList.remove('on'); a.classList.add('on'); // estado inicial: “Nível X”
       });
     }
     function ensureOneVisible(flip){
@@ -1040,7 +1045,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial (bottom sheet seguro) */
+    /* Tutorial (bottom sheet robusto + auditor) */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
@@ -1059,10 +1064,11 @@
     const onbText=document.getElementById('onbText');
 
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
-    function getViewport(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
-    function placeSpotlight(targetEl, pad=6){
+    function vp(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
+
+    function spotlight(targetEl, pad=6){
       if(!targetEl) return;
-      const r=targetEl.getBoundingClientRect(); const vw=getViewport().w, vh=getViewport().h;
+      const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       const x=clamp(r.left-pad,0,vw-1), y=clamp(r.top-pad,0,vh-1), w=clamp(r.width+pad*2,0,vw), h=clamp(r.height+pad*2,0,vh);
       Object.assign(onbHighlight.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
       Object.assign(onbTop.style,{left:'0px',top:'0px',width:vw+'px',height:y+'px'});
@@ -1070,41 +1076,68 @@
       Object.assign(onbRight.style,{left:(x+w)+'px',top:y+'px',width:Math.max(0,vw-(x+w))+'px',height:h+'px'});
       Object.assign(onbBottom.style,{left:'0px',top:(y+h)+'px',width:vw+'px',height:Math.max(0,vh-(y+h))+'px'});
     }
+
+    function ensureVisible(el){
+      try{ el?.scrollIntoView({behavior:'instant', block:'center', inline:'nearest'}); }catch{}
+    }
+
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
       onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
+
       function setTexts(){
         if(onbStep===1){ onbTitle.textContent='Explore por nível'; onbText.textContent='Use os botões de nível para ver os benefícios de cada plano.'; onbNext.classList.remove('hide'); }
         else if(onbStep===2){ onbTitle.textContent='Acesse seções rapidamente'; onbText.textContent='Use o menu lateral para ir direto ao que precisa.'; onbNext.classList.remove('hide'); }
         else { onbTitle.textContent='Veja o contexto aqui'; onbText.textContent='Nível e plano selecionados ficam visíveis no topo.'; onbNext.classList.add('hide'); }
       }
-      function targetForStep(){ if(onbStep===1) return document.getElementById('levelDockWrap'); if(onbStep===2) return document.getElementById('sideDock'); return document.querySelector('.capsule'); }
-      function placeNow(){
+
+      function targetForStep(){
+        if(onbStep===1) return document.getElementById('levelDockWrap');
+        if(onbStep===2) return document.getElementById('sideDock') || document.getElementById('dockToggle');
+        return document.querySelector('.capsule');
+      }
+
+      function place(){
         const tgt=targetForStep(); if(!tgt) return;
-        placeSpotlight(tgt);
-        const isSmall = matchMedia('(max-width: 520px)').matches;
-        if(isSmall && (onbStep===1 || onbStep===2)){
+        ensureVisible(tgt);
+
+        // Spotlight
+        requestAnimationFrame(()=> spotlight(tgt, 6));
+
+        // Card placement (bottom sheet para mobile nos passos 1 e 2)
+        const small = matchMedia('(max-width: 520px)').matches;
+        if(small && (onbStep===1||onbStep===2)){
+          // Bottom seguro: não cobre Level Bar nem selo ATUAL
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
-          // NÃO COBRIR A LEVEL BAR NEM O SELO ATUAL
           onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
         }else{
-          const r=tgt.getBoundingClientRect(); const vw=getViewport().w, vh=getViewport().h;
+          const r=tgt.getBoundingClientRect(); const {w:vw,h:vh}=vp();
           const pad=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
-          let top=r.top - (ch + pad); if(top<60) top=r.bottom + pad; if(top + ch + 16 > vh) top=Math.max(60, vh - ch - 16);
+          let top=r.top-(ch+pad); if(top<60) top=r.bottom+pad; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
           let left=clamp(r.left, 16, vw - cw - 16);
           onbCard.style.bottom='auto'; onbCard.style.transform='none';
           onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
         }
-        // garantir visibilidade do alvo
-        tgt.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'});
+
+        // AUDITORIA: garantir que card está dentro do viewport
+        const b=onbCard.getBoundingClientRect(); const {w:vw,h:vh}=vp();
+        const margin=8;
+        if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
+          // fallback: centralizar como bottom sheet
+          onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
+          onbCard.style.right='auto'; onbCard.style.top='auto';
+          onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
+        }
       }
-      setTexts(); placeNow();
-      onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); placeNow(); };
+
+      setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
+
+      onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
       function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; }
       onbDone.onclick=end; onbSkip.onclick=end;
-      addEventListener('resize', ()=> onbOpen&&placeNow(), {passive:true});
-      addEventListener('scroll', ()=> onbOpen&&placeNow(), {passive:true});
+      addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
+      addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
     }
 
     /* Init */
