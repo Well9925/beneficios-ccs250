@@ -119,9 +119,19 @@
 
     .content{ padding:16px 16px 18px }
     .title{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative }
-    /* Sub-linha animada quando a seção está em foco */
-    .section.is-current .title h2::after{
+    .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
+    /* Overlay mágico reativo ao scroll (usa data-text e --magic) */
+    .title h2::after{
+      content: attr(data-text);
+      position:absolute; inset:0;
+      background: linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      opacity: var(--magic, 0);
+      filter: drop-shadow(0 0 10px rgba(0,217,255,.35)) drop-shadow(0 0 12px rgba(123,92,255,.25));
+      pointer-events:none; transition: opacity .18s ease;
+    }
+    /* Sweep de sublinhado ao ganhar foco */
+    .section.is-current .title h2::before{
       content:""; position:absolute; left:0; right:65%; bottom:-6px; height:3px; border-radius:3px;
       background:linear-gradient(90deg,#23d3ff,#6b5cff);
       box-shadow:0 0 12px rgba(0,217,255,.5), 0 0 18px rgba(123,92,255,.4);
@@ -144,7 +154,7 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques suaves das mudanças */
+    /* Destaques suaves */
     .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
@@ -222,9 +232,9 @@
     .level-dock .wrap{ height:100%; display:flex; gap:10px; align-items:center; justify-content:center; max-width:var(--content-w); margin:0 auto }
     .btn-level{
       position:relative; flex:1 1 0; min-width:0; padding:12px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06); color:#fff; font-weight:900; white-space:nowrap; cursor:pointer; overflow:visible;
+      background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer; overflow:visible;
+      display:flex; align-items:center; justify-content:center;
     }
-    /* Borda animada no ativo */
     .btn-level[aria-pressed="true"]::before{
       content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -233,7 +243,6 @@
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.8;
     }
     .btn-level[aria-pressed="true"]{ background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12)); box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 18px rgba(0,217,255,.30), 0 0 26px rgba(123,92,255,.22); transform: translateY(-1px) }
-    /* Selo ATUAL com halo pulsante */
     .label-actual{
       display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px rgba(0,217,255,.55), 0 0 18px rgba(123,92,255,.45);
       animation: halo 2.6s ease-out infinite;
@@ -241,10 +250,10 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ “Plano Y” */
-    .flip{ position:relative; display:inline-block; width:var(--flip-w, auto) }
-    .flip .flip-a, .flip .flip-b{ position:absolute; left:0; top:0; right:0; opacity:0; transition:opacity 280ms ease }
-    .flip .flip-a.on, .flip .flip-b.on{ opacity:1; position:relative }
+    /* Alternância “Nível X” ↔ “Plano Y” – centralizada e com largura estável */
+    .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
+    .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
+    .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
 
     /* FAB */
     .fab{
@@ -254,7 +263,7 @@
     }
     .fab svg{ width:22px; height:22px }
 
-    /* Resumo: 2 por linha no mobile (e também mantemos 2 no desktop para consistência) */
+    /* Resumo (2 por linha) */
     .summary{ max-width:var(--content-w); margin:0 auto; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -263,7 +272,7 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Indique & Ganhe — visual comercial */
+    /* Indique & Ganhe — destaque comercial */
     #s-indique .card{ background:
       radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.10), transparent 60%),
       radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.08), transparent 60%),
@@ -317,7 +326,14 @@
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
     .onb .highlight{ position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85); box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30); pointer-events:none; transition: all .22s ease }
-    .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
+    .onb .card{
+      position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--line); border-radius:14px; padding:14px;
+      box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left
+    }
+    .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
+    .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
     .onb .row{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px }
     .hide{ display:none !important }
   </style>
@@ -500,7 +516,7 @@
       </div>
     </section>
 
-    <!-- Indique & Ganhe (bloco comercial) -->
+    <!-- Indique & Ganhe -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card">
         <div class="media"><div class="frame">
@@ -605,7 +621,7 @@
       <div class="card"><div class="content">
         <div class="title"><h2>Perguntas frequentes</h2></div>
         <div class="faq-grid">
-          <details class="faq-card"><summary>Quando meus benefícios são ativados após a instalação?</summary><div>Em até 72 horas úteis, após validações internas do cadastro e da instalação.</div></details>
+          <details class="faq-card><summary>Quando meus benefícios são ativados após a instalação?</summary><div>Em até 72 horas úteis, após validações internas do cadastro e da instalação.</div></details>
           <details class="faq-card"><summary>Como acesso o CCS PLAY e o CCS TV?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> e faça login com seu e‑mail e CPF (somente números) como senha inicial.</div></details>
           <details class="faq-card"><summary>A Rede Globo está incluída nos canais?</summary><div>Não. A Rede Globo não está incluída em nenhum nível.</div></details>
           <details class="faq-card"><summary>No Nível 2, o que muda no CCS PLAY?</summary><div>Além dos 60 canais, você ganha +50 canais de música.</div></details>
@@ -656,18 +672,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="wrap" style="max-width:var(--content-w); margin:0 auto; text-align:center">
-      <div class="actions" style="justify-content:center">
-        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/554732634700?text=Ol%C3%A1%2C+preciso+de+suporte+com+a+minha+assinatura+CCS.">Falar com Suporte</a>
-        <a class="btn" target="_blank" rel="noopener" href="https://is.gd/CCSnota10">Avaliar no Google</a>
-        <button class="btn ghost" id="btnReplayTutorial" type="button">Ver tutorial novamente</button>
-      </div>
-      <p style="margin:12px 0 0; color:#cfe0ff">© 2025 V C TECH Representante Comercial - CCS TELECOM — Todos os direitos reservados</p>
-    </div>
-  </footer>
-
   <!-- Splash (boas-vindas) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
@@ -710,16 +714,16 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Seletor cápsula dinâmica */
+    /* Seletores principais */
+    const topbar=document.getElementById('topbar');
+    const statusBar=document.getElementById('statusBar');
+    const statusWrap=document.getElementById('statusWrap');
+
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
     const wrapTop=document.querySelector('.topbar .wrap');
     const capsule=document.querySelector('.capsule');
     const capTrack=document.getElementById('capTrack');
-
-    const topbar=document.getElementById('topbar');
-    const statusBar=document.getElementById('statusBar');
-    const statusWrap=document.getElementById('statusWrap');
 
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
@@ -729,6 +733,78 @@
 
     const fab=document.getElementById('fab');
 
+    /* Conteúdos por nível (resumo) */
+    const CONNECTA={
+      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
+    };
+    const PLAY={
+      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
+      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
+      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
+    };
+    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
+    const SUPORTE={
+      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
+      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
+      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
+    };
+
+    /* Util */
+    function setHeights(){
+      const hTop=topbar.offsetHeight||60;
+      const hStatus=statusBar.offsetHeight||44;
+      document.documentElement.style.setProperty('--h-topbar',hTop+'px');
+      document.documentElement.style.setProperty('--h-status',hStatus+'px');
+    }
+    function root(){ return document.scrollingElement||document.documentElement; }
+    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+
+    function fitCapsule(){
+      const wrapW=wrapTop.clientWidth, gap=parseFloat(getComputedStyle(wrapTop).columnGap)||10;
+      const lW=document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
+      const rW=document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
+      const available=Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
+      capsule.style.maxWidth = available + 'px';
+      capTrack.style.transform='';
+    }
+    function setCapsuleTop(level){
+      capLeft.textContent=`Benefícios Nível ${level}`;
+      capRight.textContent=`Plano ${PLANS[level]}`;
+      fitCapsule();
+    }
+    function setCapsuleSection(level, name){
+      capLeft.textContent=`Nível ${level}`;
+      capRight.textContent=name||'';
+      fitCapsule();
+    }
+
+    function renderFacts(container,facts){
+      container.innerHTML='';
+      (facts||[]).forEach(f=>{
+        const row=document.createElement('div'); row.className='fact';
+        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
+        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
+        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
+      });
+    }
+
+    /* Snapshot/destaques */
+    function snapshotPills(){
+      const map={}; document.querySelectorAll('.pill-flag[id]').forEach(el=> map[el.id]={ text:el.textContent.trim(), inc:el.classList.contains('included') }); return map;
+    }
+    function hasNumberDiff(a,b){ const na=(a.match(/\d+/g)||[]).join(','); const nb=(b.match(/\d+/g)||[]).join(','); return na!==nb; }
+    function highlightChanges(prev){
+      const now=snapshotPills();
+      Object.keys(now).forEach(id=>{
+        const el=document.getElementById(id); const p=prev[id]; const n=now[id]; if(!el||!p) return;
+        const changed=(p.text!==n.text)||(p.inc!==n.inc);
+        if(changed){ el.classList.add('changed'); if(!p.inc && n.inc) el.classList.add('included-new'); if(hasNumberDiff(p.text,n.text)) el.classList.add('num-flip'); setTimeout(()=> el.classList.remove('changed','included-new','num-flip'),800); }
+      });
+    }
+
+    /* Atualização por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -748,78 +824,6 @@
     const pillSupAbs=document.getElementById('pill-sup-abs');
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
-
-    /* Estado */
-    let topAtSight=true, currentSectionTitle='Conecta Clube';
-
-    /* Helpers de layout */
-    function setHeights(){
-      const hTop=topbar.offsetHeight||60;
-      const hStatus=statusBar.offsetHeight||44;
-      document.documentElement.style.setProperty('--h-topbar',hTop+'px');
-      document.documentElement.style.setProperty('--h-status',hStatus+'px');
-    }
-    function fitCapsule(){
-      const wrapW=wrapTop.clientWidth, gap=parseFloat(getComputedStyle(wrapTop).columnGap)||10;
-      const lW=document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
-      const rW=document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
-      const available=Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
-      capsule.style.maxWidth = available + 'px';
-      capTrack.style.transform='';
-    }
-    function setCapsuleTop(level){
-      capLeft.textContent=`Benefícios Nível ${level}`;
-      capRight.textContent=`Plano ${PLANS[level]}`;
-      fitCapsule();
-    }
-    function setCapsuleSection(level, name){
-      capLeft.textContent=`Nível ${level}`;
-      capRight.textContent=name||'';
-      fitCapsule();
-    }
-    function root(){ return document.scrollingElement||document.documentElement; }
-    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
-
-    /* Conteúdos por nível (resumo enxuto) */
-    const CONNECTA={
-      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
-    };
-    const PLAY={
-      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
-      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
-      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
-    };
-    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
-    const SUPORTE={
-      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
-      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
-      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
-    };
-
-    function renderFacts(container,facts){
-      container.innerHTML='';
-      (facts||[]).forEach(f=>{
-        const row=document.createElement('div'); row.className='fact';
-        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
-        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
-        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
-      });
-    }
-
-    function snapshotPills(){
-      const map={}; document.querySelectorAll('.pill-flag[id]').forEach(el=> map[el.id]={ text:el.textContent.trim(), inc:el.classList.contains('included') }); return map;
-    }
-    function hasNumberDiff(a,b){ const na=(a.match(/\d+/g)||[]).join(','); const nb=(b.match(/\d+/g)||[]).join(','); return na!==nb; }
-    function highlightChanges(prev){
-      const now=snapshotPills();
-      Object.keys(now).forEach(id=>{
-        const el=document.getElementById(id); const p=prev[id]; const n=now[id]; if(!el||!p) return;
-        const changed=(p.text!==n.text)||(p.inc!==n.inc);
-        if(changed){ el.classList.add('changed'); if(!p.inc && n.inc) el.classList.add('included-new'); if(hasNumberDiff(p.text,n.text)) el.classList.add('num-flip'); setTimeout(()=> el.classList.remove('changed','included-new','num-flip'),800); }
-      });
-    }
 
     function updateConecta(level){
       const c=CONNECTA[level];
@@ -855,20 +859,23 @@
       if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
     }
 
-    /* Alternância “Nível X” ↔ Plano Y nos botões */
+    /* Alternância “Nível X” ↔ Plano Y nos botões (2.6s; nunca fica sem texto) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let flipTimer=null, flipOn=true, flipPaused=false;
+    let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
         const flip=btn.querySelector('.flip'); if(!flip) return;
         const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
-        // medida offscreen
         a.classList.add('on'); b.classList.add('on');
         const w=Math.max(a.scrollWidth, b.scrollWidth);
         flip.style.setProperty('--flip-w', w+'px');
-        // volta estado inicial (mostrar A)
-        b.classList.remove('on'); if(!flipOn) a.classList.remove('on');
+        // volta para o estado inicial garantido (mostrar A)
+        b.classList.remove('on'); a.classList.add('on');
       });
+    }
+    function ensureOneVisible(flip){
+      const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
+      if(!a.classList.contains('on') && !b.classList.contains('on')) a.classList.add('on');
     }
     function setFlipState(showB){
       lvlBtns.forEach(btn=>{
@@ -876,28 +883,27 @@
         const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
         if(showB){ a.classList.remove('on'); b.classList.add('on'); }
         else { b.classList.remove('on'); a.classList.add('on'); }
+        ensureOneVisible(flip);
       });
     }
     function startFlip(){
-      if(prefersReduce) return; // não alterna
+      if(prefersReduce) return;
       clearInterval(flipTimer);
-      flipOn=false; setFlipState(false);
-      flipTimer=setInterval(()=>{ if(!flipPaused){ flipOn=!flipOn; setFlipState(flipOn); } }, 3500);
+      showPlan=false; setFlipState(false);
+      flipTimer=setInterval(()=>{ if(!flipPaused){ showPlan=!showPlan; setFlipState(showPlan); } }, 2600);
     }
     function pauseFlip(){ flipPaused=true; }
     function resumeFlip(){ flipPaused=false; }
-
     lvlBtns.forEach(btn=>{
       btn.addEventListener('mouseenter', pauseFlip);
       btn.addEventListener('mouseleave', resumeFlip);
       btn.addEventListener('focusin', pauseFlip);
       btn.addEventListener('focusout', resumeFlip);
-      // aria-label estável
       const lvl=btn.dataset.level; const plan=PLANS[lvl];
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Dock mobile toggle */
+    /* Side Dock mobile toggle (hambúrguer + fechar + recolhe ao rolar) */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
@@ -927,16 +933,12 @@
       }
     });
 
-    /* Clipboard */
-    document.getElementById('copyEmail')?.addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
-      const btn=document.getElementById('copyEmail'); const old=btn.textContent; btn.textContent='✅ Copiado'; setTimeout(()=> btn.textContent=old, 1200);
-    });
-
-    /* Intersection Observers — cápsula dinâmica e título “is-current” */
+    /* Cápsula dinâmica + título “cor mágica” reativo */
+    let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
       if(!('IntersectionObserver' in window)) return;
+
       const ioTop=new IntersectionObserver(entries=>{
         topAtSight=entries[0].isIntersecting;
         const level=+localStorage.getItem(LEVELS_KEY)||1;
@@ -944,25 +946,45 @@
       },{threshold:[0,0.01,1]});
       ioTop.observe(sentinel);
 
+      // Preparar data-text dos títulos para o overlay ::after
+      document.querySelectorAll('.title h2').forEach(h=>{
+        h.setAttribute('data-text', h.textContent.trim());
+      });
+
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
       const io=new IntersectionObserver(()=>{
         const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
-        const vis=sections.map(s=>{
+        let maxVis=null;
+
+        sections.forEach(s=>{
           const r=s.getBoundingClientRect();
           const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, hTop));
-          return {el:s, area:visible, title:s.getAttribute('data-title')||''};
-        }).sort((a,b)=>b.area-a.area)[0];
-        if(!vis) return;
-        currentSectionTitle=vis.title||currentSectionTitle;
-        if(lastCur && lastCur!==vis.el) lastCur.classList.remove('is-current');
-        vis.el.classList.add('is-current'); lastCur=vis.el;
-        const level=+localStorage.getItem(LEVELS_KEY)||1;
-        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+          const denom = Math.min(vh - hTop, r.height||1);
+          const ratio = Math.max(0, Math.min(1, visible / Math.max(1, denom)));
+          // atualizar “magia” no título dessa seção
+          const h2=s.querySelector('.title h2'); if(h2) h2.style.setProperty('--magic', ratio.toFixed(2));
+
+          if(!maxVis || visible>maxVis.visible) maxVis={el:s, visible, title:s.getAttribute('data-title')||''};
+        });
+
+        if(maxVis){
+          currentSectionTitle = maxVis.title || currentSectionTitle;
+          if(lastCur && lastCur!==maxVis.el) lastCur.classList.remove('is-current');
+          maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
+          const level=+localStorage.getItem(LEVELS_KEY)||1;
+          if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        }
       },{threshold:[0,0.25,0.5,0.75]});
       sections.forEach(s=> io.observe(s));
     })();
+
+    /* Clipboard */
+    document.getElementById('copyEmail')?.addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
+      const btn=document.getElementById('copyEmail'); const old=btn.textContent; btn.textContent='✅ Copiado'; setTimeout(()=> btn.textContent=old, 1200);
+    });
 
     /* Aplicar nível */
     function setStatus(level){ setStatusBar(level); }
@@ -981,10 +1003,11 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Splash e Tutorial (sempre inicia no Nível 1 e não troca sozinho) */
+    /* Tutorial (bottom sheet seguro no mobile) */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
+
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
     const onbLeft=document.getElementById('onbLeft');
@@ -1009,11 +1032,6 @@
       Object.assign(onbLeft.style,{left:'0px',top:y+'px',width:x+'px',height:h+'px'});
       Object.assign(onbRight.style,{left:(x+w)+'px',top:y+'px',width:Math.max(0,vw-(x+w))+'px',height:h+'px'});
       Object.assign(onbBottom.style,{left:'0px',top:(y+h)+'px',width:vw+'px',height:Math.max(0,vh-(y+h))+'px'});
-      // posicionar card
-      const padC=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
-      let top=y-(ch+padC); if(top<60) top=y+h+padC; if(top+ch+16>vh) top=Math.max(60,vh-ch-16);
-      let left=x; left=clamp(left,16,vw-cw-16);
-      Object.assign(onbCard.style,{top:top+'px',left:left+'px'});
     }
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
@@ -1024,7 +1042,26 @@
         else { onbTitle.textContent='Veja o contexto aqui'; onbText.textContent='Nível e plano selecionados ficam visíveis no topo.'; onbNext.classList.add('hide'); }
       }
       function targetForStep(){ if(onbStep===1) return document.getElementById('levelDockWrap'); if(onbStep===2) return document.getElementById('sideDock'); return document.querySelector('.capsule'); }
-      function placeNow(){ requestAnimationFrame(()=> requestAnimationFrame(()=> placeSpotlight(targetForStep()))); }
+      function placeNow(){
+        const tgt=targetForStep(); if(!tgt) return;
+        // spotlight posicionado
+        placeSpotlight(tgt);
+        // bottom sheet adaptativo para mobile nos passos 1 e 2
+        const isSmall = matchMedia('(max-width: 520px)').matches;
+        if(isSmall && (onbStep===1 || onbStep===2)){
+          onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
+          onbCard.style.right='auto'; onbCard.style.top='auto';
+          onbCard.style.bottom='max(16px, env(safe-area-inset-bottom))';
+        }else{
+          // coloca acima/below do target com clamp
+          const r=tgt.getBoundingClientRect(); const vw=getViewport().w, vh=getViewport().h;
+          const pad=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
+          let top=r.top - (ch + pad); if(top<60) top=r.bottom + pad; if(top + ch + 16 > vh) top=Math.max(60, vh - ch - 16);
+          let left=clamp(r.left, 16, vw - cw - 16);
+          onbCard.style.bottom='auto'; onbCard.style.transform='none';
+          onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
+        }
+      }
       setTexts(); placeNow();
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); placeNow(); };
       function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; }
@@ -1032,17 +1069,25 @@
       addEventListener('resize', ()=> onbOpen&&placeNow(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&placeNow(), {passive:true});
     }
-    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
-    btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 150); });
-    btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
 
     /* Init */
     function init(){
       setHeights();
+      // inicia sempre no Nível 1
       const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
       setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
+
+      // preparar títulos para overlay mágico
+      document.querySelectorAll('.title h2').forEach(h=> h.setAttribute('data-text', h.textContent.trim()));
+
       computeFlipWidths(); startFlip();
+
+      // splash sempre abre
       splash.classList.add('is-open'); document.body.style.overflow='hidden';
+      document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+      document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
+      document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+
       addEventListener('resize', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
       addEventListener('orientationchange', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
