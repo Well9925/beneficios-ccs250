@@ -46,13 +46,13 @@
       --fx-hue: 0deg; --fx-sat:1.05; --fx-bri:1.0;
     }
     body.theme-l2{
-      --levelA:#7b5cff; --levelB:#c55bff;  /* roxo/fúcsia moderno */
+      --levelA:#7b5cff; --levelB:#c55bff;
       --planA:#ff52c9;  --planB:#ff9ce7;
       --fx-hue: 25deg; --fx-sat:1.08; --fx-bri:1.02;
     }
     body.theme-l3{
-      --levelA:#ffb648; --levelB:#ffd86b;  /* ouro vivo */
-      --planA:#00e2c2;  --planB:#7afff2;   /* glints frios modernos */
+      --levelA:#ffb648; --levelB:#ffd86b;
+      --planA:#00e2c2;  --planB:#7afff2;
       --fx-hue: -8deg; --fx-sat:1.08; --fx-bri:1.04;
     }
 
@@ -454,11 +454,11 @@
     .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-    .onb .row{ display:grid; grid-template-columns: 1fr 1fr; grid-template-areas: "skip next" "start start"; gap:10px; margin-top:12px; align-items:stretch; justify-items:stretch; pointer-events:auto; }
-    #onbSkip{ grid-area:skip } #onbNext{ grid-area:next } #onbDone{ grid-area:start }
+    .onb .row{ display:grid; grid-template-columns: 1fr 1fr; grid-template-areas: "back next" "start start"; gap:10px; margin-top:12px; align-items:stretch; justify-items:stretch; pointer-events:auto; }
+    #onbBack{ grid-area:back } #onbNext{ grid-area:next } #onbDone{ grid-area:start }
     .onb .row .btn{ width:100%; min-width:0; padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px); font-size: clamp(14px, 4vw, 16px); }
     @media (min-width:560px){
-      .onb .row{ grid-template-columns:auto auto auto; grid-template-areas:"skip next start" }
+      .onb .row{ grid-template-columns:auto auto auto; grid-template-areas:"back next start" }
       .onb .row .btn{ width:auto }
     }
 
@@ -532,7 +532,7 @@
             <div class="track" id="capTrack">
               <span class="captext">
                 <span id="capLeft">Benefícios Nível 1</span>
-                <!-- Mini‑ícone contextual no lugar da bolinha -->
+                <!-- Mini‑ícone contextual -->
                 <span class="cap-icon" aria-hidden="true">
                   <img id="capIcon" alt="" decoding="async">
                 </span>
@@ -884,7 +884,7 @@
       <h3 id="onbTitle">Explore por nível</h3>
       <p id="onbText">Use os botões de nível para ver os benefícios de cada plano.</p>
       <div class="row">
-        <button class="btn ghost" type="button" id="onbSkip">Pular</button>
+        <button class="btn ghost" type="button" id="onbBack">Voltar</button>
         <button class="btn" type="button" id="onbNext">Próximo</button>
         <button class="btn cta" type="button" id="onbDone">Começar</button>
       </div>
@@ -922,9 +922,7 @@
       's-portal':'img/APP.png',
       's-faturas':'https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128',
       's-vctech':'https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png'
-      // s-resumo, s-faq → fallback (bolinha neutra)
     };
-    // Preload para evitar flicker
     Object.values(ICONS_BY_SECTION).forEach(src=>{ const i=new Image(); i.decoding='async'; i.src=src; });
 
     const topbar=document.getElementById('topbar');
@@ -967,7 +965,7 @@
     function setCapsuleTop(level){
       capLeft.textContent=`Benefícios Nível ${level}`;
       capRight.textContent=`Plano ${PLANS[level]}`;
-      setCapIcon(null); // bolinha neutra no topo
+      setCapIcon(null); // topo = bolinha neutra
       fitCapsule();
     }
     function setCapsuleSection(level, name){
@@ -1022,7 +1020,6 @@
           const title=best.sec.getAttribute('data-title')||'';
           const level=+localStorage.getItem(LEVELS_KEY)||1;
           setCapsuleSection(level, title);
-          // Se não estamos no topo, mostrar ícone contextual
           setCapIconBySectionId(best.sec.id);
         }
       }
@@ -1164,10 +1161,9 @@
         const level=+localStorage.getItem(LEVELS_KEY)||1;
         if(topAtSight){
           setCapsuleTop(level);
-          setCapIcon(null); // bolinha neutra quando no topo
+          setCapIcon(null);
         }else{
           setCapsuleSection(level, currentSectionTitle);
-          // Ícone contextual será ajustado pelo io de seções logo abaixo
         }
       },{threshold:[0,0.01,1]});
       ioTop.observe(sentinel);
@@ -1212,7 +1208,7 @@
     document.addEventListener('click', ev=>{
       const btn=ev.target.closest('.chip-more'); if(!btn) return;
       const id=btn.getAttribute('aria-controls'); const panel=id&&document.getElementById(id);
-      const txt=btn.querySelector(' .txt'); if(!panel) return;
+      const txt=btn.querySelector('.txt'); if(!panel) return;
       const expanded=btn.getAttribute('aria-expanded')==='true';
       if(expanded){
         const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
@@ -1230,7 +1226,6 @@
     });
 
     /* Flip Nível/Plano */
-    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
         const flip=btn.querySelector('.flip'); if(!flip) return;
@@ -1297,7 +1292,6 @@
         setCapsuleTop(L);
       }else{
         setCapsuleSection(L, currentTitle);
-        // atualiza ícone contextual conforme a seção atual
         const curSec = document.querySelector('.section.is-current');
         if(curSec) setCapIconBySectionId(curSec.id);
       }
@@ -1348,7 +1342,7 @@
     splash.classList.add('is-open'); document.body.style.overflow='hidden';
     btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
     btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; runEntranceSequence(); });
-    btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
+    btnReplayTutorial?.addEventListener('click', ()=>{ applyLevel(1); showOnboarding(1); }); // sempre reinicia no nível 1
 
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
@@ -1359,7 +1353,7 @@
     const onbCard=document.getElementById('onbCard');
     const onbNext=document.getElementById('onbNext');
     const onbDone=document.getElementById('onbDone');
-    const onbSkip=document.getElementById('onbSkip');
+    const onbBack=document.getElementById('onbBack');
     const onbTitle=document.getElementById('onbTitle');
     const onbText=document.getElementById('onbText');
 
@@ -1389,11 +1383,17 @@
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
       onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
+
       function setTexts(){
+        // títulos
         if(onbStep===1){ onbTitle.textContent='Explore por nível'; onbText.textContent='Use os botões de nível para ver os benefícios de cada plano.'; onbNext.classList.remove('hide'); }
         else if(onbStep===2){ onbTitle.textContent='Acesse seções rapidamente'; onbText.textContent='Use o menu lateral para ir direto ao que precisa.'; onbNext.classList.remove('hide'); }
         else { onbTitle.textContent='Veja o contexto aqui'; onbText.textContent='Nível e plano selecionados ficam visíveis no topo.'; onbNext.classList.add('hide'); }
+
+        // visibilidade do "Voltar"
+        onbBack.classList.toggle('hide', onbStep===1);
       }
+
       function targetForStep(){
         if(onbStep===1) return document.getElementById('levelDockWrap');
         if(onbStep===2){
@@ -1402,11 +1402,13 @@
         }
         return document.querySelector('.capsule');
       }
+
       function place(){
         const tgt=targetForStep(); if(!tgt) return;
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
+
         const vw=vp().w, vh=vp().h;
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1435,20 +1437,26 @@
           }
         }
       }
-      setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
+
+      setTexts();
+      requestAnimationFrame(()=>{ requestAnimationFrame(place); });
+
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
+      onbBack.onclick=()=>{ onbStep=Math.max(1,onbStep-1); setTexts(); requestAnimationFrame(place); };
+
       function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); runEntranceSequence(); }
-      onbDone.onclick=end; onbSkip.onclick=end;
+      onbDone.onclick=end;
+
       addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
       const esc=(e)=>{ if(e.key==='Escape'){ end(); removeEventListener('keydown',esc); } };
       addEventListener('keydown', esc);
     }
 
-    /* Init */
+    /* Init — sempre começar no Nível 1 */
     function init(){
       setHeights();
-      const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
+      const startLevel=1; // força nível 1 em todo carregamento
       localStorage.setItem(LEVELS_KEY,String(startLevel));
 
       setTheme(startLevel,{morph:false});
