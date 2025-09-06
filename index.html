@@ -24,9 +24,9 @@
       --side-pad: clamp(14px, 4.5vw, 36px);
       --content-w: 1200px;
 
-      /* Alturas padrão do bloco de mídia (proporcionais por viewport) */
-      --media-h-d: clamp(260px, 36vh, 420px);
-      --media-h-m: clamp(180px, 34vh, 280px);
+      /* Alturas do bloco de mídia */
+      --media-h-d: clamp(240px, 30vh, 360px); /* desktop: grande, sem invadir o conteúdo */
+      --media-h-m: clamp(180px, 34vh, 280px); /* mobile */
 
       --h-topbar: 60px;
       --h-status: 44px;
@@ -127,25 +127,28 @@
       transition: transform .28s ease, opacity .28s ease;
     }
 
-    /* Desktop: sem min-height e sem grid 1fr (evita "buracos") */
+    /* Desktop: sem min-height nem grid 1fr */
     @media (min-width:1024px){
       .card.stage{ display:block; }
     }
 
-    /* Bloco de mídia com altura consistente por viewport */
-    .media{ padding:10px 14px 0 }
+    /* Bloco de mídia CONSISTENTE e sem invasão do conteúdo */
+    .media{
+      padding:10px 14px 0;
+      overflow:hidden; /* impede qualquer “estouro” */
+    }
     .frame{
       width:100%;
-      height: var(--media-h-m);
+      height: var(--media-h-m); /* mobile */
       display:grid;
       place-content:center;
       place-items:center;
     }
     @media (min-width:1024px){
-      .frame{ height: var(--media-h-d) }
+      .frame{ height: var(--media-h-d) } /* desktop */
     }
 
-    /* TODAS as imagens/vídeos dentro do frame preenchem o bloco proporcionalmente */
+    /* Imagens/vídeos sempre dentro do frame, proporcionais */
     .frame > img,
     .frame > video{
       width:100%;
@@ -154,7 +157,7 @@
       display:block;
     }
 
-    /* Duas imagens (CCS PLAY + CCS TV) ocupam 100% do frame */
+    /* Duas imagens (CCS PLAY + CCS TV) usam toda a altura do frame */
     .frame-grid-2{
       height:100%;
       width:100%;
@@ -167,14 +170,14 @@
     .frame-grid-2 img{
       width:100%;
       height:100%;
-      object-fit: contain; /* troque para cover se preferir encher com corte */
+      object-fit: contain; /* troque para cover para “encher” com possível corte */
       border-radius:12px;
       border:1px solid var(--line);
       background:#0f1420;
       display:block;
     }
 
-    .content{ padding:16px 16px 18px }
+    .content{ padding:16px 16px 18px; position:relative; z-index:1 } /* garante o conteúdo acima de qualquer mídia */
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
     .title h2::after{
@@ -303,9 +306,9 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ Plano Y */
-    .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
-    .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
+    /* Alternância “Nível X” ↔ Plano Y — impedir quebra de linha */
+    .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em; white-space:nowrap }
+    .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease; white-space:nowrap }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
 
     /* FAB */
@@ -360,7 +363,6 @@
     #s-faq .title + .faq-grid{ margin-top:18px }
     #s-faq .title h2::before{ bottom:-4px; right:72% }
 
-    /* Splash / Onboarding / Footer (mesmos padrões) */
     .footer{ padding:24px var(--side-pad) calc(24px + var(--h-levelbar)); text-align:center; color:#cfe0ff }
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
@@ -376,7 +378,7 @@
     @keyframes glint{ from{ left:-60% } to{ left:105% } }
     .splash .cap{ display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; margin:0 auto 8px; background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900; animation:pulseHalo 4.2s ease-out infinite; }
     .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px rgba(0,217,255,.18) }
-    .splash p{ margin:0 0 14px; color:#dfe7ff }
+    .splash p{ margin:0 0 14px; color:#dfe0ff }
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
@@ -384,10 +386,23 @@
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
     .onb .highlight{ position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85); box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30); pointer-events:none; transition: all .22s ease }
-    .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
+    .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-    .onb .row{ display:grid; grid-template-columns: 1fr 1fr; grid-template-areas: "skip next" "start start"; gap:10px; margin-top:12px; align-items:stretch; justify-items:stretch; pointer-events:auto; }
+    .onb .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "skip next"
+        "start start";
+      gap:10px;
+      margin-top:12px;
+      align-items:stretch;
+      justify-items:stretch;
+      pointer-events:auto;
+    }
     #onbSkip{ grid-area:skip } #onbNext{ grid-area:next } #onbDone{ grid-area:start }
     .onb .row .btn{ width:100%; min-width:0; padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px); font-size: clamp(14px, 4vw, 16px); }
     @media (min-width:560px){
@@ -745,9 +760,9 @@
   <!-- Level Bar -->
   <nav class="level-dock" aria-label="Nível dos benefícios">
     <div class="wrap" id="levelDockWrap">
-      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span><span class="flip" data-plan="250 MB"><span class="flip-a on">Nível 1</span><span class="flip-b">250 MB</span></span></button>
-      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false" title="Ver benefícios do Nível 2"><span class="label-actual">ATUAL</span><span class="flip" data-plan="450 MB"><span class="flip-a on">Nível 2</span><span class="flip-b">450 MB</span></span></button>
-      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false" title="Ver benefícios do Nível 3"><span class="label-actual">ATUAL</span><span class="flip" data-plan="650 MB"><span class="flip-a on">Nível 3</span><span class="flip-b">650 MB</span></span></button>
+      <button class="btn-level" id="lvl-1" data-level="1" aria-pressed="true" title="Ver benefícios do Nível 1"><span class="label-actual">ATUAL</span><span class="flip" data-plan="250&nbsp;MB"><span class="flip-a on">Nível 1</span><span class="flip-b">250&nbsp;MB</span></span></button>
+      <button class="btn-level" id="lvl-2" data-level="2" aria-pressed="false" title="Ver benefícios do Nível 2"><span class="label-actual">ATUAL</span><span class="flip" data-plan="450&nbsp;MB"><span class="flip-a on">Nível 2</span><span class="flip-b">450&nbsp;MB</span></span></button>
+      <button class="btn-level" id="lvl-3" data-level="3" aria-pressed="false" title="Ver benefícios do Nível 3"><span class="label-actual">ATUAL</span><span class="flip" data-plan="650&nbsp;MB"><span class="flip-a on">Nível 3</span><span class="flip-b">650&nbsp;MB</span></span></button>
     </div>
   </nav>
 
@@ -801,7 +816,8 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
-    const PLANS={1:'250 MB',2:'450 MB',3:'650 MB'};
+    // Espaço não separável entre número e MB para evitar quebra:
+    const PLANS={1:'250\u00A0MB',2:'450\u00A0MB',3:'650\u00A0MB'};
     const CONTACT_WHATS='https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20CCS.';
     const SIGN_WHATS={
       1:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%201%20(Plano%20250%20MB)%20da%20CCS.',
@@ -812,17 +828,21 @@
     const topbar=document.getElementById('topbar');
     const statusBar=document.getElementById('statusBar');
     const statusWrap=document.getElementById('statusWrap');
+
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
+
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
     const dockClose=document.getElementById('dockClose');
+
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
     const main=document.getElementById('content');
 
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function root(){ return document.scrollingElement||document.documentElement; }
+    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
 
@@ -850,9 +870,8 @@
       capRight.textContent=name||'';
       fitCapsule();
     }
-    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
 
-    /* Modo lateral (deck) por query ?mode=deck */
+    /* Modo lateral (deck) — ativa com ?mode=deck */
     function enableDeckIfRequested(){
       const qp = new URLSearchParams(location.search);
       const on = qp.get('mode') === 'deck';
@@ -933,7 +952,7 @@
       });
     }
 
-    /* Dados por nível */
+    /* Conteúdos por nível */
     const CONNECTA={
       1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
       2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
@@ -951,7 +970,7 @@
       3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
     };
 
-    /* Refs de elementos que variam por nível */
+    /* Elementos variáveis por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -1003,7 +1022,7 @@
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy vertical (desktop padrão) */
+    /* Scrollspy vertical */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1067,19 +1086,21 @@
       }
     });
 
-    /* Alternância “Nível X” ↔ Plano Y” (leve) */
+    /* Alternância “Nível X” ↔ Plano Y” (não quebra linha) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
         const flip=btn.querySelector('.flip'); if(!flip) return;
         const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
+        // Mostrar os dois momentaneamente para medir a maior largura
         a.classList.add('on'); b.classList.add('on');
+        flip.style.whiteSpace='nowrap';
         const w=Math.max(a.scrollWidth, b.scrollWidth);
         flip.style.setProperty('--flip-w', w+'px');
         b.classList.remove('on'); a.classList.add('on');
       });
     }
+    let flipTimer=null, showPlan=false, flipPaused=false;
     function ensureOneVisible(flip){
       const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
       if(!a.classList.contains('on') && !b.classList.contains('on')) a.classList.add('on');
@@ -1127,7 +1148,7 @@
     function applyLevel(level,{remember=true}={}){
       const L=[1,2,3].includes(+level)?+level:1;
       const prev=snapshotPills();
-      setLevelDock(L);
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===L)));
       setStatusBar(L);
       updateAll(L);
       document.getElementById('cc-email-link').href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
@@ -1138,7 +1159,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Onboarding */
+    /* Onboarding (mantido) */
     const splash=document.getElementById('splash');
     document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
     document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
@@ -1164,7 +1185,7 @@
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
-      if (targetEl.id==='levelDockWrap') extraTop=22;
+      if (targetEl.id==='levelDockWrap') extraTop=22; // incluir selo ATUAL
       const x=clamp(r.left-pad,0,vw-1);
       const y=clamp(r.top-pad-extraTop,0,vh-1);
       const w=clamp(r.width+pad*2,0,vw);
@@ -1184,11 +1205,13 @@
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
       onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
+
       function setTexts(){
         if(onbStep===1){ onbTitle.textContent='Explore por nível'; onbText.textContent='Use os botões de nível para ver os benefícios de cada plano.'; onbNext.classList.remove('hide'); }
         else if(onbStep===2){ onbTitle.textContent='Acesse seções rapidamente'; onbText.textContent='Use o menu lateral para ir direto ao que precisa.'; onbNext.classList.remove('hide'); }
         else { onbTitle.textContent='Veja o contexto aqui'; onbText.textContent='Nível e plano selecionados ficam visíveis no topo.'; onbNext.classList.add('hide'); }
       }
+
       function targetForStep(){
         if(onbStep===1) return document.getElementById('levelDockWrap');
         if(onbStep===2){
@@ -1197,11 +1220,13 @@
         }
         return document.querySelector('.capsule');
       }
+
       function place(){
         const tgt=targetForStep(); if(!tgt) return;
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
+
         const {w:vw,h:vh}=vp();
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1230,7 +1255,9 @@
           }
         }
       }
+
       setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
+
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
       function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
       onbDone.onclick=end; onbSkip.onclick=end;
@@ -1254,7 +1281,7 @@
       document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
       splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
 
-      // Flip “Nível/Plano”
+      // Flip Nível/Plano (sem quebra)
       computeFlipWidths();
       if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         let show=false; setInterval(()=>{ show=!show; setFlipState(show); }, 2600);
@@ -1265,7 +1292,7 @@
       addEventListener('resize', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
       addEventListener('orientationchange', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
-      addEventListener('scroll', ()=>{ if (isMobile()) sideDock.classList.remove('is-open'); toggleFab(); }, {passive:true});
+      addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
   })();
