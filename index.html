@@ -31,6 +31,12 @@
       --h-topbar: 60px;
       --h-status: 44px;
       --h-levelbar: 72px;
+
+      /* Entrada orquestrada */
+      --enter-shift: 14px;
+      --enter-dur: 420ms;
+      --enter-dur-fast: 320ms;
+      --stagger: 60ms;
     }
 
     *{box-sizing:border-box}
@@ -145,16 +151,10 @@
       transition: transform .28s ease, opacity .28s ease;
     }
 
-    /* Desktop: sem min-height e sem grid 1fr */
-    @media (min-width:1024px){
-      .card.stage{ display:block; }
-    }
+    @media (min-width:1024px){ .card.stage{ display:block } }
 
-    /* Bloco de mídia: no mobile reservamos altura; no desktop adaptamos ao conteúdo sem cortar */
-    .media{
-      padding:10px 14px 0;
-      overflow:visible; /* nada será cortado; garantimos limite pela altura máxima da imagem */
-    }
+    /* Bloco de mídia */
+    .media{ padding:10px 14px 0; overflow:visible }
     .frame{
       width:100%;
       display:grid;
@@ -162,44 +162,31 @@
       place-items:center;
       height: var(--media-h-m); /* mobile */
     }
-    @media (min-width:1024px){
-      .frame{ height:auto } /* desktop: altura cresce de acordo com a imagem */
-    }
+    @media (min-width:1024px){ .frame{ height:auto } }
 
-    /* Imagens/vídeos: NUNCA cortadas, grandes e proporcionais, com teto visual no desktop */
-    .frame > img,
-    .frame > video{
+    .frame > img, .frame > video{
       display:block;
       width:100%;
-      height:auto;          /* crítico para não cortar */
-      object-fit:contain;   /* proporcional, sem recorte */
-      max-height:none;      /* mobile pode usar toda a altura do frame */
+      height:auto;
+      object-fit:contain;
+      max-height:none;
     }
     @media (min-width:1024px){
-      .frame > img,
-      .frame > video{
-        max-height: var(--media-h-max-d); /* desktop: teto para não invadir o conteúdo */
-      }
+      .frame > img, .frame > video{ max-height: var(--media-h-max-d) }
     }
 
-    /* Duas imagens (CCS PLAY + CCS TV): seguem a mesma regra sem corte */
+    /* Duas imagens (CCS PLAY + CCS TV) */
     .frame-grid-2{
       width:100%;
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: clamp(10px, 2vw, 16px);
-      align-items:center;
-      justify-items:center;
+      align-items:center; justify-items:center;
     }
     .frame-grid-2 img{
-      display:block;
-      width:100%;
-      height:auto;          /* sem esticar vertical, evita corte */
-      object-fit:contain;
+      display:block; width:100%; height:auto; object-fit:contain;
     }
-    @media (min-width:1024px){
-      .frame-grid-2 img{ max-height: var(--media-h-max-d) } /* teto de altura por imagem */
-    }
+    @media (min-width:1024px){ .frame-grid-2 img{ max-height: var(--media-h-max-d) } }
 
     .content{ padding:16px 16px 18px; position:relative; z-index:1 }
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
@@ -278,7 +265,7 @@
         animation:chipPulse 1.8s ease-in-out infinite;
       }
       @keyframes chipPulse{
-        0%{ box-shadow:0 0 0 0 rgba(0,217,255,.35), 0 0 12px 0 rgba(123,92,255,.28); transform:translateZ(0) }
+        0%{ box-shadow:0 0 0 0 rgba(0,217,255,.35), 0 0 12px 0 rgba(123,92,255,.28) }
         50%{ box-shadow:0 0 0 8px rgba(0,217,255,0), 0 0 18px 6px rgba(123,92,255,.24) }
         100%{ box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 12px 0 rgba(123,92,255,.20) }
       }
@@ -405,7 +392,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash (mantido) */
+    /* Splash */
     .splash{ position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background: radial-gradient(900px 600px at 10% 10%, rgba(95,92,255,.16), transparent 60%), radial-gradient(900px 600px at 90% 90%, rgba(0,234,255,.14), transparent 60%), rgba(9,12,18,.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align:center; }
@@ -421,7 +408,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding (mantido com botões responsivos) */
+    /* Onboarding */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -429,28 +416,15 @@
     .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-    .onb .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas:
-        "skip next"
-        "start start";
-      gap:10px;
-      margin-top:12px;
-      align-items:stretch;
-      justify-items:stretch;
-      pointer-events:auto;
-    }
-    #onbSkip{ grid-area:skip }
-    #onbNext{ grid-area:next }
-    #onbDone{ grid-area:start }
+    .onb .row{ display:grid; grid-template-columns: 1fr 1fr; grid-template-areas: "skip next" "start start"; gap:10px; margin-top:12px; align-items:stretch; justify-items:stretch; pointer-events:auto; }
+    #onbSkip{ grid-area:skip } #onbNext{ grid-area:next } #onbDone{ grid-area:start }
     .onb .row .btn{ width:100%; min-width:0; padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px); font-size: clamp(14px, 4vw, 16px); }
     @media (min-width:560px){
       .onb .row{ grid-template-columns:auto auto auto; grid-template-areas:"skip next start" }
       .onb .row .btn{ width:auto }
     }
 
-    /* Modo lateral (deck) — opcional, ?mode=deck */
+    /* Modo lateral (deck) */
     @media (min-width:1024px){
       body.mode-deck main{
         display:grid;
@@ -470,6 +444,63 @@
         padding: 0;
       }
       body.mode-deck .card.stage{ width:100% }
+    }
+
+    /* ENTRADA ORQUESTRADA — estados iniciais por etapa */
+    /* Etapa 1: topo (cápsula/status) */
+    body.enter-seq .topbar .capsule,
+    body.enter-seq .status-bar{
+      opacity:0; transform:translateY(calc(var(--enter-shift) * -1));
+      transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
+    }
+    body.enter-seq.step-1 .topbar .capsule,
+    body.enter-seq.step-1 .status-bar{ opacity:1; transform:none }
+
+    /* Etapa 2: níveis e menu lateral */
+    body.enter-seq .level-dock{
+      opacity:0; transform:translateY(var(--enter-shift));
+      transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
+    }
+    body.enter-seq .side-dock{
+      opacity:0; transform:translateX(var(--enter-shift));
+      transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
+    }
+    body.enter-seq.step-2 .level-dock{ opacity:1; transform:none }
+    @media (min-width:1024px){
+      body.enter-seq.step-2 .side-dock{ opacity:1; transform:none }
+    }
+
+    /* Etapa 3: card alvo (mídia, título, subtítulo, pílulas, botões em cascata) */
+    body.enter-seq .enter-target .media,
+    body.enter-seq .enter-target .content .title,
+    body.enter-seq .enter-target .content .subtitle,
+    body.enter-seq .enter-target .content .pills-grid,
+    body.enter-seq .enter-target .content .actions{
+      opacity:0; transform:translateY(calc(var(--enter-shift) * .6));
+      transition: opacity var(--enter-dur-fast) ease, transform var(--enter-dur-fast) cubic-bezier(.2,.8,.2,1);
+      will-change: opacity, transform;
+    }
+    body.enter-seq.step-3 .enter-target .media{ opacity:1; transform:none; transition-delay:0ms }
+    body.enter-seq.step-3 .enter-target .content .title{ opacity:1; transform:none; transition-delay:80ms }
+    body.enter-seq.step-3 .enter-target .content .subtitle{ opacity:1; transform:none; transition-delay:140ms }
+    body.enter-seq.step-3 .enter-target .content .pills-grid{ opacity:1; transform:none; transition-delay:200ms }
+    body.enter-seq.step-3 .enter-target .content .actions{ opacity:1; transform:none; transition-delay:260ms }
+
+    /* Stagger para itens dentro de pílulas e ações (apenas opacidade/translate) */
+    body.enter-seq .enter-target .pills-grid > *,
+    body.enter-seq .enter-target .actions > *{
+      opacity:0; transform:translateY(10px);
+      transition: opacity var(--enter-dur-fast) ease, transform var(--enter-dur-fast) ease;
+    }
+    body.enter-seq.step-3 .enter-target .pills-grid > *,
+    body.enter-seq.step-3 .enter-target .actions > *{
+      opacity:1; transform:none;
+    }
+
+    /* Redução de movimento */
+    @media (prefers-reduced-motion: reduce){
+      :root{ --enter-shift: 0px; --enter-dur: 160ms; --enter-dur-fast: 140ms; --stagger: 0ms }
+      .fx.fx-shimmer, .fx.fx-shimmer2, .fx.fx-noise{ animation-duration:0.01s }
     }
 
     .hide{ display:none !important }
@@ -857,7 +888,6 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
-    // Espaço não separável entre número e MB para evitar quebra:
     const PLANS={1:'250\u00A0MB',2:'450\u00A0MB',3:'650\u00A0MB'};
     const CONTACT_WHATS='https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20CCS.';
     const SIGN_WHATS={
@@ -1011,11 +1041,10 @@
       3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
     };
 
-    /* Refs que mudam por nível */
+    /* Elementos variáveis por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
-    const emailBtn=document.getElementById('cc-email-link');
 
     const playSubtitle=document.getElementById('play-subtitle');
     const playFacts=document.getElementById('play-facts');
@@ -1063,7 +1092,7 @@
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy vertical (desktop padrão) */
+    /* Scrollspy vertical */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1127,7 +1156,7 @@
       }
     });
 
-    /* Alternância “Nível X” ↔ Plano Y” (não quebra linha) */
+    /* Alternância “Nível X” ↔ Plano Y (sem quebra) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
@@ -1154,14 +1183,8 @@
         ensureOneVisible(flip);
       });
     }
-    function startFlip(){
-      if(prefersReduce) return;
-      clearInterval(flipTimer);
-      showPlan=false; setFlipState(false);
-      flipTimer=setInterval(()=>{ if(!flipPaused){ showPlan=!showPlan; setFlipState(showPlan); } }, 2600);
-    }
-    function pauseFlip(){ flipPaused=true; }
-    function resumeFlip(){ flipPaused=false; }
+    function pauseFlip(){ flipPaused=true }
+    function resumeFlip(){ flipPaused=false }
     lvlBtns.forEach(btn=>{
       btn.addEventListener('mouseenter', pauseFlip);
       btn.addEventListener('mouseleave', resumeFlip);
@@ -1171,7 +1194,7 @@
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Dock mobile toggle */
+    /* Dock mobile */
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
@@ -1199,12 +1222,75 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Onboarding */
+    /* ENTRADA ORQUESTRADA */
+    function setStaggerVars(section){
+      try{
+        section?.querySelectorAll('.pills-grid > *').forEach((el,i)=> el.style.setProperty('--i', i));
+        section?.querySelectorAll('.actions > *').forEach((el,i)=> el.style.setProperty('--i', i));
+        const style=document.createElement('style');
+        style.textContent=`
+          body.enter-seq.step-3 .enter-target .pills-grid > *{ transition-delay: calc(220ms + var(--i) * var(--stagger)) }
+          body.enter-seq.step-3 .enter-target .actions > *{ transition-delay: calc(260ms + var(--i) * var(--stagger)) }
+        `;
+        document.head.appendChild(style);
+        setTimeout(()=> style.remove(), 2000);
+      }catch{}
+    }
+    function getCurrentSection(){
+      return document.querySelector('main .section.is-current') || document.querySelector('main .section');
+    }
+    let enterRunning=false, enterTimers=[];
+    function clearTimers(){ enterTimers.forEach(t=> clearTimeout(t)); enterTimers=[]; }
+    function endEntrance(){
+      document.body.classList.remove('enter-seq','step-1','step-2','step-3');
+      const target=document.querySelector('.enter-target'); target?.classList.remove('enter-target');
+      clearTimers(); enterRunning=false;
+    }
+    function skipOnInteraction(){
+      if(!enterRunning) return;
+      endEntrance();
+      window.removeEventListener('wheel', skipOnInteraction, {passive:true});
+      window.removeEventListener('keydown', skipOnInteraction);
+      window.removeEventListener('pointerdown', skipOnInteraction);
+      window.removeEventListener('scroll', skipOnInteraction, {passive:true});
+    }
+    function runEntranceSequence(){
+      if(enterRunning) { endEntrance() }
+      enterRunning=true;
+
+      // garantir que estamos no topo visual
+      try{ document.getElementById('top-sentinel').scrollIntoView({block:'start'}); }catch{}
+
+      const target = getCurrentSection();
+      target?.classList.add('enter-target');
+      setStaggerVars(target);
+
+      document.body.classList.add('enter-seq');
+      // Etapas
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-1'), 20));
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-2'), 420));
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-3'), 840));
+      enterTimers.push(setTimeout(endEntrance, 1600));
+
+      // Permitir pular por interação
+      window.addEventListener('wheel', skipOnInteraction, {passive:true});
+      window.addEventListener('keydown', skipOnInteraction);
+      window.addEventListener('pointerdown', skipOnInteraction);
+      window.addEventListener('scroll', skipOnInteraction, {passive:true});
+    }
+
+    /* Onboarding + Splash integração com entrada */
     const splash=document.getElementById('splash');
-    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
-    document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
-    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+    const btnStart=document.getElementById('btnStart');
+    const btnSkipTutorial=document.getElementById('btnSkipTutorial');
+    const btnReplayTutorial=document.getElementById('btnReplayTutorial');
+
+    // Ao abrir a página mostramos o splash
     splash.classList.add('is-open'); document.body.style.overflow='hidden';
+
+    btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+    btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; runEntranceSequence(); });
+    btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
 
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
@@ -1220,9 +1306,10 @@
     const onbText=document.getElementById('onbText');
 
     function vp(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
+
     function spotlight(targetEl, pad=6){
       if(!targetEl) return;
-      const r=targetEl.getBoundingClientRect(); const vw=vp().w; const vh=vp().h;
+      const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
       if (targetEl.id==='levelDockWrap') extraTop=22;
       const x=Math.max(0, Math.min(r.left-pad, vw-1));
@@ -1262,7 +1349,6 @@
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
-
         const {w:vw,h:vh}=vp();
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1293,7 +1379,7 @@
       }
       setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
-      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
+      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); runEntranceSequence(); }
       onbDone.onclick=end; onbSkip.onclick=end;
       addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
@@ -1307,13 +1393,6 @@
       const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
       localStorage.setItem(LEVELS_KEY,String(startLevel));
       setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
-
-      // Splash/tutorial
-      const splashEl=document.getElementById('splash');
-      document.getElementById('btnStart')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
-      document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; });
-      document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
-      splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
 
       // Flip “Nível/Plano”
       computeFlipWidths();
