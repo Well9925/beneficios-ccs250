@@ -17,7 +17,6 @@
       --txt:#f6f8ff;
       --muted:#cfe0ff;
       --cta-a:#ff8a25; --cta-b:#ffb04a;
-      --focus:#00d9ff;
 
       --levelA:#2f6bff; --levelB:#7b5cff;
       --planA:#00d9ff;  --planB:#00ffc6;
@@ -31,6 +30,9 @@
       --h-topbar: 60px;
       --h-status: 44px;
       --h-levelbar: 72px;
+
+      /* Pager height (setado no JS) */
+      --snap-h: 720px;
     }
 
     *{box-sizing:border-box}
@@ -124,15 +126,26 @@
       backdrop-filter:blur(10px); -webkit-backdrop-filter: blur(10px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
       overflow:hidden; contain:content;
+      transition: transform .45s ease, opacity .45s ease;
     }
     .media{ padding:10px 14px 0 }
-    .frame{ width:100%; display:flex; justify-content:center; align-items:center }
+    .frame{ width:100%; display:grid; place-content:center; place-items:center }
     .art-img{ width:100%; max-width:880px; height:auto; display:block; object-fit:contain; max-height:var(--art-max-h-d) }
     @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m) } }
 
-    .content{ padding:16px 16px 18px }
+    /* DUAS IMAGENS CENTRAIS (CCS PLAY/TV) */
+    .frame-grid-2{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(220px, 1fr));
+      gap: clamp(10px, 2vw, 16px);
+      max-width: clamp(680px, 80vw, 960px);
+      margin: 0 auto;
+      place-items:center;
+    }
+    .frame-grid-2 img{ width:100%; height:auto; display:block; object-fit:contain; border-radius:12px; border:1px solid var(--line); background:#0f1420 }
 
-    /* Título SEMPRE com "Saiba mais" à direita */
+    .content{ padding:16px 16px 18px }
+    /* Título com chip à direita */
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
     .title h2::after{
@@ -153,7 +166,7 @@
     @keyframes underlineSweep{ from{ right:98% } to{ right:65% } }
     .subtitle{ margin:10px 0 14px; color:#cfe0ff }
 
-    /* Pílulas: 2/linha no mobile */
+    /* Pílulas */
     .pills-grid{ display:flex; flex-wrap:wrap; gap:10px }
     @media (max-width:700px){ .pills-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px } }
     .pill-flag{
@@ -166,7 +179,7 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques suaves */
+    /* Destaques pílulas */
     .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
@@ -181,7 +194,7 @@
     }
     @keyframes spark{ 0%{ opacity:1; transform:scale(.85) } 100%{ opacity:0; transform:scale(1.12) } }
 
-    /* Ações — mobile ocupa o card */
+    /* Ações */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
     .btn{
       border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900;
@@ -196,7 +209,7 @@
       .btn{ width:100% }
     }
 
-    /* "Saiba mais" */
+    /* Saiba mais */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer
@@ -207,7 +220,7 @@
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
     .facts{ display:grid; grid-template-columns:1fr; gap:10px }
-    @media (min-width:700px){ .facts{ grid-template-columns:1fr 1fr } }
+    @media (min-width:1080px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
     .fact .ico{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.10); border:1px solid var(--line); font-size:14px }
 
@@ -262,7 +275,7 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ “Plano Y” */
+    /* Alternância “Nível X” ↔ Plano Y */
     .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
     .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
@@ -284,7 +297,7 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Indique & Ganhe — destaque e CTAs (250/450 lado a lado, 650 full) */
+    /* Indique & Ganhe — com efeito reativado no título */
     #s-indique .card{ background:
       radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
       radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.10), transparent 60%),
@@ -292,14 +305,14 @@
       border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 24px 60px rgba(0,0,0,.45);
     }
-    #s-indique .title h2::after{ content:none } /* evita overlay duplicado no título */
+    /* CTAs do Indique & Ganhe */
     #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
     #indique-actions .btn{
       position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
       box-shadow:0 10px 30px rgba(255,173,56,.25);
       animation:pulseGlow 2.8s ease-in-out infinite;
     }
-    #indique-actions .btn:nth-child(3){ grid-column:1 / -1 } /* 650 MB full width */
+    #indique-actions .btn:nth-child(3){ grid-column:1 / -1 }
     #indique-actions .btn::after{
       content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%); transform:translateX(-120%); transition:transform .6s ease; mix-blend-mode:screen
     }
@@ -309,19 +322,22 @@
       50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px rgba(0,217,255,.18) }
     }
 
-    /* FAQ em cards */
+    /* FAQ */
     .faq-grid{ display:grid; gap:10px; grid-template-columns:1fr; }
+    @media (min-width:1080px){ .faq-grid{ grid-template-columns:1fr 1fr } }
     .faq-card{ border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.06); padding:12px; cursor:pointer }
     .faq-card summary{ list-style:none; cursor:pointer; font-weight:700 }
     .faq-card[open]{ background:rgba(255,255,255,.10) }
     .faq-card summary::-webkit-details-marker{ display:none }
+    #s-faq .title + .faq-grid{ margin-top:16px }
+    #s-faq .title h2::before{ bottom:-4px; right:72% }
 
     /* Footer */
     .footer{ padding:24px var(--side-pad) calc(24px + var(--h-levelbar)); text-align:center; color:#cfe0ff }
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash com “glint” (varrendo lateral) */
+    /* Splash: “glint” lateral (sem giro) */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -359,7 +375,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding (robusto: não estoura, não cobre ATUAL, auditor) */
+    /* Onboarding (robusto) */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -373,7 +389,7 @@
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
 
-    /* BOTÕES DO TUTORIAL — correção de proporcionalidade */
+    /* Botões do tutorial: grid responsivo, sem overflow */
     .onb .row{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -391,7 +407,7 @@
     #onbDone{ grid-area:start }
     .onb .row .btn{
       width:100%;
-      min-width:0; /* permite encolher sem estourar */
+      min-width:0;
       padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px);
       font-size: clamp(14px, 4vw, 16px);
     }
@@ -402,6 +418,22 @@
       }
       .onb .row .btn{ width:auto }
     }
+
+    /* DESKTOP: Pager Mode */
+    @media (min-width:1024px){
+      main{ scroll-snap-type: y mandatory }
+      .section{
+        min-height: var(--snap-h);
+        scroll-snap-align: center;
+        display:grid;
+        place-items:center;
+        padding: 24px var(--side-pad) 36px;
+      }
+      .card{ transform:translateY(40px); opacity:0 }
+      .section.is-current .card{ transform:translateY(0); opacity:1 }
+      .section.is-leaving .card{ transform:translateY(-22px); opacity:.28 }
+    }
+
     .hide{ display:none !important }
   </style>
 </head>
@@ -450,7 +482,7 @@
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>Conecta Clube</h2>
+            <h2 data-text="Conecta Clube">Conecta Clube</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-conecta" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -479,13 +511,15 @@
     <!-- CCS PLAY + CCS TV -->
     <section class="section" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
       <div class="card">
-        <div class="media"><div class="frame" style="gap:10px; display:grid; grid-template-columns:1fr 1fr; max-width:880px">
-          <img alt="CCS Play" style="width:100%;height:auto;object-fit:contain;background:#0f1420;border-radius:12px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
-          <img alt="CCS TV"   style="width:100%;height:auto;object-fit:contain;background:#0f1420;border-radius:12px;border:1px solid var(--line)" src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
+        <div class="media"><div class="frame">
+          <div class="frame-grid-2">
+            <img alt="CCS Play" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
+            <img alt="CCS TV"   src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
+          </div>
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>CCS PLAY + CCS TV</h2>
+            <h2 data-text="CCS PLAY + CCS TV">CCS PLAY + CCS TV</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-ccsplay" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -520,7 +554,7 @@
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>Skeelo</h2>
+            <h2 data-text="Skeelo">Skeelo</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-skeelo" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -555,7 +589,7 @@
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>Suporte Premium</h2>
+            <h2 data-text="Suporte Premium">Suporte Premium</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-suporte" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -591,7 +625,7 @@
         </div></div>
         <div class="content">
           <div class="title">
-            <h2>Indique &amp; Ganhe</h2>
+            <h2 data-text="Indique &amp; Ganhe">Indique &amp; Ganhe</h2>
             <button class="chip-more" type="button" aria-expanded="false" aria-controls="more-indique" title="Saiba mais">
               <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h2v5h-2z"/></svg>
               <span class="txt">Saiba mais</span>
@@ -625,7 +659,7 @@
           <img class="art-img" alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
-          <div class="title"><h2>Portal do Assinante</h2><span aria-hidden="true"></span></div>
+          <div class="title"><h2 data-text="Portal do Assinante">Portal do Assinante</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Tenha o controle da sua assinatura onde você estiver.</p>
           <div class="actions one">
             <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.7az.com.br/">Acessar Portal</a>
@@ -641,7 +675,7 @@
           <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
-          <div class="title"><h2>Portal de Faturas</h2><span aria-hidden="true"></span></div>
+          <div class="title"><h2 data-text="Portal de Faturas">Portal de Faturas</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Acesso rápido, sem login.</p>
           <div class="actions one">
             <a class="btn cta" target="_blank" rel="noopener" href="https://ccs.pix.7az.com.br/">Acessar Portal de Faturas</a>
@@ -657,7 +691,7 @@
           <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
         </div></div>
         <div class="content">
-          <div class="title"><h2>VCTECH</h2><span aria-hidden="true"></span></div>
+          <div class="title"><h2 data-text="VCTECH">VCTECH</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Representante Comercial CCS Telecom.</p>
           <div class="actions one">
             <a class="btn cta" target="_blank" rel="noopener" href="https://wa.me/554797701300?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20VCTECH.">Falar com VCTECH</a>
@@ -686,7 +720,7 @@
     <!-- FAQ -->
     <section class="section" id="s-faq" data-title="FAQ">
       <div class="card"><div class="content">
-        <div class="title"><h2>Perguntas frequentes</h2><span aria-hidden="true"></span></div>
+        <div class="title"><h2 data-text="Perguntas frequentes">Perguntas frequentes</h2><span aria-hidden="true"></span></div>
         <div class="faq-grid">
           <details class="faq-card"><summary>Quando meus benefícios são ativados após a instalação?</summary><div>Em até 72 horas úteis, após validações internas do cadastro e da instalação.</div></details>
           <details class="faq-card"><summary>Como acesso o CCS PLAY e o CCS TV?</summary><div>Baixe em <a class="inline-link" href="https://onelink.to/ccsplay" target="_blank" rel="noopener">onelink.to/ccsplay</a> e faça login com seu e‑mail e CPF (somente números) como senha inicial.</div></details>
@@ -792,6 +826,7 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
+    /* Seletores principais */
     const topbar=document.getElementById('topbar');
     const statusBar=document.getElementById('statusBar');
     const statusWrap=document.getElementById('statusWrap');
@@ -807,7 +842,7 @@
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
 
-    /* Conteúdos por nível */
+    /* Conteúdos */
     const CONNECTA={
       1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
       2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
@@ -830,6 +865,9 @@
       const hStatus=statusBar.offsetHeight||44;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
+      /* Pager height para desktop: viewport - top - status - margem */
+      const snapH=Math.max(520,(window.innerHeight||800) - hTop - hStatus - 10);
+      document.documentElement.style.setProperty('--snap-h', snapH+'px');
     }
     function root(){ return document.scrollingElement||document.documentElement; }
     function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
@@ -842,13 +880,13 @@
       document.querySelector('.capsule').style.maxWidth = available + 'px';
     }
     function setCapsuleTop(level){
-      document.getElementById('capLeft').textContent=`Benefícios Nível ${level}`;
-      document.getElementById('capRight').textContent=`Plano ${PLANS[level]}`;
+      capLeft.textContent=`Benefícios Nível ${level}`;
+      capRight.textContent=`Plano ${PLANS[level]}`;
       fitCapsule();
     }
     function setCapsuleSection(level, name){
-      document.getElementById('capLeft').textContent=`Nível ${level}`;
-      document.getElementById('capRight').textContent=name||'';
+      capLeft.textContent=`Nível ${level}`;
+      capRight.textContent=name||'';
       fitCapsule();
     }
 
@@ -875,6 +913,7 @@
       });
     }
 
+    /* Atualização por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -929,7 +968,7 @@
       if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
     }
 
-    /* Alternância Nível X ↔ Plano Y */
+    /* Alternância “Nível X” ↔ Plano Y” */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -1002,7 +1041,7 @@
       }
     });
 
-    /* Cápsula dinâmica + títulos com cor mágica */
+    /* Cápsula + título reativo e Pager Mode classes */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1019,6 +1058,7 @@
 
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
+
       const io=new IntersectionObserver(()=>{
         const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
@@ -1036,12 +1076,18 @@
 
         if(maxVis){
           currentSectionTitle = maxVis.title || currentSectionTitle;
-          if(lastCur && lastCur!==maxVis.el) lastCur.classList.remove('is-current');
+
+          if(lastCur && lastCur!==maxVis.el){
+            lastCur.classList.remove('is-current');
+            lastCur.classList.add('is-leaving');
+            setTimeout(()=> lastCur && lastCur.classList.remove('is-leaving'), 450);
+          }
           maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
+
           const level=+localStorage.getItem(LEVELS_KEY)||1;
           if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
         }
-      },{threshold:[0,0.25,0.5,0.75]});
+      },{threshold:[0,0.25,0.5,0.75,1]});
       sections.forEach(s=> io.observe(s));
     })();
 
@@ -1068,7 +1114,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial (bottom sheet robusto + auditor) */
+    /* Tutorial */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
@@ -1109,6 +1155,11 @@
       try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
     function isSmall(){ return matchMedia('(max-width: 520px)').matches; }
+    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
+
+    function dockTargetEl(){
+      return document.querySelector('.side-dock .dock-items') || document.getElementById('sideDock') || document.getElementById('dockToggle');
+    }
 
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
@@ -1124,7 +1175,7 @@
         if(onbStep===1) return document.getElementById('levelDockWrap');
         if(onbStep===2){
           if(isMobile()) openDock();
-          return sideDock.classList.contains('is-open') ? document.getElementById('sideDock') : document.getElementById('dockToggle');
+          return dockTargetEl();
         }
         return document.querySelector('.capsule');
       }
@@ -1136,17 +1187,29 @@
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
 
+        const {w:vw,h:vh}=vp();
         if(isSmall()){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
           onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
         }else{
-          const r=tgt.getBoundingClientRect(); const {w:vw,h:vh}=vp();
-          const padC=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
-          let top=r.top-(ch+padC); if(top<60) top=r.bottom+padC; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
-          let left=clamp(r.left, 16, vw - cw - 16);
-          onbCard.style.bottom='auto'; onbCard.style.transform='none';
-          onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
+          if(onbStep===2 && isDesktop()){
+            // Ancorar ao lado direito, próximo ao menu
+            const r=(dockTargetEl() || tgt).getBoundingClientRect();
+            const ch=onbCard.offsetHeight;
+            const top=clamp(r.top + r.height/2 - ch/2, 16, vh - ch - 16);
+            onbCard.style.right='16px'; onbCard.style.left='auto';
+            onbCard.style.top=top+'px'; onbCard.style.bottom='auto'; onbCard.style.transform='none';
+          }else{
+            const r=tgt.getBoundingClientRect();
+            const ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
+            let top=r.top-(ch+12); if(top<60) top=r.bottom+12; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
+            let left=clamp(r.left, 16, vw - cw - 16);
+            onbCard.style.bottom='auto'; onbCard.style.right='auto'; onbCard.style.transform='none';
+            onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
+          }
+
+          // Auditoria: se sair da tela, vira bottom-sheet
           const b=onbCard.getBoundingClientRect(); const margin=8;
           if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
             onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1165,12 +1228,11 @@
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
     }
 
+    /* Init */
     function init(){
       setHeights();
       const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
       setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
-
-      document.querySelectorAll('.title h2').forEach(h=> h.setAttribute('data-text', h.textContent.trim()));
 
       computeFlipWidths(); startFlip();
 
