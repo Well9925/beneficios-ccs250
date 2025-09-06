@@ -144,9 +144,33 @@
       transition: text-shadow 450ms ease;
     }
     @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
-    .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px color-mix(in oklab, var(--levelB), transparent 45%), 0 0 16px color-mix(in oklab, var(--planA), transparent 55%) }
 
-    /* Pílula anexa — versão “badge”, menor e colada à cápsula */
+    /* Mini‑ícone contextual no lugar da bolinha */
+    .cap-icon{
+      position:relative; display:inline-grid; place-items:center;
+      width: clamp(16px, 1.8vw, 18px); height: clamp(16px, 1.8vw, 18px);
+      border-radius:50%; overflow:hidden;
+      background: radial-gradient(60% 60% at 30% 30%, var(--levelB), var(--levelA));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 0 10px color-mix(in oklab, var(--levelB), transparent 55%), 0 0 12px color-mix(in oklab, var(--planA), transparent 65%);
+      isolation:isolate;
+    }
+    .cap-icon::after{
+      content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
+      background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; opacity:.45;
+    }
+    #capIcon{
+      width:100%; height:100%; object-fit:contain; display:block;
+      opacity:0; transform:scale(.98);
+      transition: opacity 180ms ease, transform 180ms ease;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,.35));
+      pointer-events:none;
+    }
+    #capIcon.on{ opacity:1; transform:scale(1) }
+
+    /* Pílula anexa — versão “badge” */
     .cap-cta{
       position:absolute; left:50%; top:calc(100% - 6px); transform:translateX(-50%);
       display:inline-flex; align-items:center; gap:6px; border-radius:999px;
@@ -508,7 +532,10 @@
             <div class="track" id="capTrack">
               <span class="captext">
                 <span id="capLeft">Benefícios Nível 1</span>
-                <span class="dot-mid" aria-hidden="true"></span>
+                <!-- Mini‑ícone contextual no lugar da bolinha -->
+                <span class="cap-icon" aria-hidden="true">
+                  <img id="capIcon" alt="" decoding="async">
+                </span>
                 <span id="capRight">Plano 250 MB</span>
               </span>
             </div>
@@ -886,6 +913,20 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
+    const ICONS_BY_SECTION={
+      's-conecta':'https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/ICONCONCTACLUBE.png',
+      's-ccsplay':'https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w96-h96',
+      's-skeelo':'https://skeelo.com/img/logos/skeelo/icon.svg',
+      's-suporte':'https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/sospremium.png',
+      's-indique':'https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png',
+      's-portal':'img/APP.png',
+      's-faturas':'https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=128',
+      's-vctech':'https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png'
+      // s-resumo, s-faq → fallback (bolinha neutra)
+    };
+    // Preload para evitar flicker
+    Object.values(ICONS_BY_SECTION).forEach(src=>{ const i=new Image(); i.decoding='async'; i.src=src; });
+
     const topbar=document.getElementById('topbar');
     const capCta=document.getElementById('capCta');
     const ctaSign=document.getElementById('ctaSign');
@@ -894,6 +935,7 @@
 
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
+    const capIconImg=document.getElementById('capIcon');
 
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
@@ -925,12 +967,26 @@
     function setCapsuleTop(level){
       capLeft.textContent=`Benefícios Nível ${level}`;
       capRight.textContent=`Plano ${PLANS[level]}`;
+      setCapIcon(null); // bolinha neutra no topo
       fitCapsule();
     }
     function setCapsuleSection(level, name){
       capLeft.textContent=`Nível ${level}`;
       capRight.textContent=name||'';
       fitCapsule();
+    }
+    function setCapIcon(url){
+      if(!capIconImg) return;
+      if(url){
+        if(capIconImg.src !== url) capIconImg.src = url;
+        capIconImg.classList.add('on');
+      }else{
+        capIconImg.classList.remove('on');
+      }
+    }
+    function setCapIconBySectionId(id){
+      const url = ICONS_BY_SECTION[id];
+      setCapIcon(url || null);
     }
 
     /* Tema por nível */
@@ -966,6 +1022,8 @@
           const title=best.sec.getAttribute('data-title')||'';
           const level=+localStorage.getItem(LEVELS_KEY)||1;
           setCapsuleSection(level, title);
+          // Se não estamos no topo, mostrar ícone contextual
+          setCapIconBySectionId(best.sec.id);
         }
       }
       let raf=false;
@@ -1095,7 +1153,7 @@
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy (marcação de seção e animações de título) */
+    /* Scrollspy (seção atual + ícone contextual) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1104,7 +1162,13 @@
       const ioTop=new IntersectionObserver(entries=>{
         topAtSight=entries[0].isIntersecting;
         const level=+localStorage.getItem(LEVELS_KEY)||1;
-        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        if(topAtSight){
+          setCapsuleTop(level);
+          setCapIcon(null); // bolinha neutra quando no topo
+        }else{
+          setCapsuleSection(level, currentSectionTitle);
+          // Ícone contextual será ajustado pelo io de seções logo abaixo
+        }
       },{threshold:[0,0.01,1]});
       ioTop.observe(sentinel);
 
@@ -1131,7 +1195,13 @@
           if(lastCur && lastCur!==maxVis.el) lastCur.classList.remove('is-current');
           maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
           const level=+localStorage.getItem(LEVELS_KEY)||1;
-          if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+          if(topAtSight){
+            setCapsuleTop(level);
+            setCapIcon(null);
+          }else{
+            setCapsuleSection(level, currentSectionTitle);
+            setCapIconBySectionId(maxVis.el.id);
+          }
         }
       },{threshold:[0,0.25,0.5,0.75]});
       sections.forEach(s=> io.observe(s));
@@ -1142,7 +1212,7 @@
     document.addEventListener('click', ev=>{
       const btn=ev.target.closest('.chip-more'); if(!btn) return;
       const id=btn.getAttribute('aria-controls'); const panel=id&&document.getElementById(id);
-      const txt=btn.querySelector('.txt'); if(!panel) return;
+      const txt=btn.querySelector(' .txt'); if(!panel) return;
       const expanded=btn.getAttribute('aria-expanded')==='true';
       if(expanded){
         const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
@@ -1172,7 +1242,6 @@
         b.classList.remove('on'); a.classList.add('on');
       });
     }
-    let flipTimer=null, showPlan=false, flipPaused=false;
     function ensureOneVisible(flip){
       const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
       if(!a.classList.contains('on') && !b.classList.contains('on')) a.classList.add('on');
@@ -1188,6 +1257,7 @@
     }
     function pauseFlip(){ flipPaused=true }
     function resumeFlip(){ flipPaused=false }
+    let flipTimer=null, showPlan=false, flipPaused=false;
     lvlBtns.forEach(btn=>{
       btn.addEventListener('mouseenter', pauseFlip);
       btn.addEventListener('mouseleave', resumeFlip);
@@ -1223,8 +1293,14 @@
       document.getElementById('cc-email-link').href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
 
       const currentTitle = document.querySelector('.section.is-current')?.getAttribute('data-title') || '';
-      if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L);
-      else setCapsuleSection(L, currentTitle);
+      if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0){
+        setCapsuleTop(L);
+      }else{
+        setCapsuleSection(L, currentTitle);
+        // atualiza ícone contextual conforme a seção atual
+        const curSec = document.querySelector('.section.is-current');
+        if(curSec) setCapIconBySectionId(curSec.id);
+      }
 
       if(remember) localStorage.setItem(LEVELS_KEY,String(L));
       requestAnimationFrame(()=> highlightChanges(prev));
@@ -1331,7 +1407,7 @@
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
-        const {w:vw,h:vh}=vp();
+        const vw=vp().w, vh=vp().h;
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
@@ -1380,6 +1456,7 @@
       updateAll(startLevel);
       setLevelDock(startLevel);
       setCapsuleTop(startLevel);
+      setCapIcon(null);
 
       computeFlipWidths();
       if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
