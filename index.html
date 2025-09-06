@@ -18,7 +18,7 @@
       --muted:#cfe0ff;
       --cta-a:#ff8a25; --cta-b:#ffb04a;
 
-      /* Paleta padrão (Nível 1). Os temas abaixo sobrescrevem isso no body */
+      /* Tema base (Nível 1) */
       --levelA:#2f6bff; --levelB:#00d9ff;
       --planA:#00ffc6;  --planB:#a3ffed;
 
@@ -27,41 +27,33 @@
 
       /* Alturas/limites para o bloco de mídia */
       --media-h-m: clamp(180px, 34vh, 280px);      /* mobile */
-      --media-h-max-d: clamp(260px, 40vh, 460px);  /* desktop: teto visual seguro */
+      --media-h-max-d: clamp(260px, 40vh, 460px);  /* desktop */
 
       --h-topbar: 60px;
-      --h-status: 44px;
+      --h-status: 0px;  /* usado p/ altura da pílula anexa */
       --h-levelbar: 72px;
 
-      /* Entrada orquestrada (dura aprox. 2,6s) */
-      --enter-shift: 16px;
-      --enter-dur: 700ms;
-      --enter-dur-fast: 520ms;
-      --stagger: 90ms;
-
-      /* FX — variáveis de atmosfera por nível */
-      --fx-hue: 0deg;
-      --fx-sat: 1;
-      --fx-bri: 1;
-      --fx-opa-1: .9;
-      --fx-opa-2: .7;
+      /* Entrada orquestrada (curta, topo + níveis, sem atrasar cards) */
+      --enter-shift: 14px;
+      --enter-dur: 420ms;
+      --enter-dur-fast: 320ms;
     }
 
-    /* Temas por nível (apenas variáveis; estrutura intacta) */
+    /* Temas por nível (Neon Premium) */
     body.theme-l1{
       --levelA:#2f6bff; --levelB:#00d9ff;
       --planA:#00ffc6;  --planB:#a3ffed;
       --fx-hue: 0deg; --fx-sat:1.05; --fx-bri:1.0;
     }
     body.theme-l2{
-      --levelA:#7b5cff; --levelB:#ae47ff;
-      --planA:#ff4dd8;  --planB:#ff9ce7;
+      --levelA:#7b5cff; --levelB:#c55bff;  /* roxo/fúcsia moderno */
+      --planA:#ff52c9;  --planB:#ff9ce7;
       --fx-hue: 25deg; --fx-sat:1.08; --fx-bri:1.02;
     }
     body.theme-l3{
-      --levelA:#00d9ff; --levelB:#00ffc6;
-      --planA:#88ff4d;  --planB:#e8ff6b;
-      --fx-hue: -12deg; --fx-sat:1.08; --fx-bri:1.03;
+      --levelA:#ffb648; --levelB:#ffd86b;  /* ouro vivo */
+      --planA:#00e2c2;  --planB:#7afff2;   /* glints frios modernos */
+      --fx-hue: -8deg; --fx-sat:1.08; --fx-bri:1.04;
     }
 
     *{box-sizing:border-box}
@@ -75,7 +67,7 @@
       padding-bottom:calc(var(--h-levelbar) + 32px + env(safe-area-inset-bottom));
     }
 
-    /* FX (fundo mais animado e visível + atmosfera por nível) */
+    /* FX fundo + atmosfera */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
@@ -85,19 +77,19 @@
     .fx.fx-shimmer,
     .fx.fx-shimmer2{
       filter: hue-rotate(var(--fx-hue)) saturate(var(--fx-sat)) brightness(var(--fx-bri));
-      transition: filter 500ms ease, opacity 500ms ease;
+      transition: filter 450ms ease, opacity 450ms ease;
     }
     .fx.fx-shimmer{ z-index:-4; mix-blend-mode:screen;
       background: linear-gradient(22deg,transparent 35%, rgba(80,190,255,.22) 50%, transparent 65%);
       background-size:260% 260%;
       animation:shimmer 9s ease-in-out infinite alternate;
-      opacity:var(--fx-opa-1);
+      opacity:.9;
     }
     .fx.fx-shimmer2{ z-index:-5; mix-blend-mode:screen;
       background: linear-gradient(-18deg,transparent 40%, color-mix(in oklab, var(--planA), transparent 78%) 50%, transparent 60%);
       background-size:240% 240%;
       animation:shimmer2 12s ease-in-out infinite alternate;
-      opacity:var(--fx-opa-2);
+      opacity:.7;
     }
     .fx.fx-noise{ z-index:-3; opacity:.06; mix-blend-mode:soft-light;
       background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
@@ -107,10 +99,8 @@
     @keyframes shimmer{ from{background-position:0% 0%} to{background-position:100% 100%} }
     @keyframes shimmer2{ from{background-position:100% 100%} to{background-position:0% 0%} }
     @keyframes noiseMove{ from{ background-position:0 0 } to{ background-position:200px 200px } }
-
-    /* Boost rápido quando troca de tema (sem flash) */
-    body.theme-morph .fx.fx-shimmer{ animation-duration:6.2s; opacity:calc(var(--fx-opa-1) + .12) }
-    body.theme-morph .fx.fx-shimmer2{ animation-duration:8.6s; opacity:calc(var(--fx-opa-2) + .10) }
+    body.theme-morph .fx.fx-shimmer{ animation-duration:6.2s; opacity:1 }
+    body.theme-morph .fx.fx-shimmer2{ animation-duration:8.6s; opacity:.9 }
 
     /* Topbar */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
@@ -121,7 +111,7 @@
       background:rgba(16,18,24,.55); border-bottom:1px solid var(--line);
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    .topbar .wrap{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px; padding:8px var(--side-pad); max-width:var(--content-w); margin:0 auto }
+    .topbar .wrap{ position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px; padding:8px var(--side-pad); max-width:var(--content-w); margin:0 auto }
     .logo-ccs,.logo-vctech{ width: clamp(44px, 6.6vw, 72px); height: clamp(44px, 6.6vw, 72px); object-fit:contain; display:block }
     .titlebar{ display:flex; justify-content:center; align-items:center; min-width:0 }
 
@@ -156,22 +146,37 @@
     @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
     .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px color-mix(in oklab, var(--levelB), transparent 45%), 0 0 16px color-mix(in oklab, var(--planA), transparent 55%) }
 
-    /* Status bar */
-    .status-bar{ position:fixed; left:0; right:0; z-index:69; top:calc(var(--h-topbar) + env(safe-area-inset-top)); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px) }
-    .status-wrap{ display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; font-size:13px; line-height:1; white-space:nowrap; max-width:var(--content-w); margin:0 auto; padding:8px var(--side-pad) }
-    .status-cta{
-      position:relative; border:1px solid var(--line); border-radius:12px; padding:10px 16px; font-weight:900;
-      background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); color:#111; text-decoration:none;
+    /* Pílula anexa (substitui a barra) */
+    .cap-cta{
+      position:absolute; left:50%; top:calc(100% + 8px); transform:translateX(-50%);
+      display:inline-flex; align-items:stretch; gap:0; border-radius:999px; padding:2px;
+      background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.28);
       overflow:hidden;
+      z-index:1;
     }
-    .status-cta::before{
-      content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
+    .cap-cta::before{
+      content:""; position:absolute; inset:0; padding:1px; border-radius:inherit; pointer-events:none;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
-      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude;
-      background-size:300% 300%; animation:ringShift 8s ease-in-out infinite alternate; opacity:.9; pointer-events:none;
+      background-size:300% 300%; animation:ringShift 10s ease-in-out infinite alternate;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; opacity:.9;
       transition: background 450ms ease;
     }
-    .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
+    .cap-cta-inner{ position:relative; display:inline-flex; gap:0; border-radius:inherit; overflow:hidden }
+    .cap-cta a{
+      position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:8px 14px; font-weight:900; font-size:13px; text-decoration:none; white-space:nowrap;
+      border-radius:999px;
+    }
+    .cap-cta a .ico{ width:16px; height:16px }
+    .cta-sign{ background:linear-gradient(90deg,var(--levelA),var(--levelB)); color:#0b0d12; }
+    .cta-expert{ background:rgba(255,255,255,.08); color:#fff; border-left:1px solid rgba(255,255,255,.12) }
+    @media (max-width:560px){
+      .cap-cta{ max-width:92vw }
+      .cap-cta a{ padding:8px 12px; font-size:12px }
+    }
 
     /* Main layout */
     main{ padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0 }
@@ -188,7 +193,7 @@
 
     @media (min-width:1024px){ .card.stage{ display:block } }
 
-    /* Bloco de mídia (desktop sem corte) */
+    /* Mídia (sem corte no desktop) */
     .media{ padding:10px 14px 0; overflow:visible }
     .frame{
       width:100%;
@@ -210,7 +215,7 @@
       .frame > img, .frame > video{ max-height: var(--media-h-max-d) }
     }
 
-    /* Duas imagens (CCS PLAY + CCS TV) */
+    /* Duas imagens */
     .frame-grid-2{
       width:100%;
       display:grid;
@@ -218,9 +223,7 @@
       gap: clamp(10px, 2vw, 16px);
       align-items:center; justify-items:center;
     }
-    .frame-grid-2 img{
-      display:block; width:100%; height:auto; object-fit:contain;
-    }
+    .frame-grid-2 img{ display:block; width:100%; height:auto; object-fit:contain }
     @media (min-width:1024px){ .frame-grid-2 img{ max-height: var(--media-h-max-d) } }
 
     .content{ padding:16px 16px 18px; position:relative; z-index:1 }
@@ -262,21 +265,6 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques pílulas */
-    .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
-    @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
-    .pill-flag.changed::before{
-      content:""; position:absolute; inset:0 -30%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.45) 12%, transparent 26%);
-      transform:translateX(-120%); animation: sweep 360ms ease-out forwards 60ms; mix-blend-mode:screen
-    }
-    @keyframes sweep{ to{ transform:translateX(120%) } }
-    .pill-flag.included-new::after{
-      content:""; position:absolute; inset:-6px; pointer-events:none;
-      background:radial-gradient(2px 2px at 72% 22%, #fff, transparent 55%), radial-gradient(2px 2px at 28% 78%, #fff, transparent 55%);
-      animation: spark 380ms ease-out forwards; filter: drop-shadow(0 0 4px rgba(255,255,255,.5));
-    }
-    @keyframes spark{ 0%{ opacity:1; transform:scale(.85) } 100%{ opacity:0; transform:scale(1.12) } }
-
     /* Ações */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
     .btn{
@@ -285,14 +273,13 @@
     }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
     .btn.ghost{ background:rgba(255,255,255,.10); color:#fff }
-
     @media (max-width:700px){
       .actions{ display:grid; gap:10px; grid-template-columns: 1fr 1fr }
       .actions.one{ grid-template-columns:1fr }
       .btn{ width:100% }
     }
 
-    /* "Saiba mais" com efeito pulsante */
+    /* "Saiba mais" pulsante */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer;
@@ -380,7 +367,7 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 color-mix(in oklab, var(--levelB), transparent 40%),0 0 0 0 color-mix(in oklab, var(--planA), transparent 38%) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ Plano Y — impedir quebra de linha */
+    /* Alternância “Nível/Plano” */
     .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em; white-space:nowrap }
     .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease; white-space:nowrap }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
@@ -393,7 +380,7 @@
     }
     .fab svg{ width:22px; height:22px }
 
-    /* Resumo */
+    /* Resumo/FAQ/rodapé (inalterados) */
     .summary{ max-width:var(--content-w); margin:0 auto; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 18px 50px rgba(0,0,0,.35); padding:16px }
     .gtitle{ margin:0 0 12px; font-size: clamp(18px, 2.2vw, 24px) }
     .summary .grid{ display:grid; gap:12px; grid-template-columns:1fr 1fr }
@@ -402,34 +389,6 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Indique & Ganhe */
-    #s-indique .card{
-      background:
-        radial-gradient(120% 100% at 10% 0%, color-mix(in oklab, var(--levelA), transparent 88%), transparent 60%),
-        radial-gradient(120% 100% at 90% 100%, color-mix(in oklab, var(--levelB), transparent 88%), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 24px 60px rgba(0,0,0,.45);
-      transition: background 450ms ease, box-shadow 450ms ease;
-    }
-
-    #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
-    #indique-actions .btn{
-      position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
-      box-shadow:0 10px 30px rgba(255,173,56,.25);
-      animation:pulseGlow 2.8s ease-in-out infinite;
-    }
-    #indique-actions .btn:nth-child(3){ grid-column:1 / -1 }
-    #indique-actions .btn::after{
-      content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%); transform:translateX(-120%); transition:transform .6s ease; mix-blend-mode:screen
-    }
-    #indique-actions .btn:hover::after{ transform:translateX(120%) }
-    @keyframes pulseGlow{
-      0%,100%{ box-shadow:0 10px 30px rgba(255,173,56,.25), 0 0 0 0 rgba(0,217,255,0) }
-      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px color-mix(in oklab, var(--levelA), transparent 88%) }
-    }
-
-    /* FAQ */
     .faq-grid{ display:grid; gap:10px; grid-template-columns:1fr; }
     @media (min-width:1280px){ .faq-grid{ grid-template-columns:1fr 1fr } }
     .faq-card{ border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.06); padding:12px; cursor:pointer }
@@ -443,7 +402,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash */
+    /* Splash/Onboarding (mesmos efeitos de antes) */
     .splash{ position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background: radial-gradient(900px 600px at 10% 10%, color-mix(in oklab, var(--levelB), transparent 86%), transparent 60%), radial-gradient(900px 600px at 90% 90%, color-mix(in oklab, var(--planA), transparent 86%), transparent 60%), rgba(9,12,18,.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align:center; }
@@ -459,7 +418,6 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -475,7 +433,7 @@
       .onb .row .btn{ width:auto }
     }
 
-    /* Modo lateral (deck) */
+    /* Deck (opcional) */
     @media (min-width:1024px){
       body.mode-deck main{
         display:grid;
@@ -497,17 +455,15 @@
       body.mode-deck .card.stage{ width:100% }
     }
 
-    /* ENTRADA ORQUESTRADA — estados iniciais por etapa */
-    /* Etapa 1: topo (cápsula/status) */
+    /* ENTRADA ORQUESTRADA — somente topo e níveis (cards sempre visíveis) */
     body.enter-seq .topbar .capsule,
-    body.enter-seq .status-bar{
+    body.enter-seq .cap-cta{
       opacity:0; transform:translateY(calc(var(--enter-shift) * -1));
       transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
     }
     body.enter-seq.step-1 .topbar .capsule,
-    body.enter-seq.step-1 .status-bar{ opacity:1; transform:none }
+    body.enter-seq.step-1 .cap-cta{ opacity:1; transform:none }
 
-    /* Etapa 2: níveis e menu lateral */
     body.enter-seq .level-dock{
       opacity:0; transform:translateY(var(--enter-shift));
       transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
@@ -521,36 +477,9 @@
       body.enter-seq.step-2 .side-dock{ opacity:1; transform:none }
     }
 
-    /* Etapa 3: card alvo (mídia, título, subtítulo, pílulas, botões em cascata) */
-    body.enter-seq .enter-target .media,
-    body.enter-seq .enter-target .content .title,
-    body.enter-seq .enter-target .content .subtitle,
-    body.enter-seq .enter-target .content .pills-grid,
-    body.enter-seq .enter-target .content .actions{
-      opacity:0; transform:translateY(calc(var(--enter-shift) * .6));
-      transition: opacity var(--enter-dur-fast) ease, transform var(--enter-dur-fast) cubic-bezier(.2,.8,.2,1);
-      will-change: opacity, transform;
-    }
-    body.enter-seq.step-3 .enter-target .media{ opacity:1; transform:none; transition-delay:0ms }
-    body.enter-seq.step-3 .enter-target .content .title{ opacity:1; transform:none; transition-delay:120ms }
-    body.enter-seq.step-3 .enter-target .content .subtitle{ opacity:1; transform:none; transition-delay:200ms }
-    body.enter-seq.step-3 .enter-target .content .pills-grid{ opacity:1; transform:none; transition-delay:280ms }
-    body.enter-seq.step-3 .enter-target .content .actions{ opacity:1; transform:none; transition-delay:360ms }
-
-    /* Stagger para itens dentro de pílulas e ações */
-    body.enter-seq .enter-target .pills-grid > *,
-    body.enter-seq .enter-target .actions > *{
-      opacity:0; transform:translateY(10px);
-      transition: opacity var(--enter-dur-fast) ease, transform var(--enter-dur-fast) ease;
-    }
-    body.enter-seq.step-3 .enter-target .pills-grid > *,
-    body.enter-seq.step-3 .enter-target .actions > *{
-      opacity:1; transform:none;
-    }
-
     /* Redução de movimento */
     @media (prefers-reduced-motion: reduce){
-      :root{ --enter-shift: 0px; --enter-dur: 260ms; --enter-dur-fast: 200ms; --stagger: 0ms }
+      :root{ --enter-shift: 0px; --enter-dur: 200ms; --enter-dur-fast: 160ms }
       .fx.fx-shimmer, .fx.fx-shimmer2, .fx.fx-noise{ animation-duration:0.01s }
     }
 
@@ -583,13 +512,21 @@
         </div>
       </div>
       <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
+      <!-- Pílula anexa (split) -->
+      <div class="cap-cta" id="capCta">
+        <div class="cap-cta-inner">
+          <a id="ctaSign" class="cta-sign" href="#" target="_blank" rel="noopener" aria-label="Assinar agora">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h13"/><path d="M11 5l7 7-7 7"/></svg>
+            <span id="ctaSignText">Assinar Nível 1 agora</span>
+          </a>
+          <a id="ctaExpert" class="cta-expert" href="#" target="_blank" rel="noopener" aria-label="Falar com um especialista">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92V21a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72l.45 3a2 2 0 0 1-.57 1.73L9.91 11a16 16 0 0 0 6.16 6.16l1.55-1.06a2 2 0 0 1 1.73-.57l3 .45A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Especialista</span>
+          </a>
+        </div>
+      </div>
     </div>
   </header>
-
-  <!-- Barra comercial -->
-  <div class="status-bar" id="statusBar" role="region" aria-live="polite">
-    <div class="status-wrap" id="statusWrap"></div>
-  </div>
 
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
 
@@ -855,7 +792,7 @@
           <details class="faq-card"><summary>Tenho isenção de taxa em caso de ausência ou visita improdutiva?</summary><div>Nível 1: não • Nível 2: 1 isenção por ausência • Nível 3: isenções por ausência, visita improdutiva e mudança de endereço.</div></details>
           <details class="faq-card"><summary>Como acesso minhas faturas/PIX sem login?</summary><div>Entre em <a class="inline-link" href="https://ccs.pix.7az.com.br/" target="_blank" rel="noopener">ccs.pix.7az.com.br</a> e informe seu CPF.</div></details>
           <details class="faq-card"><summary>Como acesso o Portal do Assinante?</summary><div>Acesse <a class="inline-link" href="https://ccs.7az.com.br/" target="_blank" rel="noopener">ccs.7az.com.br</a> para gerenciar sua assinatura.</div></details>
-          <details class="faq-card"><summary>Como assino ou faço upgrade de nível?</summary><div>Use o botão “Assinar Nível X agora” na barra superior ou fale com um especialista via link ao lado.</div></details>
+          <details class="faq-card"><summary>Como assino ou faço upgrade de nível?</summary><div>Use o botão “Assinar Nível X agora” na pílula do topo ou fale com um especialista.</div></details>
           <details class="faq-card"><summary>Posso rever o tutorial?</summary><div>Sim. Clique em “Ver tutorial novamente” no rodapé.</div></details>
         </div>
       </div></div>
@@ -948,8 +885,10 @@
     };
 
     const topbar=document.getElementById('topbar');
-    const statusBar=document.getElementById('statusBar');
-    const statusWrap=document.getElementById('statusWrap');
+    const capCta=document.getElementById('capCta');
+    const ctaSign=document.getElementById('ctaSign');
+    const ctaSignText=document.getElementById('ctaSignText');
+    const ctaExpert=document.getElementById('ctaExpert');
 
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
@@ -962,7 +901,6 @@
     const fab=document.getElementById('fab');
     const main=document.getElementById('content');
 
-    function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function root(){ return document.scrollingElement||document.documentElement; }
     function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
@@ -970,9 +908,9 @@
 
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
-      const hStatus=statusBar.offsetHeight||44;
+      const hCta=capCta?.offsetHeight||0;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
-      document.documentElement.style.setProperty('--h-status',hStatus+'px');
+      document.documentElement.style.setProperty('--h-status',hCta+'px');
     }
     function fitCapsule(){
       const wrapTop=document.querySelector('.topbar .wrap');
@@ -1003,7 +941,7 @@
       }
     }
 
-    /* Modo lateral (deck) — ativa com ?mode=deck */
+    /* Deck opcional */
     function enableDeckIfRequested(){
       const qp = new URLSearchParams(location.search);
       const on = qp.get('mode') === 'deck';
@@ -1102,7 +1040,7 @@
       3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
     };
 
-    /* Elementos variáveis por nível */
+    /* Variáveis por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -1145,15 +1083,17 @@
     }
     function updateAll(level){ renderConecta(level); renderPlay(level); renderSkeelo(level); renderSup(level); }
 
-    function setStatusBar(level){
-      statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
+    function setCapCta(level){
+      ctaSign.href = SIGN_WHATS[level];
+      ctaExpert.href = CONTACT_WHATS;
+      ctaSignText.textContent = `Assinar Nível ${level} agora`;
       setHeights();
     }
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy vertical (marca seção atual e anima barra do título) */
+    /* Scrollspy (calcula barra sublinhada e cápsula dinâmica) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1171,7 +1111,7 @@
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
       const io=new IntersectionObserver(()=>{
-        const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
+        const hTop=(topbar.offsetHeight||60)+(capCta?.offsetHeight||0)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
         let maxVis=null;
 
@@ -1217,7 +1157,7 @@
       }
     });
 
-    /* Alternância “Nível X” ↔ Plano Y (sem quebra) */
+    /* Flip Nível/Plano (sem quebra) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
@@ -1230,6 +1170,7 @@
         b.classList.remove('on'); a.classList.add('on');
       });
     }
+    let flipTimer=null, showPlan=false, flipPaused=false;
     function ensureOneVisible(flip){
       const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
       if(!a.classList.contains('on') && !b.classList.contains('on')) a.classList.add('on');
@@ -1245,7 +1186,6 @@
     }
     function pauseFlip(){ flipPaused=true }
     function resumeFlip(){ flipPaused=false }
-    let flipTimer=null, showPlan=false, flipPaused=false;
     lvlBtns.forEach(btn=>{
       btn.addEventListener('mouseenter', pauseFlip);
       btn.addEventListener('mouseleave', resumeFlip);
@@ -1255,7 +1195,7 @@
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Dock mobile toggle */
+    /* Dock mobile */
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
@@ -1275,7 +1215,7 @@
 
       setTheme(L,{morph:true});
       setLevelDock(L);
-      setStatusBar(L);
+      setCapCta(L);
       updateAll(L);
 
       document.getElementById('cc-email-link').href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
@@ -1289,28 +1229,11 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* ENTRADA ORQUESTRADA (mais lenta e perceptível) */
-    function setStaggerVars(section){
-      try{
-        section?.querySelectorAll('.pills-grid > *').forEach((el,i)=> el.style.setProperty('--i', i));
-        section?.querySelectorAll('.actions > *').forEach((el,i)=> el.style.setProperty('--i', i));
-        const style=document.createElement('style');
-        style.textContent=`
-          body.enter-seq.step-3 .enter-target .pills-grid > *{ transition-delay: calc(260ms + var(--i) * var(--stagger)) }
-          body.enter-seq.step-3 .enter-target .actions > *{ transition-delay: calc(360ms + var(--i) * var(--stagger)) }
-        `;
-        document.head.appendChild(style);
-        setTimeout(()=> style.remove(), 3000);
-      }catch{}
-    }
-    function getCurrentSection(){
-      return document.querySelector('main .section.is-current') || document.querySelector('main .section');
-    }
+    /* ENTRADA ORQUESTRADA — curta (não esconde cards) */
     let enterRunning=false, enterTimers=[];
     function clearTimers(){ enterTimers.forEach(t=> clearTimeout(t)); enterTimers=[]; }
     function endEntrance(){
-      document.body.classList.remove('enter-seq','step-1','step-2','step-3');
-      const target=document.querySelector('.enter-target'); target?.classList.remove('enter-target');
+      document.body.classList.remove('enter-seq','step-1','step-2');
       clearTimers(); enterRunning=false;
     }
     function skipOnInteraction(){
@@ -1327,33 +1250,24 @@
 
       try{ document.getElementById('top-sentinel').scrollIntoView({block:'start'}); }catch{}
 
-      const target = getCurrentSection();
-      target?.classList.add('enter-target');
-      setStaggerVars(target);
-
       document.body.classList.add('enter-seq');
-      // Etapas mais lentas
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-1'), 100));   // topo
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-2'), 900));   // níveis + menu
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-3'), 1700));  // card
-      enterTimers.push(setTimeout(endEntrance, 2600));
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-1'), 80));   // cápsula + pílula
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-2'), 420));  // níveis + menu
+      enterTimers.push(setTimeout(endEntrance, 1100));
 
-      // Permitir pular por interação
       window.addEventListener('wheel', skipOnInteraction, {passive:true});
       window.addEventListener('keydown', skipOnInteraction);
       window.addEventListener('pointerdown', skipOnInteraction);
       window.addEventListener('scroll', skipOnInteraction, {passive:true});
     }
 
-    /* Onboarding + Splash integração com entrada */
+    /* Onboarding + Splash */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
     const btnReplayTutorial=document.getElementById('btnReplayTutorial');
 
-    // Ao abrir a página mostramos o splash
     splash.classList.add('is-open'); document.body.style.overflow='hidden';
-
     btnStart?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
     btnSkipTutorial?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; runEntranceSequence(); });
     btnReplayTutorial?.addEventListener('click', ()=> showOnboarding(1));
@@ -1375,7 +1289,7 @@
 
     function spotlight(targetEl, pad=6){
       if(!targetEl) return;
-      const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
+      const r=targetEl.getBoundingClientRect(); const vw=vp().w; const vh=vp().h;
       let extraTop=0;
       if (targetEl.id==='levelDockWrap') extraTop=22;
       const x=Math.max(0, Math.min(r.left-pad, vw-1));
@@ -1415,6 +1329,7 @@
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
+
         const {w:vw,h:vh}=vp();
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1460,7 +1375,7 @@
       localStorage.setItem(LEVELS_KEY,String(startLevel));
 
       setTheme(startLevel,{morph:false});
-      setStatusBar(startLevel);
+      setCapCta(startLevel);
       updateAll(startLevel);
       setLevelDock(startLevel);
       setCapsuleTop(startLevel);
