@@ -22,7 +22,7 @@
       --planA:#00d9ff;  --planB:#00ffc6;
 
       --side-pad: clamp(14px, 4.5vw, 36px);
-      --content-w: 1080px;
+      --content-w: 1200px;
 
       --art-max-h-d: clamp(180px, 28vh, 320px);
       --art-max-h-m: clamp(160px, 28vh, 240px);
@@ -31,7 +31,8 @@
       --h-status: 44px;
       --h-levelbar: 72px;
 
-      --snap-h: 720px; /* calculado no JS */
+      /* Altura “padrão” dos cards no desktop (calculada no JS) */
+      --stage-h: 680px;
     }
 
     *{box-sizing:border-box}
@@ -115,14 +116,6 @@
     }
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
-    /* Modo desktop toggle */
-    .desk-mode{
-      display:none; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
-      background:rgba(255,255,255,.10); border:1px solid var(--line); color:#eaf3ff; font-weight:900; cursor:pointer
-    }
-    .desk-mode .dot{ width:10px; height:10px; border-radius:50%; background:#7b5cff; box-shadow:0 0 8px rgba(123,92,255,.6) }
-    @media (min-width:1024px){ .desk-mode{ display:inline-flex } }
-
     /* Main layout */
     main{ padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0 }
     .section{ padding:20px 0 28px }
@@ -130,11 +123,21 @@
       max-width:var(--content-w); margin:0 auto;
       border-radius:18px; border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter:blur(10px); -webkit-backdrop-filter: blur(10px);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter: blur(8px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
       overflow:hidden; contain:content;
-      transition: transform .35s ease, opacity .35s ease;
+      transition: transform .28s ease, opacity .28s ease;
     }
+    /* Cards “de palco” no desktop: mesma altura padrão para simetria */
+    @media (min-width:1024px){
+      .card.stage{
+        min-height: var(--stage-h);
+        display:grid;
+        grid-template-rows: auto 1fr; /* mídia em cima, conteúdo preenche */
+      }
+      .card.stage .media{ align-self:center }
+    }
+
     .media{ padding:10px 14px 0 }
     .frame{ width:100%; display:grid; place-content:center; place-items:center }
     .art-img{ width:100%; max-width:880px; height:auto; display:block; object-fit:contain; max-height:var(--art-max-h-d) }
@@ -143,9 +146,9 @@
     /* DUAS IMAGENS CENTRAIS (CCS PLAY/TV) */
     .frame-grid-2{
       display:grid;
-      grid-template-columns:repeat(2, minmax(220px, 1fr));
+      grid-template-columns:repeat(2, minmax(260px, 1fr));
       gap: clamp(10px, 2vw, 16px);
-      max-width: clamp(680px, 80vw, 960px);
+      max-width: clamp(720px, 80vw, 980px);
       margin: 0 auto;
       place-items:center;
     }
@@ -186,7 +189,7 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques pílulas ao trocar nível */
+    /* Destaques pílulas */
     .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
@@ -221,12 +224,10 @@
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer
     }
     .chip-more .ico{ width:16px; height:16px }
-
     .more[hidden]{ display:none }
     .more{ overflow:hidden; height:0; opacity:0; transition: height .28s ease, opacity .28s ease }
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
-
     .facts{ display:grid; grid-template-columns:1fr; gap:10px }
     @media (min-width:1080px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
@@ -283,7 +284,7 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ Plano Y */
+    /* Alternância “Nível X” ↔ Plano Y” */
     .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
     .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
@@ -346,7 +347,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash: glint lateral (sem giro) */
+    /* Splash: glint lateral (suave) */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -397,8 +398,7 @@
     }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-
-    /* Botões do tutorial: grid responsivo, sem overflow */
+    /* Botões do tutorial */
     .onb .row{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -426,21 +426,6 @@
         grid-template-areas: "skip next start";
       }
       .onb .row .btn{ width:auto }
-    }
-
-    /* DESKTOP: Modo Pager (opcional por classe) */
-    @media (min-width:1024px){
-      body.mode-pager main{ scroll-snap-type: y mandatory }
-      body.mode-pager .section{
-        min-height: var(--snap-h);
-        scroll-snap-align: center;
-        display:grid;
-        place-items:center;
-        padding: 24px var(--side-pad) 36px;
-      }
-      body.mode-pager .card{ transform:translateY(40px); opacity:0 }
-      body.mode-pager .section.is-current .card{ transform:translateY(0); opacity:1 }
-      body.mode-pager .section.is-leaving .card{ transform:translateY(-22px); opacity:.28 }
     }
 
     .hide{ display:none !important }
@@ -476,9 +461,7 @@
 
   <!-- Barra comercial -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
-    <div class="status-wrap" id="statusWrap">
-      <!-- toggle desktop mode é injetado via JS -->
-    </div>
+    <div class="status-wrap" id="statusWrap"></div>
   </div>
 
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
@@ -487,7 +470,7 @@
   <main id="content" aria-live="polite">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async" fetchpriority="high">
         </div></div>
@@ -521,7 +504,7 @@
 
     <!-- CCS PLAY + CCS TV -->
     <section class="section" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <div class="frame-grid-2">
             <img alt="CCS Play" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
@@ -559,7 +542,7 @@
 
     <!-- Skeelo -->
     <section class="section" id="s-skeelo" data-title="Skeelo">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
         </div></div>
@@ -594,7 +577,7 @@
 
     <!-- Suporte Premium -->
     <section class="section" id="s-suporte" data-title="Suporte Premium">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
         </div></div>
@@ -630,7 +613,7 @@
 
     <!-- Indique & Ganhe -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Indique & Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async">
         </div></div>
@@ -665,7 +648,7 @@
 
     <!-- Portal do Assinante -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
         </div></div>
@@ -681,7 +664,7 @@
 
     <!-- Portal de Faturas -->
     <section class="section" id="s-faturas" data-title="Portal de Faturas">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
         </div></div>
@@ -697,7 +680,7 @@
 
     <!-- VCTECH -->
     <section class="section" id="s-vctech" data-title="VCTECH">
-      <div class="card">
+      <div class="card stage">
         <div class="media"><div class="frame">
           <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
         </div></div>
@@ -829,7 +812,6 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
-    const MODE_KEY='ccs-desktop-mode'; // 'classic' | 'pager'
     const PLANS={1:'250 MB',2:'450 MB',3:'650 MB'};
     const CONTACT_WHATS='https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20CCS.';
     const SIGN_WHATS={
@@ -853,18 +835,47 @@
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
 
+    /* Conteúdos por nível */
+    const CONNECTA={
+      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
+    };
+    const PLAY={
+      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
+      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
+      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
+    };
+    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
+    const SUPORTE={
+      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
+      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
+      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
+    };
+
+    /* Util */
+    function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
+    function root(){ return document.scrollingElement||document.documentElement; }
+    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
       const hStatus=statusBar.offsetHeight||44;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
-      const snapH=Math.max(520,(window.innerHeight||800) - hTop - hStatus - 10);
-      document.documentElement.style.setProperty('--snap-h', snapH+'px');
     }
-    function root(){ return document.scrollingElement||document.documentElement; }
-    function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+    function computeStageHeight(){
+      // Altura padrão para desktop: viewport - topo - status - margem - rodapé fixo (níveis)
+      const vh = window.innerHeight||800;
+      const hTop = topbar.offsetHeight||60;
+      const hStatus = statusBar.offsetHeight||44;
+      const hLevel = 0; // não abatemos o levelbar para manter bom espaço visual
+      const stage = clamp(vh - hTop - hStatus - hLevel - 48, 560, 760);
+      document.documentElement.style.setProperty('--stage-h', stage+'px');
+    }
 
     function fitCapsule(){
+      const wrapTop=document.querySelector('.topbar .wrap');
       const wrapW=wrapTop.clientWidth, gap=parseFloat(getComputedStyle(wrapTop).columnGap)||10;
       const lW=document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
       const rW=document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
@@ -872,13 +883,13 @@
       document.querySelector('.capsule').style.maxWidth = available + 'px';
     }
     function setCapsuleTop(level){
-      capLeft.textContent=`Benefícios Nível ${level}`;
-      capRight.textContent=`Plano ${PLANS[level]}`;
+      document.getElementById('capLeft').textContent=`Benefícios Nível ${level}`;
+      document.getElementById('capRight').textContent=`Plano ${PLANS[level]}`;
       fitCapsule();
     }
     function setCapsuleSection(level, name){
-      capLeft.textContent=`Nível ${level}`;
-      capRight.textContent=name||'';
+      document.getElementById('capLeft').textContent=`Nível ${level}`;
+      document.getElementById('capRight').textContent=name||'';
       fitCapsule();
     }
 
@@ -905,24 +916,6 @@
       });
     }
 
-    /* Conteúdos por nível */
-    const CONNECTA={
-      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
-    };
-    const PLAY={
-      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
-      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
-      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
-    };
-    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
-    const SUPORTE={
-      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
-      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
-      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
-    };
-
     /* Atualização por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
@@ -932,7 +925,7 @@
     const playSubtitle=document.getElementById('play-subtitle');
     const playFacts=document.getElementById('play-facts');
     const pillPlay50=document.getElementById('pill-play-50mus');
-    const pillPlay1000=document.getElementById('pill-play-1000');
+    thePill1000=document.getElementById('pill-play-1000');
 
     const skeeloSubtitle=document.getElementById('skeelo-subtitle');
     const skeeloFacts=document.getElementById('skeelo-facts');
@@ -955,8 +948,8 @@
       const p=PLAY[level]; playSubtitle.textContent=p.subtitle; renderFacts(playFacts,p.facts);
       pillPlay50.textContent=(level>=2)?'50 canais de música':'50 canais de música não incluso';
       pillPlay50.classList.toggle('included',level>=2); pillPlay50.classList.toggle('excluded',!(level>=2));
-      pillPlay1000.textContent=(level===3)?'+1.000 horas de filmes e séries':'+1.000 horas de filmes e séries não incluso';
-      pillPlay1000.classList.toggle('included',level===3); pillPlay1000.classList.toggle('excluded',level!==3);
+      thePill1000.textContent=(level===3)?'+1.000 horas de filmes e séries':'+1.000 horas de filmes e séries não incluso';
+      thePill1000.classList.toggle('included',level===3); thePill1000.classList.toggle('excluded',level!==3);
     }
     function updateSkeelo(level){ const s=SKEELO[level]; skeeloSubtitle.textContent=s.subtitle; renderFacts(skeeloFacts,s.facts); }
     function updateSup(level){
@@ -967,41 +960,18 @@
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
-    /* Status bar + toggle modo desktop */
-    function desktopMode(){ return document.body.classList.contains('mode-pager') ? 'pager' : 'classic'; }
-    function setDesktopMode(mode){
-      const m = (mode==='pager')?'pager':'classic';
-      document.body.classList.toggle('mode-pager', m==='pager');
-      localStorage.setItem(MODE_KEY, m);
-      // Atualiza chip
-      const chip=document.getElementById('modeChip');
-      if(chip){
-        const txt=chip.querySelector('.txt');
-        txt.textContent = m==='pager' ? 'Modo imersivo (ligado)' : 'Modo imersivo (desligado)';
-        chip.setAttribute('aria-pressed', String(m==='pager'));
-      }
-    }
+    /* Status bar */
     function injectStatus(level){
       statusWrap.innerHTML='';
       const a=document.createElement('a'); a.className='status-cta'; a.href=SIGN_WHATS[level]; a.target='_blank'; a.rel='noopener'; a.textContent=`Assinar Nível ${level} agora`;
       const b=document.createElement('a'); b.className='status-link'; b.href=CONTACT_WHATS; b.target='_blank'; b.rel='noopener'; b.textContent='ou fale com um especialista';
-      const chip=document.createElement('button');
-      chip.id='modeChip'; chip.type='button'; chip.className='desk-mode'; chip.setAttribute('aria-pressed','false');
-      chip.innerHTML='<span class="dot" aria-hidden="true"></span><span class="txt">Modo imersivo (desligado)</span>';
-      chip.addEventListener('click', ()=> setDesktopMode(desktopMode()==='pager'?'classic':'pager'));
-      statusWrap.append(a, b, chip);
-      // Ajusta texto conforme estado atual
-      setDesktopMode(localStorage.getItem(MODE_KEY)||'classic');
+      statusWrap.append(a, b);
       setHeights();
     }
 
-    function setHeightsAndCapsule(){
-      setHeights(); fitCapsule();
-    }
-
-    /* Visuais de seção atual (também usados no modo pager) */
+    /* Cápsula + títulos reativos */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
-    (function observeSections(){
+    (function(){
       const sentinel=document.getElementById('top-sentinel');
       if(!('IntersectionObserver' in window)) return;
 
@@ -1016,7 +986,6 @@
 
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
-
       const io=new IntersectionObserver(()=>{
         const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
@@ -1028,28 +997,43 @@
           const denom = Math.min(vh - hTop, r.height||1);
           const ratio = Math.max(0, Math.min(1, visible / Math.max(1, denom)));
           const h2=s.querySelector('.title h2'); if(h2) h2.style.setProperty('--magic', ratio.toFixed(2));
-
           if(!maxVis || visible>maxVis.visible) maxVis={el:s, visible, title:s.getAttribute('data-title')||''};
         });
 
         if(maxVis){
           currentSectionTitle = maxVis.title || currentSectionTitle;
-
-          if(lastCur && lastCur!==maxVis.el){
-            lastCur.classList.remove('is-current');
-            lastCur.classList.add('is-leaving');
-            setTimeout(()=> lastCur && lastCur.classList.remove('is-leaving'), 350);
-          }
+          if(lastCur && lastCur!==maxVis.el) lastCur.classList.remove('is-current');
           maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
-
           const level=+localStorage.getItem(LEVELS_KEY)||1;
           if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
         }
-      },{threshold:[0,0.25,0.5,0.75,1]});
+      },{threshold:[0,0.25,0.5,0.75]});
       sections.forEach(s=> io.observe(s));
     })();
 
-    /* Alternância “Nível X” ↔ Plano Y” na barra inferior */
+    /* Saiba mais acordeão */
+    document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')){ p.hidden=true; p.style.height='0px'; } });
+    document.addEventListener('click', ev=>{
+      const btn=ev.target.closest('.chip-more'); if(!btn) return;
+      const id=btn.getAttribute('aria-controls'); const panel=id&&document.getElementById(id);
+      const txt=btn.querySelector('.txt'); if(!panel) return;
+      const expanded=btn.getAttribute('aria-expanded')==='true';
+      if(expanded){
+        const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
+        panel.style.height='0px'; panel.classList.remove('is-open');
+        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); computeStageHeight(); };
+        panel.addEventListener('transitionend',onEnd);
+        btn.setAttribute('aria-expanded','false'); if(txt) txt.textContent='Saiba mais';
+      }else{
+        panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
+        requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
+        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); computeStageHeight(); };
+        panel.addEventListener('transitionend',onEnd);
+        btn.setAttribute('aria-expanded','true'); if(txt) txt.textContent='Ver menos';
+      }
+    });
+
+    /* Alternância “Nível X” ↔ Plano Y” (animação leve) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -1094,34 +1078,11 @@
 
     /* Dock mobile toggle */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
-    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
     addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); toggleFab(); }, {passive:true});
-
-    /* Acordeão "Saiba mais" */
-    document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')){ p.hidden=true; p.style.height='0px'; } });
-    document.addEventListener('click', ev=>{
-      const btn=ev.target.closest('.chip-more'); if(!btn) return;
-      const id=btn.getAttribute('aria-controls'); const panel=id&&document.getElementById(id);
-      const txt=btn.querySelector('.txt'); if(!panel) return;
-      const expanded=btn.getAttribute('aria-expanded')==='true';
-      if(expanded){
-        const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
-        panel.style.height='0px'; panel.classList.remove('is-open');
-        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeightsAndCapsule(); };
-        panel.addEventListener('transitionend',onEnd);
-        btn.setAttribute('aria-expanded','false'); if(txt) txt.textContent='Saiba mais';
-      }else{
-        panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
-        requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
-        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeightsAndCapsule(); };
-        panel.addEventListener('transitionend',onEnd);
-        btn.setAttribute('aria-expanded','true'); if(txt) txt.textContent='Ver menos';
-      }
-    });
 
     /* Clipboard */
     document.getElementById('copyEmail')?.addEventListener('click', async ()=>{
@@ -1130,7 +1091,7 @@
     });
 
     /* Aplicar nível */
-    function setStatus(level){ injectStatus(level); }
+    function setStatusBar(level){ injectStatus(level); }
     function setLevelDockState(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
       const btn=lvlBtns.find(b=> +b.dataset.level===level);
@@ -1141,7 +1102,7 @@
       const L=[1,2,3].includes(+level)?+level:1;
       const prev=snapshotPills();
       setLevelDockState(L);
-      setStatus(L);
+      setStatusBar(L);
       updateAll(L);
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
       if(topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
@@ -1150,13 +1111,8 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial */
+    /* Tutorial (passo 2 ancorado no menu direito em desktop; bottom-sheet no mobile) */
     const splash=document.getElementById('splash');
-    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
-    document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
-    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
-    splash.classList.add('is-open'); document.body.style.overflow='hidden';
-
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
     const onbLeft=document.getElementById('onbLeft');
@@ -1170,14 +1126,13 @@
     const onbTitle=document.getElementById('onbTitle');
     const onbText=document.getElementById('onbText');
 
-    function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function vp(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
 
     function spotlight(targetEl, pad=6){
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
-      if (targetEl.id==='levelDockWrap') extraTop=22; // inclui selo ATUAL
+      if (targetEl.id==='levelDockWrap') extraTop=22; // incluir selo ATUAL
       const x=clamp(r.left-pad,0,vw-1);
       const y=clamp(r.top-pad-extraTop,0,vh-1);
       const w=clamp(r.width+pad*2,0,vw);
@@ -1192,6 +1147,7 @@
     function ensureVisible(el){
       try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
+    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
     function dockTargetEl(){
       return document.querySelector('.side-dock .dock-items') || document.getElementById('sideDock') || document.getElementById('dockToggle');
     }
@@ -1209,7 +1165,7 @@
       function targetForStep(){
         if(onbStep===1) return document.getElementById('levelDockWrap');
         if(onbStep===2){
-          if(isMobile()) openDock();
+          if(!isDesktop()) { sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
           return dockTargetEl();
         }
         return document.querySelector('.capsule');
@@ -1218,7 +1174,6 @@
       function place(){
         const tgt=targetForStep(); if(!tgt) return;
         ensureVisible(tgt);
-
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
 
@@ -1254,36 +1209,37 @@
       setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
 
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
-      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; closeDock(); }
+      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
       onbDone.onclick=end; onbSkip.onclick=end;
       addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
-      // ESC fecha
       const esc=(e)=>{ if(e.key==='Escape'){ end(); removeEventListener('keydown',esc); } };
       addEventListener('keydown', esc);
     }
 
     /* Init */
     function init(){
-      // aplica modo desktop inicial (querystring tem prioridade)
-      const params=new URLSearchParams(location.search);
-      const qsMode=params.get('mode');
-      const savedMode=localStorage.getItem(MODE_KEY)||'classic';
-      setDesktopMode(qsMode==='pager'?'pager':(qsMode==='classic'?'classic':savedMode));
+      setHeights(); computeStageHeight();
+      const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
+      injectStatus(startLevel); updateAll(startLevel); setLevelDockState(startLevel); setCapsuleTop(startLevel);
 
-      setHeights();
-      const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
-      localStorage.setItem(LEVELS_KEY,String(startLevel));
-      injectStatus(startLevel);
-      updateAll(startLevel);
-      setLevelDockState(startLevel);
-      setCapsuleTop(startLevel);
+      // Splash
+      const splashEl=document.getElementById('splash');
+      document.getElementById('btnStart')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+      document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; });
+      document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+      splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
 
-      computeFlipWidths(); startFlip();
+      // Anim flip
+      computeFlipWidths();
+      if(!prefersReduce){
+        let show=false; setInterval(()=>{ show=!show; setFlipState(show); }, 2600);
+      }
 
-      addEventListener('resize', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); }, {passive:true});
-      addEventListener('pageshow', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); });
-      addEventListener('orientationchange', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); });
+      // Listeners
+      addEventListener('resize', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); });
+      addEventListener('orientationchange', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); });
       addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
