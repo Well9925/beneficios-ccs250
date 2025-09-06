@@ -24,12 +24,12 @@
       --side-pad: clamp(14px, 4.5vw, 36px);
       --content-w: 1200px;
 
+      --art-max-h-d: clamp(180px, 28vh, 320px);
+      --art-max-h-m: clamp(160px, 28vh, 240px);
+
       --h-topbar: 60px;
       --h-status: 44px;
       --h-levelbar: 72px;
-
-      /* Altura padrão da área de mídia dos cards (consistente entre seções) */
-      --media-h: clamp(140px, 24vh, 260px);
     }
 
     *{box-sizing:border-box}
@@ -85,10 +85,13 @@
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
     }
+    .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; pointer-events:none }
+    .track{ display:inline-block; will-change:transform }
     .captext{
+      display:inline-flex; align-items:center; gap:10px;
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
                  linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
-      -webkit-background-clip:text; background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:capShift 3.2s linear infinite;
+      background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:capShift 3.2s linear infinite;
       text-shadow:0 0 12px rgba(123,92,255,.28), 0 0 18px rgba(0,255,198,.20);
     }
     @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
@@ -110,7 +113,7 @@
     }
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
-    /* Main layout (fluxo vertical padrão) */
+    /* Main layout */
     main{ padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0 }
     .section{ padding:20px 0 28px }
     .card{
@@ -120,12 +123,23 @@
       backdrop-filter:blur(8px); -webkit-backdrop-filter: blur(8px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
       overflow:hidden; contain:content;
-      transition: transform .24s ease, opacity .24s ease;
-      display:grid; grid-template-rows: var(--media-h) auto; /* mídia consistente; resto “abraça” conteúdo */
+      transition: transform .28s ease, opacity .28s ease;
     }
-    .media{ padding:10px 14px 0; display:grid; place-items:center }
-    .art-img{ width:100%; max-width:880px; height:100%; object-fit:contain; display:block }
-    .content{ padding:16px 16px 18px }
+
+    /* Cards “de palco” (altura consistente sem excesso de espaço) */
+    @media (min-width:1024px){
+      .card.stage{
+        min-height: auto;                 /* altura definida no JS por card */
+        display:grid;
+        grid-template-rows: auto 1fr;     /* mídia em cima; conteúdo preenche */
+      }
+      .card.stage .media{ align-self:center }
+    }
+
+    .media{ padding:10px 14px 0 }
+    .frame{ width:100%; display:grid; place-content:center; place-items:center }
+    .art-img{ width:100%; max-width:880px; height:auto; display:block; object-fit:contain; max-height:var(--art-max-h-d) }
+    @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m) } }
 
     /* DUAS IMAGENS CENTRAIS (CCS PLAY/TV) */
     .frame-grid-2{
@@ -136,9 +150,10 @@
       margin: 0 auto;
       place-items:center;
     }
-    .frame-grid-2 img{ width:100%; height:100%; object-fit:contain; display:block; border-radius:12px; border:1px solid var(--line); background:#0f1420 }
+    .frame-grid-2 img{ width:100%; height:auto; display:block; object-fit:contain; border-radius:12px; border:1px solid var(--line); background:#0f1420 }
 
-    /* Título + chip */
+    .content{ padding:16px 16px 18px }
+    /* Título com chip à direita */
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
     .title h2::after{
@@ -171,6 +186,21 @@
     .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
+
+    /* Destaques pílulas */
+    .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
+    .pill-flag.changed::before{
+      content:""; position:absolute; inset:0 -30%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.45) 12%, transparent 26%);
+      transform:translateX(-120%); animation: sweep 360ms ease-out forwards 60ms; mix-blend-mode:screen;
+    }
+    @keyframes sweep{ to{ transform:translateX(120%) } }
+    .pill-flag.included-new::after{
+      content:""; position:absolute; inset:-6px; pointer-events:none;
+      background:radial-gradient(2px 2px at 72% 22%, #fff, transparent 55%), radial-gradient(2px 2px at 28% 78%, #fff, transparent 55%);
+      animation: spark 380ms ease-out forwards; filter: drop-shadow(0 0 4px rgba(255,255,255,.5));
+    }
+    @keyframes spark{ 0%{ opacity:1; transform:scale(.85) } 100%{ opacity:0; transform:scale(1.12) } }
 
     /* Ações */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
@@ -249,6 +279,7 @@
       display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px rgba(0,217,255,.55), 0 0 18px rgba(123,92,255,.45);
       animation: halo 2.6s ease-out infinite;
     }
+    @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
     /* Alternância “Nível X” ↔ Plano Y */
@@ -273,7 +304,7 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* “Indique & Ganhe” */
+    /* Indique & Ganhe — efeito ativo no h2 */
     #s-indique .card{
       background:
         radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
@@ -282,30 +313,120 @@
       border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 24px 60px rgba(0,0,0,.45);
     }
+    /* CTAs Indique */
     #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
+    #indique-actions .btn{
+      position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
+      box-shadow:0 10px 30px rgba(255,173,56,.25);
+      animation:pulseGlow 2.8s ease-in-out infinite;
+    }
+    #indique-actions .btn:nth-child(3){ grid-column:1 / -1 }
+    #indique-actions .btn::after{
+      content:""; position:absolute; inset:0; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 26%); transform:translateX(-120%); transition:transform .6s ease; mix-blend-mode:screen
+    }
+    #indique-actions .btn:hover::after{ transform:translateX(120%) }
+    @keyframes pulseGlow{
+      0%,100%{ box-shadow:0 10px 30px rgba(255,173,56,.25), 0 0 0 0 rgba(0,217,255,0) }
+      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px rgba(0,217,255,.18) }
+    }
 
     /* FAQ */
     .faq-grid{ display:grid; gap:10px; grid-template-columns:1fr; }
     @media (min-width:1280px){ .faq-grid{ grid-template-columns:1fr 1fr } }
     .faq-card{ border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.06); padding:12px; cursor:pointer }
+    .faq-card summary{ list-style:none; cursor:pointer; font-weight:700 }
     .faq-card[open]{ background:rgba(255,255,255,.10) }
+    .faq-card summary::-webkit-details-marker{ display:none }
     #s-faq .title + .faq-grid{ margin-top:18px }
     #s-faq .title h2::before{ bottom:-4px; right:72% }
 
-    /* Splash + Onboarding (mesmo de antes, enxugado) */
-    .splash{ position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center; background:rgba(9,12,18,.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align:center }
+    /* Footer */
+    .footer{ padding:24px var(--side-pad) calc(24px + var(--h-levelbar)); text-align:center; color:#cfe0ff }
+    .footer .wrap{ max-width:var(--content-w); margin:0 auto }
+    .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
+
+    /* Splash: glint lateral (suave) */
+    .splash{
+      position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(95,92,255,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 90%, rgba(0,234,255,.12), transparent 60%),
+        rgba(9,12,18,.88);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      text-align:center;
+    }
     .splash.is-open{ display:flex }
-    .splash .box{ width:min(760px, 92vw); border-radius:20px; padding:24px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06)); box-shadow:0 20px 60px rgba(0,0,0,.55) }
+    .splash .box{
+      width:min(760px, 92vw); border-radius:20px; padding:24px; border:1px solid var(--line);
+      background:
+        radial-gradient(140% 140% at -20% -20%, rgba(0,217,255,.12), transparent 60%),
+        radial-gradient(140% 140% at 120% 120%, rgba(123,92,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+      position:relative; overflow:hidden;
+    }
+    .splash .box::after{
+      content:""; position:absolute; top:0; bottom:0; width:55%;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.28) 18%, transparent 34%);
+      filter: blur(10px); opacity:.65; pointer-events:none; mix-blend-mode:screen;
+      animation:glint 3.6s ease-in-out infinite alternate; left:-60%;
+    }
+    @keyframes glint{ from{ left:-60% } to{ left:105% } }
+    .splash .cap{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px; border-radius:999px; margin:0 auto 8px;
+      background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900;
+      animation:pulseHalo 4.2s ease-out infinite;
+    }
+    .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px rgba(0,217,255,.18) }
+    .splash p{ margin:0 0 14px; color:#dfe7ff }
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
+    .splash .btn{ min-width:200px }
+
+    /* Onboarding (robusto) */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
     .onb .highlight{ position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85); box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30); pointer-events:none; transition: all .22s ease }
-    .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
-    .onb .row{ display:grid; grid-template-columns: 1fr 1fr; grid-template-areas:"skip next" "start start"; gap:10px; margin-top:12px }
-    #onbSkip{ grid-area:skip } #onbNext{ grid-area:next } #onbDone{ grid-area:start }
+    .onb .card{
+      position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--line); border-radius:14px; padding:14px;
+      box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left
+    }
+    .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
+    .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
+    /* Botões do tutorial: grid responsivo, sem overflow */
+    .onb .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "skip next"
+        "start start";
+      gap:10px;
+      margin-top:12px;
+      align-items:stretch;
+      justify-items:stretch;
+      pointer-events:auto;
+    }
+    #onbSkip{ grid-area:skip }
+    #onbNext{ grid-area:next }
+    #onbDone{ grid-area:start }
+    .onb .row .btn{
+      width:100%;
+      min-width:0;
+      padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px);
+      font-size: clamp(14px, 4vw, 16px);
+    }
+    @media (min-width:560px){
+      .onb .row{
+        grid-template-columns: auto auto auto;
+        grid-template-areas: "skip next start";
+      }
+      .onb .row .btn{ width:auto }
+    }
 
-    /* MODO LATERAL (deck) — padrão no desktop */
+    /* MODO LATERAL (deck) — opcional, ativa com ?mode=deck no desktop */
     @media (min-width:1024px){
       body.mode-deck main{
         display:grid;
@@ -318,13 +439,13 @@
         padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0;
       }
       body.mode-deck .section{
-        min-height: calc(100vh - var(--h-topbar) - var(--h-status) - var(--h-levelbar) - 16px);
+        min-height: calc(100vh - var(--h-topbar) - var(--h-status) - 24px);
         scroll-snap-align: center;
         display:grid;
-        align-items:start; /* card fica no topo da coluna (sem “buraco” visual) */
+        place-items:center;
         padding: 0;
       }
-      body.mode-deck .card{ width:100% }
+      body.mode-deck .card.stage{ width:100% }
     }
 
     .hide{ display:none !important }
@@ -343,7 +464,15 @@
       <img class="logo-ccs" alt="CCS Telecom" src="https://framerusercontent.com/images/ixugIK46O0cdFAaPGdyqiwBhLJo.png" loading="eager" decoding="async" fetchpriority="high">
       <div class="titlebar">
         <div class="capsule" role="group" aria-label="Nível e contexto">
-          <span class="captext"><span id="capLeft">Benefícios Nível 1</span> <span class="dot-mid" aria-hidden="true"></span> <span id="capRight">Plano 250 MB</span></span>
+          <div class="cap-viewport" id="capViewport">
+            <div class="track" id="capTrack">
+              <span class="captext">
+                <span id="capLeft">Benefícios Nível 1</span>
+                <span class="dot-mid" aria-hidden="true"></span>
+                <span id="capRight">Plano 250 MB</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
@@ -361,10 +490,10 @@
   <main id="content" aria-live="polite">
     <!-- Conecta Clube -->
     <section class="section" id="s-conecta" data-title="Conecta Clube">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async" fetchpriority="high">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title">
             <h2 data-text="Conecta Clube">Conecta Clube</h2>
@@ -395,13 +524,13 @@
 
     <!-- CCS PLAY + CCS TV -->
     <section class="section" id="s-ccsplay" data-title="CCS PLAY + CCS TV">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <div class="frame-grid-2">
             <img alt="CCS Play" src="https://play-lh.googleusercontent.com/YUks-efQZR-eDLpf-0_Usz5PlrnEvcD16fi2HVxuaYXyA4wztJ9X240HJOEcjkSxJDsO=w480-h480-rw" loading="lazy" decoding="async">
             <img alt="CCS TV"   src="https://play-lh.googleusercontent.com/v8Grl1L_XcGz5QM-U56-jAVKdOn1TccrNambpfOu79fP0ai4K7x-GB3Ajkdes13vxUk=w480-h480-rw" loading="lazy" decoding="async">
           </div>
-        </div>
+        </div></div>
         <div class="content">
           <div class="title">
             <h2 data-text="CCS PLAY + CCS TV">CCS PLAY + CCS TV</h2>
@@ -433,10 +562,10 @@
 
     <!-- Skeelo -->
     <section class="section" id="s-skeelo" data-title="Skeelo">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title">
             <h2 data-text="Skeelo">Skeelo</h2>
@@ -468,10 +597,10 @@
 
     <!-- Suporte Premium -->
     <section class="section" id="s-suporte" data-title="Suporte Premium">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title">
             <h2 data-text="Suporte Premium">Suporte Premium</h2>
@@ -504,10 +633,10 @@
 
     <!-- Indique & Ganhe -->
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Indique & Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title">
             <h2 data-text="Indique &amp; Ganhe">Indique &amp; Ganhe</h2>
@@ -539,10 +668,10 @@
 
     <!-- Portal do Assinante -->
     <section class="section" id="s-portal" data-title="Portal do Assinante">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title"><h2 data-text="Portal do Assinante">Portal do Assinante</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Tenha o controle da sua assinatura onde você estiver.</p>
@@ -555,10 +684,10 @@
 
     <!-- Portal de Faturas -->
     <section class="section" id="s-faturas" data-title="Portal de Faturas">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title"><h2 data-text="Portal de Faturas">Portal de Faturas</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Acesso rápido, sem login.</p>
@@ -571,10 +700,10 @@
 
     <!-- VCTECH -->
     <section class="section" id="s-vctech" data-title="VCTECH">
-      <div class="card">
-        <div class="media">
+      <div class="card stage">
+        <div class="media"><div class="frame">
           <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
-        </div>
+        </div></div>
         <div class="content">
           <div class="title"><h2 data-text="VCTECH">VCTECH</h2><span aria-hidden="true"></span></div>
           <p class="subtitle">Representante Comercial CCS Telecom.</p>
@@ -661,6 +790,7 @@
   <!-- Splash (boas-vindas) -->
   <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle" aria-describedby="splashDesc">
     <div class="box">
+      <div class="cap">Comparador de Benefícios</div>
       <h1 id="splashTitle">Bem-vindo ao Portal de Benefícios CCS</h1>
       <p id="splashDesc">Compare os níveis, descubra vantagens exclusivas e escolha a melhor experiência para você.</p>
       <div class="actions">
@@ -725,10 +855,13 @@
     const fab=document.getElementById('fab');
     const main=document.getElementById('content');
 
-    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
-    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
+    /* Util */
+    function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function root(){ return document.scrollingElement||document.documentElement; }
     function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
+    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
+    function isDeck(){ return document.body.classList.contains('mode-deck'); }
 
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
@@ -736,6 +869,7 @@
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
     }
+
     function fitCapsule(){
       const wrapTop=document.querySelector('.topbar .wrap');
       const wrapW=wrapTop.clientWidth, gap=parseFloat(getComputedStyle(wrapTop).columnGap)||10;
@@ -755,37 +889,70 @@
       fitCapsule();
     }
 
-    /* Deck lateral: por padrão no desktop (ou via ?mode=deck) */
-    function setupDeckMode(){
-      const qp=new URLSearchParams(location.search);
-      const force=qp.get('mode'); // 'deck' | 'vertical' | null
-      const on = (force==='deck') || (!force && isDesktop());
+    /* Altura “compacta inteligente” para os cards do desktop */
+    function availableViewportH(){
+      const vh = window.innerHeight||800;
+      const hTop = (document.getElementById('topbar')?.offsetHeight||60);
+      const hStatus = (document.getElementById('statusBar')?.offsetHeight||44);
+      return Math.max(400, vh - hTop - hStatus - 24);
+    }
+    function percentile(arr, p){
+      if(!arr || !arr.length) return 620;
+      const s=[...arr].sort((a,b)=>a-b);
+      const i=Math.floor((s.length-1)*p);
+      return s[i];
+    }
+    function setStageHeights(){
+      if(!isDesktop()) return;
+      const cards = [...document.querySelectorAll('.card.stage')];
+      if(!cards.length) return;
+      const avail = availableViewportH();
+      const MIN = 520;
+      const MAX = Math.min(760, avail);
+      const targets = cards.map(card=>{
+        const media = card.querySelector('.media');
+        const content = card.querySelector('.content');
+        const h = (media?.offsetHeight||0) + (content?.offsetHeight||0) + 48;
+        return Math.min(MAX, Math.max(MIN, h + 24));
+      });
+      const consensus = Math.min(MAX, Math.max(MIN, Math.round(percentile(targets, 0.85))));
+      cards.forEach(card=>{
+        const need = Math.max(consensus, card.scrollHeight);
+        card.style.minHeight = need + 'px';
+      });
+    }
+
+    /* Modo lateral (deck) — ativa com ?mode=deck */
+    function enableDeckIfRequested(){
+      const qp = new URLSearchParams(location.search);
+      const on = qp.get('mode') === 'deck';
       document.body.classList.toggle('mode-deck', on);
-      if(!on) return;
+      if(!on || !isDesktop()) return;
 
+      // Roda “scrollspy” horizontal escolhendo a seção mais central
       const sections=[...document.querySelectorAll('main .section')];
-
-      function scrollSpyX(){
-        const center = main.scrollLeft + main.clientWidth/2;
-        let best=null;
-        sections.forEach(s=>{
-          const c = s.offsetLeft + s.offsetWidth/2;
-          const d = Math.abs(center - c);
-          if(!best || d<best.d) best={s, d};
+      function deckSetCurrent(){
+        const viewCenter = main.scrollLeft + main.clientWidth/2;
+        let best=null, bestIdx=0;
+        sections.forEach((sec,idx)=>{
+          const left = sec.offsetLeft;
+          const center = left + sec.offsetWidth/2;
+          const dist = Math.abs(center - viewCenter);
+          if(!best || dist<best.dist) best={sec,dist,idx};
         });
         if(best){
-          sections.forEach(sec=> sec.classList.remove('is-current'));
-          best.s.classList.add('is-current');
-          const title=best.s.getAttribute('data-title')||'';
+          sections.forEach(s=> s.classList.remove('is-current'));
+          best.sec.classList.add('is-current');
+          const title=best.sec.getAttribute('data-title')||'';
           const level=+localStorage.getItem(LEVELS_KEY)||1;
           setCapsuleSection(level, title);
         }
       }
-      let ticking=false;
-      main.addEventListener('scroll', ()=>{ if(!ticking){ ticking=true; requestAnimationFrame(()=>{ ticking=false; scrollSpyX(); }); } }, {passive:true});
-      scrollSpyX();
+      let raf=false;
+      main.addEventListener('scroll', ()=>{ if(!raf){ raf=true; requestAnimationFrame(()=>{ raf=false; deckSetCurrent(); }); } }, {passive:true});
+      deckSetCurrent();
 
-      // Roda vertical -> horizontal (natural pra wheel/trackpad)
+      // Converter rolagem vertical do mouse em horizontal (mais natural)
       main.addEventListener('wheel', (e)=>{
         if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
           e.preventDefault();
@@ -808,21 +975,39 @@
       // Navegação por setas
       addEventListener('keydown', (e)=>{
         if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return;
-        const all=[...document.querySelectorAll('main .section')];
-        const idx=all.findIndex(s=> s.classList.contains('is-current'));
-        let next = (e.key==='ArrowRight') ? idx+1 : idx-1;
-        next = Math.max(0, Math.min(all.length-1, next));
-        all[next].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        e.preventDefault();
+        const current = sections.findIndex(s=> s.classList.contains('is-current'));
+        let next = current + (e.key==='ArrowRight'?1:-1);
+        next = Math.max(0, Math.min(sections.length-1, next));
+        sections[next].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
       });
     }
 
-    /* Status bar */
-    function setStatusBar(level){
-      statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
-      setHeights();
+    /* Render helpers */
+    function renderFacts(container,facts){
+      container.innerHTML='';
+      (facts||[]).forEach(f=>{
+        const row=document.createElement('div'); row.className='fact';
+        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
+        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
+        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
+      });
     }
 
-    /* Conteúdo por nível */
+    function snapshotPills(){
+      const map={}; document.querySelectorAll('.pill-flag[id]').forEach(el=> map[el.id]={ text:el.textContent.trim(), inc:el.classList.contains('included') }); return map;
+    }
+    function hasNumberDiff(a,b){ const na=(a.match(/\d+/g)||[]).join(','); const nb=(b.match(/\d+/g)||[]).join(','); return na!==nb; }
+    function highlightChanges(prev){
+      const now=snapshotPills();
+      Object.keys(now).forEach(id=>{
+        const el=document.getElementById(id); const p=prev[id]; const n=now[id]; if(!el||!p) return;
+        const changed=(p.text!==n.text)||(p.inc!==n.inc);
+        if(changed){ el.classList.add('changed'); if(!p.inc && n.inc) el.classList.add('included-new'); if(hasNumberDiff(p.text,n.text)) el.classList.add('num-flip'); setTimeout(()=> el.classList.remove('changed','included-new','num-flip'),800); }
+      });
+    }
+
+    /* Conteúdos por nível */
     const CONNECTA={
       1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
       2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
@@ -840,16 +1025,7 @@
       3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
     };
 
-    function renderFacts(container,facts){
-      container.innerHTML='';
-      (facts||[]).forEach(f=>{
-        const row=document.createElement('div'); row.className='fact';
-        const ico=document.createElement('span'); ico.className='ico'; ico.textContent=f.emoji||'•';
-        const txt=document.createElement('div'); txt.className='txt'; txt.innerHTML=`<span>${f.text}</span>`;
-        row.appendChild(ico); row.appendChild(txt); container.appendChild(row);
-      });
-    }
-
+    /* Elementos que mudam por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -870,30 +1046,39 @@
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
 
-    function updateConecta(level){
+    function renderConecta(level){
       const c=CONNECTA[level];
       pillVoucher.textContent=`1 voucher a cada ${c.days} dias`;
       pillPremium.textContent=c.premium?'Atração premium inclusa':'Atração premium não inclusa';
       pillPremium.classList.toggle('included',!!c.premium); pillPremium.classList.toggle('excluded',!c.premium);
       renderFacts(ccFacts,c.facts);
     }
-    function updatePlay(level){
+    function renderPlay(level){
       const p=PLAY[level]; playSubtitle.textContent=p.subtitle; renderFacts(playFacts,p.facts);
       pillPlay50.textContent=(level>=2)?'50 canais de música':'50 canais de música não incluso';
       pillPlay50.classList.toggle('included',level>=2); pillPlay50.classList.toggle('excluded',!(level>=2));
       pillPlay1000.textContent=(level===3)?'+1.000 horas de filmes e séries':'+1.000 horas de filmes e séries não incluso';
       pillPlay1000.classList.toggle('included',level===3); pillPlay1000.classList.toggle('excluded',level!==3);
     }
-    function updateSkeelo(level){ const s=SKEELO[level]; skeeloSubtitle.textContent=s.subtitle; renderFacts(skeeloFacts,s.facts); }
-    function updateSup(level){
+    function renderSkeelo(level){ const s=SKEELO[level]; skeeloSubtitle.textContent=s.subtitle; renderFacts(skeeloFacts,s.facts); }
+    function renderSup(level){
       const sp=SUPORTE[level]; supSubtitle.textContent=sp.subtitle; renderFacts(supFacts,sp.facts);
       pillSupSla.textContent=sp.sla;
       const setInc=(el,ok,base)=>{ el.textContent= ok?base:base+' não inclusa'; el.classList.toggle('included',!!ok); el.classList.toggle('excluded',!ok); };
       setInc(pillSupAbs,sp.abs,'Isenção por ausência'); setInc(pillSupImp,sp.imp,'Isenção visita improdutiva'); setInc(pillSupMud,sp.mud,'Isenção mudança de endereço');
     }
-    function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
+    function updateAll(level){ renderConecta(level); renderPlay(level); renderSkeelo(level); renderSup(level); }
 
-    /* Títulos reativos no fluxo vertical */
+    function setStatusBar(level){
+      statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
+      setHeights();
+    }
+
+    function setLevelDock(level){
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+    }
+
+    /* Título reativo/scrollspy (vertical) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -911,7 +1096,7 @@
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
       const io=new IntersectionObserver(()=>{
-        if(document.body.classList.contains('mode-deck')) return; // no deck usamos outro spy
+        if(isDeck()) return; // no deck, usamos o scrollspy horizontal
         const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
         let maxVis=null;
@@ -946,19 +1131,19 @@
       if(expanded){
         const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
         panel.style.height='0px'; panel.classList.remove('is-open');
-        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); };
+        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); setStageHeights(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','false'); if(txt) txt.textContent='Saiba mais';
       }else{
         panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
         requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
-        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); };
+        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); setStageHeights(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','true'); if(txt) txt.textContent='Ver menos';
       }
     });
 
-    /* Alternância “Nível X” ↔ Plano Y” */
+    /* Alternância “Nível X” ↔ Plano Y” (leve) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -990,57 +1175,181 @@
       showPlan=false; setFlipState(false);
       flipTimer=setInterval(()=>{ if(!flipPaused){ showPlan=!showPlan; setFlipState(showPlan); } }, 2600);
     }
+    function pauseFlip(){ flipPaused=true; }
+    function resumeFlip(){ flipPaused=false; }
     lvlBtns.forEach(btn=>{
-      btn.addEventListener('mouseenter', ()=>{ flipPaused=true; });
-      btn.addEventListener('mouseleave', ()=>{ flipPaused=false; });
-      btn.addEventListener('focusin', ()=>{ flipPaused=true; });
-      btn.addEventListener('focusout', ()=>{ flipPaused=false; });
+      btn.addEventListener('mouseenter', pauseFlip);
+      btn.addEventListener('mouseleave', resumeFlip);
+      btn.addEventListener('focusin', pauseFlip);
+      btn.addEventListener('focusout', resumeFlip);
       const lvl=btn.dataset.level; const plan=PLANS[lvl];
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Dock mobile */
+    /* Dock mobile toggle */
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
     dockClose?.addEventListener('click', closeDock);
     addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); toggleFab(); }, {passive:true});
 
-    /* Nível */
+    /* Clipboard */
+    document.getElementById('copyEmail')?.addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText('ccs@ccstelecom.com.br'); }catch{}
+      const btn=document.getElementById('copyEmail'); const old=btn.textContent; btn.textContent='✅ Copiado'; setTimeout(()=> btn.textContent=old, 1200);
+    });
+
+    /* Aplicar nível */
     function applyLevel(level,{remember=true}={}){
       const L=[1,2,3].includes(+level)?+level:1;
+      const prev=snapshotPills();
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===L)));
       setStatusBar(L);
       updateAll(L);
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      const name = document.querySelector('.section.is-current')?.getAttribute('data-title') || 'Conecta Clube';
-      if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L); else setCapsuleSection(L, name);
+      if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L);
+      else setCapsuleSection(L, currentSectionTitle);
       if(remember) localStorage.setItem(LEVELS_KEY,String(L));
+      requestAnimationFrame(()=> highlightChanges(prev));
+      setStageHeights();
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial básico (âncora no side-dock no passo 2) */
+    /* Tutorial */
     const splash=document.getElementById('splash');
-    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; /* opcional: abrir onboarding aqui */ });
+    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
     document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
-    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=>{ /* abrir onboarding se desejar */ });
+    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+    splash.classList.add('is-open'); document.body.style.overflow='hidden';
+
+    const onboarding=document.getElementById('onboarding');
+    const onbTop=document.getElementById('onbTop');
+    const onbLeft=document.getElementById('onbLeft');
+    const onbRight=document.getElementById('onbRight');
+    const onbBottom=document.getElementById('onbBottom');
+    const onbHighlight=document.getElementById('onbHighlight');
+    const onbCard=document.getElementById('onbCard');
+    const onbNext=document.getElementById('onbNext');
+    const onbDone=document.getElementById('onbDone');
+    const onbSkip=document.getElementById('onbSkip');
+    const onbTitle=document.getElementById('onbTitle');
+    const onbText=document.getElementById('onbText');
+
+    function vp(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
+
+    function spotlight(targetEl, pad=6){
+      if(!targetEl) return;
+      const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
+      let extraTop=0;
+      if (targetEl.id==='levelDockWrap') extraTop=22;
+      const x=clamp(r.left-pad,0,vw-1);
+      const y=clamp(r.top-pad-extraTop,0,vh-1);
+      const w=clamp(r.width+pad*2,0,vw);
+      const h=clamp(r.height+pad*2+extraTop,0,vh);
+      Object.assign(onbHighlight.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+      Object.assign(onbTop.style,{left:'0px',top:'0px',width:vw+'px',height:y+'px'});
+      Object.assign(onbLeft.style,{left:'0px',top:y+'px',width:x+'px',height:h+'px'});
+      Object.assign(onbRight.style,{left:(x+w)+'px',top:y+'px',width:Math.max(0,vw-(x+w))+'px',height:h+'px'});
+      Object.assign(onbBottom.style,{left:'0px',top:(y+h)+'px',width:vw+'px',height:Math.max(0,vh-(y+h))+'px'});
+    }
+
+    function ensureVisible(el){
+      try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
+    }
+    function dockTargetEl(){
+      return document.querySelector('.side-dock .dock-items') || document.getElementById('sideDock') || document.getElementById('dockToggle');
+    }
+
+    function showOnboarding(step=1){
+      let onbOpen=true, onbStep=step;
+      onboarding.classList.add('is-open'); document.body.style.overflow='hidden';
+
+      function setTexts(){
+        if(onbStep===1){ onbTitle.textContent='Explore por nível'; onbText.textContent='Use os botões de nível para ver os benefícios de cada plano.'; onbNext.classList.remove('hide'); }
+        else if(onbStep===2){ onbTitle.textContent='Acesse seções rapidamente'; onbText.textContent='Use o menu lateral para ir direto ao que precisa.'; onbNext.classList.remove('hide'); }
+        else { onbTitle.textContent='Veja o contexto aqui'; onbText.textContent='Nível e plano selecionados ficam visíveis no topo.'; onbNext.classList.add('hide'); }
+      }
+
+      function targetForStep(){
+        if(onbStep===1) return document.getElementById('levelDockWrap');
+        if(onbStep===2){
+          if(!isDesktop()) { sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
+          return dockTargetEl();
+        }
+        return document.querySelector('.capsule');
+      }
+
+      function place(){
+        const tgt=targetForStep(); if(!tgt) return;
+        ensureVisible(tgt);
+        const pad = (onbStep===1)?14:6;
+        requestAnimationFrame(()=> spotlight(tgt, pad));
+
+        const {w:vw,h:vh}=vp();
+        if(matchMedia('(max-width: 520px)').matches){
+          onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
+          onbCard.style.right='auto'; onbCard.style.top='auto';
+          onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
+        }else{
+          if(onbStep===2 && isDesktop()){
+            const r=(dockTargetEl() || tgt).getBoundingClientRect();
+            const ch=onbCard.offsetHeight;
+            const top=clamp(r.top + r.height/2 - ch/2, 16, vh - ch - 16);
+            onbCard.style.right='16px'; onbCard.style.left='auto';
+            onbCard.style.top=top+'px'; onbCard.style.bottom='auto'; onbCard.style.transform='none';
+          }else{
+            const r=tgt.getBoundingClientRect();
+            const ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
+            let top=r.top-(ch+12); if(top<60) top=r.bottom+12; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
+            let left=clamp(r.left, 16, vw - cw - 16);
+            onbCard.style.bottom='auto'; onbCard.style.right='auto'; onbCard.style.transform='none';
+            onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
+          }
+          const b=onbCard.getBoundingClientRect(); const margin=8;
+          if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
+            onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
+            onbCard.style.right='auto'; onbCard.style.top='auto';
+            onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
+          }
+        }
+      }
+
+      setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
+
+      onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
+      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
+      onbDone.onclick=end; onbSkip.onclick=end;
+      addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
+      addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
+      const esc=(e)=>{ if(e.key==='Escape'){ end(); removeEventListener('keydown',esc); } };
+      addEventListener('keydown', esc);
+    }
 
     /* Init */
     function init(){
       setHeights();
       const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
       localStorage.setItem(LEVELS_KEY,String(startLevel));
-      setStatusBar(startLevel); updateAll(startLevel); applyLevel(startLevel,{remember:false}); setCapsuleTop(startLevel);
+      setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
 
+      // Splash e tutorial
+      const splashEl=document.getElementById('splash');
+      document.getElementById('btnStart')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+      document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; });
+      document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+      splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
+
+      // Flip
       computeFlipWidths(); startFlip();
-      setupDeckMode(); // deck ativo por padrão no desktop
 
-      // Splash opcional (comentar se quiser desativar)
-      // splash.classList.add('is-open'); document.body.style.overflow='hidden';
+      // Ajustes de layout
+      setStageHeights();
+      enableDeckIfRequested();
 
-      addEventListener('resize', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); }, {passive:true});
-      addEventListener('pageshow', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
-      addEventListener('orientationchange', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
+      // Listeners
+      addEventListener('resize', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); });
+      addEventListener('orientationchange', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); });
       addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
