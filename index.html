@@ -24,8 +24,9 @@
       --side-pad: clamp(14px, 4.5vw, 36px);
       --content-w: 1200px;
 
-      --art-max-h-d: clamp(180px, 26vh, 300px);
-      --art-max-h-m: clamp(160px, 28vh, 240px);
+      /* Alturas padrão do bloco de mídia (proporcionais por viewport) */
+      --media-h-d: clamp(260px, 36vh, 420px);
+      --media-h-m: clamp(180px, 34vh, 280px);
 
       --h-topbar: 60px;
       --h-status: 44px;
@@ -126,28 +127,52 @@
       transition: transform .28s ease, opacity .28s ease;
     }
 
-    /* Cards de benefícios no desktop:
-       - sem min-height forçada
-       - sem grid 1fr (evita "buracos" internos) */
+    /* Desktop: sem min-height e sem grid 1fr (evita "buracos") */
     @media (min-width:1024px){
       .card.stage{ display:block; }
     }
 
+    /* Bloco de mídia com altura consistente por viewport */
     .media{ padding:10px 14px 0 }
-    .frame{ width:100%; display:grid; place-content:center; place-items:center }
-    .art-img{ width:100%; max-width:880px; height:auto; display:block; object-fit:contain; max-height:var(--art-max-h-d) }
-    @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m) } }
-
-    /* DUAS IMAGENS CENTRAIS (CCS PLAY/TV) */
-    .frame-grid-2{
+    .frame{
+      width:100%;
+      height: var(--media-h-m);
       display:grid;
-      grid-template-columns:repeat(2, minmax(260px, 1fr));
-      gap: clamp(10px, 2vw, 16px);
-      max-width: clamp(720px, 80vw, 980px);
-      margin: 0 auto;
+      place-content:center;
       place-items:center;
     }
-    .frame-grid-2 img{ width:100%; height:auto; display:block; object-fit:contain; border-radius:12px; border:1px solid var(--line); background:#0f1420 }
+    @media (min-width:1024px){
+      .frame{ height: var(--media-h-d) }
+    }
+
+    /* TODAS as imagens/vídeos dentro do frame preenchem o bloco proporcionalmente */
+    .frame > img,
+    .frame > video{
+      width:100%;
+      height:100%;
+      object-fit: contain; /* troque para 'cover' se quiser preencher com corte */
+      display:block;
+    }
+
+    /* Duas imagens (CCS PLAY + CCS TV) ocupam 100% do frame */
+    .frame-grid-2{
+      height:100%;
+      width:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(10px, 2vw, 16px);
+      align-items:center;
+      justify-items:center;
+    }
+    .frame-grid-2 img{
+      width:100%;
+      height:100%;
+      object-fit: contain; /* troque para cover se preferir encher com corte */
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0f1420;
+      display:block;
+    }
 
     .content{ padding:16px 16px 18px }
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
@@ -335,7 +360,7 @@
     #s-faq .title + .faq-grid{ margin-top:18px }
     #s-faq .title h2::before{ bottom:-4px; right:72% }
 
-    /* Splash e Onboarding — iguais às versões anteriores (omitimos comentários extras) */
+    /* Splash / Onboarding / Footer (mesmos padrões) */
     .footer{ padding:24px var(--side-pad) calc(24px + var(--h-levelbar)); text-align:center; color:#cfe0ff }
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
@@ -370,7 +395,7 @@
       .onb .row .btn{ width:auto }
     }
 
-    /* Modo lateral (deck) — opcional, ?mode=deck no desktop */
+    /* Modo lateral (deck) — opcional, ?mode=deck */
     @media (min-width:1024px){
       body.mode-deck main{
         display:grid;
@@ -389,7 +414,7 @@
         place-items:center;
         padding: 0;
       }
-      body.mode-deck .card.stage{ width:100% } /* card não estica por dentro */
+      body.mode-deck .card.stage{ width:100% }
     }
 
     .hide{ display:none !important }
@@ -436,7 +461,7 @@
     <section class="section" id="s-conecta" data-title="Conecta Clube">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async" fetchpriority="high">
+          <img alt="Conecta Clube" src="https://framerusercontent.com/images/jPkGCdAiQBgiblLlATegvPPlLaY.png?scale-down-to=1024" loading="eager" decoding="async" fetchpriority="high">
         </div></div>
         <div class="content">
           <div class="title">
@@ -508,7 +533,7 @@
     <section class="section" id="s-skeelo" data-title="Skeelo">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
+          <img alt="Skeelo" src="https://www.projetodraft.com/wp-content/uploads/2022/07/1907_skeelo_superapp-1-1.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -543,7 +568,7 @@
     <section class="section" id="s-suporte" data-title="Suporte Premium">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
+          <img alt="Suporte Premium" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/suporte-premium.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -579,7 +604,7 @@
     <section class="section" id="s-indique" data-title="Indique & Ganhe">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Indique & Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async">
+          <img alt="Indique & Ganhe" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/indique-ganhe.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title">
@@ -614,7 +639,7 @@
     <section class="section" id="s-portal" data-title="Portal do Assinante">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
+          <img alt="Portal do Assinante" src="img/portal.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title"><h2 data-text="Portal do Assinante">Portal do Assinante</h2><span aria-hidden="true"></span></div>
@@ -630,7 +655,7 @@
     <section class="section" id="s-faturas" data-title="Portal de Faturas">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
+          <img alt="Portal de Faturas" src="https://framerusercontent.com/images/Nu8Tpko22Wh8ACphM2HgL0wfn8U.jpg?scale-down-to=1024" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title"><h2 data-text="Portal de Faturas">Portal de Faturas</h2><span aria-hidden="true"></span></div>
@@ -646,7 +671,7 @@
     <section class="section" id="s-vctech" data-title="VCTECH">
       <div class="card stage">
         <div class="media"><div class="frame">
-          <img class="art-img" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async" style="max-height:clamp(120px, 22vh, 200px)">
+          <img alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="lazy" decoding="async">
         </div></div>
         <div class="content">
           <div class="title"><h2 data-text="VCTECH">VCTECH</h2><span aria-hidden="true"></span></div>
@@ -827,7 +852,7 @@
     }
     function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
 
-    /* Modo lateral (deck) — ativa com ?mode=deck */
+    /* Modo lateral (deck) por query ?mode=deck */
     function enableDeckIfRequested(){
       const qp = new URLSearchParams(location.search);
       const on = qp.get('mode') === 'deck';
@@ -1107,13 +1132,13 @@
       updateAll(L);
       document.getElementById('cc-email-link').href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
       if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L);
-      else setCapsuleSection(L, currentSectionTitle);
+      else setCapsuleSection(L, document.querySelector('.section.is-current')?.getAttribute('data-title')||'');
       if(remember) localStorage.setItem(LEVELS_KEY,String(L));
       requestAnimationFrame(()=> highlightChanges(prev));
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Onboarding (mesma lógica, com âncora no menu direito em desktop) */
+    /* Onboarding */
     const splash=document.getElementById('splash');
     document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
     document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
@@ -1134,6 +1159,7 @@
     const onbText=document.getElementById('onbText');
 
     function vp(){ return { w: window.innerWidth||document.documentElement.clientWidth, h: window.innerHeight||document.documentElement.clientHeight }; }
+
     function spotlight(targetEl, pad=6){
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
@@ -1228,7 +1254,7 @@
       document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
       splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
 
-      // Botões “Nível/Plano”
+      // Flip “Nível/Plano”
       computeFlipWidths();
       if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         let show=false; setInterval(()=>{ show=!show; setFlipState(show); }, 2600);
@@ -1239,7 +1265,7 @@
       addEventListener('resize', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); }, {passive:true});
       addEventListener('pageshow', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
       addEventListener('orientationchange', ()=>{ setHeights(); computeFlipWidths(); fitCapsule(); });
-      addEventListener('scroll', toggleFab, {passive:true});
+      addEventListener('scroll', ()=>{ if (isMobile()) sideDock.classList.remove('is-open'); toggleFab(); }, {passive:true});
     }
     init();
   })();
