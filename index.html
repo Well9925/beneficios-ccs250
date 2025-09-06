@@ -58,7 +58,7 @@
 
     /* Topbar */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
-    @keyframes pulseHalo { 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.4),0 0 0 0 rgba(123,92,255,.35) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
+    @keyframes pulseHalo { 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.35),0 0 0 0 rgba(123,92,255,.3) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -131,7 +131,8 @@
     @media (max-width:880px){ .art-img{ max-height:var(--art-max-h-m) } }
 
     .content{ padding:16px 16px 18px }
-    /* Título SEMPRE com botão à direita */
+
+    /* Título SEMPRE com "Saiba mais" à direita */
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
     .title h2::after{
@@ -320,7 +321,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash com “magia” melhorada (sem linha dura) */
+    /* Splash com “glint” (varrendo, sem rotação) + pílula pulsante */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -341,12 +342,13 @@
       position:relative; overflow:hidden;
     }
     .splash .box::after{
-      content:""; position:absolute; inset:-40% -20%;
-      background: conic-gradient(from 0deg, transparent 0 70%, rgba(255,255,255,.26) 80%, transparent 90%);
-      filter: blur(14px); opacity:.6; animation:splashSweep 4s linear infinite;
-      pointer-events:none; mix-blend-mode:screen;
+      content:""; position:absolute; top:0; bottom:0; width:55%;
+      background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.28) 18%, transparent 34%);
+      filter: blur(10px); opacity:.65; pointer-events:none; mix-blend-mode:screen;
+      animation:glint 3.6s ease-in-out infinite alternate;
+      left:-60%;
     }
-    @keyframes splashSweep{ to{ transform:rotate(360deg) } }
+    @keyframes glint{ from{ left:-60% } to{ left:105% } }
     .splash .cap{
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 14px; border-radius:999px; margin:0 auto 8px;
@@ -358,7 +360,7 @@
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
-    /* Onboarding (robust: não estoura, não cobre ATUAL, auditor de limites) */
+    /* Onboarding (robusto: não estoura, não cobre ATUAL, auditor) */
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
@@ -771,7 +773,6 @@
     const capRight=document.getElementById('capRight');
     const wrapTop=document.querySelector('.topbar .wrap');
     const capsule=document.querySelector('.capsule');
-    const capTrack=document.getElementById('capTrack');
 
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
@@ -813,8 +814,7 @@
       const lW=document.querySelector('.logo-ccs')?.getBoundingClientRect().width||0;
       const rW=document.querySelector('.logo-vctech')?.getBoundingClientRect().width||0;
       const available=Math.max(160, Math.floor(wrapW - lW - rW - gap*2));
-      capsule.style.maxWidth = available + 'px';
-      capTrack.style.transform='';
+      document.querySelector('.capsule').style.maxWidth = available + 'px';
     }
     function setCapsuleTop(level){
       capLeft.textContent=`Benefícios Nível ${level}`;
@@ -916,7 +916,7 @@
         a.classList.add('on'); b.classList.add('on');
         const w=Math.max(a.scrollWidth, b.scrollWidth);
         flip.style.setProperty('--flip-w', w+'px');
-        b.classList.remove('on'); a.classList.add('on'); // estado inicial: “Nível X”
+        b.classList.remove('on'); a.classList.add('on'); // estado inicial
       });
     }
     function ensureOneVisible(flip){
@@ -949,7 +949,7 @@
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Side Dock mobile toggle */
+    /* Dock mobile toggle */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
@@ -1045,7 +1045,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial (bottom sheet robusto + auditor) */
+    /* Tutorial (bottom sheet robusto, pad especial para ver “ATUAL”, abertura do dock no passo 2, auditor) */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
@@ -1069,7 +1069,13 @@
     function spotlight(targetEl, pad=6){
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
-      const x=clamp(r.left-pad,0,vw-1), y=clamp(r.top-pad,0,vh-1), w=clamp(r.width+pad*2,0,vw), h=clamp(r.height+pad*2,0,vh);
+      let extraTop=0;
+      // Passo 1: incluir o selo "ATUAL" acima do botão
+      if (targetEl.id==='levelDockWrap') extraTop=22;
+      const x=clamp(r.left-pad,0,vw-1);
+      const y=clamp(r.top-pad-extraTop,0,vh-1);
+      const w=clamp(r.width+pad*2,0,vw);
+      const h=clamp(r.height+pad*2+extraTop,0,vh);
       Object.assign(onbHighlight.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
       Object.assign(onbTop.style,{left:'0px',top:'0px',width:vw+'px',height:y+'px'});
       Object.assign(onbLeft.style,{left:'0px',top:y+'px',width:x+'px',height:h+'px'});
@@ -1078,8 +1084,10 @@
     }
 
     function ensureVisible(el){
-      try{ el?.scrollIntoView({behavior:'instant', block:'center', inline:'nearest'}); }catch{}
+      try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
+
+    function isSmall(){ return matchMedia('(max-width: 520px)').matches; }
 
     function showOnboarding(step=1){
       let onbOpen=true, onbStep=step;
@@ -1093,7 +1101,11 @@
 
       function targetForStep(){
         if(onbStep===1) return document.getElementById('levelDockWrap');
-        if(onbStep===2) return document.getElementById('sideDock') || document.getElementById('dockToggle');
+        if(onbStep===2){
+          // Abrir dock no mobile para destacar o menu da direita
+          if(isMobile()) openDock();
+          return sideDock.classList.contains('is-open') ? document.getElementById('sideDock') : document.getElementById('dockToggle');
+        }
         return document.querySelector('.capsule');
       }
 
@@ -1101,40 +1113,37 @@
         const tgt=targetForStep(); if(!tgt) return;
         ensureVisible(tgt);
 
-        // Spotlight
-        requestAnimationFrame(()=> spotlight(tgt, 6));
+        // Spotlight com pad especial no passo 1 (para o selo ATUAL)
+        const pad = (onbStep===1)?14:6;
+        requestAnimationFrame(()=> spotlight(tgt, pad));
 
-        // Card placement (bottom sheet para mobile nos passos 1 e 2)
-        const small = matchMedia('(max-width: 520px)').matches;
-        if(small && (onbStep===1||onbStep===2)){
-          // Bottom seguro: não cobre Level Bar nem selo ATUAL
+        // Card: bottom sheet seguro no mobile em todos os passos
+        if(isSmall()){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
           onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
         }else{
+          // Desktop: tenta posicionar próximo do alvo, com auditoria
           const r=tgt.getBoundingClientRect(); const {w:vw,h:vh}=vp();
-          const pad=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
-          let top=r.top-(ch+pad); if(top<60) top=r.bottom+pad; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
+          const padC=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
+          let top=r.top-(ch+padC); if(top<60) top=r.bottom+padC; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
           let left=clamp(r.left, 16, vw - cw - 16);
           onbCard.style.bottom='auto'; onbCard.style.transform='none';
           onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
-        }
-
-        // AUDITORIA: garantir que card está dentro do viewport
-        const b=onbCard.getBoundingClientRect(); const {w:vw,h:vh}=vp();
-        const margin=8;
-        if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
-          // fallback: centralizar como bottom sheet
-          onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
-          onbCard.style.right='auto'; onbCard.style.top='auto';
-          onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
+          // Auditoria de limites
+          const b=onbCard.getBoundingClientRect(); const margin=8;
+          if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
+            onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
+            onbCard.style.right='auto'; onbCard.style.top='auto';
+            onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
+          }
         }
       }
 
       setTexts(); requestAnimationFrame(()=>{ requestAnimationFrame(place); });
 
       onbNext.onclick=()=>{ onbStep=Math.min(3,onbStep+1); setTexts(); requestAnimationFrame(place); };
-      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; }
+      function end(){ onbOpen=false; onboarding.classList.remove('is-open'); document.body.style.overflow=''; closeDock(); }
       onbDone.onclick=end; onbSkip.onclick=end;
       addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
