@@ -31,8 +31,7 @@
       --h-status: 44px;
       --h-levelbar: 72px;
 
-      /* Pager height (setado no JS) */
-      --snap-h: 720px;
+      --snap-h: 720px; /* calculado no JS */
     }
 
     *{box-sizing:border-box}
@@ -116,6 +115,14 @@
     }
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
+    /* Modo desktop toggle */
+    .desk-mode{
+      display:none; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.10); border:1px solid var(--line); color:#eaf3ff; font-weight:900; cursor:pointer
+    }
+    .desk-mode .dot{ width:10px; height:10px; border-radius:50%; background:#7b5cff; box-shadow:0 0 8px rgba(123,92,255,.6) }
+    @media (min-width:1024px){ .desk-mode{ display:inline-flex } }
+
     /* Main layout */
     main{ padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0 }
     .section{ padding:20px 0 28px }
@@ -126,7 +133,7 @@
       backdrop-filter:blur(10px); -webkit-backdrop-filter: blur(10px);
       box-shadow:0 18px 50px rgba(0,0,0,.35);
       overflow:hidden; contain:content;
-      transition: transform .45s ease, opacity .45s ease;
+      transition: transform .35s ease, opacity .35s ease;
     }
     .media{ padding:10px 14px 0 }
     .frame{ width:100%; display:grid; place-content:center; place-items:center }
@@ -179,7 +186,7 @@
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
-    /* Destaques pílulas */
+    /* Destaques pílulas ao trocar nível */
     .pill-flag.changed{ animation: pillPop 480ms cubic-bezier(.2,.7,.2,1) both; }
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
@@ -199,7 +206,6 @@
     .btn{
       border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:900;
       background:#fff; color:#111; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:15px;
-      flex:0 0 auto;
     }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
     .btn.ghost{ background:rgba(255,255,255,.10); color:#fff }
@@ -209,16 +215,18 @@
       .btn{ width:100% }
     }
 
-    /* Saiba mais */
+    /* "Saiba mais" */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer
     }
     .chip-more .ico{ width:16px; height:16px }
+
     .more[hidden]{ display:none }
     .more{ overflow:hidden; height:0; opacity:0; transition: height .28s ease, opacity .28s ease }
     .more.is-open{ opacity:1 }
     .more-inner{ padding:14px; margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px }
+
     .facts{ display:grid; grid-template-columns:1fr; gap:10px }
     @media (min-width:1080px){ .facts{ grid-template-columns:1fr 1fr } }
     .fact{ display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.08) }
@@ -297,15 +305,16 @@
     .gimg{ width:64px; height:64px; object-fit:contain; display:block; margin:0 auto }
     .gtxt{ font-weight:900; text-align:center }
 
-    /* Indique & Ganhe — com efeito reativado no título */
-    #s-indique .card{ background:
-      radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
-      radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.10), transparent 60%),
-      linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+    /* Indique & Ganhe — efeito ativo no h2 */
+    #s-indique .card{
+      background:
+        radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
+        radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
       border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 24px 60px rgba(0,0,0,.45);
     }
-    /* CTAs do Indique & Ganhe */
+    /* CTAs Indique */
     #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
     #indique-actions .btn{
       position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
@@ -324,12 +333,12 @@
 
     /* FAQ */
     .faq-grid{ display:grid; gap:10px; grid-template-columns:1fr; }
-    @media (min-width:1080px){ .faq-grid{ grid-template-columns:1fr 1fr } }
+    @media (min-width:1280px){ .faq-grid{ grid-template-columns:1fr 1fr } }
     .faq-card{ border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.06); padding:12px; cursor:pointer }
     .faq-card summary{ list-style:none; cursor:pointer; font-weight:700 }
     .faq-card[open]{ background:rgba(255,255,255,.10) }
     .faq-card summary::-webkit-details-marker{ display:none }
-    #s-faq .title + .faq-grid{ margin-top:16px }
+    #s-faq .title + .faq-grid{ margin-top:18px }
     #s-faq .title h2::before{ bottom:-4px; right:72% }
 
     /* Footer */
@@ -337,7 +346,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash: “glint” lateral (sem giro) */
+    /* Splash: glint lateral (sem giro) */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -419,19 +428,19 @@
       .onb .row .btn{ width:auto }
     }
 
-    /* DESKTOP: Pager Mode */
+    /* DESKTOP: Modo Pager (opcional por classe) */
     @media (min-width:1024px){
-      main{ scroll-snap-type: y mandatory }
-      .section{
+      body.mode-pager main{ scroll-snap-type: y mandatory }
+      body.mode-pager .section{
         min-height: var(--snap-h);
         scroll-snap-align: center;
         display:grid;
         place-items:center;
         padding: 24px var(--side-pad) 36px;
       }
-      .card{ transform:translateY(40px); opacity:0 }
-      .section.is-current .card{ transform:translateY(0); opacity:1 }
-      .section.is-leaving .card{ transform:translateY(-22px); opacity:.28 }
+      body.mode-pager .card{ transform:translateY(40px); opacity:0 }
+      body.mode-pager .section.is-current .card{ transform:translateY(0); opacity:1 }
+      body.mode-pager .section.is-leaving .card{ transform:translateY(-22px); opacity:.28 }
     }
 
     .hide{ display:none !important }
@@ -467,7 +476,9 @@
 
   <!-- Barra comercial -->
   <div class="status-bar" id="statusBar" role="region" aria-live="polite">
-    <div class="status-wrap" id="statusWrap"></div>
+    <div class="status-wrap" id="statusWrap">
+      <!-- toggle desktop mode é injetado via JS -->
+    </div>
   </div>
 
   <div id="top-sentinel" aria-hidden="true" style="height:1px;"></div>
@@ -786,7 +797,7 @@
     </div>
   </div>
 
-  <!-- Onboarding (3 passos) -->
+  <!-- Onboarding -->
   <div class="onb" id="onboarding" role="dialog" aria-modal="true" aria-live="polite">
     <div class="blk" id="onbTop" aria-hidden="true"></div>
     <div class="blk" id="onbLeft" aria-hidden="true"></div>
@@ -818,6 +829,7 @@
   <script>
   (function(){
     const LEVELS_KEY='ccs-cc-compare-level';
+    const MODE_KEY='ccs-desktop-mode'; // 'classic' | 'pager'
     const PLANS={1:'250 MB',2:'450 MB',3:'650 MB'};
     const CONTACT_WHATS='https://wa.me/554797701300?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20especialista%20sobre%20os%20planos%20CCS.';
     const SIGN_WHATS={
@@ -826,7 +838,6 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Seletores principais */
     const topbar=document.getElementById('topbar');
     const statusBar=document.getElementById('statusBar');
     const statusWrap=document.getElementById('statusWrap');
@@ -842,30 +853,11 @@
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
 
-    /* Conteúdos */
-    const CONNECTA={
-      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
-    };
-    const PLAY={
-      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
-      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
-      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
-    };
-    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
-    const SUPORTE={
-      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
-      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
-      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
-    };
-
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
       const hStatus=statusBar.offsetHeight||44;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
-      /* Pager height para desktop: viewport - top - status - margem */
       const snapH=Math.max(520,(window.innerHeight||800) - hTop - hStatus - 10);
       document.documentElement.style.setProperty('--snap-h', snapH+'px');
     }
@@ -913,6 +905,24 @@
       });
     }
 
+    /* Conteúdos por nível */
+    const CONNECTA={
+      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
+    };
+    const PLAY={
+      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
+      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
+      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
+    };
+    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
+    const SUPORTE={
+      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
+      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
+      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
+    };
+
     /* Atualização por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
@@ -957,18 +967,89 @@
     }
     function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
 
-    function setStatusBar(level){
-      statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
+    /* Status bar + toggle modo desktop */
+    function desktopMode(){ return document.body.classList.contains('mode-pager') ? 'pager' : 'classic'; }
+    function setDesktopMode(mode){
+      const m = (mode==='pager')?'pager':'classic';
+      document.body.classList.toggle('mode-pager', m==='pager');
+      localStorage.setItem(MODE_KEY, m);
+      // Atualiza chip
+      const chip=document.getElementById('modeChip');
+      if(chip){
+        const txt=chip.querySelector('.txt');
+        txt.textContent = m==='pager' ? 'Modo imersivo (ligado)' : 'Modo imersivo (desligado)';
+        chip.setAttribute('aria-pressed', String(m==='pager'));
+      }
+    }
+    function injectStatus(level){
+      statusWrap.innerHTML='';
+      const a=document.createElement('a'); a.className='status-cta'; a.href=SIGN_WHATS[level]; a.target='_blank'; a.rel='noopener'; a.textContent=`Assinar Nível ${level} agora`;
+      const b=document.createElement('a'); b.className='status-link'; b.href=CONTACT_WHATS; b.target='_blank'; b.rel='noopener'; b.textContent='ou fale com um especialista';
+      const chip=document.createElement('button');
+      chip.id='modeChip'; chip.type='button'; chip.className='desk-mode'; chip.setAttribute('aria-pressed','false');
+      chip.innerHTML='<span class="dot" aria-hidden="true"></span><span class="txt">Modo imersivo (desligado)</span>';
+      chip.addEventListener('click', ()=> setDesktopMode(desktopMode()==='pager'?'classic':'pager'));
+      statusWrap.append(a, b, chip);
+      // Ajusta texto conforme estado atual
+      setDesktopMode(localStorage.getItem(MODE_KEY)||'classic');
       setHeights();
     }
 
-    function setLevelDock(level){
-      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      const btn=lvlBtns.find(b=> +b.dataset.level===level);
-      if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
+    function setHeightsAndCapsule(){
+      setHeights(); fitCapsule();
     }
 
-    /* Alternância “Nível X” ↔ Plano Y” */
+    /* Visuais de seção atual (também usados no modo pager) */
+    let topAtSight=true, currentSectionTitle='Conecta Clube';
+    (function observeSections(){
+      const sentinel=document.getElementById('top-sentinel');
+      if(!('IntersectionObserver' in window)) return;
+
+      const ioTop=new IntersectionObserver(entries=>{
+        topAtSight=entries[0].isIntersecting;
+        const level=+localStorage.getItem(LEVELS_KEY)||1;
+        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+      },{threshold:[0,0.01,1]});
+      ioTop.observe(sentinel);
+
+      document.querySelectorAll('.title h2').forEach(h=> h.setAttribute('data-text', h.textContent.trim()));
+
+      const sections=[...document.querySelectorAll('main .section')];
+      let lastCur=null;
+
+      const io=new IntersectionObserver(()=>{
+        const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
+        const vh=window.innerHeight||document.documentElement.clientHeight;
+        let maxVis=null;
+
+        sections.forEach(s=>{
+          const r=s.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, hTop));
+          const denom = Math.min(vh - hTop, r.height||1);
+          const ratio = Math.max(0, Math.min(1, visible / Math.max(1, denom)));
+          const h2=s.querySelector('.title h2'); if(h2) h2.style.setProperty('--magic', ratio.toFixed(2));
+
+          if(!maxVis || visible>maxVis.visible) maxVis={el:s, visible, title:s.getAttribute('data-title')||''};
+        });
+
+        if(maxVis){
+          currentSectionTitle = maxVis.title || currentSectionTitle;
+
+          if(lastCur && lastCur!==maxVis.el){
+            lastCur.classList.remove('is-current');
+            lastCur.classList.add('is-leaving');
+            setTimeout(()=> lastCur && lastCur.classList.remove('is-leaving'), 350);
+          }
+          maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
+
+          const level=+localStorage.getItem(LEVELS_KEY)||1;
+          if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
+        }
+      },{threshold:[0,0.25,0.5,0.75,1]});
+      sections.forEach(s=> io.observe(s));
+    })();
+
+    /* Alternância “Nível X” ↔ Plano Y” na barra inferior */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -1013,6 +1094,7 @@
 
     /* Dock mobile toggle */
     function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
+    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
@@ -1029,67 +1111,17 @@
       if(expanded){
         const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
         panel.style.height='0px'; panel.classList.remove('is-open');
-        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); };
+        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeightsAndCapsule(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','false'); if(txt) txt.textContent='Saiba mais';
       }else{
         panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
         requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
-        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); };
+        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeightsAndCapsule(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','true'); if(txt) txt.textContent='Ver menos';
       }
     });
-
-    /* Cápsula + título reativo e Pager Mode classes */
-    let topAtSight=true, currentSectionTitle='Conecta Clube';
-    (function(){
-      const sentinel=document.getElementById('top-sentinel');
-      if(!('IntersectionObserver' in window)) return;
-
-      const ioTop=new IntersectionObserver(entries=>{
-        topAtSight=entries[0].isIntersecting;
-        const level=+localStorage.getItem(LEVELS_KEY)||1;
-        if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
-      },{threshold:[0,0.01,1]});
-      ioTop.observe(sentinel);
-
-      document.querySelectorAll('.title h2').forEach(h=> h.setAttribute('data-text', h.textContent.trim()));
-
-      const sections=[...document.querySelectorAll('main .section')];
-      let lastCur=null;
-
-      const io=new IntersectionObserver(()=>{
-        const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
-        const vh=window.innerHeight||document.documentElement.clientHeight;
-        let maxVis=null;
-
-        sections.forEach(s=>{
-          const r=s.getBoundingClientRect();
-          const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, hTop));
-          const denom = Math.min(vh - hTop, r.height||1);
-          const ratio = Math.max(0, Math.min(1, visible / Math.max(1, denom)));
-          const h2=s.querySelector('.title h2'); if(h2) h2.style.setProperty('--magic', ratio.toFixed(2));
-
-          if(!maxVis || visible>maxVis.visible) maxVis={el:s, visible, title:s.getAttribute('data-title')||''};
-        });
-
-        if(maxVis){
-          currentSectionTitle = maxVis.title || currentSectionTitle;
-
-          if(lastCur && lastCur!==maxVis.el){
-            lastCur.classList.remove('is-current');
-            lastCur.classList.add('is-leaving');
-            setTimeout(()=> lastCur && lastCur.classList.remove('is-leaving'), 450);
-          }
-          maxVis.el.classList.add('is-current'); lastCur=maxVis.el;
-
-          const level=+localStorage.getItem(LEVELS_KEY)||1;
-          if(topAtSight) setCapsuleTop(level); else setCapsuleSection(level, currentSectionTitle);
-        }
-      },{threshold:[0,0.25,0.5,0.75,1]});
-      sections.forEach(s=> io.observe(s));
-    })();
 
     /* Clipboard */
     document.getElementById('copyEmail')?.addEventListener('click', async ()=>{
@@ -1098,8 +1130,12 @@
     });
 
     /* Aplicar nível */
-    function setStatus(level){ setStatusBar(level); }
-    function setLevelDockState(level){ setLevelDock(level); }
+    function setStatus(level){ injectStatus(level); }
+    function setLevelDockState(level){
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+      const btn=lvlBtns.find(b=> +b.dataset.level===level);
+      if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 320); }
+    }
 
     function applyLevel(level,{remember=true}={}){
       const L=[1,2,3].includes(+level)?+level:1;
@@ -1116,8 +1152,10 @@
 
     /* Tutorial */
     const splash=document.getElementById('splash');
-    const btnStart=document.getElementById('btnStart');
-    const btnSkipTutorial=document.getElementById('btnSkipTutorial');
+    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+    document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
+    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+    splash.classList.add('is-open'); document.body.style.overflow='hidden';
 
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
@@ -1139,7 +1177,7 @@
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
-      if (targetEl.id==='levelDockWrap') extraTop=22; // incluir selo ATUAL
+      if (targetEl.id==='levelDockWrap') extraTop=22; // inclui selo ATUAL
       const x=clamp(r.left-pad,0,vw-1);
       const y=clamp(r.top-pad-extraTop,0,vh-1);
       const w=clamp(r.width+pad*2,0,vw);
@@ -1154,9 +1192,6 @@
     function ensureVisible(el){
       try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
-    function isSmall(){ return matchMedia('(max-width: 520px)').matches; }
-    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
-
     function dockTargetEl(){
       return document.querySelector('.side-dock .dock-items') || document.getElementById('sideDock') || document.getElementById('dockToggle');
     }
@@ -1188,13 +1223,12 @@
         requestAnimationFrame(()=> spotlight(tgt, pad));
 
         const {w:vw,h:vh}=vp();
-        if(isSmall()){
+        if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
           onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
         }else{
           if(onbStep===2 && isDesktop()){
-            // Ancorar ao lado direito, próximo ao menu
             const r=(dockTargetEl() || tgt).getBoundingClientRect();
             const ch=onbCard.offsetHeight;
             const top=clamp(r.top + r.height/2 - ch/2, 16, vh - ch - 16);
@@ -1208,8 +1242,6 @@
             onbCard.style.bottom='auto'; onbCard.style.right='auto'; onbCard.style.transform='none';
             onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
           }
-
-          // Auditoria: se sair da tela, vira bottom-sheet
           const b=onbCard.getBoundingClientRect(); const margin=8;
           if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
             onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1226,25 +1258,32 @@
       onbDone.onclick=end; onbSkip.onclick=end;
       addEventListener('resize', ()=> onbOpen&&place(), {passive:true});
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
+      // ESC fecha
+      const esc=(e)=>{ if(e.key==='Escape'){ end(); removeEventListener('keydown',esc); } };
+      addEventListener('keydown', esc);
     }
 
     /* Init */
     function init(){
+      // aplica modo desktop inicial (querystring tem prioridade)
+      const params=new URLSearchParams(location.search);
+      const qsMode=params.get('mode');
+      const savedMode=localStorage.getItem(MODE_KEY)||'classic';
+      setDesktopMode(qsMode==='pager'?'pager':(qsMode==='classic'?'classic':savedMode));
+
       setHeights();
-      const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
-      setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
+      const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
+      localStorage.setItem(LEVELS_KEY,String(startLevel));
+      injectStatus(startLevel);
+      updateAll(startLevel);
+      setLevelDockState(startLevel);
+      setCapsuleTop(startLevel);
 
       computeFlipWidths(); startFlip();
 
-      const splash=document.getElementById('splash');
-      document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
-      document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
-      document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
-      splash.classList.add('is-open'); document.body.style.overflow='hidden';
-
-      addEventListener('resize', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); }, {passive:true});
-      addEventListener('pageshow', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
-      addEventListener('orientationchange', ()=>{ setHeights(); fitCapsule(); computeFlipWidths(); });
+      addEventListener('resize', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); });
+      addEventListener('orientationchange', ()=>{ setHeightsAndCapsule(); computeFlipWidths(); });
       addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
