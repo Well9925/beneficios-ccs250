@@ -18,8 +18,9 @@
       --muted:#cfe0ff;
       --cta-a:#ff8a25; --cta-b:#ffb04a;
 
-      --levelA:#2f6bff; --levelB:#7b5cff;
-      --planA:#00d9ff;  --planB:#00ffc6;
+      /* Paleta padrão (Nível 1). Os temas abaixo sobrescrevem isso no body */
+      --levelA:#2f6bff; --levelB:#00d9ff;
+      --planA:#00ffc6;  --planB:#a3ffed;
 
       --side-pad: clamp(14px, 4.5vw, 36px);
       --content-w: 1200px;
@@ -32,11 +33,35 @@
       --h-status: 44px;
       --h-levelbar: 72px;
 
-      /* Entrada orquestrada */
-      --enter-shift: 14px;
-      --enter-dur: 420ms;
-      --enter-dur-fast: 320ms;
-      --stagger: 60ms;
+      /* Entrada orquestrada (dura aprox. 2,6s) */
+      --enter-shift: 16px;
+      --enter-dur: 700ms;
+      --enter-dur-fast: 520ms;
+      --stagger: 90ms;
+
+      /* FX — variáveis de atmosfera por nível */
+      --fx-hue: 0deg;
+      --fx-sat: 1;
+      --fx-bri: 1;
+      --fx-opa-1: .9;
+      --fx-opa-2: .7;
+    }
+
+    /* Temas por nível (apenas variáveis; estrutura intacta) */
+    body.theme-l1{
+      --levelA:#2f6bff; --levelB:#00d9ff;
+      --planA:#00ffc6;  --planB:#a3ffed;
+      --fx-hue: 0deg; --fx-sat:1.05; --fx-bri:1.0;
+    }
+    body.theme-l2{
+      --levelA:#7b5cff; --levelB:#ae47ff;
+      --planA:#ff4dd8;  --planB:#ff9ce7;
+      --fx-hue: 25deg; --fx-sat:1.08; --fx-bri:1.02;
+    }
+    body.theme-l3{
+      --levelA:#00d9ff; --levelB:#00ffc6;
+      --planA:#88ff4d;  --planB:#e8ff6b;
+      --fx-hue: -12deg; --fx-sat:1.08; --fx-bri:1.03;
     }
 
     *{box-sizing:border-box}
@@ -50,26 +75,29 @@
       padding-bottom:calc(var(--h-levelbar) + 32px + env(safe-area-inset-bottom));
     }
 
-    /* FX (fundo mais animado e visível) */
+    /* FX (fundo mais animado e visível + atmosfera por nível) */
     .fx{position:fixed; inset:0; pointer-events:none}
     .fx.fx-bg{ z-index:-6;
       background:
-        radial-gradient(700px 480px at 5% 8%, rgba(95,92,255,.18), transparent 60%),
-        radial-gradient(700px 480px at 95% 92%, rgba(0,234,255,.16), transparent 60%),
+        radial-gradient(700px 480px at 5% 8%, color-mix(in oklab, var(--levelA), transparent 85%), transparent 60%),
+        radial-gradient(700px 480px at 95% 92%, color-mix(in oklab, var(--levelB), transparent 84%), transparent 60%),
         #0b0d12 }
+    .fx.fx-shimmer,
+    .fx.fx-shimmer2{
+      filter: hue-rotate(var(--fx-hue)) saturate(var(--fx-sat)) brightness(var(--fx-bri));
+      transition: filter 500ms ease, opacity 500ms ease;
+    }
     .fx.fx-shimmer{ z-index:-4; mix-blend-mode:screen;
-      background:
-        linear-gradient(22deg,transparent 35%,rgba(80,190,255,.22) 50%,transparent 65%);
+      background: linear-gradient(22deg,transparent 35%, rgba(80,190,255,.22) 50%, transparent 65%);
       background-size:260% 260%;
       animation:shimmer 9s ease-in-out infinite alternate;
-      opacity:.9;
+      opacity:var(--fx-opa-1);
     }
     .fx.fx-shimmer2{ z-index:-5; mix-blend-mode:screen;
-      background:
-        linear-gradient(-18deg,transparent 40%,rgba(0,255,198,.18) 50%,transparent 60%);
+      background: linear-gradient(-18deg,transparent 40%, color-mix(in oklab, var(--planA), transparent 78%) 50%, transparent 60%);
       background-size:240% 240%;
       animation:shimmer2 12s ease-in-out infinite alternate;
-      opacity:.7;
+      opacity:var(--fx-opa-2);
     }
     .fx.fx-noise{ z-index:-3; opacity:.06; mix-blend-mode:soft-light;
       background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.55"/></svg>');
@@ -80,9 +108,13 @@
     @keyframes shimmer2{ from{background-position:100% 100%} to{background-position:0% 0%} }
     @keyframes noiseMove{ from{ background-position:0 0 } to{ background-position:200px 200px } }
 
+    /* Boost rápido quando troca de tema (sem flash) */
+    body.theme-morph .fx.fx-shimmer{ animation-duration:6.2s; opacity:calc(var(--fx-opa-1) + .12) }
+    body.theme-morph .fx.fx-shimmer2{ animation-duration:8.6s; opacity:calc(var(--fx-opa-2) + .10) }
+
     /* Topbar */
     @keyframes ringShift { 0% { background-position: 0% 50% } 100%{ background-position: 100% 50% } }
-    @keyframes pulseHalo { 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.35),0 0 0 0 rgba(123,92,255,.3) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
+    @keyframes pulseHalo { 0%{ box-shadow:0 0 0 0 color-mix(in oklab, var(--levelB), transparent 40%),0 0 0 0 color-mix(in oklab, var(--levelA), transparent 38%) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
 
     .topbar{
       position:fixed; inset:0 0 auto 0; z-index:70;
@@ -109,6 +141,7 @@
       background-size:300% 300%; animation:ringShift 12s ease-in-out infinite alternate;
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+      transition: background 450ms ease;
     }
     .cap-viewport{ position:relative; display:block; max-width:100%; overflow:hidden; white-space:nowrap; pointer-events:none }
     .track{ display:inline-block; will-change:transform }
@@ -117,10 +150,11 @@
       background:linear-gradient(90deg, #eaf3ff 0%, #ffffff 30%, #eaf3ff 60%) padding-box,
                  linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB)) border-box;
       background-clip:text; -webkit-background-clip:text; color:transparent; background-size:200% 100%, 100% 100%; animation:capShift 3.2s linear infinite;
-      text-shadow:0 0 12px rgba(123,92,255,.28), 0 0 18px rgba(0,255,198,.20);
+      text-shadow:0 0 12px color-mix(in oklab, var(--levelA), transparent 72%), 0 0 18px color-mix(in oklab, var(--planB), transparent 80%);
+      transition: text-shadow 450ms ease;
     }
     @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
-    .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px rgba(0,217,255,.55), 0 0 16px rgba(123,92,255,.35) }
+    .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px color-mix(in oklab, var(--levelB), transparent 45%), 0 0 16px color-mix(in oklab, var(--planA), transparent 55%) }
 
     /* Status bar */
     .status-bar{ position:fixed; left:0; right:0; z-index:69; top:calc(var(--h-topbar) + env(safe-area-inset-top)); background:rgba(16,18,24,.55); border-bottom:1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px) }
@@ -135,6 +169,7 @@
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude;
       background-size:300% 300%; animation:ringShift 8s ease-in-out infinite alternate; opacity:.9; pointer-events:none;
+      transition: background 450ms ease;
     }
     .status-link{ color:#e6f0ff; text-decoration:underline dotted 1px; text-underline-offset:2px }
 
@@ -153,7 +188,7 @@
 
     @media (min-width:1024px){ .card.stage{ display:block } }
 
-    /* Bloco de mídia */
+    /* Bloco de mídia (desktop sem corte) */
     .media{ padding:10px 14px 0; overflow:visible }
     .frame{
       width:100%;
@@ -197,13 +232,13 @@
       background: linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
       -webkit-background-clip:text; background-clip:text; color:transparent;
       opacity: var(--magic, 0);
-      filter: drop-shadow(0 0 10px rgba(0,217,255,.35)) drop-shadow(0 0 12px rgba(123,92,255,.25));
-      pointer-events:none; transition: opacity .18s ease;
+      filter: drop-shadow(0 0 10px color-mix(in oklab, var(--levelB), transparent 65%)) drop-shadow(0 0 12px color-mix(in oklab, var(--planA), transparent 75%));
+      pointer-events:none; transition: opacity .18s ease, background 450ms ease;
     }
     .section.is-current .title h2::before{
       content:""; position:absolute; left:0; right:65%; bottom:-6px; height:3px; border-radius:3px;
-      background:linear-gradient(90deg,#23d3ff,#6b5cff);
-      box-shadow:0 0 12px rgba(0,217,255,.5), 0 0 18px rgba(123,92,255,.4);
+      background:linear-gradient(90deg,var(--levelA),var(--levelB));
+      box-shadow:0 0 12px color-mix(in oklab, var(--levelB), transparent 55%), 0 0 18px color-mix(in oklab, var(--levelA), transparent 60%);
       animation:underlineSweep 700ms ease-out;
     }
     @keyframes underlineSweep{ from{ right:98% } to{ right:65% } }
@@ -216,9 +251,14 @@
       border:1px solid var(--line); border-radius:999px; padding:10px 14px; font-weight:900;
       background:rgba(255,255,255,.06); color:#fff; text-align:center; display:inline-flex; align-items:center; justify-content:center;
       position:relative; overflow:hidden;
+      transition: background 450ms ease, color 450ms ease, border-color 450ms ease;
     }
     @media (max-width:700px){ .pill-flag{ width:100% } }
-    .pill-flag.included{ background:linear-gradient(90deg,var(--planA),var(--planB)); color:#0b0d12; border-color:transparent }
+    .pill-flag.included{
+      background:linear-gradient(90deg,var(--planA),var(--planB));
+      color:#0b0d12; border-color:transparent;
+      box-shadow: 0 4px 14px color-mix(in oklab, var(--planA), transparent 80%);
+    }
     .pill-flag.excluded{ background:rgba(255,255,255,.06); color:#cfe0ff; border-color:var(--line); opacity:.96 }
     .pill-flag.info{ background:rgba(255,255,255,.06); color:#e9f2ff; border-color:var(--line) }
 
@@ -227,7 +267,7 @@
     @keyframes pillPop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.03) } 100%{ transform:scale(1) } }
     .pill-flag.changed::before{
       content:""; position:absolute; inset:0 -30%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.45) 12%, transparent 26%);
-      transform:translateX(-120%); animation: sweep 360ms ease-out forwards 60ms; mix-blend-mode:screen;
+      transform:translateX(-120%); animation: sweep 360ms ease-out forwards 60ms; mix-blend-mode:screen
     }
     @keyframes sweep{ to{ transform:translateX(120%) } }
     .pill-flag.included-new::after{
@@ -245,6 +285,7 @@
     }
     .btn.cta{ background:linear-gradient(90deg,var(--cta-a),var(--cta-b)); border-color:transparent; color:#111 }
     .btn.ghost{ background:rgba(255,255,255,.10); color:#fff }
+
     @media (max-width:700px){
       .actions{ display:grid; gap:10px; grid-template-columns: 1fr 1fr }
       .actions.one{ grid-template-columns:1fr }
@@ -261,13 +302,13 @@
     @media (prefers-reduced-motion: no-preference){
       .chip-more::after{
         content:""; position:absolute; inset:-3px; border-radius:inherit; z-index:-1;
-        box-shadow:0 0 0 0 rgba(0,217,255,.45), 0 0 0 0 rgba(123,92,255,.35);
-        animation:chipPulse 1.8s ease-in-out infinite;
+        box-shadow:0 0 0 0 color-mix(in oklab, var(--levelB), transparent 55%), 0 0 0 0 color-mix(in oklab, var(--planA), transparent 55%);
+        animation:chipPulse 2s ease-in-out infinite;
       }
       @keyframes chipPulse{
-        0%{ box-shadow:0 0 0 0 rgba(0,217,255,.35), 0 0 12px 0 rgba(123,92,255,.28) }
-        50%{ box-shadow:0 0 0 8px rgba(0,217,255,0), 0 0 18px 6px rgba(123,92,255,.24) }
-        100%{ box-shadow:0 0 0 0 rgba(0,217,255,0), 0 0 12px 0 rgba(123,92,255,.20) }
+        0%{ box-shadow:0 0 0 0 color-mix(in oklab, var(--levelB), transparent 55%), 0 0 10px 0 color-mix(in oklab, var(--planA), transparent 65%) }
+        50%{ box-shadow:0 0 0 10px rgba(0,0,0,0), 0 0 18px 10px color-mix(in oklab, var(--levelA), transparent 70%) }
+        100%{ box-shadow:0 0 0 0 rgba(0,0,0,0), 0 0 10px 0 color-mix(in oklab, var(--planB), transparent 70%) }
       }
     }
 
@@ -309,26 +350,34 @@
       background:rgba(16,18,24,.55); border-top:1px solid var(--line);
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       height:var(--h-levelbar); overflow:visible;
+      transition: box-shadow 450ms ease;
     }
     .level-dock .wrap{ height:100%; display:flex; gap:10px; align-items:center; justify-content:center; max-width:var(--content-w); margin:0 auto }
     .btn-level{
       position:relative; flex:1 1 0; min-width:0; padding:12px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer; overflow:visible;
       display:flex; align-items:center; justify-content:center;
+      transition: border-color 450ms ease, background 450ms ease, box-shadow 450ms ease;
     }
     .btn-level[aria-pressed="true"]::before{
       content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
       background-size:300% 300%; animation:ringShift 10s ease-in-out infinite alternate;
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.8;
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.85;
+      transition: background 450ms ease;
     }
-    .btn-level[aria-pressed="true"]{ background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12)); box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 18px rgba(0,217,255,.30), 0 0 26px rgba(123,92,255,.22); transform: translateY(-1px) }
+    .btn-level[aria-pressed="true"]{
+      background:linear-gradient(90deg, rgba(255,255,255,.20), rgba(255,255,255,.12));
+      box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 0 18px color-mix(in oklab, var(--levelB), transparent 72%), 0 0 26px color-mix(in oklab, var(--planA), transparent 78%);
+      transform: translateY(-1px)
+    }
     .label-actual{
-      display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px rgba(0,217,255,.55), 0 0 18px rgba(123,92,255,.45);
+      display:none; position:absolute; top:-16px; left:14px; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; color:#0b0d12; background:linear-gradient(90deg,var(--levelA),var(--planB)); border:1px solid rgba(0,0,0,.12); box-shadow:0 2px 10px rgba(0,0,0,.35), 0 0 14px color-mix(in oklab, var(--levelB), transparent 55%), 0 0 18px color-mix(in oklab, var(--planA), transparent 60%);
       animation: halo 2.6s ease-out infinite;
+      transition: background 450ms ease;
     }
-    @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
+    @keyframes halo{ 0%{ box-shadow:0 0 0 0 color-mix(in oklab, var(--levelB), transparent 40%),0 0 0 0 color-mix(in oklab, var(--planA), transparent 38%) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
     /* Alternância “Nível X” ↔ Plano Y — impedir quebra de linha */
@@ -356,12 +405,14 @@
     /* Indique & Ganhe */
     #s-indique .card{
       background:
-        radial-gradient(120% 100% at 10% 0%, rgba(123,92,255,.12), transparent 60%),
-        radial-gradient(120% 100% at 90% 100%, rgba(0,234,255,.10), transparent 60%),
+        radial-gradient(120% 100% at 10% 0%, color-mix(in oklab, var(--levelA), transparent 88%), transparent 60%),
+        radial-gradient(120% 100% at 90% 100%, color-mix(in oklab, var(--levelB), transparent 88%), transparent 60%),
         linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
       border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 24px 60px rgba(0,0,0,.45);
+      transition: background 450ms ease, box-shadow 450ms ease;
     }
+
     #indique-actions{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
     #indique-actions .btn{
       position:relative; overflow:hidden; background:linear-gradient(90deg,#ff982a,#ffd24a); color:#111; border-color:transparent;
@@ -375,7 +426,7 @@
     #indique-actions .btn:hover::after{ transform:translateX(120%) }
     @keyframes pulseGlow{
       0%,100%{ box-shadow:0 10px 30px rgba(255,173,56,.25), 0 0 0 0 rgba(0,217,255,0) }
-      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px rgba(0,217,255,.18) }
+      50%{ box-shadow:0 16px 38px rgba(255,173,56,.42), 0 0 18px color-mix(in oklab, var(--levelA), transparent 88%) }
     }
 
     /* FAQ */
@@ -394,17 +445,17 @@
 
     /* Splash */
     .splash{ position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
-      background: radial-gradient(900px 600px at 10% 10%, rgba(95,92,255,.16), transparent 60%), radial-gradient(900px 600px at 90% 90%, rgba(0,234,255,.14), transparent 60%), rgba(9,12,18,.88);
+      background: radial-gradient(900px 600px at 10% 10%, color-mix(in oklab, var(--levelB), transparent 86%), transparent 60%), radial-gradient(900px 600px at 90% 90%, color-mix(in oklab, var(--planA), transparent 86%), transparent 60%), rgba(9,12,18,.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align:center; }
     .splash.is-open{ display:flex }
     .splash .box{ width:min(760px, 92vw); border-radius:20px; padding:24px; border:1px solid var(--line);
-      background: radial-gradient(140% 140% at -20% -20%, rgba(0,217,255,.14), transparent 60%), radial-gradient(140% 140% at 120% 120%, rgba(123,92,255,.12), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      background: radial-gradient(140% 140% at -20% -20%, color-mix(in oklab, var(--levelB), transparent 86%), transparent 60%), radial-gradient(140% 140% at 120% 120%, color-mix(in oklab, var(--planA), transparent 86%), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
       box-shadow:0 20px 60px rgba(0,0,0,.55); position:relative; overflow:hidden; }
     .splash .box::after{ content:""; position:absolute; top:0; bottom:0; width:55%; background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.36) 18%, transparent 34%); filter: blur(10px); opacity:.7; pointer-events:none; mix-blend-mode:screen; animation:glint 3.2s ease-in-out infinite alternate; left:-60%; }
     @keyframes glint{ from{ left:-60% } to{ left:105% } }
     .splash .cap{ display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; margin:0 auto 8px; background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900; animation:pulseHalo 4.2s ease-out infinite; }
-    .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px rgba(0,217,255,.18) }
-    .splash p{ margin:0 0 14px; color:#dfe7ff }
+    .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px color-mix(in oklab, var(--levelA), transparent 80%) }
+    .splash p{ margin:0 0 14px; color:#dfe0ff }
     .splash .actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap }
     .splash .btn{ min-width:200px }
 
@@ -412,7 +463,7 @@
     .onb{ position:fixed; inset:0; z-index:115; display:none; pointer-events:none }
     .onb.is-open{ display:block }
     .onb .blk{ position:fixed; background:rgba(0,0,0,.55); z-index:0; pointer-events:auto; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px) }
-    .onb .highlight{ position:fixed; z-index:1; border-radius:14px; border:2px solid rgba(0,217,255,.85); box-shadow:0 0 0 10px rgba(0,217,255,.18), 0 0 30px rgba(123,92,255,.30); pointer-events:none; transition: all .22s ease }
+    .onb .highlight{ position:fixed; z-index:1; border-radius:14px; border:2px solid color-mix(in oklab, var(--levelB), transparent 15%); box-shadow:0 0 0 10px color-mix(in oklab, var(--levelA), transparent 80%), 0 0 30px color-mix(in oklab, var(--planA), transparent 70%); pointer-events:none; transition: all .22s ease }
     .onb .card{ position:fixed; z-index:2; max-width:min(420px, 92vw); max-height:60vh; overflow:auto; background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 14px 40px rgba(0,0,0,.55); color:#fff; pointer-events:auto; text-align:left }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
@@ -481,12 +532,12 @@
       will-change: opacity, transform;
     }
     body.enter-seq.step-3 .enter-target .media{ opacity:1; transform:none; transition-delay:0ms }
-    body.enter-seq.step-3 .enter-target .content .title{ opacity:1; transform:none; transition-delay:80ms }
-    body.enter-seq.step-3 .enter-target .content .subtitle{ opacity:1; transform:none; transition-delay:140ms }
-    body.enter-seq.step-3 .enter-target .content .pills-grid{ opacity:1; transform:none; transition-delay:200ms }
-    body.enter-seq.step-3 .enter-target .content .actions{ opacity:1; transform:none; transition-delay:260ms }
+    body.enter-seq.step-3 .enter-target .content .title{ opacity:1; transform:none; transition-delay:120ms }
+    body.enter-seq.step-3 .enter-target .content .subtitle{ opacity:1; transform:none; transition-delay:200ms }
+    body.enter-seq.step-3 .enter-target .content .pills-grid{ opacity:1; transform:none; transition-delay:280ms }
+    body.enter-seq.step-3 .enter-target .content .actions{ opacity:1; transform:none; transition-delay:360ms }
 
-    /* Stagger para itens dentro de pílulas e ações (apenas opacidade/translate) */
+    /* Stagger para itens dentro de pílulas e ações */
     body.enter-seq .enter-target .pills-grid > *,
     body.enter-seq .enter-target .actions > *{
       opacity:0; transform:translateY(10px);
@@ -499,7 +550,7 @@
 
     /* Redução de movimento */
     @media (prefers-reduced-motion: reduce){
-      :root{ --enter-shift: 0px; --enter-dur: 160ms; --enter-dur-fast: 140ms; --stagger: 0ms }
+      :root{ --enter-shift: 0px; --enter-dur: 260ms; --enter-dur-fast: 200ms; --stagger: 0ms }
       .fx.fx-shimmer, .fx.fx-shimmer2, .fx.fx-noise{ animation-duration:0.01s }
     }
 
@@ -942,6 +993,16 @@
       fitCapsule();
     }
 
+    /* Tema por nível */
+    function setTheme(level,{morph=true}={}){
+      document.body.classList.remove('theme-l1','theme-l2','theme-l3');
+      document.body.classList.add(`theme-l${level}`);
+      if(morph){
+        document.body.classList.add('theme-morph');
+        setTimeout(()=> document.body.classList.remove('theme-morph'), 780);
+      }
+    }
+
     /* Modo lateral (deck) — ativa com ?mode=deck */
     function enableDeckIfRequested(){
       const qp = new URLSearchParams(location.search);
@@ -1092,7 +1153,7 @@
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy vertical */
+    /* Scrollspy vertical (marca seção atual e anima barra do título) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1169,7 +1230,6 @@
         b.classList.remove('on'); a.classList.add('on');
       });
     }
-    let flipTimer=null, showPlan=false, flipPaused=false;
     function ensureOneVisible(flip){
       const a=flip.querySelector('.flip-a'); const b=flip.querySelector('.flip-b');
       if(!a.classList.contains('on') && !b.classList.contains('on')) a.classList.add('on');
@@ -1185,6 +1245,7 @@
     }
     function pauseFlip(){ flipPaused=true }
     function resumeFlip(){ flipPaused=false }
+    let flipTimer=null, showPlan=false, flipPaused=false;
     lvlBtns.forEach(btn=>{
       btn.addEventListener('mouseenter', pauseFlip);
       btn.addEventListener('mouseleave', resumeFlip);
@@ -1194,7 +1255,7 @@
       btn.setAttribute('aria-label', `Nível ${lvl} (${plan}). Selecione para ver benefícios.`);
     });
 
-    /* Dock mobile */
+    /* Dock mobile toggle */
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
@@ -1211,29 +1272,35 @@
     function applyLevel(level,{remember=true}={}){
       const L=[1,2,3].includes(+level)?+level:1;
       const prev=snapshotPills();
-      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===L)));
+
+      setTheme(L,{morph:true});
+      setLevelDock(L);
       setStatusBar(L);
       updateAll(L);
+
       document.getElementById('cc-email-link').href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
+
+      const currentTitle = document.querySelector('.section.is-current')?.getAttribute('data-title') || '';
       if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L);
-      else setCapsuleSection(L, document.querySelector('.section.is-current')?.getAttribute('data-title')||'');
+      else setCapsuleSection(L, currentTitle);
+
       if(remember) localStorage.setItem(LEVELS_KEY,String(L));
       requestAnimationFrame(()=> highlightChanges(prev));
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* ENTRADA ORQUESTRADA */
+    /* ENTRADA ORQUESTRADA (mais lenta e perceptível) */
     function setStaggerVars(section){
       try{
         section?.querySelectorAll('.pills-grid > *').forEach((el,i)=> el.style.setProperty('--i', i));
         section?.querySelectorAll('.actions > *').forEach((el,i)=> el.style.setProperty('--i', i));
         const style=document.createElement('style');
         style.textContent=`
-          body.enter-seq.step-3 .enter-target .pills-grid > *{ transition-delay: calc(220ms + var(--i) * var(--stagger)) }
-          body.enter-seq.step-3 .enter-target .actions > *{ transition-delay: calc(260ms + var(--i) * var(--stagger)) }
+          body.enter-seq.step-3 .enter-target .pills-grid > *{ transition-delay: calc(260ms + var(--i) * var(--stagger)) }
+          body.enter-seq.step-3 .enter-target .actions > *{ transition-delay: calc(360ms + var(--i) * var(--stagger)) }
         `;
         document.head.appendChild(style);
-        setTimeout(()=> style.remove(), 2000);
+        setTimeout(()=> style.remove(), 3000);
       }catch{}
     }
     function getCurrentSection(){
@@ -1258,7 +1325,6 @@
       if(enterRunning) { endEntrance() }
       enterRunning=true;
 
-      // garantir que estamos no topo visual
       try{ document.getElementById('top-sentinel').scrollIntoView({block:'start'}); }catch{}
 
       const target = getCurrentSection();
@@ -1266,11 +1332,11 @@
       setStaggerVars(target);
 
       document.body.classList.add('enter-seq');
-      // Etapas
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-1'), 20));
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-2'), 420));
-      enterTimers.push(setTimeout(()=> document.body.classList.add('step-3'), 840));
-      enterTimers.push(setTimeout(endEntrance, 1600));
+      // Etapas mais lentas
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-1'), 100));   // topo
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-2'), 900));   // níveis + menu
+      enterTimers.push(setTimeout(()=> document.body.classList.add('step-3'), 1700));  // card
+      enterTimers.push(setTimeout(endEntrance, 2600));
 
       // Permitir pular por interação
       window.addEventListener('wheel', skipOnInteraction, {passive:true});
@@ -1392,7 +1458,12 @@
       setHeights();
       const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
       localStorage.setItem(LEVELS_KEY,String(startLevel));
-      setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
+
+      setTheme(startLevel,{morph:false});
+      setStatusBar(startLevel);
+      updateAll(startLevel);
+      setLevelDock(startLevel);
+      setCapsuleTop(startLevel);
 
       // Flip “Nível/Plano”
       computeFlipWidths();
