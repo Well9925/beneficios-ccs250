@@ -321,7 +321,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash com “glint” (varrendo, sem rotação) + pílula pulsante */
+    /* Splash com “glint” (varrendo lateral) */
     .splash{
       position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background:
@@ -345,15 +345,14 @@
       content:""; position:absolute; top:0; bottom:0; width:55%;
       background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.28) 18%, transparent 34%);
       filter: blur(10px); opacity:.65; pointer-events:none; mix-blend-mode:screen;
-      animation:glint 3.6s ease-in-out infinite alternate;
-      left:-60%;
+      animation:glint 3.6s ease-in-out infinite alternate; left:-60%;
     }
     @keyframes glint{ from{ left:-60% } to{ left:105% } }
     .splash .cap{
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 14px; border-radius:999px; margin:0 auto 8px;
       background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10); font-weight:900;
-      box-shadow:0 0 0 0 rgba(0,217,255,.0), 0 0 0 0 rgba(123,92,255,.0); animation:pulseHalo 4.2s ease-out infinite;
+      animation:pulseHalo 4.2s ease-out infinite;
     }
     .splash h1{ margin:8px 0 6px; font-size: clamp(22px, 3.2vw, 32px); text-shadow:0 0 18px rgba(0,217,255,.18) }
     .splash p{ margin:0 0 14px; color:#dfe7ff }
@@ -373,7 +372,36 @@
     }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-    .onb .row{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px }
+
+    /* BOTÕES DO TUTORIAL — correção de proporcionalidade */
+    .onb .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "skip next"
+        "start start";
+      gap:10px;
+      margin-top:12px;
+      align-items:stretch;
+      justify-items:stretch;
+      pointer-events:auto;
+    }
+    #onbSkip{ grid-area:skip }
+    #onbNext{ grid-area:next }
+    #onbDone{ grid-area:start }
+    .onb .row .btn{
+      width:100%;
+      min-width:0; /* permite encolher sem estourar */
+      padding: clamp(10px, 3.5vw, 12px) clamp(12px, 4vw, 16px);
+      font-size: clamp(14px, 4vw, 16px);
+    }
+    @media (min-width:560px){
+      .onb .row{
+        grid-template-columns: auto auto auto;
+        grid-template-areas: "skip next start";
+      }
+      .onb .row .btn{ width:auto }
+    }
     .hide{ display:none !important }
   </style>
 </head>
@@ -764,7 +792,6 @@
       3:'https://wa.me/554797701300?text=Quero%20assinar%20o%20N%C3%ADvel%203%20(Plano%20650%20MB)%20da%20CCS.'
     };
 
-    /* Seletores principais */
     const topbar=document.getElementById('topbar');
     const statusBar=document.getElementById('statusBar');
     const statusWrap=document.getElementById('statusWrap');
@@ -772,7 +799,6 @@
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
     const wrapTop=document.querySelector('.topbar .wrap');
-    const capsule=document.querySelector('.capsule');
 
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
@@ -781,7 +807,7 @@
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
 
-    /* Conteúdos por nível (resumo) */
+    /* Conteúdos por nível */
     const CONNECTA={
       1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
       2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
@@ -799,7 +825,6 @@
       3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
     };
 
-    /* Util */
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
       const hStatus=statusBar.offsetHeight||44;
@@ -817,13 +842,13 @@
       document.querySelector('.capsule').style.maxWidth = available + 'px';
     }
     function setCapsuleTop(level){
-      capLeft.textContent=`Benefícios Nível ${level}`;
-      capRight.textContent=`Plano ${PLANS[level]}`;
+      document.getElementById('capLeft').textContent=`Benefícios Nível ${level}`;
+      document.getElementById('capRight').textContent=`Plano ${PLANS[level]}`;
       fitCapsule();
     }
     function setCapsuleSection(level, name){
-      capLeft.textContent=`Nível ${level}`;
-      capRight.textContent=name||'';
+      document.getElementById('capLeft').textContent=`Nível ${level}`;
+      document.getElementById('capRight').textContent=name||'';
       fitCapsule();
     }
 
@@ -837,7 +862,6 @@
       });
     }
 
-    /* Snapshot/destaques */
     function snapshotPills(){
       const map={}; document.querySelectorAll('.pill-flag[id]').forEach(el=> map[el.id]={ text:el.textContent.trim(), inc:el.classList.contains('included') }); return map;
     }
@@ -851,7 +875,6 @@
       });
     }
 
-    /* Atualização por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -906,7 +929,7 @@
       if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 480); }
     }
 
-    /* Alternância “Nível X” ↔ Plano Y (2.6s, centralizada, à prova de sumiço) */
+    /* Alternância Nível X ↔ Plano Y */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -916,7 +939,7 @@
         a.classList.add('on'); b.classList.add('on');
         const w=Math.max(a.scrollWidth, b.scrollWidth);
         flip.style.setProperty('--flip-w', w+'px');
-        b.classList.remove('on'); a.classList.add('on'); // estado inicial
+        b.classList.remove('on'); a.classList.add('on');
       });
     }
     function ensureOneVisible(flip){
@@ -957,7 +980,7 @@
     dockClose?.addEventListener('click', closeDock);
     addEventListener('scroll', ()=>{ if (isMobile()) closeDock(); toggleFab(); }, {passive:true});
 
-    /* Saiba mais acordeão */
+    /* Acordeão "Saiba mais" */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')){ p.hidden=true; p.style.height='0px'; } });
     document.addEventListener('click', ev=>{
       const btn=ev.target.closest('.chip-more'); if(!btn) return;
@@ -979,7 +1002,7 @@
       }
     });
 
-    /* Cápsula dinâmica + título “cor mágica” reativo */
+    /* Cápsula dinâmica + títulos com cor mágica */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1045,7 +1068,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial (bottom sheet robusto, pad especial para ver “ATUAL”, abertura do dock no passo 2, auditor) */
+    /* Tutorial (bottom sheet robusto + auditor) */
     const splash=document.getElementById('splash');
     const btnStart=document.getElementById('btnStart');
     const btnSkipTutorial=document.getElementById('btnSkipTutorial');
@@ -1070,8 +1093,7 @@
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
-      // Passo 1: incluir o selo "ATUAL" acima do botão
-      if (targetEl.id==='levelDockWrap') extraTop=22;
+      if (targetEl.id==='levelDockWrap') extraTop=22; // incluir selo ATUAL
       const x=clamp(r.left-pad,0,vw-1);
       const y=clamp(r.top-pad-extraTop,0,vh-1);
       const w=clamp(r.width+pad*2,0,vw);
@@ -1086,7 +1108,6 @@
     function ensureVisible(el){
       try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
-
     function isSmall(){ return matchMedia('(max-width: 520px)').matches; }
 
     function showOnboarding(step=1){
@@ -1102,7 +1123,6 @@
       function targetForStep(){
         if(onbStep===1) return document.getElementById('levelDockWrap');
         if(onbStep===2){
-          // Abrir dock no mobile para destacar o menu da direita
           if(isMobile()) openDock();
           return sideDock.classList.contains('is-open') ? document.getElementById('sideDock') : document.getElementById('dockToggle');
         }
@@ -1113,24 +1133,20 @@
         const tgt=targetForStep(); if(!tgt) return;
         ensureVisible(tgt);
 
-        // Spotlight com pad especial no passo 1 (para o selo ATUAL)
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
 
-        // Card: bottom sheet seguro no mobile em todos os passos
         if(isSmall()){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
           onbCard.style.right='auto'; onbCard.style.top='auto';
           onbCard.style.bottom='calc(var(--h-levelbar) + 16px + env(safe-area-inset-bottom))';
         }else{
-          // Desktop: tenta posicionar próximo do alvo, com auditoria
           const r=tgt.getBoundingClientRect(); const {w:vw,h:vh}=vp();
           const padC=12, ch=onbCard.offsetHeight, cw=onbCard.offsetWidth;
           let top=r.top-(ch+padC); if(top<60) top=r.bottom+padC; if(top+ch+16>vh) top=Math.max(60, vh-ch-16);
           let left=clamp(r.left, 16, vw - cw - 16);
           onbCard.style.bottom='auto'; onbCard.style.transform='none';
           onbCard.style.top=top+'px'; onbCard.style.left=left+'px';
-          // Auditoria de limites
           const b=onbCard.getBoundingClientRect(); const margin=8;
           if(b.left<margin||b.right>vw-margin||b.top<margin||b.bottom>vh-margin){
             onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1149,7 +1165,6 @@
       addEventListener('scroll', ()=> onbOpen&&place(), {passive:true});
     }
 
-    /* Init */
     function init(){
       setHeights();
       const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
@@ -1159,7 +1174,6 @@
 
       computeFlipWidths(); startFlip();
 
-      // splash
       const splash=document.getElementById('splash');
       document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
       document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
