@@ -25,21 +25,21 @@
       --side-pad: clamp(14px, 4.5vw, 36px);
       --content-w: 1200px;
 
-      /* Alturas/limites para o bloco de mídia */
-      --media-h-m: clamp(180px, 34vh, 280px);      /* mobile */
-      --media-h-max-d: clamp(260px, 40vh, 460px);  /* desktop */
+      /* Alturas/limites para mídia */
+      --media-h-m: clamp(180px, 34vh, 280px);
+      --media-h-max-d: clamp(260px, 40vh, 460px);
 
       --h-topbar: 60px;
-      --h-status: 0px;  /* usado p/ altura da pílula anexa */
+      --h-status: 0px;  /* altura da pílula anexa */
       --h-levelbar: 72px;
 
-      /* Entrada orquestrada (curta, topo + níveis, sem atrasar cards) */
+      /* Entrada curta (só topo e níveis) */
       --enter-shift: 14px;
       --enter-dur: 420ms;
       --enter-dur-fast: 320ms;
     }
 
-    /* Temas por nível (Neon Premium) */
+    /* Atmosfera — Neon Premium */
     body.theme-l1{
       --levelA:#2f6bff; --levelB:#00d9ff;
       --planA:#00ffc6;  --planB:#a3ffed;
@@ -146,14 +146,13 @@
     @keyframes capShift{ from{ background-position:0% 50% } to{ background-position:200% 50% } }
     .dot-mid{ width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--levelA),var(--planB)); box-shadow:0 0 10px color-mix(in oklab, var(--levelB), transparent 45%), 0 0 16px color-mix(in oklab, var(--planA), transparent 55%) }
 
-    /* Pílula anexa (substitui a barra) */
+    /* Pílula anexa — versão “badge”, menor e colada à cápsula */
     .cap-cta{
-      position:absolute; left:50%; top:calc(100% + 8px); transform:translateX(-50%);
-      display:inline-flex; align-items:stretch; gap:0; border-radius:999px; padding:2px;
-      background:rgba(16,18,24,.45); border:1px solid rgba(255,255,255,.10);
+      position:absolute; left:50%; top:calc(100% - 6px); transform:translateX(-50%);
+      display:inline-flex; align-items:center; gap:6px; border-radius:999px;
+      padding:2px; background:rgba(16,18,24,.55); border:1px solid rgba(255,255,255,.10);
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 26px rgba(0,0,0,.28);
-      overflow:hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 8px 20px rgba(0,0,0,.28);
       z-index:1;
     }
     .cap-cta::before{
@@ -164,18 +163,22 @@
       -webkit-mask-composite:xor; mask-composite:exclude; opacity:.9;
       transition: background 450ms ease;
     }
-    .cap-cta-inner{ position:relative; display:inline-flex; gap:0; border-radius:inherit; overflow:hidden }
-    .cap-cta a{
-      position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:8px 14px; font-weight:900; font-size:13px; text-decoration:none; white-space:nowrap;
-      border-radius:999px;
+    .cap-cta .cta-sign{
+      position:relative; display:inline-flex; align-items:center; gap:8px;
+      padding:6px 12px; border-radius:999px; font-weight:900; font-size:12px; line-height:1;
+      background:linear-gradient(90deg,var(--levelA),var(--levelB));
+      color:#0b0d12; text-decoration:none; white-space:nowrap;
     }
-    .cap-cta a .ico{ width:16px; height:16px }
-    .cta-sign{ background:linear-gradient(90deg,var(--levelA),var(--levelB)); color:#0b0d12; }
-    .cta-expert{ background:rgba(255,255,255,.08); color:#fff; border-left:1px solid rgba(255,255,255,.12) }
-    @media (max-width:560px){
-      .cap-cta{ max-width:92vw }
-      .cap-cta a{ padding:8px 12px; font-size:12px }
+    .cap-cta .cta-sign .ico{ width:14px; height:14px }
+    .cap-cta .cta-expert{
+      width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center;
+      border-radius:999px; border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.10); color:#fff; text-decoration:none;
+    }
+    .cap-cta .cta-expert .ico{ width:16px; height:16px }
+    @media (max-width:420px){
+      .cap-cta .cta-sign{ font-size:11px; padding:6px 10px }
+      .cap-cta .cta-expert{ width:26px; height:26px }
     }
 
     /* Main layout */
@@ -197,30 +200,15 @@
     .media{ padding:10px 14px 0; overflow:visible }
     .frame{
       width:100%;
-      display:grid;
-      place-content:center;
-      place-items:center;
-      height: var(--media-h-m); /* mobile */
+      display:grid; place-content:center; place-items:center;
+      height: var(--media-h-m);
     }
     @media (min-width:1024px){ .frame{ height:auto } }
+    .frame > img, .frame > video{ display:block; width:100%; height:auto; object-fit:contain; max-height:none }
+    @media (min-width:1024px){ .frame > img, .frame > video{ max-height: var(--media-h-max-d) } }
 
-    .frame > img, .frame > video{
-      display:block;
-      width:100%;
-      height:auto;
-      object-fit:contain;
-      max-height:none;
-    }
-    @media (min-width:1024px){
-      .frame > img, .frame > video{ max-height: var(--media-h-max-d) }
-    }
-
-    /* Duas imagens */
     .frame-grid-2{
-      width:100%;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(10px, 2vw, 16px);
+      width:100%; display:grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 2vw, 16px);
       align-items:center; justify-items:center;
     }
     .frame-grid-2 img{ display:block; width:100%; height:auto; object-fit:contain }
@@ -230,8 +218,7 @@
     .title{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px }
     .title h2{ margin:0; font-size: clamp(20px, 2.4vw, 28px); font-weight:900; position:relative; color:#eaf3ff }
     .title h2::after{
-      content: attr(data-text);
-      position:absolute; inset:0;
+      content: attr(data-text); position:absolute; inset:0;
       background: linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
       -webkit-background-clip:text; background-clip:text; color:transparent;
       opacity: var(--magic, 0);
@@ -279,7 +266,7 @@
       .btn{ width:100% }
     }
 
-    /* "Saiba mais" pulsante */
+    /* "Saiba mais" */
     .chip-more{
       display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
       background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; font-weight:900; font-size:13px; cursor:pointer;
@@ -344,8 +331,26 @@
       position:relative; flex:1 1 0; min-width:0; padding:12px 16px; border-radius:999px; border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06); color:#fff; font-weight:900; cursor:pointer; overflow:visible;
       display:flex; align-items:center; justify-content:center;
-      transition: border-color 450ms ease, background 450ms ease, box-shadow 450ms ease;
+      transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
     }
+
+    /* Aro colorido permanente por botão (cores fixas de cada nível) */
+    .btn-level::after{
+      content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
+      background:linear-gradient(90deg, var(--rimA), var(--rimB), var(--rimC), var(--rimD));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude;
+      opacity:.45; transition: opacity 220ms ease, filter 220ms ease;
+    }
+    .btn-level:hover::after{ opacity:.70 }
+    .btn-level[aria-pressed="true"]::after{ opacity:0 } /* o estado selecionado usa ::before mais forte */
+
+    /* Mapa de cores dos aros por nível */
+    .btn-level[data-level="1"]{ --rimA:#2f6bff; --rimB:#00d9ff; --rimC:#00ffc6; --rimD:#a3ffed }
+    .btn-level[data-level="2"]{ --rimA:#7b5cff; --rimB:#c55bff; --rimC:#ff52c9; --rimD:#ff9ce7 }
+    .btn-level[data-level="3"]{ --rimA:#ffb648; --rimB:#ffd86b; --rimC:#00e2c2; --rimD:#7afff2 }
+
+    /* Selecionado (anel forte no ::before) */
     .btn-level[aria-pressed="true"]::before{
       content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
       background:linear-gradient(90deg, var(--levelA), var(--levelB), var(--planA), var(--planB));
@@ -402,7 +407,7 @@
     .footer .wrap{ max-width:var(--content-w); margin:0 auto }
     .footer .actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 0 }
 
-    /* Splash/Onboarding (mesmos efeitos de antes) */
+    /* Splash/Onboarding */
     .splash{ position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
       background: radial-gradient(900px 600px at 10% 10%, color-mix(in oklab, var(--levelB), transparent 86%), transparent 60%), radial-gradient(900px 600px at 90% 90%, color-mix(in oklab, var(--planA), transparent 86%), transparent 60%), rgba(9,12,18,.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align:center; }
@@ -455,7 +460,7 @@
       body.mode-deck .card.stage{ width:100% }
     }
 
-    /* ENTRADA ORQUESTRADA — somente topo e níveis (cards sempre visíveis) */
+    /* ENTRADA — só topo/pílula e níveis/menu */
     body.enter-seq .topbar .capsule,
     body.enter-seq .cap-cta{
       opacity:0; transform:translateY(calc(var(--enter-shift) * -1));
@@ -463,7 +468,6 @@
     }
     body.enter-seq.step-1 .topbar .capsule,
     body.enter-seq.step-1 .cap-cta{ opacity:1; transform:none }
-
     body.enter-seq .level-dock{
       opacity:0; transform:translateY(var(--enter-shift));
       transition: opacity var(--enter-dur) ease, transform var(--enter-dur) cubic-bezier(.2,.8,.2,1);
@@ -512,18 +516,16 @@
         </div>
       </div>
       <img class="logo-vctech" alt="VCTECH" src="https://cdn.jsdelivr.net/gh/Well9925/beneficios-ccs250@main/img/REPRESENTANTE%20COMERCIAL.png" loading="eager" decoding="async">
-      <!-- Pílula anexa (split) -->
+
+      <!-- Pílula anexa (mini) -->
       <div class="cap-cta" id="capCta">
-        <div class="cap-cta-inner">
-          <a id="ctaSign" class="cta-sign" href="#" target="_blank" rel="noopener" aria-label="Assinar agora">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h13"/><path d="M11 5l7 7-7 7"/></svg>
-            <span id="ctaSignText">Assinar Nível 1 agora</span>
-          </a>
-          <a id="ctaExpert" class="cta-expert" href="#" target="_blank" rel="noopener" aria-label="Falar com um especialista">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92V21a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72l.45 3a2 2 0 0 1-.57 1.73L9.91 11a16 16 0 0 0 6.16 6.16l1.55-1.06a2 2 0 0 1 1.73-.57l3 .45A2 2 0 0 1 22 16.92z"/></svg>
-            <span>Especialista</span>
-          </a>
-        </div>
+        <a id="ctaSign" class="cta-sign" href="#" target="_blank" rel="noopener" aria-label="Assinar agora">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h13"/><path d="M11 5l7 7-7 7"/></svg>
+          <span id="ctaSignText">Assinar Nível 1</span>
+        </a>
+        <a id="ctaExpert" class="cta-expert" href="#" target="_blank" rel="noopener" title="Falar com especialista" aria-label="Falar com especialista">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92V21a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72l.45 3a2 2 0 0 1-.57 1.73L9.91 11a16 16 0 0 0 6.16 6.16l1.55-1.06a2 2 0 0 1 1.73-.57l3 .45A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
       </div>
     </div>
   </header>
@@ -792,7 +794,7 @@
           <details class="faq-card"><summary>Tenho isenção de taxa em caso de ausência ou visita improdutiva?</summary><div>Nível 1: não • Nível 2: 1 isenção por ausência • Nível 3: isenções por ausência, visita improdutiva e mudança de endereço.</div></details>
           <details class="faq-card"><summary>Como acesso minhas faturas/PIX sem login?</summary><div>Entre em <a class="inline-link" href="https://ccs.pix.7az.com.br/" target="_blank" rel="noopener">ccs.pix.7az.com.br</a> e informe seu CPF.</div></details>
           <details class="faq-card"><summary>Como acesso o Portal do Assinante?</summary><div>Acesse <a class="inline-link" href="https://ccs.7az.com.br/" target="_blank" rel="noopener">ccs.7az.com.br</a> para gerenciar sua assinatura.</div></details>
-          <details class="faq-card"><summary>Como assino ou faço upgrade de nível?</summary><div>Use o botão “Assinar Nível X agora” na pílula do topo ou fale com um especialista.</div></details>
+          <details class="faq-card"><summary>Como assino ou faço upgrade de nível?</summary><div>Use “Assinar Nível X” na pílula do topo ou fale com um especialista pelo ícone ao lado.</div></details>
           <details class="faq-card"><summary>Posso rever o tutorial?</summary><div>Sim. Clique em “Ver tutorial novamente” no rodapé.</div></details>
         </div>
       </div></div>
@@ -1086,14 +1088,14 @@
     function setCapCta(level){
       ctaSign.href = SIGN_WHATS[level];
       ctaExpert.href = CONTACT_WHATS;
-      ctaSignText.textContent = `Assinar Nível ${level} agora`;
+      ctaSignText.textContent = `Assinar Nível ${level}`;
       setHeights();
     }
     function setLevelDock(level){
       lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
     }
 
-    /* Scrollspy (calcula barra sublinhada e cápsula dinâmica) */
+    /* Scrollspy (marcação de seção e animações de título) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -1157,7 +1159,7 @@
       }
     });
 
-    /* Flip Nível/Plano (sem quebra) */
+    /* Flip Nível/Plano */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function computeFlipWidths(){
       lvlBtns.forEach(btn=>{
@@ -1229,7 +1231,7 @@
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* ENTRADA ORQUESTRADA — curta (não esconde cards) */
+    /* ENTRADA curta — não oculta cards */
     let enterRunning=false, enterTimers=[];
     function clearTimers(){ enterTimers.forEach(t=> clearTimeout(t)); enterTimers=[]; }
     function endEntrance(){
@@ -1329,7 +1331,6 @@
         ensureVisible(tgt);
         const pad = (onbStep===1)?14:6;
         requestAnimationFrame(()=> spotlight(tgt, pad));
-
         const {w:vw,h:vh}=vp();
         if(matchMedia('(max-width: 520px)').matches){
           onbCard.style.left='50%'; onbCard.style.transform='translateX(-50%)';
@@ -1380,7 +1381,6 @@
       setLevelDock(startLevel);
       setCapsuleTop(startLevel);
 
-      // Flip “Nível/Plano”
       computeFlipWidths();
       if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         let show=false; setInterval(()=>{ show=!show; setFlipState(show); }, 2600);
