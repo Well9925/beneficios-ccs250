@@ -30,9 +30,6 @@
       --h-topbar: 60px;
       --h-status: 44px;
       --h-levelbar: 72px;
-
-      /* Altura “padrão” dos cards no desktop (calculada no JS) */
-      --stage-h: 680px;
     }
 
     *{box-sizing:border-box}
@@ -128,12 +125,13 @@
       overflow:hidden; contain:content;
       transition: transform .28s ease, opacity .28s ease;
     }
-    /* Cards “de palco” no desktop: mesma altura padrão para simetria */
+
+    /* Cards “de palco” (altura consistente sem excesso de espaço) */
     @media (min-width:1024px){
       .card.stage{
-        min-height: var(--stage-h);
+        min-height: auto;                 /* altura definida no JS por card */
         display:grid;
-        grid-template-rows: auto 1fr; /* mídia em cima, conteúdo preenche */
+        grid-template-rows: auto 1fr;     /* mídia em cima; conteúdo preenche */
       }
       .card.stage .media{ align-self:center }
     }
@@ -284,7 +282,7 @@
     @keyframes halo{ 0%{ box-shadow:0 0 0 0 rgba(0,217,255,.6),0 0 0 0 rgba(123,92,255,.5) } 100%{ box-shadow:0 0 0 16px rgba(0,217,255,0),0 0 0 28px rgba(123,92,255,0) } }
     .btn-level[aria-pressed="true"] .label-actual{ display:inline-block }
 
-    /* Alternância “Nível X” ↔ Plano Y” */
+    /* Alternância “Nível X” ↔ Plano Y */
     .flip{ position:relative; display:grid; place-items:center; width:var(--flip-w, auto); min-height:1em }
     .flip .flip-a, .flip .flip-b{ grid-area:1/1; opacity:0; transition:opacity 220ms ease }
     .flip .flip-a.on, .flip .flip-b.on{ opacity:1 }
@@ -398,7 +396,7 @@
     }
     .onb .card h3{ margin:0 0 8px; font-size: clamp(16px, 4.5vw, 18px) }
     .onb .card p{ margin:0 0 12px; color:#e9f2ff; font-size: clamp(14px, 4vw, 16px) }
-    /* Botões do tutorial */
+    /* Botões do tutorial: grid responsivo, sem overflow */
     .onb .row{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -426,6 +424,28 @@
         grid-template-areas: "skip next start";
       }
       .onb .row .btn{ width:auto }
+    }
+
+    /* MODO LATERAL (deck) — opcional, ativa com ?mode=deck no desktop */
+    @media (min-width:1024px){
+      body.mode-deck main{
+        display:grid;
+        grid-auto-flow: column;
+        grid-auto-columns: min(1200px, 86vw);
+        gap: 24px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        padding: calc(var(--h-topbar) + var(--h-status) + 10px) var(--side-pad) 0;
+      }
+      body.mode-deck .section{
+        min-height: calc(100vh - var(--h-topbar) - var(--h-status) - 24px);
+        scroll-snap-align: center;
+        display:grid;
+        place-items:center;
+        padding: 0;
+      }
+      body.mode-deck .card.stage{ width:100% }
     }
 
     .hide{ display:none !important }
@@ -826,7 +846,6 @@
 
     const capLeft=document.getElementById('capLeft');
     const capRight=document.getElementById('capRight');
-    const wrapTop=document.querySelector('.topbar .wrap');
 
     const sideDock=document.getElementById('sideDock');
     const dockToggle=document.getElementById('dockToggle');
@@ -834,44 +853,21 @@
 
     const lvlBtns=[...document.querySelectorAll('.btn-level')];
     const fab=document.getElementById('fab');
-
-    /* Conteúdos por nível */
-    const CONNECTA={
-      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
-      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
-    };
-    const PLAY={
-      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
-      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
-      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
-    };
-    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
-    const SUPORTE={
-      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
-      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
-      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
-    };
+    const main=document.getElementById('content');
 
     /* Util */
     function clamp(v,min,max){ return Math.max(min, Math.min(v, max)); }
     function root(){ return document.scrollingElement||document.documentElement; }
     function toggleFab(){ fab.style.display=(root().scrollTop>300)?'inline-flex':'none'; }
+    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
+    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
+    function isDeck(){ return document.body.classList.contains('mode-deck'); }
 
     function setHeights(){
       const hTop=topbar.offsetHeight||60;
       const hStatus=statusBar.offsetHeight||44;
       document.documentElement.style.setProperty('--h-topbar',hTop+'px');
       document.documentElement.style.setProperty('--h-status',hStatus+'px');
-    }
-    function computeStageHeight(){
-      // Altura padrão para desktop: viewport - topo - status - margem - rodapé fixo (níveis)
-      const vh = window.innerHeight||800;
-      const hTop = topbar.offsetHeight||60;
-      const hStatus = statusBar.offsetHeight||44;
-      const hLevel = 0; // não abatemos o levelbar para manter bom espaço visual
-      const stage = clamp(vh - hTop - hStatus - hLevel - 48, 560, 760);
-      document.documentElement.style.setProperty('--stage-h', stage+'px');
     }
 
     function fitCapsule(){
@@ -883,16 +879,111 @@
       document.querySelector('.capsule').style.maxWidth = available + 'px';
     }
     function setCapsuleTop(level){
-      document.getElementById('capLeft').textContent=`Benefícios Nível ${level}`;
-      document.getElementById('capRight').textContent=`Plano ${PLANS[level]}`;
+      capLeft.textContent=`Benefícios Nível ${level}`;
+      capRight.textContent=`Plano ${PLANS[level]}`;
       fitCapsule();
     }
     function setCapsuleSection(level, name){
-      document.getElementById('capLeft').textContent=`Nível ${level}`;
-      document.getElementById('capRight').textContent=name||'';
+      capLeft.textContent=`Nível ${level}`;
+      capRight.textContent=name||'';
       fitCapsule();
     }
 
+    /* Altura “compacta inteligente” para os cards do desktop */
+    function availableViewportH(){
+      const vh = window.innerHeight||800;
+      const hTop = (document.getElementById('topbar')?.offsetHeight||60);
+      const hStatus = (document.getElementById('statusBar')?.offsetHeight||44);
+      return Math.max(400, vh - hTop - hStatus - 24);
+    }
+    function percentile(arr, p){
+      if(!arr || !arr.length) return 620;
+      const s=[...arr].sort((a,b)=>a-b);
+      const i=Math.floor((s.length-1)*p);
+      return s[i];
+    }
+    function setStageHeights(){
+      if(!isDesktop()) return;
+      const cards = [...document.querySelectorAll('.card.stage')];
+      if(!cards.length) return;
+      const avail = availableViewportH();
+      const MIN = 520;
+      const MAX = Math.min(760, avail);
+      const targets = cards.map(card=>{
+        const media = card.querySelector('.media');
+        const content = card.querySelector('.content');
+        const h = (media?.offsetHeight||0) + (content?.offsetHeight||0) + 48;
+        return Math.min(MAX, Math.max(MIN, h + 24));
+      });
+      const consensus = Math.min(MAX, Math.max(MIN, Math.round(percentile(targets, 0.85))));
+      cards.forEach(card=>{
+        const need = Math.max(consensus, card.scrollHeight);
+        card.style.minHeight = need + 'px';
+      });
+    }
+
+    /* Modo lateral (deck) — ativa com ?mode=deck */
+    function enableDeckIfRequested(){
+      const qp = new URLSearchParams(location.search);
+      const on = qp.get('mode') === 'deck';
+      document.body.classList.toggle('mode-deck', on);
+      if(!on || !isDesktop()) return;
+
+      // Roda “scrollspy” horizontal escolhendo a seção mais central
+      const sections=[...document.querySelectorAll('main .section')];
+      function deckSetCurrent(){
+        const viewCenter = main.scrollLeft + main.clientWidth/2;
+        let best=null, bestIdx=0;
+        sections.forEach((sec,idx)=>{
+          const left = sec.offsetLeft;
+          const center = left + sec.offsetWidth/2;
+          const dist = Math.abs(center - viewCenter);
+          if(!best || dist<best.dist) best={sec,dist,idx};
+        });
+        if(best){
+          sections.forEach(s=> s.classList.remove('is-current'));
+          best.sec.classList.add('is-current');
+          const title=best.sec.getAttribute('data-title')||'';
+          const level=+localStorage.getItem(LEVELS_KEY)||1;
+          setCapsuleSection(level, title);
+        }
+      }
+      let raf=false;
+      main.addEventListener('scroll', ()=>{ if(!raf){ raf=true; requestAnimationFrame(()=>{ raf=false; deckSetCurrent(); }); } }, {passive:true});
+      deckSetCurrent();
+
+      // Converter rolagem vertical do mouse em horizontal (mais natural)
+      main.addEventListener('wheel', (e)=>{
+        if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+          e.preventDefault();
+          main.scrollBy({ left: e.deltaY * 1.08, behavior: 'auto' });
+        }
+      }, {passive:false});
+
+      // Side-dock centraliza a coluna ao clicar
+      sideDock?.addEventListener('click',(ev)=>{
+        const a = ev.target.closest('a[href^="#"]');
+        if(!a) return;
+        const id = a.getAttribute('href').slice(1);
+        const sec = document.getElementById(id);
+        if(sec){
+          ev.preventDefault();
+          sec.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        }
+      });
+
+      // Navegação por setas
+      addEventListener('keydown', (e)=>{
+        if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return;
+        e.preventDefault();
+        const current = sections.findIndex(s=> s.classList.contains('is-current'));
+        let next = current + (e.key==='ArrowRight'?1:-1);
+        next = Math.max(0, Math.min(sections.length-1, next));
+        sections[next].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      });
+    }
+
+    /* Render helpers */
     function renderFacts(container,facts){
       container.innerHTML='';
       (facts||[]).forEach(f=>{
@@ -916,7 +1007,25 @@
       });
     }
 
-    /* Atualização por nível */
+    /* Conteúdos por nível */
+    const CONNECTA={
+      1:{days:90,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 90 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      2:{days:60,premium:false,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'ℹ️',text:'Atrações premium: apenas Nível 3.'}]},
+      3:{days:60,premium:true ,facts:[{emoji:'🌟',text:'Clube com parceiros da região.'},{emoji:'🎁',text:'Vouchers de acordo com seu plano.'},{emoji:'⏳',text:'1 voucher a cada 60 dias.'},{emoji:'🏆',text:'Inclui atrações premium.'}]}
+    };
+    const PLAY={
+      1:{subtitle:'Streaming completo e canais de TV.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'ℹ️',text:'Rede Globo não está incluída.'}]},
+      2:{subtitle:'60 canais + 50 canais de música.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'}]},
+      3:{subtitle:'60 canais + 50 canais de música + +1.000 horas.',facts:[{emoji:'🎬',text:'60 canais (variados e regionais).'},{emoji:'🎵',text:'+50 canais de música.'},{emoji:'🎞️',text:'+1.000 horas de filmes e séries.'}]}
+    };
+    const SKEELO={1:{subtitle:'Sua biblioteca de leitura e áudio.',facts:[{emoji:'📚',text:'E‑books, audiobooks, minibooks e comics.'}]}}; SKEELO[2]=SKEELO[1]; SKEELO[3]=SKEELO[1];
+    const SUPORTE={
+      1:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 36h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'}],sla:'SLA 36h úteis',abs:false,imp:false,mud:false},
+      2:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 24h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'1 isenção por ausência.'}],sla:'SLA 24h úteis',abs:true,imp:false,mud:false},
+      3:{subtitle:'Atendimento com prioridade e prazo garantido.',facts:[{emoji:'⏱️',text:'SLA até 18h úteis.'},{emoji:'🛠️',text:'1 visita técnica/ano.'},{emoji:'✅',text:'Isenções por ausência, improdutiva e mudança.'}],sla:'SLA 18h úteis',abs:true,imp:true,mud:true}
+    };
+
+    /* Elementos que mudam por nível */
     const pillVoucher=document.getElementById('pill-cc-voucher');
     const pillPremium=document.getElementById('pill-cc-premium');
     const ccFacts=document.getElementById('cc-facts');
@@ -925,7 +1034,7 @@
     const playSubtitle=document.getElementById('play-subtitle');
     const playFacts=document.getElementById('play-facts');
     const pillPlay50=document.getElementById('pill-play-50mus');
-    thePill1000=document.getElementById('pill-play-1000');
+    const pillPlay1000=document.getElementById('pill-play-1000');
 
     const skeeloSubtitle=document.getElementById('skeelo-subtitle');
     const skeeloFacts=document.getElementById('skeelo-facts');
@@ -937,39 +1046,39 @@
     const pillSupImp=document.getElementById('pill-sup-imp');
     const pillSupMud=document.getElementById('pill-sup-mud');
 
-    function updateConecta(level){
+    function renderConecta(level){
       const c=CONNECTA[level];
       pillVoucher.textContent=`1 voucher a cada ${c.days} dias`;
       pillPremium.textContent=c.premium?'Atração premium inclusa':'Atração premium não inclusa';
       pillPremium.classList.toggle('included',!!c.premium); pillPremium.classList.toggle('excluded',!c.premium);
       renderFacts(ccFacts,c.facts);
     }
-    function updatePlay(level){
+    function renderPlay(level){
       const p=PLAY[level]; playSubtitle.textContent=p.subtitle; renderFacts(playFacts,p.facts);
       pillPlay50.textContent=(level>=2)?'50 canais de música':'50 canais de música não incluso';
       pillPlay50.classList.toggle('included',level>=2); pillPlay50.classList.toggle('excluded',!(level>=2));
-      thePill1000.textContent=(level===3)?'+1.000 horas de filmes e séries':'+1.000 horas de filmes e séries não incluso';
-      thePill1000.classList.toggle('included',level===3); thePill1000.classList.toggle('excluded',level!==3);
+      pillPlay1000.textContent=(level===3)?'+1.000 horas de filmes e séries':'+1.000 horas de filmes e séries não incluso';
+      pillPlay1000.classList.toggle('included',level===3); pillPlay1000.classList.toggle('excluded',level!==3);
     }
-    function updateSkeelo(level){ const s=SKEELO[level]; skeeloSubtitle.textContent=s.subtitle; renderFacts(skeeloFacts,s.facts); }
-    function updateSup(level){
+    function renderSkeelo(level){ const s=SKEELO[level]; skeeloSubtitle.textContent=s.subtitle; renderFacts(skeeloFacts,s.facts); }
+    function renderSup(level){
       const sp=SUPORTE[level]; supSubtitle.textContent=sp.subtitle; renderFacts(supFacts,sp.facts);
       pillSupSla.textContent=sp.sla;
       const setInc=(el,ok,base)=>{ el.textContent= ok?base:base+' não inclusa'; el.classList.toggle('included',!!ok); el.classList.toggle('excluded',!ok); };
       setInc(pillSupAbs,sp.abs,'Isenção por ausência'); setInc(pillSupImp,sp.imp,'Isenção visita improdutiva'); setInc(pillSupMud,sp.mud,'Isenção mudança de endereço');
     }
-    function updateAll(level){ updateConecta(level); updatePlay(level); updateSkeelo(level); updateSup(level); }
+    function updateAll(level){ renderConecta(level); renderPlay(level); renderSkeelo(level); renderSup(level); }
 
-    /* Status bar */
-    function injectStatus(level){
-      statusWrap.innerHTML='';
-      const a=document.createElement('a'); a.className='status-cta'; a.href=SIGN_WHATS[level]; a.target='_blank'; a.rel='noopener'; a.textContent=`Assinar Nível ${level} agora`;
-      const b=document.createElement('a'); b.className='status-link'; b.href=CONTACT_WHATS; b.target='_blank'; b.rel='noopener'; b.textContent='ou fale com um especialista';
-      statusWrap.append(a, b);
+    function setStatusBar(level){
+      statusWrap.innerHTML=`<a class="status-cta" href="${SIGN_WHATS[level]}" target="_blank" rel="noopener">Assinar Nível ${level} agora</a><a class="status-link" href="${CONTACT_WHATS}" target="_blank" rel="noopener">ou fale com um especialista</a>`;
       setHeights();
     }
 
-    /* Cápsula + títulos reativos */
+    function setLevelDock(level){
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
+    }
+
+    /* Título reativo/scrollspy (vertical) */
     let topAtSight=true, currentSectionTitle='Conecta Clube';
     (function(){
       const sentinel=document.getElementById('top-sentinel');
@@ -987,6 +1096,7 @@
       const sections=[...document.querySelectorAll('main .section')];
       let lastCur=null;
       const io=new IntersectionObserver(()=>{
+        if(isDeck()) return; // no deck, usamos o scrollspy horizontal
         const hTop=(topbar.offsetHeight||60)+(statusBar.offsetHeight||44)+8;
         const vh=window.innerHeight||document.documentElement.clientHeight;
         let maxVis=null;
@@ -1011,7 +1121,7 @@
       sections.forEach(s=> io.observe(s));
     })();
 
-    /* Saiba mais acordeão */
+    /* Acordeão "Saiba mais" */
     document.querySelectorAll('.more').forEach(p=>{ if(!p.classList.contains('is-open')){ p.hidden=true; p.style.height='0px'; } });
     document.addEventListener('click', ev=>{
       const btn=ev.target.closest('.chip-more'); if(!btn) return;
@@ -1021,19 +1131,19 @@
       if(expanded){
         const h=panel.scrollHeight; panel.style.height=h+'px'; panel.getBoundingClientRect();
         panel.style.height='0px'; panel.classList.remove('is-open');
-        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); computeStageHeight(); };
+        const onEnd=()=>{ panel.hidden=true; panel.style.height=''; panel.removeEventListener('transitionend',onEnd); setHeights(); setStageHeights(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','false'); if(txt) txt.textContent='Saiba mais';
       }else{
         panel.hidden=false; panel.style.height='0px'; panel.classList.add('is-open');
         requestAnimationFrame(()=> panel.style.height=panel.scrollHeight+'px');
-        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); computeStageHeight(); };
+        const onEnd=()=>{ panel.style.height='auto'; panel.removeEventListener('transitionend',onEnd); setHeights(); setStageHeights(); };
         panel.addEventListener('transitionend',onEnd);
         btn.setAttribute('aria-expanded','true'); if(txt) txt.textContent='Ver menos';
       }
     });
 
-    /* Alternância “Nível X” ↔ Plano Y” (animação leve) */
+    /* Alternância “Nível X” ↔ Plano Y” (leve) */
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let flipTimer=null, showPlan=false, flipPaused=false;
     function computeFlipWidths(){
@@ -1077,7 +1187,6 @@
     });
 
     /* Dock mobile toggle */
-    function isMobile(){ return matchMedia('(max-width: 880px)').matches; }
     function openDock(){ sideDock.classList.add('is-open'); dockToggle.setAttribute('aria-expanded','true'); }
     function closeDock(){ sideDock.classList.remove('is-open'); dockToggle.setAttribute('aria-expanded','false'); }
     dockToggle.addEventListener('click', ()=>{ if (isMobile()) (sideDock.classList.contains('is-open')?closeDock():openDock()); });
@@ -1091,28 +1200,28 @@
     });
 
     /* Aplicar nível */
-    function setStatusBar(level){ injectStatus(level); }
-    function setLevelDockState(level){
-      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===level)));
-      const btn=lvlBtns.find(b=> +b.dataset.level===level);
-      if(btn){ btn.classList.remove('hit'); void btn.offsetWidth; btn.classList.add('hit'); setTimeout(()=> btn.classList.remove('hit'), 320); }
-    }
-
     function applyLevel(level,{remember=true}={}){
       const L=[1,2,3].includes(+level)?+level:1;
       const prev=snapshotPills();
-      setLevelDockState(L);
+      lvlBtns.forEach(b=> b.setAttribute('aria-pressed', String(+b.dataset.level===L)));
       setStatusBar(L);
       updateAll(L);
       emailBtn.href=`mailto:ccs@ccstelecom.com.br?subject=${encodeURIComponent('Conecta Clube - Solicitar benefícios (Nível '+L+')')}`;
-      if(topAtSight) setCapsuleTop(L); else setCapsuleSection(L, currentSectionTitle);
+      if(document.getElementById('top-sentinel').getBoundingClientRect().top>=0) setCapsuleTop(L);
+      else setCapsuleSection(L, currentSectionTitle);
       if(remember) localStorage.setItem(LEVELS_KEY,String(L));
       requestAnimationFrame(()=> highlightChanges(prev));
+      setStageHeights();
     }
     lvlBtns.forEach(b=> b.addEventListener('click', ()=> applyLevel(+b.dataset.level)));
 
-    /* Tutorial (passo 2 ancorado no menu direito em desktop; bottom-sheet no mobile) */
+    /* Tutorial */
     const splash=document.getElementById('splash');
+    document.getElementById('btnStart')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
+    document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splash.classList.remove('is-open'); document.body.style.overflow=''; });
+    document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
+    splash.classList.add('is-open'); document.body.style.overflow='hidden';
+
     const onboarding=document.getElementById('onboarding');
     const onbTop=document.getElementById('onbTop');
     const onbLeft=document.getElementById('onbLeft');
@@ -1132,7 +1241,7 @@
       if(!targetEl) return;
       const r=targetEl.getBoundingClientRect(); const {w:vw,h:vh}=vp();
       let extraTop=0;
-      if (targetEl.id==='levelDockWrap') extraTop=22; // incluir selo ATUAL
+      if (targetEl.id==='levelDockWrap') extraTop=22;
       const x=clamp(r.left-pad,0,vw-1);
       const y=clamp(r.top-pad-extraTop,0,vh-1);
       const w=clamp(r.width+pad*2,0,vw);
@@ -1147,7 +1256,6 @@
     function ensureVisible(el){
       try{ el?.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'}); }catch{}
     }
-    function isDesktop(){ return matchMedia('(min-width: 1024px)').matches; }
     function dockTargetEl(){
       return document.querySelector('.side-dock .dock-items') || document.getElementById('sideDock') || document.getElementById('dockToggle');
     }
@@ -1219,27 +1327,29 @@
 
     /* Init */
     function init(){
-      setHeights(); computeStageHeight();
-      const startLevel=1; localStorage.setItem(LEVELS_KEY,String(startLevel));
-      injectStatus(startLevel); updateAll(startLevel); setLevelDockState(startLevel); setCapsuleTop(startLevel);
+      setHeights();
+      const startLevel=+localStorage.getItem(LEVELS_KEY)||1;
+      localStorage.setItem(LEVELS_KEY,String(startLevel));
+      setStatusBar(startLevel); updateAll(startLevel); setLevelDock(startLevel); setCapsuleTop(startLevel);
 
-      // Splash
+      // Splash e tutorial
       const splashEl=document.getElementById('splash');
       document.getElementById('btnStart')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; setTimeout(()=> showOnboarding(1), 120); });
       document.getElementById('btnSkipTutorial')?.addEventListener('click', ()=>{ splashEl.classList.remove('is-open'); document.body.style.overflow=''; });
       document.getElementById('btnReplayTutorial')?.addEventListener('click', ()=> showOnboarding(1));
       splashEl.classList.add('is-open'); document.body.style.overflow='hidden';
 
-      // Anim flip
-      computeFlipWidths();
-      if(!prefersReduce){
-        let show=false; setInterval(()=>{ show=!show; setFlipState(show); }, 2600);
-      }
+      // Flip
+      computeFlipWidths(); startFlip();
+
+      // Ajustes de layout
+      setStageHeights();
+      enableDeckIfRequested();
 
       // Listeners
-      addEventListener('resize', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); }, {passive:true});
-      addEventListener('pageshow', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); });
-      addEventListener('orientationchange', ()=>{ setHeights(); computeStageHeight(); computeFlipWidths(); fitCapsule(); });
+      addEventListener('resize', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); }, {passive:true});
+      addEventListener('pageshow', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); });
+      addEventListener('orientationchange', ()=>{ setHeights(); setStageHeights(); computeFlipWidths(); fitCapsule(); });
       addEventListener('scroll', toggleFab, {passive:true});
     }
     init();
